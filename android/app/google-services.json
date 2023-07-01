@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "928248104131",
+    "project_id": "spenzabeta-74e04",
+    "storage_bucket": "spenzabeta-74e04.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:928248104131:android:523efafa172f2ab5950e76",
+        "android_client_info": {
+          "package_name": "com.mycompany.spenza"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "928248104131-pnafehjnb76osp577558jstdlk5hmtni.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycompany.spenza",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "928248104131-k706fv5luls3upsh72d9fu4fr6lgbfjv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDS0q7nxQ37mhRuz1cUB9F34fPSM5YNkBs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "928248104131-k706fv5luls3upsh72d9fu4fr6lgbfjv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "928248104131-mdt9sa1potq015hd57vve334p6vus94p.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mycompany.spenza"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
