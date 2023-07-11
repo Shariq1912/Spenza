@@ -10,26 +10,21 @@ import '../../repository/google_repository.dart';
 import 'google_login_state.dart';
 
 part 'google_login_event.dart';
-
 class GoogleLoginBloc extends Bloc<GoogleLoginEvent, GoogleLoginState> {
   final GoogleLoginRepository authRepository;
 
   GoogleLoginBloc({required this.authRepository})
-      : super(const GooleLoginUnAuthenticated());
-
-  @override
-  Stream<GoogleLoginState> mapEventToState(GoogleLoginEvent event) async* {
-    if (event is GoogleSignInRequested) {
-      await _mapGoogleSignInRequestedToState();
-    }
+      : super(const GoogleLoginInitial()) {
+    on<GoogleSignInRequested>(_mapGoogleSignInRequestedToState);
   }
 
-  Future<void> _mapGoogleSignInRequestedToState() async {
+  Future<void> _mapGoogleSignInRequestedToState(
+      GoogleSignInRequested event, Emitter<GoogleLoginState> emit) async {
     emit(const GoogleLoginLoading());
 
     try {
       final ApiResponse<UserCredential> response =
-          await authRepository.signInWithGoogle();
+      await authRepository.signInWithGoogle();
       final userData = await GoogleSignIn().signIn();
       String email = userData!.email;
       String? displayName = userData!.displayName;
@@ -51,3 +46,4 @@ class GoogleLoginBloc extends Bloc<GoogleLoginEvent, GoogleLoginState> {
     }
   }
 }
+

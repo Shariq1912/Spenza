@@ -5,6 +5,7 @@ part 'google_login_state.freezed.dart';
 
 @freezed
 class GoogleLoginState with _$GoogleLoginState {
+  const factory GoogleLoginState.initial() = GoogleLoginInitial;
   const factory GoogleLoginState.loading() = GoogleLoginLoading;
   const factory GoogleLoginState.authenticated({String? email, String? displayName}) = GoogleLoginAuthenticated;
   const factory GoogleLoginState.unauthenticated() = GooleLoginUnAuthenticated;

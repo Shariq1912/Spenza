@@ -24,7 +24,16 @@ class LoginRoute extends StatelessWidget {
           listeners: [
             BlocListener<GoogleLoginBloc, GoogleLoginState>(
                 listener: (context, state) {
-
+                  if(state is GoogleLoginAuthenticated){
+                    final snackBar =
+                    SnackBar(content: Text("Sucessfully logged in"));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
+                  if(state is GoogleLoginAuthError){
+                    final snackBar =
+                    SnackBar(content: Text("can't logged in"));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
                 })
           ],
           child: LoginScreen(),
@@ -54,6 +63,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return BlocConsumer<GoogleLoginBloc, GoogleLoginState>(
+  listener: (context, state) {
+    // TODO: implement listener
+  },
+  builder: (context, state) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -212,6 +226,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           padding: const EdgeInsets.all(16),
                           child: InkWell(
                             onTap: () {
+                              _authenticateWithGoogle(context);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                     content: Text('clicked on google')),
@@ -247,5 +262,13 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  },
+);
   }
+}
+
+void _authenticateWithGoogle(context) {
+  BlocProvider.of<GoogleLoginBloc>(context).add(
+    GoogleSignInRequested(),
+  );
 }
