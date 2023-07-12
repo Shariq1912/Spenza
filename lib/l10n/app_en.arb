@@ -1,0 +1,13 @@
+{
+
+  "appTitle": "Spenza",
+  "@appTitle": {
+    "description": "Flutter version of Spenza app"
+  }
+  ,
+  "settingsAlertMsg":"You need to turn on automatic date and time in order to proceed",
+  "goToSettings":"Go to Settings",
+  "cancel":"Cancel",
+  "verifyMobile":"Verify Mobile"
+
+}

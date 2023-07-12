@@ -1,10 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:spenza/ui/login/login_route.dart';
-import 'package:spenza/ui/sign_up/sign_up_route.dart';
-import 'package:spenza/ui/splash/splash_route.dart';
-
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:spenza/router/app_router.dart';
 import 'dependency_injection.dart';
 
 
@@ -28,28 +25,18 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      routerConfig: _router,
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('en'), // English
+        Locale('es'), // Spanish
+      ],
+      routeInformationParser: RouteManager.router.routeInformationParser,
+      routerDelegate: RouteManager.router.routerDelegate,
+      routeInformationProvider: RouteManager.router.routeInformationProvider,
     );
   }
-  final _router = GoRouter(routes: [
-    GoRoute(
-        name: "splash",
-        path: "/",
-        builder: (context, state) {
-          return  SplashRoute();
-        }),
-    GoRoute(
-        name: "signUp",
-        path: "/signUp",
-        builder: (context, state) {
-          return  SignUpScreen();
-        }),
-    GoRoute(
-        name: "login",
-        path: "/login",
-        builder: (context, state) {
-          return  LoginRoute();
-        }),
-
-  ]);
 }
