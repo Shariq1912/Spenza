@@ -100,7 +100,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       Center(
                         child: ElevatedButton(
                           onPressed: () {
-                            context.pushNamed(RouteManager.registerScreen);
+                            context.pushNamed(RouteManager.favouriteScreen);
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF0CA9E6),

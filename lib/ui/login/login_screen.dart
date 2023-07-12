@@ -26,8 +26,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   final passwordValidator = MultiValidator([
     RequiredValidator(errorText: 'Password is required'),
-    /*MinLengthValidator(8,
-        errorText: 'Password must be at least 8 characters long'),*/
   ]);
 
   final emailValidator = MultiValidator([
@@ -99,6 +97,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           () => Container(),
                           loading: () => const CircularProgressIndicator(),
                           success: (data) => Text(data.toString()),
+                          //error: (message) => Text(message.toString()),
                           error: (message) => Text(message.toString()),
                         ),
                         TextFormField(
@@ -235,6 +234,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         child: InkWell(
                           onTap: () {
                             //_authenticateWithGoogle(context);
+                            context.goNamed(RouteManager.locationScreen);
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                   content: Text("clicked on facebook")),
