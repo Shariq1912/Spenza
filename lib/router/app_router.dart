@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:spenza/ui/login/login_route.dart';
+import 'package:spenza/ui/login/login_screen.dart';
 import 'package:spenza/ui/sign_up/sign_up_route.dart';
 import 'package:spenza/ui/splash/splash_route.dart';
 
@@ -11,9 +11,9 @@ final GlobalKey<NavigatorState> _shellNavigator =
     GlobalKey(debugLabel: 'shell');
 
 class RouteManager {
-  static const String splashScreen = '/loginScreen';
+  static const String splashScreen = '/';
 
-  static const String loginScreen = '/';
+  static const String loginScreen = '/loginScreen';
   static const String registerScreen = '/registerScreen';
   static const String dashboardScreen = '/dashboard';
 
@@ -42,7 +42,7 @@ class RouteManager {
         name: loginScreen,
         path: loginScreen,
         builder: (context, state) {
-          return const LoginRoute();
+          return const LoginScreen();
         },
       ),
 

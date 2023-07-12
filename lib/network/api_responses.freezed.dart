@@ -17,21 +17,24 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$ApiResponse<T> {
   @optionalTypeArgs
-  TResult when<TResult extends Object?>({
+  TResult when<TResult extends Object?>(
+    TResult Function() $default, {
     required TResult Function() loading,
     required TResult Function(String errorMsg) error,
     required TResult Function(T data) success,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function()? $default, {
     TResult? Function()? loading,
     TResult? Function(String errorMsg)? error,
     TResult? Function(T data)? success,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function()? $default, {
     TResult Function()? loading,
     TResult Function(String errorMsg)? error,
     TResult Function(T data)? success,
@@ -39,21 +42,24 @@ mixin _$ApiResponse<T> {
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
-  TResult map<TResult extends Object?>({
+  TResult map<TResult extends Object?>(
+    TResult Function(_Initial<T> value) $default, {
     required TResult Function(_ApiResponseLoading<T> value) loading,
     required TResult Function(_ApiResponseError<T> value) error,
     required TResult Function(_ApiResponseSuccess<T> value) success,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_Initial<T> value)? $default, {
     TResult? Function(_ApiResponseLoading<T> value)? loading,
     TResult? Function(_ApiResponseError<T> value)? error,
     TResult? Function(_ApiResponseSuccess<T> value)? success,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_Initial<T> value)? $default, {
     TResult Function(_ApiResponseLoading<T> value)? loading,
     TResult Function(_ApiResponseError<T> value)? error,
     TResult Function(_ApiResponseSuccess<T> value)? success,
@@ -81,6 +87,126 @@ class _$ApiResponseCopyWithImpl<T, $Res, $Val extends ApiResponse<T>>
 }
 
 /// @nodoc
+abstract class _$$_InitialCopyWith<T, $Res> {
+  factory _$$_InitialCopyWith(
+          _$_Initial<T> value, $Res Function(_$_Initial<T>) then) =
+      __$$_InitialCopyWithImpl<T, $Res>;
+}
+
+/// @nodoc
+class __$$_InitialCopyWithImpl<T, $Res>
+    extends _$ApiResponseCopyWithImpl<T, $Res, _$_Initial<T>>
+    implements _$$_InitialCopyWith<T, $Res> {
+  __$$_InitialCopyWithImpl(
+      _$_Initial<T> _value, $Res Function(_$_Initial<T>) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$_Initial<T> with DiagnosticableTreeMixin implements _Initial<T> {
+  const _$_Initial();
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'ApiResponse<$T>()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('type', 'ApiResponse<$T>'));
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$_Initial<T>);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function() $default, {
+    required TResult Function() loading,
+    required TResult Function(String errorMsg) error,
+    required TResult Function(T data) success,
+  }) {
+    return $default();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function()? $default, {
+    TResult? Function()? loading,
+    TResult? Function(String errorMsg)? error,
+    TResult? Function(T data)? success,
+  }) {
+    return $default?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function()? $default, {
+    TResult Function()? loading,
+    TResult Function(String errorMsg)? error,
+    TResult Function(T data)? success,
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_Initial<T> value) $default, {
+    required TResult Function(_ApiResponseLoading<T> value) loading,
+    required TResult Function(_ApiResponseError<T> value) error,
+    required TResult Function(_ApiResponseSuccess<T> value) success,
+  }) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_Initial<T> value)? $default, {
+    TResult? Function(_ApiResponseLoading<T> value)? loading,
+    TResult? Function(_ApiResponseError<T> value)? error,
+    TResult? Function(_ApiResponseSuccess<T> value)? success,
+  }) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_Initial<T> value)? $default, {
+    TResult Function(_ApiResponseLoading<T> value)? loading,
+    TResult Function(_ApiResponseError<T> value)? error,
+    TResult Function(_ApiResponseSuccess<T> value)? success,
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _Initial<T> implements ApiResponse<T> {
+  const factory _Initial() = _$_Initial<T>;
+}
+
+/// @nodoc
 abstract class _$$_ApiResponseLoadingCopyWith<T, $Res> {
   factory _$$_ApiResponseLoadingCopyWith(_$_ApiResponseLoading<T> value,
           $Res Function(_$_ApiResponseLoading<T>) then) =
@@ -98,12 +224,20 @@ class __$$_ApiResponseLoadingCopyWithImpl<T, $Res>
 
 /// @nodoc
 
-class _$_ApiResponseLoading<T> implements _ApiResponseLoading<T> {
+class _$_ApiResponseLoading<T>
+    with DiagnosticableTreeMixin
+    implements _ApiResponseLoading<T> {
   const _$_ApiResponseLoading();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'ApiResponse<$T>.loading()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('type', 'ApiResponse<$T>.loading'));
   }
 
   @override
@@ -117,7 +251,8 @@ class _$_ApiResponseLoading<T> implements _ApiResponseLoading<T> {
 
   @override
   @optionalTypeArgs
-  TResult when<TResult extends Object?>({
+  TResult when<TResult extends Object?>(
+    TResult Function() $default, {
     required TResult Function() loading,
     required TResult Function(String errorMsg) error,
     required TResult Function(T data) success,
@@ -127,7 +262,8 @@ class _$_ApiResponseLoading<T> implements _ApiResponseLoading<T> {
 
   @override
   @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function()? $default, {
     TResult? Function()? loading,
     TResult? Function(String errorMsg)? error,
     TResult? Function(T data)? success,
@@ -137,7 +273,8 @@ class _$_ApiResponseLoading<T> implements _ApiResponseLoading<T> {
 
   @override
   @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function()? $default, {
     TResult Function()? loading,
     TResult Function(String errorMsg)? error,
     TResult Function(T data)? success,
@@ -151,7 +288,8 @@ class _$_ApiResponseLoading<T> implements _ApiResponseLoading<T> {
 
   @override
   @optionalTypeArgs
-  TResult map<TResult extends Object?>({
+  TResult map<TResult extends Object?>(
+    TResult Function(_Initial<T> value) $default, {
     required TResult Function(_ApiResponseLoading<T> value) loading,
     required TResult Function(_ApiResponseError<T> value) error,
     required TResult Function(_ApiResponseSuccess<T> value) success,
@@ -161,7 +299,8 @@ class _$_ApiResponseLoading<T> implements _ApiResponseLoading<T> {
 
   @override
   @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_Initial<T> value)? $default, {
     TResult? Function(_ApiResponseLoading<T> value)? loading,
     TResult? Function(_ApiResponseError<T> value)? error,
     TResult? Function(_ApiResponseSuccess<T> value)? success,
@@ -171,7 +310,8 @@ class _$_ApiResponseLoading<T> implements _ApiResponseLoading<T> {
 
   @override
   @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_Initial<T> value)? $default, {
     TResult Function(_ApiResponseLoading<T> value)? loading,
     TResult Function(_ApiResponseError<T> value)? error,
     TResult Function(_ApiResponseSuccess<T> value)? success,
@@ -221,15 +361,25 @@ class __$$_ApiResponseErrorCopyWithImpl<T, $Res>
 
 /// @nodoc
 
-class _$_ApiResponseError<T> implements _ApiResponseError<T> {
+class _$_ApiResponseError<T>
+    with DiagnosticableTreeMixin
+    implements _ApiResponseError<T> {
   const _$_ApiResponseError({required this.errorMsg});
 
   @override
   final String errorMsg;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'ApiResponse<$T>.error(errorMsg: $errorMsg)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'ApiResponse<$T>.error'))
+      ..add(DiagnosticsProperty('errorMsg', errorMsg));
   }
 
   @override
@@ -253,7 +403,8 @@ class _$_ApiResponseError<T> implements _ApiResponseError<T> {
 
   @override
   @optionalTypeArgs
-  TResult when<TResult extends Object?>({
+  TResult when<TResult extends Object?>(
+    TResult Function() $default, {
     required TResult Function() loading,
     required TResult Function(String errorMsg) error,
     required TResult Function(T data) success,
@@ -263,7 +414,8 @@ class _$_ApiResponseError<T> implements _ApiResponseError<T> {
 
   @override
   @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function()? $default, {
     TResult? Function()? loading,
     TResult? Function(String errorMsg)? error,
     TResult? Function(T data)? success,
@@ -273,7 +425,8 @@ class _$_ApiResponseError<T> implements _ApiResponseError<T> {
 
   @override
   @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function()? $default, {
     TResult Function()? loading,
     TResult Function(String errorMsg)? error,
     TResult Function(T data)? success,
@@ -287,7 +440,8 @@ class _$_ApiResponseError<T> implements _ApiResponseError<T> {
 
   @override
   @optionalTypeArgs
-  TResult map<TResult extends Object?>({
+  TResult map<TResult extends Object?>(
+    TResult Function(_Initial<T> value) $default, {
     required TResult Function(_ApiResponseLoading<T> value) loading,
     required TResult Function(_ApiResponseError<T> value) error,
     required TResult Function(_ApiResponseSuccess<T> value) success,
@@ -297,7 +451,8 @@ class _$_ApiResponseError<T> implements _ApiResponseError<T> {
 
   @override
   @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_Initial<T> value)? $default, {
     TResult? Function(_ApiResponseLoading<T> value)? loading,
     TResult? Function(_ApiResponseError<T> value)? error,
     TResult? Function(_ApiResponseSuccess<T> value)? success,
@@ -307,7 +462,8 @@ class _$_ApiResponseError<T> implements _ApiResponseError<T> {
 
   @override
   @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_Initial<T> value)? $default, {
     TResult Function(_ApiResponseLoading<T> value)? loading,
     TResult Function(_ApiResponseError<T> value)? error,
     TResult Function(_ApiResponseSuccess<T> value)? success,
@@ -363,15 +519,25 @@ class __$$_ApiResponseSuccessCopyWithImpl<T, $Res>
 
 /// @nodoc
 
-class _$_ApiResponseSuccess<T> implements _ApiResponseSuccess<T> {
+class _$_ApiResponseSuccess<T>
+    with DiagnosticableTreeMixin
+    implements _ApiResponseSuccess<T> {
   const _$_ApiResponseSuccess({required this.data});
 
   @override
   final T data;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'ApiResponse<$T>.success(data: $data)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'ApiResponse<$T>.success'))
+      ..add(DiagnosticsProperty('data', data));
   }
 
   @override
@@ -395,7 +561,8 @@ class _$_ApiResponseSuccess<T> implements _ApiResponseSuccess<T> {
 
   @override
   @optionalTypeArgs
-  TResult when<TResult extends Object?>({
+  TResult when<TResult extends Object?>(
+    TResult Function() $default, {
     required TResult Function() loading,
     required TResult Function(String errorMsg) error,
     required TResult Function(T data) success,
@@ -405,7 +572,8 @@ class _$_ApiResponseSuccess<T> implements _ApiResponseSuccess<T> {
 
   @override
   @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function()? $default, {
     TResult? Function()? loading,
     TResult? Function(String errorMsg)? error,
     TResult? Function(T data)? success,
@@ -415,7 +583,8 @@ class _$_ApiResponseSuccess<T> implements _ApiResponseSuccess<T> {
 
   @override
   @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function()? $default, {
     TResult Function()? loading,
     TResult Function(String errorMsg)? error,
     TResult Function(T data)? success,
@@ -429,7 +598,8 @@ class _$_ApiResponseSuccess<T> implements _ApiResponseSuccess<T> {
 
   @override
   @optionalTypeArgs
-  TResult map<TResult extends Object?>({
+  TResult map<TResult extends Object?>(
+    TResult Function(_Initial<T> value) $default, {
     required TResult Function(_ApiResponseLoading<T> value) loading,
     required TResult Function(_ApiResponseError<T> value) error,
     required TResult Function(_ApiResponseSuccess<T> value) success,
@@ -439,7 +609,8 @@ class _$_ApiResponseSuccess<T> implements _ApiResponseSuccess<T> {
 
   @override
   @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_Initial<T> value)? $default, {
     TResult? Function(_ApiResponseLoading<T> value)? loading,
     TResult? Function(_ApiResponseError<T> value)? error,
     TResult? Function(_ApiResponseSuccess<T> value)? success,
@@ -449,7 +620,8 @@ class _$_ApiResponseSuccess<T> implements _ApiResponseSuccess<T> {
 
   @override
   @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_Initial<T> value)? $default, {
     TResult Function(_ApiResponseLoading<T> value)? loading,
     TResult Function(_ApiResponseError<T> value)? error,
     TResult Function(_ApiResponseSuccess<T> value)? success,
