@@ -7,6 +7,8 @@ import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/login/login_provider.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
+import 'data/login_request.dart';
+
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -156,18 +158,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     child: ElevatedButton(
                       onPressed: () {
                         // Handle login button press
-                        if (_formKey.currentState!.validate()) {
-                          // For example, you can show a success message
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Form is valid!')),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content:
-                                    Text('Please fix the errors in the form.')),
-                          );
+                        if (!_formKey.currentState!.validate()) {
+                          context.showSnackBar(
+                              message: 'Please fix the errors in the form.');
                         }
+
+                        final loginData = LoginRequest(
+                          email: emailController.text.toString(),
+                          password: passwordController.text.toString(),
+                        );
+
+                        ref
+                            .read(loginRepositoryProvider.notifier)
+                            .loginWithEmailAndPassword(credentials: loginData);
                       },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF0CA9E6),

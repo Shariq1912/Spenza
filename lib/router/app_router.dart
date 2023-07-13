@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/ui/favourite_stores/favourite_store_screen.dart';
 import 'package:spenza/ui/location/location_screen.dart';
 import 'package:spenza/ui/login/login_screen.dart';
@@ -33,7 +34,6 @@ class RouteManager {
           // return const LoginScreen();
         },
       ),
-
       GoRoute(
         name: registerScreen,
         path: registerScreen,
@@ -41,7 +41,6 @@ class RouteManager {
           return const SignUpScreen();
         },
       ),
-
       GoRoute(
         name: loginScreen,
         path: loginScreen,
@@ -49,7 +48,6 @@ class RouteManager {
           return const LoginScreen();
         },
       ),
-
       GoRoute(
         name: locationScreen,
         path: locationScreen,
@@ -57,7 +55,6 @@ class RouteManager {
           return const LocationScreen();
         },
       ),
-
       GoRoute(
         name: favouriteScreen,
         path: favouriteScreen,
@@ -65,10 +62,12 @@ class RouteManager {
           return const FavouriteStoreScreen();
         },
       ),
-
     ],
     redirect: (context, state) async {
-      return null;
+      final prefs = await SharedPreferences.getInstance();
+      bool isLoggedIn = prefs.getBool('is_login') ?? false;
+
+      return isLoggedIn ? favouriteScreen : null;
     },
   );
 }
