@@ -1,15 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geoflutterfire2/geoflutterfire2.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/network/api_responses.dart';
-import 'package:spenza/ui/login/data/login_request.dart';
-import 'package:spenza/ui/login/data/user.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:spenza/ui/login/data/user.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
+
+import 'data/favourite_stores.dart';
 
 class FavoriteRepository extends StateNotifier<ApiResponse> {
   FavoriteRepository() : super(const ApiResponse());
@@ -61,4 +57,25 @@ class FavoriteRepository extends StateNotifier<ApiResponse> {
     return [];
     // return nearbyStores;
   }
+
+
+  Future<List<Stores>?> fetchProductsByZipCode(String userZipCode) async {
+    final QuerySnapshot<Map<String, dynamic>> snapshot =
+    await FirebaseFirestore.instance
+        .collection('stores')
+        .where('zipCodesList', arrayContains: userZipCode)
+        .get();
+
+    final List<Stores> stores = snapshot.docs.map((doc) {
+      final data = doc.data();
+      final store = Stores.fromJson(data);
+      print(store.name); // Print store name
+      return store;
+    }).toList();
+
+    return stores;
+  }
+
 }
+
+
