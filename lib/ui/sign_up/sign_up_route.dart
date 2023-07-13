@@ -1,8 +1,14 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:spenza/router/app_router.dart';
+import 'package:spenza/ui/sign_up/register_provider.dart';
+
+import '../login/data/login_request.dart';
+import '../login/login_provider.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -13,14 +19,14 @@ class SignUpScreen extends StatelessWidget {
   }
 }
 
-class SignUpRoute extends StatefulWidget {
+class SignUpRoute extends ConsumerStatefulWidget {
   const SignUpRoute({Key? key}) : super(key: key);
 
   @override
-  State<SignUpRoute> createState() => _SignUpRouteState();
+  ConsumerState<SignUpRoute> createState() => _SignUpRouteState();
 }
 
-class _SignUpRouteState extends State<SignUpRoute> {
+class _SignUpRouteState extends ConsumerState<SignUpRoute> {
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
   var confirmPasswordController = TextEditingController();
@@ -36,13 +42,13 @@ class _SignUpRouteState extends State<SignUpRoute> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final responseValue = ref.watch(registerRepositoryProvider);
 
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
             onPressed: () {
-              context.goNamed("splash");
+              context.goNamed(RouteManager.splashScreen);
             },
             icon: const Icon(Icons.chevron_left_outlined)),
       ),
@@ -78,6 +84,13 @@ class _SignUpRouteState extends State<SignUpRoute> {
                   ),
                   child: Column(
                     children: [
+                      responseValue.maybeWhen(
+                        () => Container(),
+                        loading: () => const CircularProgressIndicator(),
+                        success: (data) => Text(data.toString()),
+                        error: (message) => Text(message.toString()),
+                        orElse: () => Container(),
+                      ),
                       TextField(
                         decoration: InputDecoration(
                           hintText: 'Enter Email',
@@ -90,6 +103,7 @@ class _SignUpRouteState extends State<SignUpRoute> {
                           filled: true,
                           fillColor: Colors.white,
                         ),
+                        controller: emailController,
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
@@ -156,7 +170,7 @@ class _SignUpRouteState extends State<SignUpRoute> {
                 ),
                 const SizedBox(height: 20),
                 Padding(
-                  padding: const EdgeInsets.all( 8),
+                  padding: const EdgeInsets.all(8),
                   child: Text.rich(
                     TextSpan(
                       text: "By Using this application, you agree to our ",
@@ -164,25 +178,21 @@ class _SignUpRouteState extends State<SignUpRoute> {
                         TextSpan(
                             recognizer: TapGestureRecognizer()
                               ..onTap =
-                                  () =>/* context.goNamed("register"),*/{},
+                                  () => /* context.goNamed("register"),*/ {},
                             text: 'Terms of Service',
-                            style:  TextStyle(
+                            style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontFamily: poppinsFont
-                            )),
+                                fontFamily: poppinsFont)),
 
-                        const TextSpan(
-                          text: " and "
-                        ),
+                        const TextSpan(text: " and "),
                         TextSpan(
                             recognizer: TapGestureRecognizer()
                               ..onTap =
-                                  () =>/* context.goNamed("register"),*/{},
+                                  () => /* context.goNamed("register"),*/ {},
                             text: 'Privacy Policy',
-                            style:  TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontFamily: poppinsFont
-                            )),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontFamily: poppinsFont)),
 
                         // can add more TextSpans here...
                       ],
@@ -210,6 +220,15 @@ class _SignUpRouteState extends State<SignUpRoute> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Form is valid!')),
                         );
+                        final signUpData = LoginRequest(
+                          email: emailController.text.toString(),
+                          password: passwordController.text.toString(),
+                        );
+                        print("signUPDATA :$signUpData");
+                        ref
+                            .read(registerRepositoryProvider.notifier)
+                            .registerWithEmailAndPassword(
+                                credentials: signUpData);
                       } else {
                         // Form is invalid, display error message
 
@@ -237,8 +256,9 @@ class _SignUpRouteState extends State<SignUpRoute> {
                     child: const Text('Create Account'),
                   ),
                 ),
-
-                const SizedBox(height: 25,),
+                const SizedBox(
+                  height: 25,
+                ),
                 Row(children: <Widget>[
                   Expanded(
                     child: Container(
@@ -258,13 +278,12 @@ class _SignUpRouteState extends State<SignUpRoute> {
                         )),
                   ),
                 ]),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Center(
                       child: Padding(
-                          padding: const EdgeInsets.all( 16),
+                          padding: const EdgeInsets.all(16),
                           child: InkWell(
                             onTap: () {
                               //_authenticateWithFacebook(context);
@@ -273,10 +292,8 @@ class _SignUpRouteState extends State<SignUpRoute> {
                               "assets/images/google.png",
                               height: 40,
                             ),
-                          )
-                      ),
+                          )),
                     ),
-
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: InkWell(

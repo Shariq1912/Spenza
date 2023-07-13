@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/network/api_responses.dart';
 import 'package:spenza/ui/login/data/login_request.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:spenza/ui/login/data/user.dart';
 
 class LoginRepository extends StateNotifier<ApiResponse> {
   LoginRepository() : super(const ApiResponse());
@@ -26,41 +27,12 @@ class LoginRepository extends StateNotifier<ApiResponse> {
       );
       state = ApiResponse.success(data: userCredential.user);
       await _storeData(userCredential);
-
-
     } catch (error) {
       state = ApiResponse.error(errorMsg: '$error');
     }
   }
 
 
-
-  Future<void> registerWithEmailAndPassword(
-      {required LoginRequest credentials}) async {
-    try {
-      state = ApiResponse.loading();
-      final userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: credentials.email,
-        password: credentials.password,
-      );
-      state = ApiResponse.success(data: userCredential.user);
-      await _storeData(userCredential);
-
-      // insert the same in firestore db
-      final user = User(
-        uid: userCredential.user!.uid,
-        email: credentials.email,
-      );
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).set(user.toJson());
-
-
-
-
-    } catch (error) {
-      state = ApiResponse.error(errorMsg: '$error');
-    }
-  }
 
   Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
