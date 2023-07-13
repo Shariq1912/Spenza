@@ -22,7 +22,7 @@ class RegisterRepository extends StateNotifier<ApiResponse>{
       state = ApiResponse.loading();
       final alreadyUser = await FirebaseAuth.instance.fetchSignInMethodsForEmail(credentials.email);
       if (alreadyUser.isNotEmpty) {
-        state = ApiResponse.error(errorMsg: "user is already registered");
+        state = ApiResponse.error(errorMsg: "User is already registered");
         return;
       }
       final userCredential =

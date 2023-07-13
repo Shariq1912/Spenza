@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 extension ImageExtension on String {
   String get assetImageUrl {
@@ -13,5 +14,15 @@ extension SnackbarExtension on BuildContext {
         content: Text(message),
       ),
     );
+  }
+}
+
+extension SharedPreferencesExtension on SharedPreferences {
+  String getUserId() {
+    return getString('uid')!;
+  }
+
+  bool isUserLoggedIn() {
+    return getBool('is_login') ?? false;
   }
 }

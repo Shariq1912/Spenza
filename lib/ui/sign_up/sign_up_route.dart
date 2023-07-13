@@ -6,27 +6,18 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/sign_up/register_provider.dart';
+import 'package:spenza/utils/spenza_extensions.dart';
 
 import '../login/data/login_request.dart';
-import '../login/login_provider.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return const SignUpRoute();
-  }
+  ConsumerState<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class SignUpRoute extends ConsumerStatefulWidget {
-  const SignUpRoute({Key? key}) : super(key: key);
-
-  @override
-  ConsumerState<SignUpRoute> createState() => _SignUpRouteState();
-}
-
-class _SignUpRouteState extends ConsumerState<SignUpRoute> {
+class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
   var confirmPasswordController = TextEditingController();
@@ -84,12 +75,17 @@ class _SignUpRouteState extends ConsumerState<SignUpRoute> {
                   ),
                   child: Column(
                     children: [
-                      responseValue.maybeWhen(
+                      responseValue.when(
                         () => Container(),
                         loading: () => const CircularProgressIndicator(),
-                        success: (data) => Text(data.toString()),
-                        error: (message) => Text(message.toString()),
-                        orElse: () => Container(),
+                        success: (data) {
+                          debugPrint(data.toString());
+                          return Container();
+                        },
+                        error: (message) {
+                          debugPrint(message.toString());
+                          return Container();
+                        },
                       ),
                       TextField(
                         decoration: InputDecoration(
@@ -216,28 +212,21 @@ class _SignUpRouteState extends ConsumerState<SignUpRoute> {
                           );
                           return;
                         }
-                        // For example, you can show a success message
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Form is valid!')),
-                        );
+
                         final signUpData = LoginRequest(
                           email: emailController.text.toString(),
                           password: passwordController.text.toString(),
                         );
-                        print("signUPDATA :$signUpData");
+                        debugPrint("signUPDATA :$signUpData");
                         ref
                             .read(registerRepositoryProvider.notifier)
                             .registerWithEmailAndPassword(
-                                credentials: signUpData);
+                              credentials: signUpData,
+                            );
                       } else {
                         // Form is invalid, display error message
-
-                        // For example, you can show an error message
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content:
-                                  Text('Please fix the errors in the form.')),
-                        );
+                        context.showSnackBar(
+                            message: 'Please fix the errors in the form.');
                       }
                     },
                     style: ElevatedButton.styleFrom(

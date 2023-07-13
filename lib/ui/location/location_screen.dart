@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:spenza/ui/location/location_provider.dart';
 import 'package:spenza/ui/location/widget/location_widget.dart';
+import 'package:spenza/utils/spenza_extensions.dart';
 
 import 'lat_lng_provider.dart';
 
@@ -45,7 +46,8 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
               children: [
                 const SizedBox(height: 32),
                 location.when(
-                  data: (position) => LocationWidget.buildLocationText(position),
+                  data: (position) =>
+                      LocationWidget.buildLocationText(position),
                   loading: () => CircularProgressIndicator(),
                   error: (error, stackTrace) {
                     if (error is Exception &&
@@ -100,32 +102,9 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                                       .then((LatLng? latLng) {
                                     if (latLng != null) {
                                       zipCodeController.clear();
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Text('Location Details'),
-                                            content: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Text(
-                                                    'Latitude: ${latLng.latitude}'),
-                                                Text(
-                                                    'Longitude: ${latLng.longitude}'),
-                                              ],
-                                            ),
-                                            actions: [
-                                              TextButton(
-                                                child: Text('Close'),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                              ),
-                                            ],
-                                          );
-                                        },
+                                      context.showSnackBar(
+                                        message:
+                                            "Latitude: ${latLng.latitude} and Longitude: ${latLng.longitude}",
                                       );
                                     } else {
                                       showDialog(

@@ -98,9 +98,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         responseValue.when(
                           () => Container(),
                           loading: () => const CircularProgressIndicator(),
-                          success: (data) => Text(data.toString()),
+                          success: (data) {
+                            debugPrint("$data");
+                            context.goNamed(RouteManager.locationScreen);
+                            return Container();
+                          },
                           //error: (message) => Text(message.toString()),
-                          error: (message) => Text(message.toString()),
+                          error: (message) {
+                            debugPrint("$message");
+                            return Container();
+
+                          },
                         ),
                         TextFormField(
                           decoration: InputDecoration(
@@ -237,10 +245,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         child: InkWell(
                           onTap: () {
                             //_authenticateWithGoogle(context);
-                            context.goNamed(RouteManager.locationScreen);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text("clicked on facebook")),
+                            context.goNamed(RouteManager.favouriteScreen);
+                            context.showSnackBar(
+                              message: "clicked on facebook",
                             );
                           },
                           child: Image.asset(

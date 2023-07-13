@@ -6,6 +6,7 @@ import 'package:spenza/ui/location/location_screen.dart';
 import 'package:spenza/ui/login/login_screen.dart';
 import 'package:spenza/ui/sign_up/sign_up_route.dart';
 import 'package:spenza/ui/splash/splash_route.dart';
+import 'package:spenza/utils/spenza_extensions.dart';
 
 final GlobalKey<NavigatorState> _rootNavigator = GlobalKey(debugLabel: 'root');
 
@@ -65,9 +66,8 @@ class RouteManager {
     ],
     redirect: (context, state) async {
       final prefs = await SharedPreferences.getInstance();
-      bool isLoggedIn = prefs.getBool('is_login') ?? false;
 
-      return isLoggedIn ? favouriteScreen : null;
+      return prefs.isUserLoggedIn() ? favouriteScreen : null;
     },
   );
 }

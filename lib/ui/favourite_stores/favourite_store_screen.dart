@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:spenza/ui/favourite_stores/favorite_provider.dart';
 
 class FavouriteStoreScreen extends ConsumerStatefulWidget {
   const FavouriteStoreScreen({Key? key}) : super(key: key);
@@ -15,7 +16,18 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
   final myProducts = List<String>.generate(1000, (i) => 'Product $i');
 
   @override
+  void initState() {
+    super.initState();
+
+    ref.read(favoriteProvider.notifier).fetchNearbyStores();
+  }
+
+  @override
   Widget build(BuildContext context) {
+
+    final provider = ref.watch(favoriteProvider);
+
+
     return Scaffold(
       appBar: AppBar(
         title: Text(

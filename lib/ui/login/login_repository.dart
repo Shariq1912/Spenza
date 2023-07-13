@@ -4,8 +4,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/network/api_responses.dart';
 import 'package:spenza/ui/login/data/login_request.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:spenza/ui/login/data/user.dart';
 
 class LoginRepository extends StateNotifier<ApiResponse> {
   LoginRepository() : super(const ApiResponse());

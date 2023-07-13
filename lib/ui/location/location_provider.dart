@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spenza/utils/spenza_extensions.dart';
 
 final positionProvider = FutureProvider.autoDispose<Position?>((ref) async {
   bool serviceEnabled;
@@ -22,10 +25,17 @@ final positionProvider = FutureProvider.autoDispose<Position?>((ref) async {
     return throw Exception("Location service is deniedForever");
   }
 
-  const LocationSettings locationSettings =
-      LocationSettings(accuracy: LocationAccuracy.high, distanceFilter: 100);
   Position initialPosition = await Geolocator.getCurrentPosition(
     desiredAccuracy: LocationAccuracy.high,
   );
+
+  final pref = await SharedPreferences.getInstance();
+  await FirebaseFirestore.instance.collection('users').doc(pref.getUserId()).set(
+    {
+      'location': GeoPoint(initialPosition.latitude, initialPosition.longitude),
+    },
+    SetOptions(merge: true),
+  );
+
   return initialPosition;
 });
