@@ -25,70 +25,7 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
     ref.read(favoriteProvider.notifier).fetchNearbyStores();
   }
 
-/*
-  @override
-  Widget build(BuildContext context) {
-    final provider = ref.watch(favoriteProvider.notifier).fetchProductsByZipCode("44670");
-    return FutureBuilder<List<Stores>?>(
-      future: provider,
-      builder: (context, snapshot) {
-        final List<Stores>? stores = snapshot.data;
 
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(
-              "Select Favourite stores",
-              style: TextStyle(
-                fontFamily: poppinsFont,
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-                color: Color(0xFF0CA9E6),
-              ),
-            ),
-            automaticallyImplyLeading: false,
-            elevation: 5,
-            surfaceTintColor: Colors.white,
-            shadowColor: Colors.grey,
-            actions: [
-              IconButton(
-                onPressed: () {
-                  showSearch(context: context, delegate: CustomSearchDelegate());
-                },
-                icon: const Icon(Icons.search),
-              )
-            ],
-          ),
-          body: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Container(
-              child: ListView.builder(
-                itemCount: stores?.length ?? 0,
-                itemBuilder: (context, index) {
-                  final store = stores![index];
-
-                  return Card(
-                    color: Colors.white,
-                    margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                    child: ListTile(
-                      leading: FlutterLogo(size: 60.0),
-                      title: Text(store.name),
-                      subtitle: Text('Here is a second line'),
-                      trailing: IconButton(
-                        onPressed: () async {
-                          Icon(Icons.favorite);
-                        },
-                        icon: Icon(Icons.favorite_border_outlined),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }*/
   @override
   Widget build(BuildContext context) {
     final provider = ref.watch(favoriteProvider.notifier);
