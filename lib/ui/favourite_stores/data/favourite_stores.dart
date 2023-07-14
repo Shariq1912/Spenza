@@ -12,6 +12,7 @@ class Stores with _$Stores {
     required String name,
     required String adress,
     required List<String> zipCodesList,
+    @Default(false) bool isFavorite,
   }) = _Stores;
 
   factory Stores.fromJson(Map<String, dynamic> json) => _$StoresFromJson(json);
