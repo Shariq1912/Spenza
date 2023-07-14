@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -12,6 +13,7 @@ class Stores with _$Stores {
     required String name,
     required String adress,
     required List<String> zipCodesList,
+    required String logo,
     @Default(false) bool isFavorite,
   }) = _Stores;
 

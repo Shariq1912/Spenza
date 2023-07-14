@@ -60,7 +60,7 @@ class RouteManager {
         name: favouriteScreen,
         path: favouriteScreen,
         builder: (context, state) {
-          return const FavouriteStoreScreen();
+          return const FavouriteStoreScreen(null);
         },
       ),
     ],

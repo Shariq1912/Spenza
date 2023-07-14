@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:spenza/ui/favourite_stores/favourite_store_screen.dart';
 import 'package:spenza/ui/location/location_provider.dart';
 import 'package:spenza/ui/location/widget/location_widget.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
@@ -34,7 +35,6 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
   @override
   Widget build(BuildContext context) {
     final location = ref.watch(positionProvider);
-    final locationLatLng = ref.watch(locationProvider(zipCodeController.text));
 
     return Scaffold(
       appBar: AppBar(title: const Text("Location")),
@@ -46,8 +46,9 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
               children: [
                 const SizedBox(height: 32),
                 location.when(
-                  data: (position) =>
-                      LocationWidget.buildLocationText(position),
+                  data: (position) {
+                    return LocationWidget.buildLocationText(position);
+                  },
                   loading: () => CircularProgressIndicator(),
                   error: (error, stackTrace) {
                     if (error is Exception &&
@@ -95,11 +96,20 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                             ElevatedButton(
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
+
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          FavouriteStoreScreen(
+                                              zipCodeController.text),
+                                    ),
+                                  );
                                   ref
                                       .read(locationProvider(
                                               zipCodeController.text)
                                           .future)
-                                      .then((LatLng? latLng) {
+                                      .then((Position? latLng) {
                                     if (latLng != null) {
                                       zipCodeController.clear();
                                       context.showSnackBar(

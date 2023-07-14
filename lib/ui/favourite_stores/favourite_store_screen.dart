@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/ui/favourite_stores/favorite_provider.dart';
+import 'package:spenza/ui/location/lat_lng_provider.dart';
+import 'package:spenza/ui/location/location_provider.dart';
 
 import 'data/favourite_stores.dart';
-import 'favorite_repository.dart';
 
 class FavouriteStoreScreen extends ConsumerStatefulWidget {
-  const FavouriteStoreScreen({Key? key}) : super(key: key);
+  const FavouriteStoreScreen(this.title, {Key? key}) : super(key: key);
+  final String? title;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -21,14 +23,23 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
   @override
   void initState() {
     super.initState();
-
-    // ref.read(favoriteProvider.notifier).fetchNearbyStores();
-    ref.read(favoriteProvider.notifier).fetchProductsByZipCode("44670");
   }
 
   @override
   Widget build(BuildContext context) {
+
+
     final provider = ref.watch(favoriteProvider);
+    ref.watch(positionProvider).when(
+          data: (data) => ref.read(favoriteProvider.notifier).getStores(data!),
+          error: (error, stackTrace) {},
+          loading: () {},
+        );
+    ref.watch(locationProvider(widget.title)).when(
+          data: (data) => ref.read(favoriteProvider.notifier).getStores(data!),
+          error: (error, stackTrace) {},
+          loading: () {},
+        );
 
     return Scaffold(
       appBar: AppBar(
@@ -66,10 +77,14 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
 
                 return Card(
                   color: Colors.white,
+                  surfaceTintColor: Colors.white,
                   margin:
                       const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                   child: ListTile(
-                    leading: FlutterLogo(size: 60.0),
+                    leading: Image.network(
+                      store.logo,
+                      fit: BoxFit.cover,
+                    ),
                     title: Text(store.name),
                     subtitle: Text(store.adress),
                     trailing: IconButton(

@@ -37,5 +37,21 @@ final positionProvider = FutureProvider.autoDispose<Position?>((ref) async {
     SetOptions(merge: true),
   );
 
-  return initialPosition;
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setDouble("latitude", initialPosition.latitude);
+  await prefs.setDouble("longitude", initialPosition.longitude);
+
+  final initialPositions = Position(
+    latitude: 20.61494342,
+    longitude: -103.396112,
+    timestamp: DateTime.now(),
+    accuracy: 0,
+    altitude: 0,
+    heading: 0,
+    speed: 0,
+    speedAccuracy: 0,
+  );
+
+  return initialPositions;
 });
+
