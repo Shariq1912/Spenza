@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/login/login_provider.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'data/login_request.dart';
 
@@ -26,6 +27,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   bool _obscurePassword = true;
 
+  /*late final MultiValidator passwordValidator;
+  late final MultiValidator emailValidator;*/
+
   final passwordValidator = MultiValidator([
     RequiredValidator(errorText: 'Password is required'),
   ]);
@@ -34,6 +38,27 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     RequiredValidator(errorText: 'Email is required'),
     EmailValidator(errorText: 'Please use valid Email ID'),
   ]);
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    /*passwordValidator = MultiValidator([
+      RequiredValidator(
+        errorText: AppLocalizations.of(context)!.passwordRequiredError,
+      ),
+    ]);
+
+    emailValidator = MultiValidator([
+      RequiredValidator(
+        errorText: AppLocalizations.of(context)!.emailRequiredError,
+      ),
+      EmailValidator(
+        errorText: AppLocalizations.of(context)!.emailInvalidError,
+      ),
+    ]);*/
+  }
 
   @override
   void dispose() {
@@ -66,16 +91,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 child: Column(
                   children: [
                     Text(
-                      "Login",
+                      AppLocalizations.of(context)!.loginTitle,
                       style: TextStyle(
-                          fontFamily: poppinsFont,
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xFF0CA9E6)),
+                        fontFamily: poppinsFont,
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF0CA9E6),
+                      ),
                     ),
                     const SizedBox(height: 15),
                     Text(
-                      "Access your account by logging in below.",
+                      AppLocalizations.of(context)!.loginSubtitle,
                       style: TextStyle(
                         fontFamily: poppinsFont,
                       ),
@@ -85,14 +111,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.3), // Shadow color
-                            spreadRadius: 2, // Spread radius
-                            blurRadius: 5, // Blur radius
-                            offset: const Offset(
-                                0, 2), // Offset in the vertical direction
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: const Offset(0, 2),
                           ),
                         ],
-                        borderRadius: BorderRadius.circular(12), // Border radius
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       child: Column(
                         children: [
@@ -104,21 +129,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               context.goNamed(RouteManager.locationScreen);
                               return Container();
                             },
-                            //error: (message) => Text(message.toString()),
                             error: (message) {
                               debugPrint("$message");
                               return Container();
-
                             },
                           ),
                           TextFormField(
                             decoration: InputDecoration(
-                              hintText: 'Enter Email',
+                              hintText:
+                                  AppLocalizations.of(context)!.enterEmailHint,
                               contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 16, vertical: 12),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide.none, // No border line
+                                borderSide: BorderSide.none,
                               ),
                               filled: true,
                               fillColor: Colors.white,
@@ -129,11 +153,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           const SizedBox(height: 8),
                           TextFormField(
                             decoration: InputDecoration(
-                              hintText: 'Password',
+                              hintText:
+                                  AppLocalizations.of(context)!.passwordHint,
                               contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 12,
-                              ),
+                                  horizontal: 16, vertical: 12),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide.none,
@@ -169,7 +192,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           // Handle login button press
                           if (!_formKey.currentState!.validate()) {
                             context.showSnackBar(
-                                message: 'Please fix the errors in the form.');
+                              message:
+                                  AppLocalizations.of(context)!.loginFormErrors,
+                            );
                           }
 
                           final loginData = LoginRequest(
@@ -179,73 +204,78 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                           ref
                               .read(loginRepositoryProvider.notifier)
-                              .loginWithEmailAndPassword(credentials: loginData);
+                              .loginWithEmailAndPassword(
+                                  credentials: loginData);
                         },
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF0CA9E6),
-                            // Background color
-                            foregroundColor: Colors.white,
-                            // Text color
-                            textStyle: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: poppinsFont),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                side: const BorderSide(color: Color(0xFF99D6EF))),
-                            fixedSize: const Size(310, 40)),
-                        child: const Text('Login'),
+                          backgroundColor: const Color(0xFF0CA9E6),
+                          foregroundColor: Colors.white,
+                          textStyle: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: poppinsFont,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                            side: const BorderSide(color: Color(0xFF99D6EF)),
+                          ),
+                          fixedSize: const Size(310, 40),
+                        ),
+                        child: Text(AppLocalizations.of(context)!.loginButton),
                       ),
                     ),
-                    const SizedBox(
-                      height: 25,
-                    ),
-                    Row(children: <Widget>[
-                      Expanded(
-                        child: Container(
-                            margin: const EdgeInsets.only(left: 35.0, right: 5.0),
+                    const SizedBox(height: 25),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            margin:
+                                const EdgeInsets.only(left: 35.0, right: 5.0),
                             child: const Divider(
                               color: Colors.black,
                               height: 30,
-                            )),
-                      ),
-                      const Text("or login with"),
-                      Expanded(
-                        child: Container(
-                            margin: const EdgeInsets.only(left: 5.0, right: 35.0),
+                            ),
+                          ),
+                        ),
+                        Text(AppLocalizations.of(context)!.orLoginWith),
+                        Expanded(
+                          child: Container(
+                            margin:
+                                const EdgeInsets.only(left: 5.0, right: 35.0),
                             child: const Divider(
                               color: Colors.black,
                               height: 30,
-                            )),
-                      ),
-                    ]),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Center(
                           child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: InkWell(
-                                onTap: () {
-                                  // _authenticateWithGoogle(context);
-
-                                  context.showSnackBar(
-                                      message: 'clicked on google');
-                                  ref
-                                      .read(loginRepositoryProvider.notifier)
-                                      .signInWithGoogle();
-                                },
-                                child: Image.asset(
-                                  "google.png".assetImageUrl,
-                                  height: 40,
-                                ),
-                              )),
+                            padding: const EdgeInsets.all(16),
+                            child: InkWell(
+                              onTap: () {
+                                context.showSnackBar(
+                                  message: 'clicked on google',
+                                );
+                                ref
+                                    .read(loginRepositoryProvider.notifier)
+                                    .signInWithGoogle();
+                              },
+                              child: Image.asset(
+                                "google.png".assetImageUrl,
+                                height: 40,
+                              ),
+                            ),
+                          ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: InkWell(
                             onTap: () {
-                              //_authenticateWithGoogle(context);
                               context.goNamed(RouteManager.favouriteScreen);
                               context.showSnackBar(
                                 message: "clicked on facebook",

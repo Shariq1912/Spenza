@@ -1,13 +1,74 @@
 {
-
   "appTitle": "Spenza",
   "@appTitle": {
     "description": "Flutter version of Spenza app"
-  }
-  ,
-  "settingsAlertMsg":"You need to turn on automatic date and time in order to proceed",
-  "goToSettings":"Go to Settings",
-  "cancel":"Cancel",
-  "verifyMobile":"Verify Mobile"
+  },
+  "welcome": "Welcome to",
+  "find_stores": "Find stores",
+  "find_stores_description": "Find your favorite stores and supermarkets, and discover new ones near you",
+  "make_shopping_list": "Make your shopping list",
+  "make_shopping_list_description": "Make your own shopping list or select a pre-charged list that spenza has for you",
+  "compare_prices": "Compare prices",
+  "compare_prices_description": "Compare the price of your entire shopping list and find the best bargain",
+  "shop_in_store_or_online": "Shop in store or online",
+  "shop_in_store_or_online_description": "Select the best option for you and cut your grocery bill up to 30% every week",
+  "sign_up": "Sign Up",
+  "login": "Login",
+  "loginTitle": "Login",
+  "@loginTitle": {
+    "description": "Title for the login screen"
+  },
+  "loginSubtitle": "Access your account by logging in below.",
+  "@loginSubtitle": {
+    "description": "Subtitle for the login screen"
+  },
+  "enterEmailHint": "Enter Email",
+  "@enterEmailHint": {
+    "description": "Hint text for the email input field"
+  },
+  "passwordHint": "Password",
+  "@passwordHint": {
+    "description": "Hint text for the password input field"
+  },
+  "loginButton": "Login",
+  "@loginButton": {
+    "description": "Label for the login button"
+  },
+  "loginFormErrors": "Please fix the errors in the form.",
+  "@loginFormErrors": {
+    "description": "Error message for invalid form submission"
+  },
+  "orLoginWith": "or login with",
+  "@orLoginWith": {
+    "description": "Label for alternative login methods"
+  },
+  "googleLogin": "Google",
+  "@googleLogin": {
+    "description": "Label for Google login option"
+  },
+  "passwordLengthError": "Password must be at least 8 characters long",
+  "@passwordLengthError": {
+    "description": "Error message for minimum password length requirement"
+  },
+  "facebookLogin": "Facebook",
+  "@facebookLogin": {
+    "description": "Label for Facebook login option"
+  },
+  "passwordRequiredError": "Password is required",
+  "@passwordRequiredError": {
+    "description": "Error message for required password"
+  },
+  "emailRequiredError": "Email is required",
+  "@emailRequiredError": {
+    "description": "Error message for required email"
+  },
+  "emailInvalidError": "Please use a valid Email ID",
+  "@emailInvalidError": {
+    "description": "Error message for invalid email"
+  },
+  "terms_of_service_intro": "By Using this application, you agree to our",
+  "terms_of_service": "Terms of Service",
+  "privacy_policy": "Privacy Policy",
+  "create_account": "Create Account"
 
 }

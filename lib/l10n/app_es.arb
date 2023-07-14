@@ -1,0 +1,73 @@
+{
+  "appTitle": "Spenza",
+  "@appTitle": {
+    "description": "Versión Flutter de la aplicación Spenza"
+  },
+  "welcome": "Bienvenido a",
+  "find_stores": "Buscar tiendas",
+  "find_stores_description": "Encuentra tus tiendas y supermercados favoritos, y descubre nuevos cerca de ti",
+  "make_shopping_list": "Crear lista de compras",
+  "make_shopping_list_description": "Crea tu propia lista de compras o selecciona una lista predefinida que Spenza tiene para ti",
+  "compare_prices": "Comparar precios",
+  "compare_prices_description": "Compara el precio de toda tu lista de compras y encuentra la mejor oferta",
+  "shop_in_store_or_online": "Comprar en tienda o en línea",
+  "shop_in_store_or_online_description": "Selecciona la mejor opción para ti y ahorra hasta un 30% en tu factura de comestibles cada semana",
+  "sign_up": "Registrarse",
+  "login": "Iniciar sesión",
+  "loginTitle": "Iniciar sesión",
+  "@loginTitle": {
+    "description": "Título para la pantalla de inicio de sesión"
+  },
+  "loginSubtitle": "Accede a tu cuenta iniciando sesión a continuación.",
+  "@loginSubtitle": {
+    "description": "Subtítulo para la pantalla de inicio de sesión"
+  },
+  "enterEmailHint": "Ingrese su correo electrónico",
+  "@enterEmailHint": {
+    "description": "Texto de sugerencia para el campo de entrada de correo electrónico"
+  },
+  "passwordHint": "Contraseña",
+  "@passwordHint": {
+    "description": "Texto de sugerencia para el campo de entrada de contraseña"
+  },
+  "loginButton": "Iniciar sesión",
+  "@loginButton": {
+    "description": "Etiqueta para el botón de inicio de sesión"
+  },
+  "loginFormErrors": "Por favor, corrige los errores en el formulario.",
+  "@loginFormErrors": {
+    "description": "Mensaje de error para el envío de formulario inválido"
+  },
+  "orLoginWith": "o inicia sesión con",
+  "@orLoginWith": {
+    "description": "Etiqueta para métodos de inicio de sesión alternativos"
+  },
+  "googleLogin": "Google",
+  "@googleLogin": {
+    "description": "Etiqueta para la opción de inicio de sesión con Google"
+  },
+  "passwordLengthError": "La contraseña debe tener al menos 8 caracteres",
+  "@passwordLengthError": {
+    "description": "Mensaje de error para el requisito mínimo de longitud de contraseña"
+  },
+  "facebookLogin": "Facebook",
+  "@facebookLogin": {
+    "description": "Etiqueta para la opción de inicio de sesión con Facebook"
+  },
+  "passwordRequiredError": "Se requiere contraseña",
+  "@passwordRequiredError": {
+    "description": "Mensaje de error para contraseña requerida"
+  },
+  "emailRequiredError": "Se requiere correo electrónico",
+  "@emailRequiredError": {
+    "description": "Mensaje de error para correo electrónico requerido"
+  },
+  "emailInvalidError": "Por favor, utiliza un correo electrónico válido",
+  "@emailInvalidError": {
+    "description": "Mensaje de error para correo electrónico inválido"
+  },
+  "terms_of_service_intro": "Al utilizar esta aplicación, aceptas nuestros",
+  "terms_of_service": "Términos del servicio",
+  "privacy_policy": "Política de privacidad",
+  "create_account": "Crear cuenta"
+}

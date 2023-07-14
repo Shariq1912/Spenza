@@ -2,15 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/router/app_router.dart';
-
-class SplashRoute extends StatelessWidget {
-  const SplashRoute({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SplashScreen();
-  }
-}
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -43,12 +35,13 @@ class _SplashScreenState extends State<SplashScreen> {
                           padding: const EdgeInsets.fromLTRB(0, 100, 0, 0),
                           child: Center(
                             child: Text(
-                              "Welcome to",
+                              AppLocalizations.of(context)!.welcome,
                               style: TextStyle(
-                                  fontFamily: poppinsFont,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(0xFF7B868C)),
+                                fontFamily: poppinsFont,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF7B868C),
+                              ),
                             ),
                           ),
                         ),
@@ -59,64 +52,73 @@ class _SplashScreenState extends State<SplashScreen> {
                             fit: BoxFit.fitWidth,
                           ),
                         ),
-                        const SizedBox(
-                          height: 22,
-                        ),
-                        _buildText("Find stores",
-                            fontSize: 21, color: const Color(0xFF0CA9E6)),
+                        const SizedBox(height: 22),
                         _buildText(
-                            "Find your favorite stores and supermarkets, and discover new ones near you",
-                            fontSize: 12,
-                            color: const Color(0xFF7B868C)),
-                        const SizedBox(
-                          height: 12,
+                          AppLocalizations.of(context)!.find_stores,
+                          fontSize: 21,
+                          color: const Color(0xFF0CA9E6),
                         ),
-                        _buildText("Make your shopping list",
-                            fontSize: 21, color: const Color(0xFF0CA9E6)),
                         _buildText(
-                            "Make your own shopping list or select a pre-charged list that spenza has for you",
-                            fontSize: 12,
-                            color: const Color(0xFF7B868C)),
-                        const SizedBox(
-                          height: 12,
+                          AppLocalizations.of(context)!.find_stores_description,
+                          fontSize: 12,
+                          color: const Color(0xFF7B868C),
                         ),
-                        _buildText("Compare prices",
-                            fontSize: 21, color: const Color(0xFF0CA9E6)),
+                        const SizedBox(height: 12),
                         _buildText(
-                            "Compare the price of your entire shopping list and find the best bargain",
-                            fontSize: 12,
-                            color: const Color(0xFF7B868C)),
-                        const SizedBox(
-                          height: 12,
+                          AppLocalizations.of(context)!.make_shopping_list,
+                          fontSize: 21,
+                          color: const Color(0xFF0CA9E6),
                         ),
-                        _buildText("Shop in store or online",
-                            fontSize: 21, color: const Color(0xFF0CA9E6)),
                         _buildText(
-                            "Select the best option for you and cut your grocery bill up to 30% every week",
-                            fontSize: 12,
-                            color: const Color(0xFF7B868C)),
-                        const SizedBox(
-                          height: 65,
+                          AppLocalizations.of(context)!
+                              .make_shopping_list_description,
+                          fontSize: 12,
+                          color: const Color(0xFF7B868C),
                         ),
+                        const SizedBox(height: 12),
+                        _buildText(
+                          AppLocalizations.of(context)!.compare_prices,
+                          fontSize: 21,
+                          color: const Color(0xFF0CA9E6),
+                        ),
+                        _buildText(
+                          AppLocalizations.of(context)!
+                              .compare_prices_description,
+                          fontSize: 12,
+                          color: const Color(0xFF7B868C),
+                        ),
+                        const SizedBox(height: 12),
+                        _buildText(
+                          AppLocalizations.of(context)!.shop_in_store_or_online,
+                          fontSize: 21,
+                          color: const Color(0xFF0CA9E6),
+                        ),
+                        _buildText(
+                          AppLocalizations.of(context)!
+                              .shop_in_store_or_online_description,
+                          fontSize: 12,
+                          color: const Color(0xFF7B868C),
+                        ),
+                        const SizedBox(height: 65),
                         Center(
                           child: ElevatedButton(
                             onPressed: () {
                               context.pushNamed(RouteManager.registerScreen);
                             },
                             style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF0CA9E6),
-                                // Background color
-                                foregroundColor: Colors.white,
-                                // Text color
-                                textStyle: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: poppinsFont),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                fixedSize: const Size(310, 40)),
-                            child: const Text('Sign Up'),
+                              backgroundColor: const Color(0xFF0CA9E6),
+                              foregroundColor: Colors.white,
+                              textStyle: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: poppinsFont,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              fixedSize: const Size(310, 40),
+                            ),
+                            child: Text(AppLocalizations.of(context)!.sign_up),
                           ),
                         ),
                         const SizedBox(height: 20),
@@ -126,20 +128,21 @@ class _SplashScreenState extends State<SplashScreen> {
                               context.pushNamed(RouteManager.loginScreen);
                             },
                             style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                // Background color
-                                foregroundColor: const Color(0xFF0CA9E6),
-                                // Text color
-                                textStyle: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: poppinsFont),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                    side: const BorderSide(
-                                        color: Color(0xFF99D6EF))),
-                                fixedSize: const Size(310, 40)),
-                            child: const Text('Login'),
+                              backgroundColor: Colors.white,
+                              foregroundColor: const Color(0xFF0CA9E6),
+                              textStyle: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: poppinsFont,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                                side:
+                                    const BorderSide(color: Color(0xFF99D6EF)),
+                              ),
+                              fixedSize: const Size(310, 40),
+                            ),
+                            child: Text(AppLocalizations.of(context)!.login),
                           ),
                         ),
                       ],

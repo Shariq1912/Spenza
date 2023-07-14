@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/ui/favourite_stores/favourite_store_screen.dart';
 import 'package:spenza/ui/location/location_screen.dart';
 import 'package:spenza/ui/login/login_screen.dart';
-import 'package:spenza/ui/sign_up/sign_up_route.dart';
+import 'package:spenza/ui/sign_up/sign_up_screen.dart';
 import 'package:spenza/ui/splash/splash_route.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
@@ -31,7 +31,7 @@ class RouteManager {
         name: splashScreen,
         path: splashScreen,
         builder: (context, state) {
-          return const SplashRoute();
+          return const SplashScreen();
           // return const LoginScreen();
         },
       ),

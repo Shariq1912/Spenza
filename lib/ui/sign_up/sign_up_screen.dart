@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/sign_up/register_provider.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../login/data/login_request.dart';
 
@@ -25,11 +26,43 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final poppinsFont = GoogleFonts.poppins().fontFamily;
   bool _obscurePassword = true;
+
+  /*late final MultiValidator passwordValidator;
+  late final MultiValidator emailValidator;*/
+
+
+  final emailValidator = MultiValidator([
+    RequiredValidator(errorText: 'Email is required'),
+    EmailValidator(errorText: 'Please use valid Email ID'),
+  ]);
+
   final passwordValidator = MultiValidator([
     RequiredValidator(errorText: 'Password is required'),
     MinLengthValidator(8,
         errorText: 'Password must be at least 8 characters long'),
   ]);
+
+  @override
+  void initState() {
+    super.initState();
+
+    /*passwordValidator = MultiValidator([
+      RequiredValidator(
+        errorText: AppLocalizations.of(context)!.passwordRequiredError,
+      ),
+      MinLengthValidator(8,
+          errorText: AppLocalizations.of(context)!.passwordLengthError),
+    ]);
+
+    emailValidator = MultiValidator([
+      RequiredValidator(
+        errorText: AppLocalizations.of(context)!.emailRequiredError,
+      ),
+      EmailValidator(
+        errorText: AppLocalizations.of(context)!.emailInvalidError,
+      ),
+    ]);*/
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,26 +85,26 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
             child: Column(
               children: [
                 Text(
-                  "Sign up",
+                  AppLocalizations.of(context)!.sign_up,
                   style: TextStyle(
-                      fontFamily: poppinsFont,
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF0CA9E6)),
+                    fontFamily: poppinsFont,
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF0CA9E6),
+                  ),
                 ),
                 const SizedBox(height: 20),
                 Container(
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.3), // Shadow color
-                        spreadRadius: 2, // Spread radius
-                        blurRadius: 5, // Blur radius
-                        offset: const Offset(
-                            0, 2), // Offset in the vertical direction
+                        color: Colors.grey.withOpacity(0.3),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: const Offset(0, 2),
                       ),
                     ],
-                    borderRadius: BorderRadius.circular(12), // Border radius
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: Column(
                     children: [
@@ -87,24 +120,25 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                           return Container();
                         },
                       ),
-                      TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Enter Email',
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 12),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide.none, // No border line
+                      TextFormField(
+                          decoration: InputDecoration(
+                            hintText:
+                                AppLocalizations.of(context)!.enterEmailHint,
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 12),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
                           ),
-                          filled: true,
-                          fillColor: Colors.white,
-                        ),
-                        controller: emailController,
-                      ),
+                          controller: emailController,
+                          validator: emailValidator),
                       const SizedBox(height: 8),
                       TextFormField(
                         decoration: InputDecoration(
-                          hintText: 'Password',
+                          hintText: AppLocalizations.of(context)!.passwordHint,
                           contentPadding: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 12),
                           border: OutlineInputBorder(
@@ -134,7 +168,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       const SizedBox(height: 8),
                       TextFormField(
                         decoration: InputDecoration(
-                          hintText: 'Password',
+                          hintText: AppLocalizations.of(context)!.passwordHint,
                           contentPadding: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 12),
                           border: OutlineInputBorder(
@@ -169,28 +203,30 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   padding: const EdgeInsets.all(8),
                   child: Text.rich(
                     TextSpan(
-                      text: "By Using this application, you agree to our ",
+                      text:
+                          AppLocalizations.of(context)!.terms_of_service_intro,
                       children: <TextSpan>[
                         TextSpan(
-                            recognizer: TapGestureRecognizer()
-                              ..onTap =
-                                  () => /* context.goNamed("register"),*/ {},
-                            text: 'Terms of Service',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontFamily: poppinsFont)),
-
+                          recognizer: TapGestureRecognizer()
+                            ..onTap =
+                                () => /* context.goNamed("register"),*/ {},
+                          text: AppLocalizations.of(context)!.terms_of_service,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontFamily: poppinsFont,
+                          ),
+                        ),
                         const TextSpan(text: " and "),
                         TextSpan(
-                            recognizer: TapGestureRecognizer()
-                              ..onTap =
-                                  () => /* context.goNamed("register"),*/ {},
-                            text: 'Privacy Policy',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontFamily: poppinsFont)),
-
-                        // can add more TextSpans here...
+                          recognizer: TapGestureRecognizer()
+                            ..onTap =
+                                () => /* context.goNamed("register"),*/ {},
+                          text: AppLocalizations.of(context)!.privacy_policy,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontFamily: poppinsFont,
+                          ),
+                        ),
                       ],
                     ),
                     textAlign: TextAlign.center,
@@ -226,62 +262,67 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       } else {
                         // Form is invalid, display error message
                         context.showSnackBar(
-                            message: 'Please fix the errors in the form.');
+                            message:
+                                AppLocalizations.of(context)!.loginFormErrors);
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0CA9E6),
-                        // Background color
-                        foregroundColor: Colors.white,
-                        // Text color
-                        textStyle: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: poppinsFont),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            side: const BorderSide(color: Color(0xFF99D6EF))),
-                        fixedSize: const Size(310, 40)),
-                    child: const Text('Create Account'),
+                      backgroundColor: const Color(0xFF0CA9E6),
+                      foregroundColor: Colors.white,
+                      textStyle: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: poppinsFont,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        side: const BorderSide(color: Color(0xFF99D6EF)),
+                      ),
+                      fixedSize: const Size(310, 40),
+                    ),
+                    child: Text(AppLocalizations.of(context)!.create_account),
                   ),
                 ),
-                const SizedBox(
-                  height: 25,
-                ),
-                Row(children: <Widget>[
-                  Expanded(
-                    child: Container(
+                const SizedBox(height: 25),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
                         margin: const EdgeInsets.only(left: 35.0, right: 5.0),
                         child: const Divider(
                           color: Colors.black,
                           height: 30,
-                        )),
-                  ),
-                  const Text("continue with"),
-                  Expanded(
-                    child: Container(
+                        ),
+                      ),
+                    ),
+                    Text(AppLocalizations.of(context)!.orLoginWith),
+                    Expanded(
+                      child: Container(
                         margin: const EdgeInsets.only(left: 5.0, right: 35.0),
                         child: const Divider(
                           color: Colors.black,
                           height: 30,
-                        )),
-                  ),
-                ]),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Center(
                       child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: InkWell(
-                            onTap: () {
-                              //_authenticateWithFacebook(context);
-                            },
-                            child: Image.asset(
-                              "assets/images/google.png",
-                              height: 40,
-                            ),
-                          )),
+                        padding: const EdgeInsets.all(16),
+                        child: InkWell(
+                          onTap: () {
+                            //_authenticateWithFacebook(context);
+                          },
+                          child: Image.asset(
+                            "assets/images/google.png",
+                            height: 40,
+                          ),
+                        ),
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -294,9 +335,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                           height: 43,
                         ),
                       ),
-                    )
+                    ),
                   ],
-                )
+                ),
               ],
             ),
           ),
