@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/favourite_stores/favorite_provider.dart';
 import 'package:spenza/ui/location/lat_lng_provider.dart';
 import 'package:spenza/ui/location/location_provider.dart';
@@ -27,8 +29,6 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-
     final provider = ref.watch(favoriteProvider);
     ref.watch(positionProvider).when(
           data: (data) => ref.read(favoriteProvider.notifier).getStores(data!),
@@ -80,18 +80,19 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
                     return Card(
                       color: Colors.white,
                       surfaceTintColor: Colors.white,
-                      margin:
-                          const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 5),
                       child: ListTile(
                         leading: store.logo.isNotEmpty
                             ? Image.network(
-                          store.logo,
-                          fit: BoxFit.cover,
-                        )
+                                store.logo,
+                                fit: BoxFit.cover,
+                              )
                             : Image.asset(
-                          'assets/favicon.png', // Replace with the path to your static image asset
-                          fit: BoxFit.cover,
-                        ),
+                                'assets/favicon.png',
+                                // Replace with the path to your static image asset
+                                fit: BoxFit.cover,
+                              ),
                         title: Text(store.name),
                         subtitle: Text(store.adress),
                         trailing: IconButton(
@@ -117,12 +118,17 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
               },
             ),
           ),
-          Positioned(left: 0,
+          Positioned(
+              left: 0,
               right: 0,
               bottom: 0,
-              child: ElevatedButton(onPressed: (){
-                
-              }, child: Text("Skip"),))
+              child: ElevatedButton(
+                onPressed: () {
+                  context.goNamed(RouteManager.homeScreen);
+                },
+                child: Text("Skip"),
+              )
+          )
         ],
       ),
     );

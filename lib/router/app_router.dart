@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/ui/favourite_stores/favourite_store_screen.dart';
+import 'package:spenza/ui/home/home_screen.dart';
 import 'package:spenza/ui/location/location_screen.dart';
 import 'package:spenza/ui/login/login_screen.dart';
 import 'package:spenza/ui/sign_up/sign_up_screen.dart';
@@ -22,6 +23,7 @@ class RouteManager {
   static const String dashboardScreen = '/dashboard';
   static const String locationScreen = '/locationScreen';
   static const String favouriteScreen = '/favouriteScreen';
+  static const String homeScreen = '/homeScreen';
 
   /// The route configuration.
   static final GoRouter router = GoRouter(
@@ -63,10 +65,18 @@ class RouteManager {
           return const FavouriteStoreScreen(null);
         },
       ),
+
+      GoRoute(
+        name: homeScreen,
+        path: homeScreen,
+        builder: (context, state) {
+          return const HomeScreen();
+        },
+      ),
     ],
     redirect: (context, state) async {
       final prefs = await SharedPreferences.getInstance();
-      return prefs.isUserLoggedIn() ? favouriteScreen : null;
+      return prefs.isUserLoggedIn() ? homeScreen : null;
     },
   );
 }
