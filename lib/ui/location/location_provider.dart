@@ -29,10 +29,20 @@ final positionProvider = FutureProvider.autoDispose<Position?>((ref) async {
     desiredAccuracy: LocationAccuracy.high,
   );
 
+  final initialPositions = Position(
+    latitude: 20.61494342,
+    longitude: -103.396112,
+    timestamp: DateTime.now(),
+    accuracy: 0,
+    altitude: 0,
+    heading: 0,
+    speed: 0,
+    speedAccuracy: 0,
+  );
   final pref = await SharedPreferences.getInstance();
   await FirebaseFirestore.instance.collection('users').doc(pref.getUserId()).set(
     {
-      'location': GeoPoint(initialPosition.latitude, initialPosition.longitude),
+      'location': GeoPoint(initialPositions.latitude, initialPositions.longitude),
     },
     SetOptions(merge: true),
   );
@@ -52,6 +62,7 @@ final positionProvider = FutureProvider.autoDispose<Position?>((ref) async {
     speedAccuracy: 0,
   );
 
-  return initialPosition;
+
+  return initialPositions;
 });
 

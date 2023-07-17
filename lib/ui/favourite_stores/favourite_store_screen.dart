@@ -65,55 +65,65 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
           )
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: provider.when(
-          () => Container(),
-          success: (stores) {
-            return ListView.builder(
-              itemCount: stores.length,
-              itemBuilder: (context, index) {
-                Stores store = stores[index];
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: provider.when(
+              () => Container(),
+              success: (stores) {
+                return ListView.builder(
+                  itemCount: stores.length,
+                  itemBuilder: (context, index) {
+                    Stores store = stores[index];
 
-                return Card(
-                  color: Colors.white,
-                  surfaceTintColor: Colors.white,
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                  child: ListTile(
-                    leading: store.logo.isNotEmpty
-                        ? Image.network(
-                      store.logo,
-                      fit: BoxFit.cover,
-                    )
-                        : Image.asset(
-                      'assets/favicon.png', // Replace with the path to your static image asset
-                      fit: BoxFit.cover,
-                    ),
-                    title: Text(store.name),
-                    subtitle: Text(store.adress),
-                    trailing: IconButton(
-                      onPressed: () async {
-                        ref
-                            .read(favoriteProvider.notifier)
-                            .toggleFavorite(store);
-                      },
-                      icon: store.isFavorite
-                          ? Icon(Icons.favorite_outlined, color: Colors.red)
-                          : Icon(Icons.favorite_border_outlined),
-                    ),
-                  ),
+                    return Card(
+                      color: Colors.white,
+                      surfaceTintColor: Colors.white,
+                      margin:
+                          const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                      child: ListTile(
+                        leading: store.logo.isNotEmpty
+                            ? Image.network(
+                          store.logo,
+                          fit: BoxFit.cover,
+                        )
+                            : Image.asset(
+                          'assets/favicon.png', // Replace with the path to your static image asset
+                          fit: BoxFit.cover,
+                        ),
+                        title: Text(store.name),
+                        subtitle: Text(store.adress),
+                        trailing: IconButton(
+                          onPressed: () async {
+                            ref
+                                .read(favoriteProvider.notifier)
+                                .toggleFavorite(store);
+                          },
+                          icon: store.isFavorite
+                              ? Icon(Icons.favorite_outlined, color: Colors.red)
+                              : Icon(Icons.favorite_border_outlined),
+                        ),
+                      ),
+                    );
+                  },
                 );
               },
-            );
-          },
-          loading: () {
-            return Center(child: CircularProgressIndicator());
-          },
-          error: (error) {
-            return Center(child: Text('Error: $error'));
-          },
-        ),
+              loading: () {
+                return Center(child: CircularProgressIndicator());
+              },
+              error: (error) {
+                return Center(child: Text('Error: $error'));
+              },
+            ),
+          ),
+          Positioned(left: 0,
+              right: 0,
+              bottom: 0,
+              child: ElevatedButton(onPressed: (){
+                
+              }, child: Text("Skip"),))
+        ],
       ),
     );
   }

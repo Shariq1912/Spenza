@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spenza/ui/login/data/user.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
 final locationProvider =
