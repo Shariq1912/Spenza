@@ -66,7 +66,6 @@ class RouteManager {
     ],
     redirect: (context, state) async {
       final prefs = await SharedPreferences.getInstance();
-
       return prefs.isUserLoggedIn() ? favouriteScreen : null;
     },
   );

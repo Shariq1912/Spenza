@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/favourite_stores/favourite_store_screen.dart';
 import 'package:spenza/ui/location/location_provider.dart';
 import 'package:spenza/ui/location/widget/location_widget.dart';
@@ -28,8 +30,9 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
 
   @override
   void dispose() {
-    zipCodeController.dispose();
     super.dispose();
+    zipCodeController.dispose();
+
   }
 
   @override
@@ -47,7 +50,10 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                 const SizedBox(height: 32),
                 location.when(
                   data: (position) {
-                    return LocationWidget.buildLocationText(position);
+                    // todo  Will be replaced with container, no need to show text
+                    // todo redirect user to favorite store screen.
+                    context.goNamed(RouteManager.favouriteScreen);
+                    return Container();
                   },
                   loading: () => CircularProgressIndicator(),
                   error: (error, stackTrace) {
@@ -60,7 +66,7 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                         child: Column(
                           children: [
                             Image.asset(
-                              'assets/images/marker.png',
+                              'marker.png'.assetImageUrl,
                               fit: BoxFit.fitWidth,
                             ),
                             SizedBox(
@@ -112,6 +118,7 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                                       .then((Position? latLng) {
                                     if (latLng != null) {
                                       zipCodeController.clear();
+                                      context.goNamed(RouteManager.favouriteScreen);
                                       context.showSnackBar(
                                         message:
                                             "Latitude: ${latLng.latitude} and Longitude: ${latLng.longitude}",

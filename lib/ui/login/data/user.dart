@@ -11,6 +11,7 @@ class Users with _$Users {
   const factory Users({
     required String uid,
     @Default("") String name,
+    @Default("") String zipCode,
     required String email,
   }) = _Users;
 
