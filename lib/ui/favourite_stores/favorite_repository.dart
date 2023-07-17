@@ -1,56 +1,113 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/network/api_responses.dart';
+import 'package:spenza/ui/login/data/user.dart';
+import 'package:spenza/utils/spenza_extensions.dart';
 import 'data/favourite_stores.dart';
 
 class FavoriteRepository extends StateNotifier<ApiResponse> {
   FavoriteRepository() : super(const ApiResponse());
 
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
-/*
-  Future<List<DocumentSnapshot>> fetchNearbyStores() async {
-    final pref = await SharedPreferences.getInstance();
-    final document = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(pref.getUserId())
-        .get();
 
-    GeoPoint location = document.data()!['location'];
+  Future<void> getStores() async {
+    try {
 
+      final pref = await SharedPreferences.getInstance();
 
-    final collectionRef = FirebaseFirestore.instance.collection('stores');
+      final userId = pref.getUserId();
+      final Users? user = await _getUser(userId);
+      final hasUserZipCodeField = user?.zipCode.isNotEmpty ?? false;
 
-// Get all documents in the "stores" collection.
-    QuerySnapshot querySnapshot = await collectionRef.get();
+      // final storesCollection = _fireStore.collection('stores');
 
-    // Iterate over the documents and print their fields.
-    for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
-      debugPrint("Document: ${documentSnapshot.id}");
-      debugPrint(documentSnapshot.data() as String?);
+      List<Stores> stores = [];
+      state = ApiResponse.loading();
+
+      if (hasUserZipCodeField) {
+        stores = await _fetchProductsByZipCode(user?.zipCode ?? "");
+      } else {
+        /*final querySnapshot = await storesCollection
+            .where('location',
+                isGreaterThan: GeoPoint(user?.latitude - 0.1,
+                    currentPosition.longitude - 0.1),
+                isLessThan: GeoPoint(currentPosition.latitude + 0.1,
+                    currentPosition.longitude + 0.1))
+            .get();
+
+        final documents = querySnapshot.docs;
+        stores = documents.map((doc) {
+          final data = doc.data();
+          final store = Stores.fromJson(data);
+          return store;
+        }).toList();
+
+        print('Received data: ${stores[0].name}');*/
+      }
+
+      state = ApiResponse.success(data: stores);
+    } catch (error) {
+      state = ApiResponse.error(
+        errorMsg: 'Error occurred while fetching stores: $error',
+      );
     }
+  }
 
-    // state = ApiResponse.success(data: collectionRef);
+  Future<List<Stores>> _fetchProductsByZipCode(String userZipCode) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore
+          .collection('stores')
+          .where('zipCodesList', arrayContains: userZipCode)
+          .get();
 
-    return [];
-    // return nearbyStores;
-  }*/
+      final List<Stores> stores = snapshot.docs.map((doc) {
+        final data = doc.data();
+        final store = Stores.fromJson(data);
+        return store;
+      }).toList();
 
-  Future<void> fetchProductsByZipCode(String userZipCode) async {
-    final QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore
-        .collection('stores')
-        .where('zipCodesList', arrayContains: userZipCode)
-        .get();
+      return stores;
+    } catch (error) {
+      return [];
+    }
+  }
 
-    final List<Stores> stores = snapshot.docs.map((doc) {
-      final data = doc.data();
+  Future<Users?> _getUser(String userId) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore
+          .collection('users')
+          .where('userId', isEqualTo: userId)
+          .get();
 
-      final store = Stores.fromJson(data);
-      //print(store.name); // Print store name
-      return store;
-    }).toList();
+      if (snapshot.docs.isNotEmpty) {
+        final userData = snapshot.docs.first.data();
+        return Users.fromJson(userData);
+      }
 
-    state = ApiResponse.success(data: stores);
+      return null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  Future<bool> _hasUserZipCodeField(String userId) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore
+          .collection('users')
+          .where('uid', isEqualTo: userId)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        final userData = snapshot.docs.first.data();
+        return userData.containsKey('zipCode');
+      }
+
+      return false;
+    } catch (error) {
+      return false;
+    }
   }
 
   void toggleFavorite(Stores store) {
@@ -70,32 +127,5 @@ class FavoriteRepository extends StateNotifier<ApiResponse> {
     );
 
     state = updatedStores;
-  }
-
-
-  Future<void> getStores(Position currentPosition) async {
-    final storesCollection = _fireStore.collection('stores');
-
-    final querySnapshot = await storesCollection
-        .where('location',
-            isGreaterThan: GeoPoint(currentPosition.latitude - 0.1,
-                currentPosition.longitude - 0.1),
-            isLessThan: GeoPoint(currentPosition.latitude + 0.1,
-                currentPosition.longitude + 0.1))
-        .get();
-
-    final documents = querySnapshot.docs;
-    final List<Stores> stores = documents.map((doc) {
-      final data = doc.data();
-      final uid =doc.id;
-      final store = Stores.fromJson(data);
-      print("docId : $uid");
-      return store;
-    }).toList();
-
-
-    print('Received data: ${stores[0].name} ');
-
-    state = ApiResponse.success(data: stores);
   }
 }

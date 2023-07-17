@@ -14,32 +14,28 @@ class FavouriteStoreScreen extends ConsumerStatefulWidget {
   final String? title;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _FavouriteStoreScreenState();
+  ConsumerState createState() => _FavouriteStoreScreenState();
 }
 
 class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
   final poppinsFont = GoogleFonts.poppins().fontFamily;
-  final myProducts = List<String>.generate(1000, (i) => 'Product $i');
+
+  // final myProducts = List<String>.generate(1000, (i) => 'Product $i');
 
   @override
   void initState() {
     super.initState();
+
+    _loadStores();
+  }
+
+  _loadStores() async {
+    await ref.read(favoriteProvider.notifier).getStores();
   }
 
   @override
   Widget build(BuildContext context) {
-    final provider = ref.watch(favoriteProvider);
-    ref.watch(positionProvider).when(
-          data: (data) => ref.read(favoriteProvider.notifier).getStores(data!),
-          error: (error, stackTrace) {},
-          loading: () {},
-        );
-    ref.watch(locationProvider(widget.title)).when(
-          data: (data) => ref.read(favoriteProvider.notifier).getStores(data!),
-          error: (error, stackTrace) {},
-          loading: () {},
-        );
+    final storeProvider = ref.watch(favoriteProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -69,7 +65,7 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.all(10.0),
-            child: provider.when(
+            child: storeProvider.when(
               () => Container(),
               success: (stores) {
                 return ListView.builder(
@@ -124,11 +120,11 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
               bottom: 0,
               child: ElevatedButton(
                 onPressed: () {
-                  context.goNamed(RouteManager.homeScreen);
+                  ref.read(favoriteProvider.notifier).getStores();
+                  // context.goNamed(RouteManager.homeScreen);
                 },
                 child: Text("Skip"),
-              )
-          )
+              ))
         ],
       ),
     );

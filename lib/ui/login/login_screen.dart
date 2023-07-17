@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/router/app_router.dart';
@@ -41,7 +42,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
 
   @override
-  void initState() {
+  void initState()   {
     super.initState();
 
     /*passwordValidator = MultiValidator([
@@ -58,7 +59,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         errorText: AppLocalizations.of(context)!.emailInvalidError,
       ),
     ]);*/
+
+      // getPostalCode();
   }
+
+  getPostalCode() async {
+    double latitude = 22.2821;
+    double longitude = 73.1646;
+
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
+      String postalCode = placemarks.first.postalCode ?? "";
+      print('Postal Code: $postalCode');
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
 
   @override
   void dispose() {
