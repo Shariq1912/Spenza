@@ -81,8 +81,13 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
                   margin:
                       const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                   child: ListTile(
-                    leading: Image.network(
+                    leading: store.logo.isNotEmpty
+                        ? Image.network(
                       store.logo,
+                      fit: BoxFit.cover,
+                    )
+                        : Image.asset(
+                      'assets/favicon.png', // Replace with the path to your static image asset
                       fit: BoxFit.cover,
                     ),
                     title: Text(store.name),
