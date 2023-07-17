@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,6 +20,7 @@ class FavoriteRepository extends StateNotifier<ApiResponse> {
 
       final userId = pref.getUserId();
       final Users? user = await _getUser(userId);
+      debugPrint("$user");
       final hasUserZipCodeField = user?.zipCode.isNotEmpty ?? false;
 
       // final storesCollection = _fireStore.collection('stores');
@@ -26,8 +28,13 @@ class FavoriteRepository extends StateNotifier<ApiResponse> {
       List<Stores> stores = [];
       state = ApiResponse.loading();
 
+      debugPrint("${user?.zipCode}");
+
+
+
       if (hasUserZipCodeField) {
         stores = await _fetchProductsByZipCode(user?.zipCode ?? "");
+        debugPrint("$stores");
       } else {
         /*final querySnapshot = await storesCollection
             .where('location',
@@ -78,7 +85,7 @@ class FavoriteRepository extends StateNotifier<ApiResponse> {
     try {
       final QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore
           .collection('users')
-          .where('userId', isEqualTo: userId)
+          .where('uid', isEqualTo: userId)
           .get();
 
       if (snapshot.docs.isNotEmpty) {
