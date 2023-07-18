@@ -10,6 +10,7 @@ import 'package:spenza/ui/sign_up/sign_up_screen.dart';
 import 'package:spenza/ui/splash/splash_route.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
+import '../ui/profile/component/add_list.dart';
 import '../ui/settings/setting_Screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigator = GlobalKey(debugLabel: 'root');
@@ -29,6 +30,7 @@ class RouteManager {
   static const String homeScreen = '/homeScreen';
   static const String settingScreen = '/settingScreen';
   static const String profileScreen = '/profileScreen';
+  static const String addListScreen = '/addListScreen';
 
   /// The route configuration.
   static final GoRouter router = GoRouter(
@@ -91,6 +93,13 @@ class RouteManager {
         path: profileScreen,
         builder: (context, state) {
           return const ProfileScreen();
+        },
+      ),
+      GoRoute(
+        name: addListScreen,
+        path: addListScreen,
+        builder: (context, state) {
+          return const AddItemToList();
         },
       ),
     ],
