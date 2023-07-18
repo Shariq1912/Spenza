@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:spenza/ui/settings/setting_Screen.dart';
 
+import '../../router/app_router.dart';
 import 'components/myStore.dart';
 import 'components/preLoadedList.dart';
 import 'components/topStrip.dart';
@@ -24,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Container(
-                  height: 200,
+                  height: 190,
                   color: Colors.blue,
                   child: const TopStrip(),
                 ),
@@ -48,16 +51,22 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 5.0,
         surfaceTintColor: Colors.white,
         backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
         actions: [
           Padding(
             padding: const EdgeInsets.only(
               top: 5,
-              bottom: 8,
             ),
-            child: CircleAvatar(
-              radius: 45,
-              child: ClipOval(
-                child: Image.network('https://picsum.photos/250?image=9'),
+            child:
+            InkWell(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SettingScreen()));
+              },
+              child: CircleAvatar(
+                radius: 40,
+                child: ClipOval(
+                  child: Image.network('https://picsum.photos/250?image=9'),
+                ),
               ),
             ),
           )

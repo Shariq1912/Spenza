@@ -5,9 +5,12 @@ import 'package:spenza/ui/favourite_stores/favourite_store_screen.dart';
 import 'package:spenza/ui/home/home_screen.dart';
 import 'package:spenza/ui/location/location_screen.dart';
 import 'package:spenza/ui/login/login_screen.dart';
+import 'package:spenza/ui/profile/profile_screen.dart';
 import 'package:spenza/ui/sign_up/sign_up_screen.dart';
 import 'package:spenza/ui/splash/splash_route.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
+
+import '../ui/settings/setting_Screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigator = GlobalKey(debugLabel: 'root');
 
@@ -24,6 +27,8 @@ class RouteManager {
   static const String locationScreen = '/locationScreen';
   static const String favouriteScreen = '/favouriteScreen';
   static const String homeScreen = '/homeScreen';
+  static const String settingScreen = '/settingScreen';
+  static const String profileScreen = '/profileScreen';
 
   /// The route configuration.
   static final GoRouter router = GoRouter(
@@ -71,6 +76,21 @@ class RouteManager {
         path: homeScreen,
         builder: (context, state) {
           return const HomeScreen();
+        },
+      ),
+
+      GoRoute(
+        name: settingScreen,
+        path: settingScreen,
+        builder: (context, state) {
+          return const SettingScreen();
+        },
+      ),
+      GoRoute(
+        name: profileScreen,
+        path: profileScreen,
+        builder: (context, state) {
+          return const ProfileScreen();
         },
       ),
     ],

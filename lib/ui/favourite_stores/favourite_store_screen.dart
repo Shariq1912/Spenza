@@ -7,6 +7,7 @@ import 'package:spenza/ui/favourite_stores/favorite_provider.dart';
 import 'package:spenza/ui/location/lat_lng_provider.dart';
 import 'package:spenza/ui/location/location_provider.dart';
 
+import '../home/home_screen.dart';
 import 'data/favourite_stores.dart';
 
 class FavouriteStoreScreen extends ConsumerStatefulWidget {
@@ -120,8 +121,10 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
               bottom: 0,
               child: ElevatedButton(
                 onPressed: () {
-                  ref.read(favoriteProvider.notifier).getStores();
-                  // context.goNamed(RouteManager.homeScreen);
+                  //ref.read(favoriteProvider.notifier).getStores();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                  );
                 },
                 child: Text("Skip"),
               ))

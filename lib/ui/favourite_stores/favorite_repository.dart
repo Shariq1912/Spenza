@@ -128,11 +128,21 @@ class FavoriteRepository extends StateNotifier<ApiResponse> {
             return s;
           }
         }).toList();
+        updateFavourites(updatedList);
         return ApiResponse.success(data: updatedList);
       },
       orElse: () => state,
     );
 
     state = updatedStores;
+  }
+  Future<void> updateFavourites(List<Stores> updatedList) async {
+    final pref = await SharedPreferences.getInstance();
+
+    final uid = pref.getUserId();
+    final collectionReference = FirebaseFirestore.instance.collection('favourites');
+    await collectionReference.doc(uid).set({
+      'store_ids': updatedList.map((store) => store.toJson()).toList(),
+    });
   }
 }
