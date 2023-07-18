@@ -62,6 +62,7 @@ class _AddItemToListState extends ConsumerState<AddItemToList> {
               SizedBox(height: 10),
               TextField(
                 style: TextStyle(fontFamily: poppinsFont),
+                controller: nameController,
                 decoration: InputDecoration(
                   hintText: "Name",
                   contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
@@ -76,6 +77,7 @@ class _AddItemToListState extends ConsumerState<AddItemToList> {
                 height: 100,
                 decoration: BoxDecoration(border: Border.all(color: Colors.grey, width: 2)),
                 child: TextField(
+                  controller: descriptionController,
                   maxLines: 3,
                   style: TextStyle(fontFamily: poppinsFont),
                   decoration: InputDecoration(
@@ -92,7 +94,7 @@ class _AddItemToListState extends ConsumerState<AddItemToList> {
                   onPressed: () {
                     final name = nameController.text;
                     final description = descriptionController.text;
-                    ref.read(itemListProvider.notifier).addItem(name, description,selectedImage!);
+                    ref.read(itemListProvider.notifier).addItem(name, description!);
                     Navigator.pop(context); // Go back to the previous screen
                   },
                   style: ElevatedButton.styleFrom(

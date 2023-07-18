@@ -219,9 +219,9 @@ class _TopStripState extends ConsumerState<TopStrip> {
           ] else ...[
             for (var item in items)
               ListTile(
-                leading: Image.file(item.image),
-                title: Text(item.name),
-                subtitle: Text(item.description),
+                leading: Image.asset('assets/images/avatar.gif', fit: BoxFit.cover),
+                title: Text(item.name,style: TextStyle(color: Colors.white),),
+                subtitle: Text(item.description,style: TextStyle(color: Colors.white),),
               ),
           ],
         ],
