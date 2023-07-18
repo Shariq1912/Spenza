@@ -4,10 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/favourite_stores/favorite_provider.dart';
+import 'package:spenza/ui/favourite_stores/widgets/custom_searchbar.dart';
+import 'package:spenza/ui/favourite_stores/widgets/favorite_store_list_widget.dart';
 import 'package:spenza/ui/location/lat_lng_provider.dart';
 import 'package:spenza/ui/location/location_provider.dart';
 
-import '../home/home_screen.dart';
 import 'data/favourite_stores.dart';
 
 class FavouriteStoreScreen extends ConsumerStatefulWidget {
@@ -21,12 +22,11 @@ class FavouriteStoreScreen extends ConsumerStatefulWidget {
 class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
   final poppinsFont = GoogleFonts.poppins().fontFamily;
 
-  // final myProducts = List<String>.generate(1000, (i) => 'Product $i');
-
   @override
   void initState() {
-    super.initState();
     _loadStores();
+
+    super.initState();
   }
 
   _loadStores() async {
@@ -34,8 +34,7 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final storeProvider = ref.watch(favoriteProvider);
+  Widget build(BuildContext buildContext) {
 
     return Scaffold(
       appBar: AppBar(
@@ -65,107 +64,65 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.all(10.0),
-            child: storeProvider.when(
-              () => Container(),
-              success: (stores) {
-                return ListView.builder(
-                  itemCount: stores.length,
-                  itemBuilder: (context, index) {
-                    Stores store = stores[index];
+            child: Consumer(
+              builder: (context, ref, child) {
+                final storeProvider = ref.watch(favoriteProvider);
 
-                    return Card(
-                      color: Colors.white,
-                      surfaceTintColor: Colors.white,
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 5, horizontal: 5),
-                      child: ListTile(
-                        leading: store.logo.isNotEmpty
-                            ? Image.network(
-                                store.logo,
-                                fit: BoxFit.cover,
-                              )
-                            : Image.asset(
-                                'assets/favicon.png',
-                                // Replace with the path to your static image asset
-                                fit: BoxFit.cover,
-                              ),
-                        title: Text(store.name),
-                        subtitle: Text(store.adress),
-                        trailing: IconButton(
-                          onPressed: () async {
-                            ref
-                                .read(favoriteProvider.notifier)
-                                .toggleFavorite(store);
-                          },
-                          icon: store.isFavorite
-                              ? Icon(Icons.favorite_outlined, color: Colors.red)
-                              : Icon(Icons.favorite_border_outlined),
-                        ),
-                      ),
+                return storeProvider.when(
+                  () => Container(),
+                  loading: () => Center(child: CircularProgressIndicator()),
+                  error: (message) => Center(child: Text(message)),
+                  // success: (stores) => Container(),
+                  success: (data) {
+                    // debugPrint("$data");
+                    return FavoriteStoreListWidget(
+                      stores: data,
+                      onButtonClicked: (Stores store) {
+                        ref
+                            .read(favoriteProvider.notifier)
+                            .toggleFavorite(store);
+                      },
                     );
                   },
+                  redirectUser: () {
+                    buildContext.goNamed(RouteManager.homeScreen);
+                    return Container();
+                  },
                 );
-              },
-              loading: () {
-                return Center(child: CircularProgressIndicator());
-              },
-              error: (error) {
-                return Center(child: Text('Error: $error'));
               },
             ),
           ),
           Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: ElevatedButton(
-                onPressed: () {
-                  //ref.read(favoriteProvider.notifier).getStores();
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => HomeScreen()),
-                  );
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: ElevatedButton(
+              onPressed: () {
+                ref.read(favoriteProvider.notifier).saveFavouriteStoreIfAny();
+                // context.goNamed(RouteManager.homeScreen);
+              },
+              child: Consumer(
+                builder: (context, ref, child) {
+                  final stores = ref.watch(favoriteProvider).maybeWhen(
+                        () => [],
+                        success: (stores) {
+                          final filteredStores = stores
+                              .where((store) => store.isFavorite)
+                              .toList();
+                          return filteredStores.isNotEmpty
+                              ? filteredStores
+                              : [];
+                        },
+                        orElse: () => [],
+                      );
+
+                  return stores.length > 0 ? Text("Continue") : Text("Skip");
                 },
-                child: Text("Skip"),
-              ))
+              ),
+            ),
+          )
         ],
       ),
-    );
-  }
-}
-
-class CustomSearchDelegate extends SearchDelegate {
-  @override
-  Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
-    return Container();
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    // TODO: implement buildSuggestions
-    return Container();
-  }
-
-  @override
-  List<Widget>? buildActions(BuildContext context) {
-    return [
-      IconButton(
-        onPressed: () {
-          query = '';
-        },
-        icon: Icon(Icons.clear),
-      ),
-    ];
-  }
-
-// second overwrite to pop out of search menu
-  @override
-  Widget? buildLeading(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        close(context, null);
-      },
-      icon: Icon(Icons.arrow_back),
     );
   }
 }

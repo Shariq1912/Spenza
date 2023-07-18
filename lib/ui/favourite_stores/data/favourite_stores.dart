@@ -8,6 +8,7 @@ part 'favourite_stores.g.dart';
 @freezed
 class Stores with _$Stores {
   const factory Stores({
+    @Default("") String id,
     required String name,
     required String adress,
     required List<String> zipCodesList,

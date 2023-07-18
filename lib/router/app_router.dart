@@ -24,7 +24,6 @@ class RouteManager {
 
   static const String loginScreen = '/loginScreen';
   static const String registerScreen = '/registerScreen';
-  static const String dashboardScreen = '/dashboard';
   static const String locationScreen = '/locationScreen';
   static const String favouriteScreen = '/favouriteScreen';
   static const String homeScreen = '/homeScreen';
@@ -69,7 +68,7 @@ class RouteManager {
         name: favouriteScreen,
         path: favouriteScreen,
         builder: (context, state) {
-          return const FavouriteStoreScreen(null);
+          return FavouriteStoreScreen(null);
         },
       ),
 

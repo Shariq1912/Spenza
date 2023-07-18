@@ -20,6 +20,7 @@ Stores _$StoresFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Stores {
+  String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get adress => throw _privateConstructorUsedError;
   List<String> get zipCodesList => throw _privateConstructorUsedError;
@@ -37,7 +38,8 @@ abstract class $StoresCopyWith<$Res> {
       _$StoresCopyWithImpl<$Res, Stores>;
   @useResult
   $Res call(
-      {String name,
+      {String id,
+      String name,
       String adress,
       List<String> zipCodesList,
       String logo,
@@ -57,6 +59,7 @@ class _$StoresCopyWithImpl<$Res, $Val extends Stores>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? name = null,
     Object? adress = null,
     Object? zipCodesList = null,
@@ -64,6 +67,10 @@ class _$StoresCopyWithImpl<$Res, $Val extends Stores>
     Object? isFavorite = null,
   }) {
     return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -95,7 +102,8 @@ abstract class _$$_StoresCopyWith<$Res> implements $StoresCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String name,
+      {String id,
+      String name,
       String adress,
       List<String> zipCodesList,
       String logo,
@@ -112,6 +120,7 @@ class __$$_StoresCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? name = null,
     Object? adress = null,
     Object? zipCodesList = null,
@@ -119,6 +128,10 @@ class __$$_StoresCopyWithImpl<$Res>
     Object? isFavorite = null,
   }) {
     return _then(_$_Stores(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -147,7 +160,8 @@ class __$$_StoresCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_Stores with DiagnosticableTreeMixin implements _Stores {
   const _$_Stores(
-      {required this.name,
+      {this.id = "",
+      required this.name,
       required this.adress,
       required final List<String> zipCodesList,
       required this.logo,
@@ -157,6 +171,9 @@ class _$_Stores with DiagnosticableTreeMixin implements _Stores {
   factory _$_Stores.fromJson(Map<String, dynamic> json) =>
       _$$_StoresFromJson(json);
 
+  @override
+  @JsonKey()
+  final String id;
   @override
   final String name;
   @override
@@ -177,7 +194,7 @@ class _$_Stores with DiagnosticableTreeMixin implements _Stores {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Stores(name: $name, adress: $adress, zipCodesList: $zipCodesList, logo: $logo, isFavorite: $isFavorite)';
+    return 'Stores(id: $id, name: $name, adress: $adress, zipCodesList: $zipCodesList, logo: $logo, isFavorite: $isFavorite)';
   }
 
   @override
@@ -185,6 +202,7 @@ class _$_Stores with DiagnosticableTreeMixin implements _Stores {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'Stores'))
+      ..add(DiagnosticsProperty('id', id))
       ..add(DiagnosticsProperty('name', name))
       ..add(DiagnosticsProperty('adress', adress))
       ..add(DiagnosticsProperty('zipCodesList', zipCodesList))
@@ -197,6 +215,7 @@ class _$_Stores with DiagnosticableTreeMixin implements _Stores {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Stores &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.adress, adress) || other.adress == adress) &&
             const DeepCollectionEquality()
@@ -208,7 +227,7 @@ class _$_Stores with DiagnosticableTreeMixin implements _Stores {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, name, adress,
+  int get hashCode => Object.hash(runtimeType, id, name, adress,
       const DeepCollectionEquality().hash(_zipCodesList), logo, isFavorite);
 
   @JsonKey(ignore: true)
@@ -227,7 +246,8 @@ class _$_Stores with DiagnosticableTreeMixin implements _Stores {
 
 abstract class _Stores implements Stores {
   const factory _Stores(
-      {required final String name,
+      {final String id,
+      required final String name,
       required final String adress,
       required final List<String> zipCodesList,
       required final String logo,
@@ -235,6 +255,8 @@ abstract class _Stores implements Stores {
 
   factory _Stores.fromJson(Map<String, dynamic> json) = _$_Stores.fromJson;
 
+  @override
+  String get id;
   @override
   String get name;
   @override

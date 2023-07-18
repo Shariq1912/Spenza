@@ -4,70 +4,70 @@
     "description": "Versión Flutter de la aplicación Spenza"
   },
   "welcome": "Bienvenido a",
-  "find_stores": "Buscar tiendas",
-  "find_stores_description": "Encuentra tus tiendas y supermercados favoritos, y descubre nuevos cerca de ti",
-  "make_shopping_list": "Crear lista de compras",
-  "make_shopping_list_description": "Crea tu propia lista de compras o selecciona una lista predefinida que Spenza tiene para ti",
-  "compare_prices": "Comparar precios",
-  "compare_prices_description": "Compara el precio de toda tu lista de compras y encuentra la mejor oferta",
-  "shop_in_store_or_online": "Comprar en tienda o en línea",
-  "shop_in_store_or_online_description": "Selecciona la mejor opción para ti y ahorra hasta un 30% en tu factura de comestibles cada semana",
+  "find_stores": "Descubre más tiendas",
+  "find_stores_description": "Encuentra tus tiendas y supermercados favoritos, y descubre más tiendas cerca de ti",
+  "make_shopping_list": "Crea tus listas de compras",
+  "make_shopping_list_description": "Usa una de las listas rápidas de Spenza o crea una que se ajuste perfecto a tus necesidades",
+  "compare_prices": "Compara precios",
+  "compare_prices_description": "Obtén el precio total de tu lista de compras y compara en todas las tiendas cerca de ti",
+  "shop_in_store_or_online": "Elige tu mejor opción",
+  "shop_in_store_or_online_description": "Selecciona la tienda que te ofrece el mejor precio y ahorra hasta un 30% cada semana",
   "sign_up": "Registrarse",
   "login": "Iniciar sesión",
   "loginTitle": "Iniciar sesión",
   "@loginTitle": {
-    "description": "Título para la pantalla de inicio de sesión"
+    "description": "Iniciar sesión"
   },
-  "loginSubtitle": "Accede a tu cuenta iniciando sesión a continuación.",
+  "loginSubtitle": "Ingresa tus datos para acceder a tu cuenta",
   "@loginSubtitle": {
-    "description": "Subtítulo para la pantalla de inicio de sesión"
+    "description": "Ingresa tus datos para acceder a tu cuenta"
   },
-  "enterEmailHint": "Ingrese su correo electrónico",
+  "enterEmailHint": "Correo electrónico o teléfono",
   "@enterEmailHint": {
-    "description": "Texto de sugerencia para el campo de entrada de correo electrónico"
+    "description": "Correo electrónico o teléfono"
   },
   "passwordHint": "Contraseña",
   "@passwordHint": {
-    "description": "Texto de sugerencia para el campo de entrada de contraseña"
+    "description": "Contraseña"
   },
   "loginButton": "Iniciar sesión",
   "@loginButton": {
-    "description": "Etiqueta para el botón de inicio de sesión"
+    "description": "Iniciar sesión"
   },
-  "loginFormErrors": "Por favor, corrige los errores en el formulario.",
+  "loginFormErrors": "Por favor verifica tus datos",
   "@loginFormErrors": {
-    "description": "Mensaje de error para el envío de formulario inválido"
+    "description": "Por favor verifica tus datos"
   },
-  "orLoginWith": "o inicia sesión con",
+  "orLoginWith": "o continua con",
   "@orLoginWith": {
-    "description": "Etiqueta para métodos de inicio de sesión alternativos"
+    "description": "o continua con"
   },
   "googleLogin": "Google",
   "@googleLogin": {
-    "description": "Etiqueta para la opción de inicio de sesión con Google"
+    "description": "Continuar con Google"
   },
   "passwordLengthError": "La contraseña debe tener al menos 8 caracteres",
   "@passwordLengthError": {
-    "description": "Mensaje de error para el requisito mínimo de longitud de contraseña"
+    "description": "La contraseña debe tener al menos 8 caracteres"
   },
   "facebookLogin": "Facebook",
   "@facebookLogin": {
-    "description": "Etiqueta para la opción de inicio de sesión con Facebook"
+    "description": "Continuar con facebook"
   },
-  "passwordRequiredError": "Se requiere contraseña",
+  "passwordRequiredError": "La contraseña es requerida",
   "@passwordRequiredError": {
-    "description": "Mensaje de error para contraseña requerida"
+    "description": "La contraseña es requerida"
   },
-  "emailRequiredError": "Se requiere correo electrónico",
+  "emailRequiredError": "El Correo electrónico o teléfono es requerido",
   "@emailRequiredError": {
-    "description": "Mensaje de error para correo electrónico requerido"
+    "description": "El Correo electrónico o teléfono es requerido"
   },
-  "emailInvalidError": "Por favor, utiliza un correo electrónico válido",
+  "emailInvalidError": "Por favor ingresa un correo eléctronico o teléfono válido",
   "@emailInvalidError": {
-    "description": "Mensaje de error para correo electrónico inválido"
+    "description": "Por favor ingresa un correo eléctronico o teléfono válid"
   },
-  "terms_of_service_intro": "Al utilizar esta aplicación, aceptas nuestros",
-  "terms_of_service": "Términos del servicio",
-  "privacy_policy": "Política de privacidad",
+  "terms_of_service_intro": "Al crear una cuenta aceptas a nuestros",
+  "terms_of_service": "Términos de Servicio",
+  "privacy_policy": "Política de Privacidad",
   "create_account": "Crear cuenta"
 }
