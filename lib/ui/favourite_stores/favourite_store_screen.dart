@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/favourite_stores/favorite_provider.dart';
+import 'package:spenza/ui/favourite_stores/favorite_repository.dart';
 import 'package:spenza/ui/favourite_stores/widgets/custom_searchbar.dart';
 import 'package:spenza/ui/favourite_stores/widgets/favorite_store_list_widget.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
@@ -22,7 +23,8 @@ class FavouriteStoreScreen extends ConsumerStatefulWidget {
 class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
   final poppinsFont = GoogleFonts.poppins().fontFamily;
   late CustomSearchDelegate _searchDelegate;
-  String searchInput="";
+  String searchInput = "";
+
   @override
   void initState() {
     _loadStores();
@@ -31,13 +33,11 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
   }
 
   _loadStores() async {
-    await ref.read(favoriteProvider.notifier).getStores();
+    await ref.read(favoriteRepositoryProvider.notifier).getStores();
   }
 
   @override
   Widget build(BuildContext buildContext) {
-
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -65,12 +65,11 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
       ),
       body: Stack(
         children: [
-
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: Consumer(
               builder: (context, ref, child) {
-                final storeProvider = ref.watch(favoriteProvider);
+                final storeProvider = ref.watch(favoriteRepositoryProvider);
 
                 return storeProvider.when(
                   () => Container(),
@@ -83,55 +82,60 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
                       stores: data,
                       onButtonClicked: (Stores store) {
                         ref
-                            .read(favoriteProvider.notifier)
+                            .read(favoriteRepositoryProvider.notifier)
                             .toggleFavorite(store);
                       },
                     );*/
-                       SearchableList<Stores>(
-                         displayClearIcon: true,
-                          initialList: data,
-                          builder: ( filteredList) => ListTile(
-                            leading: filteredList.logo.isNotEmpty
-                                ? Image.network(
-                              filteredList.logo,
-                              fit: BoxFit.cover,
-                            )
-                                : Image.asset(
-                              'favicon.png'.assetImageUrl,
-                              // Replace with the path to your static image asset
-                              fit: BoxFit.cover,
-                            ),
-                            title: Text(filteredList.name),
-                            subtitle: Text(filteredList.adress.substring(0,40)),
-                            trailing: IconButton(
-                              onPressed: () {
-                                ref
-                                    .read(favoriteProvider.notifier)
-                                    .toggleFavorite(filteredList);
-                              },
-                              icon: filteredList.isFavorite
-                                  ? Icon(Icons.favorite_outlined, color: Colors.red)
-                                  : Icon(Icons.favorite_border_outlined),
-                            ),
+                        SearchableList<Stores>(
+                      displayClearIcon: true,
+                      initialList: data,
+                      builder: (filteredList) => ListTile(
+                        leading: filteredList.logo.isNotEmpty
+                            ? Image.network(
+                                filteredList.logo,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.asset(
+                                'favicon.png'.assetImageUrl,
+                                // Replace with the path to your static image asset
+                                fit: BoxFit.cover,
+                              ),
+                        title: Text(filteredList.name),
+                        subtitle: Text(filteredList.adress.substring(0, 40)),
+                        trailing: IconButton(
+                          onPressed: () {
+                            ref
+                                .read(favoriteRepositoryProvider.notifier)
+                                .toggleFavorite(filteredList);
+                          },
+                          icon: filteredList.isFavorite
+                              ? Icon(Icons.favorite_outlined, color: Colors.red)
+                              : Icon(Icons.favorite_border_outlined),
+                        ),
+                      ),
+                      filter: (value) => data
+                          .where((element) => element.name
+                              .toLowerCase()
+                              .contains(value.toLowerCase()))
+                          .toList(),
+                      emptyWidget: const Text("empty"),
+                      inputDecoration: InputDecoration(
+                        fillColor: Colors.white,
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: Colors.grey,
+                            width: 1.0,
                           ),
-                          filter: (value) => data.where((element) => element.name.toLowerCase().contains(value.toLowerCase())).toList(),
-                          emptyWidget: const Text("empty"),
-                          inputDecoration: InputDecoration(
-                            fillColor: Colors.white,
-                            enabledBorder: OutlineInputBorder(borderSide: const BorderSide(
-                              color: Colors.grey,
-                              width: 1.0,
-                            ),),
-                            focusedBorder: OutlineInputBorder(
-                              /*borderSide: const BorderSide(
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                            /*borderSide: const BorderSide(
                                 color: Colors.grey,
                                 width: 1.0,
                               ),
                               borderRadius: BorderRadius.circular(10.0),*/
                             ),
-                        ),
-                      );
-
+                      ),
+                    );
                   },
                   redirectUser: () {
                     buildContext.goNamed(RouteManager.homeScreen);
@@ -147,25 +151,32 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
             bottom: 0,
             child: ElevatedButton(
               onPressed: () {
-                ref.read(favoriteProvider.notifier).saveFavouriteStoreIfAny();
+                ref
+                    .read(favoriteRepositoryProvider.notifier)
+                    .saveFavouriteStoreIfAny();
                 // context.goNamed(RouteManager.homeScreen);
               },
               child: Consumer(
                 builder: (context, ref, child) {
-                  final stores = ref.watch(favoriteProvider).maybeWhen(
-                        () => [],
-                        success: (stores) {
-                          final filteredStores = stores
-                              .where((store) => store.isFavorite)
-                              .toList();
-                          return filteredStores.isNotEmpty
-                              ? filteredStores
-                              : [];
-                        },
-                        orElse: () => [],
-                      );
+                  final length =
+                      ref.watch(favoriteRepositoryProvider).maybeWhen(
+                            () => [].length,
+                            success: (stores) {
+                              final filteredStores = stores
+                                  .where((store) => store.isFavorite)
+                                  .toList();
+                              return filteredStores.isNotEmpty
+                                  ? filteredStores.length
+                                  : [].length;
+                            },
+                            loading: () => -1,
+                            orElse: () => [].length,
+                          );
 
-                  return stores.length > 0 ? Text("Continue") : Text("Skip");
+                  return Visibility(
+                    visible: length != -1,
+                    child: length > 0 ? Text("Continue") : Text("Skip"),
+                  );
                 },
               ),
             ),

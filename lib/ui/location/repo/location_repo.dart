@@ -3,7 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/location/state/location_state.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
@@ -45,8 +47,8 @@ class LocationRepository extends StateNotifier<LocationState> {
 
       await _saveZipCodeToServer(await _getPostalCode(initialPosition));
 
-      state = LocationState.success(message: 'Coordinates and zipcode saved successfully');
-
+      state = LocationState.success(
+          message: 'Coordinates and zipcode saved successfully');
     } catch (error) {
       /// Error but can managed by showing zipcode dialog.
       // state = LocationState.error(message: error.toString());
@@ -111,7 +113,6 @@ class LocationRepository extends StateNotifier<LocationState> {
     required double latitude,
     required double longitude,
   }) async {
-
     /// Due to State notifier not accepting Future temporary solution
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -120,6 +121,20 @@ class LocationRepository extends StateNotifier<LocationState> {
         'location': GeoPoint(latitude, longitude),
       },
     );
+  }
+
+  Future<void> redirectUserToDestination({
+    required BuildContext context,
+  }) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final isFirstTimeLogin = prefs.isFirstLogin();
+
+    if (!isFirstTimeLogin) {
+      context.goNamed(RouteManager.homeScreen);
+      return;
+    }
+
+    context.goNamed(RouteManager.favouriteScreen);
   }
 
   Future<void> _saveZipCodeToServer(String postalCode) async {

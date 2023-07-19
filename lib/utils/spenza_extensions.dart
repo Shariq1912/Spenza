@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spenza/utils/firestore_constants.dart';
 
 extension ImageExtension on String {
   String get assetImageUrl {
@@ -25,4 +27,31 @@ extension SharedPreferencesExtension on SharedPreferences {
   bool isUserLoggedIn() {
     return getBool('is_login') ?? false;
   }
+
+  bool isFirstLogin() {
+    return getBool('is_first_login') ?? true;
+  }
 }
+
+mixin FirstTimeLoginMixin {
+  Future<bool> isFirstTimeLogin(String userId) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+          .collection(UserConstant.userCollection)
+          .where(UserConstant.userIdField, isEqualTo: userId)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        final userData = snapshot.docs.first.data();
+        debugPrint("IS FIRST LOGIN === $userData");
+        return !(userData.containsKey(UserConstant.zipCodeField) &&
+            userData[UserConstant.zipCodeField] != "");
+      }
+
+      return false;
+    } catch (error) {
+      return false;
+    }
+  }
+}
+

@@ -1,17 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spenza/network/api_responses.dart';
 import 'package:spenza/ui/favourite_stores/data/favourite_store_state.dart';
 import 'package:spenza/ui/favourite_stores/data/favourite_stores_request.dart';
 import 'package:spenza/ui/login/data/user.dart';
+import 'package:spenza/utils/firestore_constants.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
+
 import 'data/favourite_stores.dart';
 
-class FavoriteRepository extends StateNotifier<FavouriteStoreState> {
-  FavoriteRepository() : super(const FavouriteStoreState());
+part 'favorite_repository.g.dart';
+
+@riverpod
+class FavoriteRepository extends _$FavoriteRepository {
+
+  @override
+  FavouriteStoreState build() {
+    return FavouriteStoreState();
+  }
+
 
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
   List<Stores> _favoriteStores = [];
@@ -69,8 +77,8 @@ class FavoriteRepository extends StateNotifier<FavouriteStoreState> {
   Future<List<Stores>> _fetchProductsByZipCode(String userZipCode) async {
     try {
       final QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore
-          .collection('stores')
-          .where('zipCodesList', arrayContains: userZipCode)
+          .collection(StoreConstant.storeCollection)
+          .where(StoreConstant.zipCodesListField, arrayContains: userZipCode)
           .get();
 
       final List<Stores> stores = snapshot.docs.map((doc) {
@@ -93,8 +101,8 @@ class FavoriteRepository extends StateNotifier<FavouriteStoreState> {
   Future<Users?> _getUser(String userId) async {
     try {
       final QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore
-          .collection('users')
-          .where('uid', isEqualTo: userId)
+          .collection(UserConstant.userCollection)
+          .where(UserConstant.userIdField, isEqualTo: userId)
           .get();
 
       if (snapshot.docs.isNotEmpty) {
@@ -111,13 +119,13 @@ class FavoriteRepository extends StateNotifier<FavouriteStoreState> {
   Future<bool> _hasUserZipCodeField(String userId) async {
     try {
       final QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore
-          .collection('users')
-          .where('uid', isEqualTo: userId)
+          .collection(UserConstant.userCollection)
+          .where(FavoriteConstant.userIdField, isEqualTo: userId)
           .get();
 
       if (snapshot.docs.isNotEmpty) {
         final userData = snapshot.docs.first.data();
-        return userData.containsKey('zipCode');
+        return userData.containsKey(UserConstant.zipCodeField);
       }
 
       return false;
@@ -127,7 +135,7 @@ class FavoriteRepository extends StateNotifier<FavouriteStoreState> {
   }
 
   void toggleFavorite(Stores store) {
-    debugPrint("Called toggle Favourite on $store");
+    // debugPrint("Called toggle Favourite on $store");
     FavouriteStoreState updatedStores = state.maybeWhen(
       () => state,
       success: (stores) {
@@ -153,32 +161,40 @@ class FavoriteRepository extends StateNotifier<FavouriteStoreState> {
 
   Future<void> saveFavouriteStoreIfAny() async {
     try {
+
+      state = FavouriteStoreState.loading();
+
       if (_favoriteStores.isEmpty) {
         /// Redirect user to home screen
-        state = FavouriteStoreState.redirectUser();
+        await _setRedirectState();
         return;
       }
 
       final prefs = await SharedPreferences.getInstance();
       final userId = prefs.getUserId();
 
-      final favouriteStoresCollection = _fireStore.collection('favorites');
+      final favouriteStoresCollection =
+      _fireStore.collection(FavoriteConstant.favoriteCollection);
 
       final favouriteStoresRequest = FavouriteStoresRequest(
-        userId: "users/$userId",
-        storeIds:
-            _favoriteStores.map((Stores data) => "stores/${data.id}").toList(),
+        userId: '${UserConstant.userCollection}/$userId',
+        storeIds: _favoriteStores
+            .map((store) => '${StoreConstant.storeCollection}/${store.id}')
+            .toList(),
       );
 
-      final favouriteStoresData = favouriteStoresRequest.toJson();
-      debugPrint("FAVOURITE STORES  ==== $favouriteStoresData");
-
-      await favouriteStoresCollection.add(favouriteStoresData);
-      state = FavouriteStoreState.redirectUser();
+      await favouriteStoresCollection.add(favouriteStoresRequest.toJson());
+      await _setRedirectState();
 
       /// Redirect user to home screen
     } catch (error) {
       state = FavouriteStoreState.error(message: error.toString());
     }
+  }
+
+  _setRedirectState() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool("is_first_login", false);
+    state = FavouriteStoreState.redirectUser();
   }
 }

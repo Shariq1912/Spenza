@@ -28,7 +28,6 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-
   @override
   void initState() {
     super.initState();
@@ -59,7 +58,12 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                 success: (position) {
                   // todo  Will be replaced with container, no need to show text
                   // todo redirect user to favorite store screen.
-                  context.goNamed(RouteManager.favouriteScreen);
+                  // context.goNamed(RouteManager.favouriteScreen);
+
+                  ref
+                      .read(locationPermissionProvider.notifier)
+                      .redirectUserToDestination(context: context);
+
                   return Container();
                 },
                 loading: () => Center(child: CircularProgressIndicator()),
@@ -78,6 +82,12 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                   );
                 },
                 error: (error) {
+                  // todo this sometimes shows error when location not found with zip code then redirect to favorite store
+                  // todo because zip code already stored in the database.
+                  debugPrint('Error: $error');
+                  ref
+                      .read(locationPermissionProvider.notifier)
+                      .redirectUserToDestination(context: context);
                   return Center(child: Text('Error: $error'));
                 },
               ),

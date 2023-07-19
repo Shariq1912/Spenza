@@ -8,7 +8,9 @@ import 'package:spenza/ui/login/login_repository.dart';
 import '../location/location_provider.dart';
 
 
+/*
 final favoriteProvider = StateNotifierProvider<FavoriteRepository, FavouriteStoreState>((ref) {
   return FavoriteRepository();
 });
+*/
 

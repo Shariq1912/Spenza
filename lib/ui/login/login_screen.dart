@@ -40,9 +40,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     EmailValidator(errorText: 'Please use valid Email ID'),
   ]);
 
-
   @override
-  void initState()   {
+  void initState() {
     super.initState();
 
     /*passwordValidator = MultiValidator([
@@ -60,7 +59,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       ),
     ]);*/
 
-      // getPostalCode();
+    // getPostalCode();
   }
 
   getPostalCode() async {
@@ -68,14 +67,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     double longitude = 73.1646;
 
     try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(latitude, longitude);
       String postalCode = placemarks.first.postalCode ?? "";
       print('Postal Code: $postalCode');
     } catch (e) {
       print('Error: $e');
     }
   }
-
 
   @override
   void dispose() {
@@ -138,19 +137,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                       child: Column(
                         children: [
-                          responseValue.when(
-                            () => Container(),
-                            loading: () => const CircularProgressIndicator(),
-                            success: (data) {
-                              debugPrint("$data");
-                              context.goNamed(RouteManager.locationScreen);
-                              return Container();
-                            },
-                            error: (message) {
-                              debugPrint("$message");
-                              return Container();
-                            },
-                          ),
                           TextFormField(
                             decoration: InputDecoration(
                               hintText:
@@ -203,43 +189,33 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Center(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Handle login button press
-                          if (!_formKey.currentState!.validate()) {
-                            context.showSnackBar(
-                              message:
-                                  AppLocalizations.of(context)!.loginFormErrors,
-                            );
-                          }
-
-                          final loginData = LoginRequest(
-                            email: emailController.text.toString(),
-                            password: passwordController.text.toString(),
-                          );
-
-                          ref
-                              .read(loginRepositoryProvider.notifier)
-                              .loginWithEmailAndPassword(
-                                  credentials: loginData);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF0CA9E6),
-                          foregroundColor: Colors.white,
-                          textStyle: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: poppinsFont,
+                    Consumer(
+                      builder: (context, ref, child) {
+                        return responseValue.maybeWhen(
+                          () => _LoginButton(),
+                          loading: () => const CircularProgressIndicator(),
+                          success: (data) {
+                            debugPrint("$data");
+                            ref.read(loginRepositoryProvider.notifier).redirectUserToDestination(context: context);
+                            return Container();
+                          },
+                          orElse: () => _LoginButton(),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        return responseValue.maybeWhen(
+                          () => Container(),
+                          error: (errorMsg) => Text(
+                            errorMsg.toString(),
+                            style: TextStyle(
+                                color: Colors.red, fontWeight: FontWeight.bold),
                           ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            side: const BorderSide(color: Color(0xFF99D6EF)),
-                          ),
-                          fixedSize: const Size(310, 40),
-                        ),
-                        child: Text(AppLocalizations.of(context)!.loginButton),
-                      ),
+                          orElse: () => Container(),
+                        );
+                      },
                     ),
                     const SizedBox(height: 25),
                     Row(
@@ -315,4 +291,41 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       ),
     );
   }
+
+  Widget _LoginButton() => Center(
+        child: ElevatedButton(
+          onPressed: () {
+            // Handle login button press
+            if (!_formKey.currentState!.validate()) {
+              context.showSnackBar(
+                message: AppLocalizations.of(context)!.loginFormErrors,
+              );
+            }
+
+            final loginData = LoginRequest(
+              email: emailController.text.toString(),
+              password: passwordController.text.toString(),
+            );
+
+            ref
+                .read(loginRepositoryProvider.notifier)
+                .loginWithEmailAndPassword(credentials: loginData);
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF0CA9E6),
+            foregroundColor: Colors.white,
+            textStyle: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: poppinsFont,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+              side: const BorderSide(color: Color(0xFF99D6EF)),
+            ),
+            fixedSize: const Size(310, 40),
+          ),
+          child: Text(AppLocalizations.of(context)!.loginButton),
+        ),
+      );
 }

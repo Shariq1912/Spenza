@@ -5,13 +5,9 @@ import 'package:spenza/ui/favourite_stores/favourite_store_screen.dart';
 import 'package:spenza/ui/home/home_screen.dart';
 import 'package:spenza/ui/location/location_screen.dart';
 import 'package:spenza/ui/login/login_screen.dart';
-import 'package:spenza/ui/profile/profile_screen.dart';
-import 'package:spenza/ui/sign_up/sign_up_screen.dart';
-import 'package:spenza/ui/splash/splash_route.dart';
+import 'package:spenza/ui/sign_up/register_screen.dart';
+import 'package:spenza/ui/splash/splash_screen.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
-
-import '../ui/profile/component/add_list.dart';
-import '../ui/settings/setting_Screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigator = GlobalKey(debugLabel: 'root');
 
@@ -27,9 +23,6 @@ class RouteManager {
   static const String locationScreen = '/locationScreen';
   static const String favouriteScreen = '/favouriteScreen';
   static const String homeScreen = '/homeScreen';
-  static const String settingScreen = '/settingScreen';
-  static const String profileScreen = '/profileScreen';
-  static const String addListScreen = '/addListScreen';
 
   /// The route configuration.
   static final GoRouter router = GoRouter(
@@ -47,7 +40,7 @@ class RouteManager {
         name: registerScreen,
         path: registerScreen,
         builder: (context, state) {
-          return const SignUpScreen();
+          return const RegisterScreen();
         },
       ),
       GoRoute(
@@ -61,6 +54,7 @@ class RouteManager {
         name: locationScreen,
         path: locationScreen,
         builder: (context, state) {
+          /// Once Login or Register redirects to here.
           return const LocationScreen();
         },
       ),
@@ -68,10 +62,10 @@ class RouteManager {
         name: favouriteScreen,
         path: favouriteScreen,
         builder: (context, state) {
+          /// Checks whether it's first time login or register when coming from location screen.
           return FavouriteStoreScreen(null);
         },
       ),
-
       GoRoute(
         name: homeScreen,
         path: homeScreen,
@@ -79,32 +73,11 @@ class RouteManager {
           return const HomeScreen();
         },
       ),
-
-      GoRoute(
-        name: settingScreen,
-        path: settingScreen,
-        builder: (context, state) {
-          return const SettingScreen();
-        },
-      ),
-      GoRoute(
-        name: profileScreen,
-        path: profileScreen,
-        builder: (context, state) {
-          return const ProfileScreen();
-        },
-      ),
-      GoRoute(
-        name: addListScreen,
-        path: addListScreen,
-        builder: (context, state) {
-          return const AddItemToList();
-        },
-      ),
     ],
     redirect: (context, state) async {
-      final prefs = await SharedPreferences.getInstance();
-      return prefs.isUserLoggedIn() ? favouriteScreen : null;
+      return null;
+      /*final prefs = await SharedPreferences.getInstance();
+      return prefs.isUserLoggedIn() ? favouriteScreen : null;*/
     },
   );
 }
