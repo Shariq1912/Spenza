@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:searchable_listview/searchable_listview.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/favourite_stores/favorite_provider.dart';
 import 'package:spenza/ui/favourite_stores/widgets/custom_searchbar.dart';
 import 'package:spenza/ui/favourite_stores/widgets/favorite_store_list_widget.dart';
-import 'package:spenza/ui/location/lat_lng_provider.dart';
-import 'package:spenza/ui/location/location_provider.dart';
+import 'package:spenza/utils/spenza_extensions.dart';
 
 import 'data/favourite_stores.dart';
 
@@ -21,11 +21,12 @@ class FavouriteStoreScreen extends ConsumerStatefulWidget {
 
 class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
   final poppinsFont = GoogleFonts.poppins().fontFamily;
-
+  late CustomSearchDelegate _searchDelegate;
+  String searchInput="";
   @override
   void initState() {
     _loadStores();
-
+    _searchDelegate = CustomSearchDelegate([]);
     super.initState();
   }
 
@@ -35,6 +36,7 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
 
   @override
   Widget build(BuildContext buildContext) {
+
 
     return Scaffold(
       appBar: AppBar(
@@ -51,17 +53,19 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
         elevation: 5,
         surfaceTintColor: Colors.white,
         shadowColor: Colors.grey,
-        actions: [
+        centerTitle: true,
+        /*actions: [
           IconButton(
             onPressed: () {
-              showSearch(context: context, delegate: CustomSearchDelegate());
+              showSearch(context: context, delegate: _searchDelegate);
             },
             icon: const Icon(Icons.search),
           )
-        ],
+        ],*/
       ),
       body: Stack(
         children: [
+
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: Consumer(
@@ -75,14 +79,59 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
                   // success: (stores) => Container(),
                   success: (data) {
                     // debugPrint("$data");
-                    return FavoriteStoreListWidget(
+                    return /*FavoriteStoreListWidget(
                       stores: data,
                       onButtonClicked: (Stores store) {
                         ref
                             .read(favoriteProvider.notifier)
                             .toggleFavorite(store);
                       },
-                    );
+                    );*/
+                       SearchableList<Stores>(
+                         displayClearIcon: true,
+                          initialList: data,
+                          builder: ( filteredList) => ListTile(
+                            leading: filteredList.logo.isNotEmpty
+                                ? Image.network(
+                              filteredList.logo,
+                              fit: BoxFit.cover,
+                            )
+                                : Image.asset(
+                              'favicon.png'.assetImageUrl,
+                              // Replace with the path to your static image asset
+                              fit: BoxFit.cover,
+                            ),
+                            title: Text(filteredList.name),
+                            subtitle: Text(filteredList.adress.substring(0,40)),
+                            trailing: IconButton(
+                              onPressed: () {
+                                ref
+                                    .read(favoriteProvider.notifier)
+                                    .toggleFavorite(filteredList);
+                              },
+                              icon: filteredList.isFavorite
+                                  ? Icon(Icons.favorite_outlined, color: Colors.red)
+                                  : Icon(Icons.favorite_border_outlined),
+                            ),
+                          ),
+                          filter: (value) => data.where((element) => element.name.toLowerCase().contains(value.toLowerCase())).toList(),
+                          emptyWidget: const Text("empty"),
+                          inputDecoration: InputDecoration(
+                            fillColor: Colors.white,
+                            enabledBorder: OutlineInputBorder(borderSide: const BorderSide(
+                              color: Colors.grey,
+                              width: 1.0,
+                            ),),
+                            focusedBorder: OutlineInputBorder(
+                              /*borderSide: const BorderSide(
+                                color: Colors.grey,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(10.0),*/
+                            ),
+                        ),
+                      );
+
                   },
                   redirectUser: () {
                     buildContext.goNamed(RouteManager.homeScreen);
