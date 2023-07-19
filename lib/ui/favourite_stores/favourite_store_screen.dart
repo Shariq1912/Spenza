@@ -26,7 +26,6 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
   @override
   void initState() {
     super.initState();
-
     _loadStores();
   }
 

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../my_store/my_store.dart';
+
 class MyStores extends StatefulWidget {
   const MyStores({Key? key}) : super(key: key);
 
@@ -38,7 +40,9 @@ class _MyStoresState extends State<MyStores> {
               child: Align(
                 alignment: Alignment.topRight,
                 child: IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Stores()));
+                    },
                     icon: Icon(
                       Icons.arrow_forward_ios,
                       color: Color(0xFF0CA9E6),
