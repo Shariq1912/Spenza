@@ -39,6 +39,7 @@ class FetchFavouriteStoreRepository extends _$FetchFavouriteStoreRepository {
 
       print("FVTTs ${stores.length}");
       return stores;
+
     } catch (error) {
       print("Error fetching favorite stores: $error");
       return [];
