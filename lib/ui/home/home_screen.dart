@@ -24,7 +24,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   _loadStores() async {
-    await ref.read(fetchFavouriteStoreRepositoryProvider.notifier).fetchFavouriteStores();
+    await ref.read(fetchFavouriteStoreRepositoryProvider.notifier).fetchAndDisplayFavouriteStores();
   }
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               const Padding(
                 padding: EdgeInsets.only(top: 25, left: 10, right: 10),
                 child: PreLoadedList(),
-              ),const Padding(
+              ), Padding(
                 padding: EdgeInsets.only( left: 10, right: 10),
                 child: MyStores(),
               )

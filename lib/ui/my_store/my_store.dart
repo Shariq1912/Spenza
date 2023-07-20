@@ -71,7 +71,10 @@ class _StoresState extends ConsumerState<Stores> {
             return storeProvider.when(
               () => Container(),
               loading: () => Center(child: CircularProgressIndicator()),
-              error: (message) => Center(child: Text(message)),
+              error: (message) {
+                print("errorMrss $message");
+               return Center(child: Text(message));
+              },
               success: (data) {
                 print("allStoredata $data");
                 return MyStoreListWidget(stores: data, onButtonClicked: (AllStores allstore) {});

@@ -11,7 +11,9 @@ class AllStores with _$AllStores {
       required String adress,
       required List<String> zipCodesList,
       required String logo,
+
       required String groupName}) = _AllStores;
+
 
   factory AllStores.fromJson(Map<String, dynamic> json) =>
       _$_AllStores.fromJson(json);

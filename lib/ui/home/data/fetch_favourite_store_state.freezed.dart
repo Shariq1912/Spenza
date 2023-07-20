@@ -21,7 +21,7 @@ mixin _$FetchFavouriteStoreState {
     TResult Function() $default, {
     required TResult Function() loading,
     required TResult Function(String message) error,
-    required TResult Function(List<FetchFavouriteStores> data) success,
+    required TResult Function(List<AllStores> data) success,
     required TResult Function() redirectUser,
   }) =>
       throw _privateConstructorUsedError;
@@ -30,7 +30,7 @@ mixin _$FetchFavouriteStoreState {
     TResult? Function()? $default, {
     TResult? Function()? loading,
     TResult? Function(String message)? error,
-    TResult? Function(List<FetchFavouriteStores> data)? success,
+    TResult? Function(List<AllStores> data)? success,
     TResult? Function()? redirectUser,
   }) =>
       throw _privateConstructorUsedError;
@@ -39,7 +39,7 @@ mixin _$FetchFavouriteStoreState {
     TResult Function()? $default, {
     TResult Function()? loading,
     TResult Function(String message)? error,
-    TResult Function(List<FetchFavouriteStores> data)? success,
+    TResult Function(List<AllStores> data)? success,
     TResult Function()? redirectUser,
     required TResult orElse(),
   }) =>
@@ -136,7 +136,7 @@ class _$_Initial implements _Initial {
     TResult Function() $default, {
     required TResult Function() loading,
     required TResult Function(String message) error,
-    required TResult Function(List<FetchFavouriteStores> data) success,
+    required TResult Function(List<AllStores> data) success,
     required TResult Function() redirectUser,
   }) {
     return $default();
@@ -148,7 +148,7 @@ class _$_Initial implements _Initial {
     TResult? Function()? $default, {
     TResult? Function()? loading,
     TResult? Function(String message)? error,
-    TResult? Function(List<FetchFavouriteStores> data)? success,
+    TResult? Function(List<AllStores> data)? success,
     TResult? Function()? redirectUser,
   }) {
     return $default?.call();
@@ -160,7 +160,7 @@ class _$_Initial implements _Initial {
     TResult Function()? $default, {
     TResult Function()? loading,
     TResult Function(String message)? error,
-    TResult Function(List<FetchFavouriteStores> data)? success,
+    TResult Function(List<AllStores> data)? success,
     TResult Function()? redirectUser,
     required TResult orElse(),
   }) {
@@ -264,7 +264,7 @@ class _$_FetchFavouriteStoreStateLoading
     TResult Function() $default, {
     required TResult Function() loading,
     required TResult Function(String message) error,
-    required TResult Function(List<FetchFavouriteStores> data) success,
+    required TResult Function(List<AllStores> data) success,
     required TResult Function() redirectUser,
   }) {
     return loading();
@@ -276,7 +276,7 @@ class _$_FetchFavouriteStoreStateLoading
     TResult? Function()? $default, {
     TResult? Function()? loading,
     TResult? Function(String message)? error,
-    TResult? Function(List<FetchFavouriteStores> data)? success,
+    TResult? Function(List<AllStores> data)? success,
     TResult? Function()? redirectUser,
   }) {
     return loading?.call();
@@ -288,7 +288,7 @@ class _$_FetchFavouriteStoreStateLoading
     TResult Function()? $default, {
     TResult Function()? loading,
     TResult Function(String message)? error,
-    TResult Function(List<FetchFavouriteStores> data)? success,
+    TResult Function(List<AllStores> data)? success,
     TResult Function()? redirectUser,
     required TResult orElse(),
   }) {
@@ -420,7 +420,7 @@ class _$_FetchFavouriteStoreStateError
     TResult Function() $default, {
     required TResult Function() loading,
     required TResult Function(String message) error,
-    required TResult Function(List<FetchFavouriteStores> data) success,
+    required TResult Function(List<AllStores> data) success,
     required TResult Function() redirectUser,
   }) {
     return error(message);
@@ -432,7 +432,7 @@ class _$_FetchFavouriteStoreStateError
     TResult? Function()? $default, {
     TResult? Function()? loading,
     TResult? Function(String message)? error,
-    TResult? Function(List<FetchFavouriteStores> data)? success,
+    TResult? Function(List<AllStores> data)? success,
     TResult? Function()? redirectUser,
   }) {
     return error?.call(message);
@@ -444,7 +444,7 @@ class _$_FetchFavouriteStoreStateError
     TResult Function()? $default, {
     TResult Function()? loading,
     TResult Function(String message)? error,
-    TResult Function(List<FetchFavouriteStores> data)? success,
+    TResult Function(List<AllStores> data)? success,
     TResult Function()? redirectUser,
     required TResult orElse(),
   }) {
@@ -516,7 +516,7 @@ abstract class _$$_FetchFavouriteStoreStateSuccessCopyWith<$Res> {
           $Res Function(_$_FetchFavouriteStoreStateSuccess) then) =
       __$$_FetchFavouriteStoreStateSuccessCopyWithImpl<$Res>;
   @useResult
-  $Res call({List<FetchFavouriteStores> data});
+  $Res call({List<AllStores> data});
 }
 
 /// @nodoc
@@ -538,7 +538,7 @@ class __$$_FetchFavouriteStoreStateSuccessCopyWithImpl<$Res>
       data: null == data
           ? _value._data
           : data // ignore: cast_nullable_to_non_nullable
-              as List<FetchFavouriteStores>,
+              as List<AllStores>,
     ));
   }
 }
@@ -548,12 +548,12 @@ class __$$_FetchFavouriteStoreStateSuccessCopyWithImpl<$Res>
 class _$_FetchFavouriteStoreStateSuccess
     implements _FetchFavouriteStoreStateSuccess {
   const _$_FetchFavouriteStoreStateSuccess(
-      {required final List<FetchFavouriteStores> data})
+      {required final List<AllStores> data})
       : _data = data;
 
-  final List<FetchFavouriteStores> _data;
+  final List<AllStores> _data;
   @override
-  List<FetchFavouriteStores> get data {
+  List<AllStores> get data {
     if (_data is EqualUnmodifiableListView) return _data;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_data);
@@ -590,7 +590,7 @@ class _$_FetchFavouriteStoreStateSuccess
     TResult Function() $default, {
     required TResult Function() loading,
     required TResult Function(String message) error,
-    required TResult Function(List<FetchFavouriteStores> data) success,
+    required TResult Function(List<AllStores> data) success,
     required TResult Function() redirectUser,
   }) {
     return success(data);
@@ -602,7 +602,7 @@ class _$_FetchFavouriteStoreStateSuccess
     TResult? Function()? $default, {
     TResult? Function()? loading,
     TResult? Function(String message)? error,
-    TResult? Function(List<FetchFavouriteStores> data)? success,
+    TResult? Function(List<AllStores> data)? success,
     TResult? Function()? redirectUser,
   }) {
     return success?.call(data);
@@ -614,7 +614,7 @@ class _$_FetchFavouriteStoreStateSuccess
     TResult Function()? $default, {
     TResult Function()? loading,
     TResult Function(String message)? error,
-    TResult Function(List<FetchFavouriteStores> data)? success,
+    TResult Function(List<AllStores> data)? success,
     TResult Function()? redirectUser,
     required TResult orElse(),
   }) {
@@ -671,10 +671,10 @@ class _$_FetchFavouriteStoreStateSuccess
 abstract class _FetchFavouriteStoreStateSuccess
     implements FetchFavouriteStoreState {
   const factory _FetchFavouriteStoreStateSuccess(
-          {required final List<FetchFavouriteStores> data}) =
+          {required final List<AllStores> data}) =
       _$_FetchFavouriteStoreStateSuccess;
 
-  List<FetchFavouriteStores> get data;
+  List<AllStores> get data;
   @JsonKey(ignore: true)
   _$$_FetchFavouriteStoreStateSuccessCopyWith<
           _$_FetchFavouriteStoreStateSuccess>
@@ -727,7 +727,7 @@ class _$_FetchFavouriteStoreStateeRedirectUser
     TResult Function() $default, {
     required TResult Function() loading,
     required TResult Function(String message) error,
-    required TResult Function(List<FetchFavouriteStores> data) success,
+    required TResult Function(List<AllStores> data) success,
     required TResult Function() redirectUser,
   }) {
     return redirectUser();
@@ -739,7 +739,7 @@ class _$_FetchFavouriteStoreStateeRedirectUser
     TResult? Function()? $default, {
     TResult? Function()? loading,
     TResult? Function(String message)? error,
-    TResult? Function(List<FetchFavouriteStores> data)? success,
+    TResult? Function(List<AllStores> data)? success,
     TResult? Function()? redirectUser,
   }) {
     return redirectUser?.call();
@@ -751,7 +751,7 @@ class _$_FetchFavouriteStoreStateeRedirectUser
     TResult Function()? $default, {
     TResult Function()? loading,
     TResult Function(String message)? error,
-    TResult Function(List<FetchFavouriteStores> data)? success,
+    TResult Function(List<AllStores> data)? success,
     TResult Function()? redirectUser,
     required TResult orElse(),
   }) {
