@@ -8,7 +8,7 @@ import 'package:spenza/ui/my_list_details/components/searchbox_widget.dart';
 import 'package:spenza/ui/my_list_details/components/user_selected_product_widget.dart';
 import 'package:spenza/utils/color_utils.dart';
 
-class MyListDetailsScreen extends ConsumerStatefulWidAget {
+class MyListDetailsScreen extends ConsumerStatefulWidget {
   const MyListDetailsScreen({super.key});
 
   @override
