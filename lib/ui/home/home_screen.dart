@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:spenza/ui/home/repo/fetch_favourite_store_repository.dart';
 import 'package:spenza/ui/settings/setting_Screen.dart';
 
 import '../../router/app_router.dart';
@@ -7,14 +9,23 @@ import 'components/myStore.dart';
 import 'components/preLoadedList.dart';
 import 'components/topStrip.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  @override
+  void initState() {
+    _loadStores();
+    super.initState();
+  }
+
+  _loadStores() async {
+    await ref.read(fetchFavouriteStoreRepositoryProvider.notifier).fetchFavouriteStores();
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(

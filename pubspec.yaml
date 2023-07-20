@@ -116,6 +116,8 @@ dependencies:
   geoflutterfire2: ^2.3.15
   cached_network_image: ^3.2.3
   searchable_listview: ^2.4.0
+  image_picker: ^1.0.1
+  permission_handler: ^10.4.3
 
 dev_dependencies:
 

@@ -4,10 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 import 'package:spenza/router/app_router.dart';
-import 'package:spenza/ui/favourite_stores/favorite_provider.dart';
 import 'package:spenza/ui/favourite_stores/favorite_repository.dart';
 import 'package:spenza/ui/favourite_stores/widgets/custom_searchbar.dart';
-import 'package:spenza/ui/favourite_stores/widgets/favorite_store_list_widget.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
 import 'data/favourite_stores.dart';
