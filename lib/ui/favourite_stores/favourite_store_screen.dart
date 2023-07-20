@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -89,8 +90,8 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
                       initialList: data,
                       builder: (filteredList) => ListTile(
                         leading: filteredList.logo.isNotEmpty
-                            ? Image.network(
-                                filteredList.logo,
+                            ? CachedNetworkImage(
+                                imageUrl: filteredList.logo,
                                 fit: BoxFit.cover,
                               )
                             : Image.asset(

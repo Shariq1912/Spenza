@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:spenza/ui/splash/provider/splash_provider.dart';
+import 'package:spenza/utils/spenza_extensions.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -20,7 +21,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   void initState() {
     super.initState();
 
-    ref.read(splashProvider.notifier).isLoggedIn();
+    Future.microtask(() => ref.read(splashProvider.notifier).isLoggedIn());
   }
 
   @override
@@ -56,7 +57,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                         ),
                         Center(
                           child: Image.asset(
-                            'assets/images/logo.gif',
+                            'logo.png'.assetImageUrl,
                             width: 300,
                             fit: BoxFit.fitWidth,
                           ),
@@ -113,7 +114,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                           return ref.watch(splashProvider).when(
                                 data: (data) {
                                   if (data != null) {
-                                    buildContext.goNamed(data);
+                                    Future.delayed(Duration.zero, () {
+                                      context.goNamed(data);
+                                    });
                                   }
                                   return data == null
                                       ? Column(
