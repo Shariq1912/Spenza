@@ -74,6 +74,7 @@ class _StoresState extends ConsumerState<Stores> {
               error: (message) => Center(child: Text(message)),
               success: (data) {
                 print("allStoredata $data");
+
                 return MyStoreListWidget(stores: data, onButtonClicked: (AllStores allstore) {});
               },
             );
