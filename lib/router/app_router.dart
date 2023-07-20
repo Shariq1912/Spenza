@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spenza/ui/add_product/add_product_screen.dart';
 import 'package:spenza/ui/favourite_stores/favourite_store_screen.dart';
 import 'package:spenza/ui/home/home_screen.dart';
 import 'package:spenza/ui/location/location_screen.dart';
 import 'package:spenza/ui/login/login_screen.dart';
+import 'package:spenza/ui/my_list_details/my_list_details_screen.dart';
 import 'package:spenza/ui/sign_up/register_screen.dart';
 import 'package:spenza/ui/splash/splash_screen.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
@@ -16,13 +18,15 @@ final GlobalKey<NavigatorState> _shellNavigator =
     GlobalKey(debugLabel: 'shell');
 
 class RouteManager {
-  static const String splashScreen = '/';
+  static const String splashScreen = '/myListDetailScreen';
 
   static const String loginScreen = '/loginScreen';
   static const String registerScreen = '/registerScreen';
   static const String locationScreen = '/locationScreen';
   static const String favouriteScreen = '/favouriteScreen';
   static const String homeScreen = '/homeScreen';
+  static const String myListDetailScreen = '/';
+  static const String addProductScreen = '/addProductScreen';
 
   /// The route configuration.
   static final GoRouter router = GoRouter(
@@ -71,6 +75,20 @@ class RouteManager {
         path: homeScreen,
         builder: (context, state) {
           return const HomeScreen();
+        },
+      ),
+      GoRoute(
+        name: myListDetailScreen,
+        path: myListDetailScreen,
+        builder: (context, state) {
+          return const MyListDetailsScreen();
+        },
+      ),
+      GoRoute(
+        name: addProductScreen,
+        path: addProductScreen,
+        builder: (context, state) {
+          return const AddProductScreen();
         },
       ),
     ],

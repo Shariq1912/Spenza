@@ -90,8 +90,8 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
                       initialList: data,
                       builder: (filteredList) => ListTile(
                         leading: filteredList.logo.isNotEmpty
-                            ? CachedNetworkImage(
-                                imageUrl: filteredList.logo,
+                            ? Image.network(
+                                filteredList.logo,
                                 fit: BoxFit.cover,
                               )
                             : Image.asset(
