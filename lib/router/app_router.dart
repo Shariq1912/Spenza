@@ -74,10 +74,5 @@ class RouteManager {
         },
       ),
     ],
-    redirect: (context, state) async {
-      return null;
-      /*final prefs = await SharedPreferences.getInstance();
-      return prefs.isUserLoggedIn() ? favouriteScreen : null;*/
-    },
   );
 }

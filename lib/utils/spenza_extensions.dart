@@ -34,9 +34,10 @@ extension SharedPreferencesExtension on SharedPreferences {
 }
 
 mixin FirstTimeLoginMixin {
-  Future<bool> isFirstTimeLogin(String userId) async {
+  Future<bool> isFirstTimeLogin(
+      {required FirebaseFirestore firestore, required String userId}) async {
     try {
-      final QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+      final QuerySnapshot<Map<String, dynamic>> snapshot = await firestore
           .collection(UserConstant.userCollection)
           .where(UserConstant.userIdField, isEqualTo: userId)
           .get();
@@ -54,4 +55,3 @@ mixin FirstTimeLoginMixin {
     }
   }
 }
-

@@ -11,7 +11,8 @@ import 'package:spenza/ui/login/data/login_request.dart';
 import 'package:spenza/utils/firestore_constants.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
-class LoginRepository extends StateNotifier<ApiResponse> {
+class LoginRepository extends StateNotifier<ApiResponse>
+    with FirstTimeLoginMixin {
   LoginRepository() : super(const ApiResponse());
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
@@ -22,7 +23,10 @@ class LoginRepository extends StateNotifier<ApiResponse> {
     await prefs.setBool('is_login', true);
     await prefs.setBool(
       'is_first_login',
-      await _isFirstTimeLogin(userCredential.user!.uid),
+      await isFirstTimeLogin(
+        firestore: _fireStore,
+        userId: userCredential.user!.uid,
+      ),
     );
   }
 
@@ -66,6 +70,14 @@ class LoginRepository extends StateNotifier<ApiResponse> {
 
       await _storeData(userCredential);
       state = ApiResponse.success(data: userCredential.user);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+        state = ApiResponse.error(errorMsg: "No user found for that email");
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided.');
+        state = ApiResponse.error(errorMsg: "Invalid email or password");
+      }
     } catch (error) {
       // state = ApiResponse.error(errorMsg: error.toString());
       state = ApiResponse.error(errorMsg: "Invalid email or password");

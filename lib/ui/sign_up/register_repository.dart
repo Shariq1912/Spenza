@@ -71,8 +71,21 @@ class RegisterRepository extends StateNotifier<ApiResponse>{
           uid: userCredential.user!.uid,
           email: credentials.email
       );
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).set(user.toJson());
-    } catch (error) {
+      await _fireStore.collection('users').doc(user.uid).set(user.toJson());
+    }
+    on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+        state = ApiResponse.error(errorMsg: 'The password provided is too weak.');
+
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
+        state = ApiResponse.error(errorMsg: 'The account already exists for that email.');
+      }
+    } catch (e) {
+      print(e);
+    }
+    catch (error) {
       state = ApiResponse.error(errorMsg: error.toString());
     }
   }

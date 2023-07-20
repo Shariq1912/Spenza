@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,7 +17,9 @@ class LocaleProvider extends _$LocaleProvider {
   }
 }
 
+
 final sharedPreferencesProvider =
-    FutureProvider<SharedPreferences>((ref) async {
-  return await SharedPreferences.getInstance();
-});
+Provider<SharedPreferences>((_) => throw UnimplementedError());
+
+
+final firestoreProvider = Provider<FirebaseFirestore>((_) => FirebaseFirestore.instance);

@@ -24,7 +24,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext buildContext) {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -113,7 +113,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                           return ref.watch(splashProvider).when(
                                 data: (data) {
                                   if (data != null) {
-                                    context.goNamed(data);
+                                    buildContext.goNamed(data);
                                   }
                                   return data == null
                                       ? Column(

@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -10,8 +11,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // await inject();
   await Firebase.initializeApp();
+  final sharedPrefs = await SharedPreferences.getInstance();
+
   runApp(
-    const ProviderScope(
+    ProviderScope(
+      overrides: [
+        sharedPreferencesProvider.overrideWithValue(sharedPrefs),
+      ],
       child: SpenzaApp(),
     ),
   );
@@ -42,6 +48,7 @@ class SpenzaApp extends ConsumerWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
+
       /// If manually want to set locale
       // locale: locale,
       supportedLocales: AppLocalizations.supportedLocales,
