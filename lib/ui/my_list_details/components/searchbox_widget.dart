@@ -5,7 +5,8 @@ class SearchBox extends StatelessWidget {
   final TextEditingController controller;
   final ValueChanged<String>? onChanged;
 
-  const SearchBox({required this.controller, this.onChanged, required this.hint});
+  const SearchBox(
+      {required this.controller, this.onChanged, required this.hint});
 
   @override
   Widget build(BuildContext context) {
@@ -31,13 +32,16 @@ class SearchBox extends StatelessWidget {
                 Expanded(
                   child: TextField(
                     controller: controller,
-                    onChanged: onChanged,
                     textInputAction: TextInputAction.search,
                     onSubmitted: (_) {
                       // Perform search or any other action when the user presses the search button on the keyboard.
                       // Here, we can handle the search logic.
                       // Example:
-                      _performSearch();
+
+                      if (controller.text.isNotEmpty) {
+                        print('Performing search...');
+                        onChanged!(controller.text);
+                      }
                     },
                     decoration: InputDecoration(
                       border: InputBorder.none,
@@ -53,9 +57,5 @@ class SearchBox extends StatelessWidget {
     );
   }
 
-  // Example function for handling the search action.
-  void _performSearch() {
-    print('Performing search...');
-    // Implement your search logic here.
-  }
+
 }

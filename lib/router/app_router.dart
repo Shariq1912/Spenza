@@ -88,7 +88,8 @@ class RouteManager {
         name: addProductScreen,
         path: addProductScreen,
         builder: (context, state) {
-          return const AddProductScreen();
+          final String query = state.queryParameters['query'] ?? "";
+          return AddProductScreen(query: query);
         },
       ),
     ],

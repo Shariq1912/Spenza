@@ -48,7 +48,12 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen> {
                   SearchBox(
                     hint: "Add products",
                     controller: _searchController,
-                    onChanged: (value) {},
+                    onChanged: (value) {
+                      context.pushNamed(
+                        RouteManager.addProductScreen,
+                        queryParameters: {'query': value},
+                      );
+                    },
                   ),
                   const SizedBox(height: 10),
                   UserSelectedProductCard(
@@ -69,20 +74,23 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen> {
               onPressed: () {
                 // Add your button onPressed logic here
               },
-              color: Colors.blue, // Change the button color to your desired color
+              color: Colors.blue,
+              // Change the button color to your desired color
               padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
                     Icons.arrow_forward,
-                    color: Colors.white, // Change the icon color to your desired color
+                    color: Colors
+                        .white, // Change the icon color to your desired color
                   ),
                   SizedBox(width: 8),
                   Text(
                     'Continue',
                     style: TextStyle(
-                      color: Colors.white, // Change the text color to your desired color
+                      color: Colors.white,
+                      // Change the text color to your desired color
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),

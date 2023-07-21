@@ -58,25 +58,32 @@ class _UserSelectedProductCardState extends State<UserSelectedProductCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.title,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                    Text(
-                      'KG',
+                      "Category",
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey,
                       ),
                     ),
-                    SizedBox(height: 4),
                     Text(
-                      widget.priceRange,
+                      widget.title,
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         color: Colors.black,
+                      ),
+                    ),
+                    Text(
+                      widget.priceRange,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      "5 kg",
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
                       ),
                     ),
                   ],
