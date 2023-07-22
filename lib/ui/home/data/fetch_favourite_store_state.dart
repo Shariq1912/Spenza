@@ -13,4 +13,5 @@ class FetchFavouriteStoreState with _$FetchFavouriteStoreState {
   const factory FetchFavouriteStoreState.error({required String message}) = _FetchFavouriteStoreStateError;
   const factory FetchFavouriteStoreState.success({required List<AllStores> data}) = _FetchFavouriteStoreStateSuccess;
   const factory FetchFavouriteStoreState.redirectUser() = _FetchFavouriteStoreStateeRedirectUser;
+  const factory FetchFavouriteStoreState.empty({required String message}) = _FetchFavouriteStoreStateEmpty;
 }

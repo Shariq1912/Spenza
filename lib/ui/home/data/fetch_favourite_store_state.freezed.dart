@@ -23,6 +23,7 @@ mixin _$FetchFavouriteStoreState {
     required TResult Function(String message) error,
     required TResult Function(List<AllStores> data) success,
     required TResult Function() redirectUser,
+    required TResult Function(String message) empty,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -32,6 +33,7 @@ mixin _$FetchFavouriteStoreState {
     TResult? Function(String message)? error,
     TResult? Function(List<AllStores> data)? success,
     TResult? Function()? redirectUser,
+    TResult? Function(String message)? empty,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -41,6 +43,7 @@ mixin _$FetchFavouriteStoreState {
     TResult Function(String message)? error,
     TResult Function(List<AllStores> data)? success,
     TResult Function()? redirectUser,
+    TResult Function(String message)? empty,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -52,6 +55,7 @@ mixin _$FetchFavouriteStoreState {
     required TResult Function(_FetchFavouriteStoreStateSuccess value) success,
     required TResult Function(_FetchFavouriteStoreStateeRedirectUser value)
         redirectUser,
+    required TResult Function(_FetchFavouriteStoreStateEmpty value) empty,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -62,6 +66,7 @@ mixin _$FetchFavouriteStoreState {
     TResult? Function(_FetchFavouriteStoreStateSuccess value)? success,
     TResult? Function(_FetchFavouriteStoreStateeRedirectUser value)?
         redirectUser,
+    TResult? Function(_FetchFavouriteStoreStateEmpty value)? empty,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -72,6 +77,7 @@ mixin _$FetchFavouriteStoreState {
     TResult Function(_FetchFavouriteStoreStateSuccess value)? success,
     TResult Function(_FetchFavouriteStoreStateeRedirectUser value)?
         redirectUser,
+    TResult Function(_FetchFavouriteStoreStateEmpty value)? empty,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -138,6 +144,7 @@ class _$_Initial implements _Initial {
     required TResult Function(String message) error,
     required TResult Function(List<AllStores> data) success,
     required TResult Function() redirectUser,
+    required TResult Function(String message) empty,
   }) {
     return $default();
   }
@@ -150,6 +157,7 @@ class _$_Initial implements _Initial {
     TResult? Function(String message)? error,
     TResult? Function(List<AllStores> data)? success,
     TResult? Function()? redirectUser,
+    TResult? Function(String message)? empty,
   }) {
     return $default?.call();
   }
@@ -162,6 +170,7 @@ class _$_Initial implements _Initial {
     TResult Function(String message)? error,
     TResult Function(List<AllStores> data)? success,
     TResult Function()? redirectUser,
+    TResult Function(String message)? empty,
     required TResult orElse(),
   }) {
     if ($default != null) {
@@ -179,6 +188,7 @@ class _$_Initial implements _Initial {
     required TResult Function(_FetchFavouriteStoreStateSuccess value) success,
     required TResult Function(_FetchFavouriteStoreStateeRedirectUser value)
         redirectUser,
+    required TResult Function(_FetchFavouriteStoreStateEmpty value) empty,
   }) {
     return $default(this);
   }
@@ -192,6 +202,7 @@ class _$_Initial implements _Initial {
     TResult? Function(_FetchFavouriteStoreStateSuccess value)? success,
     TResult? Function(_FetchFavouriteStoreStateeRedirectUser value)?
         redirectUser,
+    TResult? Function(_FetchFavouriteStoreStateEmpty value)? empty,
   }) {
     return $default?.call(this);
   }
@@ -205,6 +216,7 @@ class _$_Initial implements _Initial {
     TResult Function(_FetchFavouriteStoreStateSuccess value)? success,
     TResult Function(_FetchFavouriteStoreStateeRedirectUser value)?
         redirectUser,
+    TResult Function(_FetchFavouriteStoreStateEmpty value)? empty,
     required TResult orElse(),
   }) {
     if ($default != null) {
@@ -266,6 +278,7 @@ class _$_FetchFavouriteStoreStateLoading
     required TResult Function(String message) error,
     required TResult Function(List<AllStores> data) success,
     required TResult Function() redirectUser,
+    required TResult Function(String message) empty,
   }) {
     return loading();
   }
@@ -278,6 +291,7 @@ class _$_FetchFavouriteStoreStateLoading
     TResult? Function(String message)? error,
     TResult? Function(List<AllStores> data)? success,
     TResult? Function()? redirectUser,
+    TResult? Function(String message)? empty,
   }) {
     return loading?.call();
   }
@@ -290,6 +304,7 @@ class _$_FetchFavouriteStoreStateLoading
     TResult Function(String message)? error,
     TResult Function(List<AllStores> data)? success,
     TResult Function()? redirectUser,
+    TResult Function(String message)? empty,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -307,6 +322,7 @@ class _$_FetchFavouriteStoreStateLoading
     required TResult Function(_FetchFavouriteStoreStateSuccess value) success,
     required TResult Function(_FetchFavouriteStoreStateeRedirectUser value)
         redirectUser,
+    required TResult Function(_FetchFavouriteStoreStateEmpty value) empty,
   }) {
     return loading(this);
   }
@@ -320,6 +336,7 @@ class _$_FetchFavouriteStoreStateLoading
     TResult? Function(_FetchFavouriteStoreStateSuccess value)? success,
     TResult? Function(_FetchFavouriteStoreStateeRedirectUser value)?
         redirectUser,
+    TResult? Function(_FetchFavouriteStoreStateEmpty value)? empty,
   }) {
     return loading?.call(this);
   }
@@ -333,6 +350,7 @@ class _$_FetchFavouriteStoreStateLoading
     TResult Function(_FetchFavouriteStoreStateSuccess value)? success,
     TResult Function(_FetchFavouriteStoreStateeRedirectUser value)?
         redirectUser,
+    TResult Function(_FetchFavouriteStoreStateEmpty value)? empty,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -422,6 +440,7 @@ class _$_FetchFavouriteStoreStateError
     required TResult Function(String message) error,
     required TResult Function(List<AllStores> data) success,
     required TResult Function() redirectUser,
+    required TResult Function(String message) empty,
   }) {
     return error(message);
   }
@@ -434,6 +453,7 @@ class _$_FetchFavouriteStoreStateError
     TResult? Function(String message)? error,
     TResult? Function(List<AllStores> data)? success,
     TResult? Function()? redirectUser,
+    TResult? Function(String message)? empty,
   }) {
     return error?.call(message);
   }
@@ -446,6 +466,7 @@ class _$_FetchFavouriteStoreStateError
     TResult Function(String message)? error,
     TResult Function(List<AllStores> data)? success,
     TResult Function()? redirectUser,
+    TResult Function(String message)? empty,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -463,6 +484,7 @@ class _$_FetchFavouriteStoreStateError
     required TResult Function(_FetchFavouriteStoreStateSuccess value) success,
     required TResult Function(_FetchFavouriteStoreStateeRedirectUser value)
         redirectUser,
+    required TResult Function(_FetchFavouriteStoreStateEmpty value) empty,
   }) {
     return error(this);
   }
@@ -476,6 +498,7 @@ class _$_FetchFavouriteStoreStateError
     TResult? Function(_FetchFavouriteStoreStateSuccess value)? success,
     TResult? Function(_FetchFavouriteStoreStateeRedirectUser value)?
         redirectUser,
+    TResult? Function(_FetchFavouriteStoreStateEmpty value)? empty,
   }) {
     return error?.call(this);
   }
@@ -489,6 +512,7 @@ class _$_FetchFavouriteStoreStateError
     TResult Function(_FetchFavouriteStoreStateSuccess value)? success,
     TResult Function(_FetchFavouriteStoreStateeRedirectUser value)?
         redirectUser,
+    TResult Function(_FetchFavouriteStoreStateEmpty value)? empty,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -592,6 +616,7 @@ class _$_FetchFavouriteStoreStateSuccess
     required TResult Function(String message) error,
     required TResult Function(List<AllStores> data) success,
     required TResult Function() redirectUser,
+    required TResult Function(String message) empty,
   }) {
     return success(data);
   }
@@ -604,6 +629,7 @@ class _$_FetchFavouriteStoreStateSuccess
     TResult? Function(String message)? error,
     TResult? Function(List<AllStores> data)? success,
     TResult? Function()? redirectUser,
+    TResult? Function(String message)? empty,
   }) {
     return success?.call(data);
   }
@@ -616,6 +642,7 @@ class _$_FetchFavouriteStoreStateSuccess
     TResult Function(String message)? error,
     TResult Function(List<AllStores> data)? success,
     TResult Function()? redirectUser,
+    TResult Function(String message)? empty,
     required TResult orElse(),
   }) {
     if (success != null) {
@@ -633,6 +660,7 @@ class _$_FetchFavouriteStoreStateSuccess
     required TResult Function(_FetchFavouriteStoreStateSuccess value) success,
     required TResult Function(_FetchFavouriteStoreStateeRedirectUser value)
         redirectUser,
+    required TResult Function(_FetchFavouriteStoreStateEmpty value) empty,
   }) {
     return success(this);
   }
@@ -646,6 +674,7 @@ class _$_FetchFavouriteStoreStateSuccess
     TResult? Function(_FetchFavouriteStoreStateSuccess value)? success,
     TResult? Function(_FetchFavouriteStoreStateeRedirectUser value)?
         redirectUser,
+    TResult? Function(_FetchFavouriteStoreStateEmpty value)? empty,
   }) {
     return success?.call(this);
   }
@@ -659,6 +688,7 @@ class _$_FetchFavouriteStoreStateSuccess
     TResult Function(_FetchFavouriteStoreStateSuccess value)? success,
     TResult Function(_FetchFavouriteStoreStateeRedirectUser value)?
         redirectUser,
+    TResult Function(_FetchFavouriteStoreStateEmpty value)? empty,
     required TResult orElse(),
   }) {
     if (success != null) {
@@ -729,6 +759,7 @@ class _$_FetchFavouriteStoreStateeRedirectUser
     required TResult Function(String message) error,
     required TResult Function(List<AllStores> data) success,
     required TResult Function() redirectUser,
+    required TResult Function(String message) empty,
   }) {
     return redirectUser();
   }
@@ -741,6 +772,7 @@ class _$_FetchFavouriteStoreStateeRedirectUser
     TResult? Function(String message)? error,
     TResult? Function(List<AllStores> data)? success,
     TResult? Function()? redirectUser,
+    TResult? Function(String message)? empty,
   }) {
     return redirectUser?.call();
   }
@@ -753,6 +785,7 @@ class _$_FetchFavouriteStoreStateeRedirectUser
     TResult Function(String message)? error,
     TResult Function(List<AllStores> data)? success,
     TResult Function()? redirectUser,
+    TResult Function(String message)? empty,
     required TResult orElse(),
   }) {
     if (redirectUser != null) {
@@ -770,6 +803,7 @@ class _$_FetchFavouriteStoreStateeRedirectUser
     required TResult Function(_FetchFavouriteStoreStateSuccess value) success,
     required TResult Function(_FetchFavouriteStoreStateeRedirectUser value)
         redirectUser,
+    required TResult Function(_FetchFavouriteStoreStateEmpty value) empty,
   }) {
     return redirectUser(this);
   }
@@ -783,6 +817,7 @@ class _$_FetchFavouriteStoreStateeRedirectUser
     TResult? Function(_FetchFavouriteStoreStateSuccess value)? success,
     TResult? Function(_FetchFavouriteStoreStateeRedirectUser value)?
         redirectUser,
+    TResult? Function(_FetchFavouriteStoreStateEmpty value)? empty,
   }) {
     return redirectUser?.call(this);
   }
@@ -796,6 +831,7 @@ class _$_FetchFavouriteStoreStateeRedirectUser
     TResult Function(_FetchFavouriteStoreStateSuccess value)? success,
     TResult Function(_FetchFavouriteStoreStateeRedirectUser value)?
         redirectUser,
+    TResult Function(_FetchFavouriteStoreStateEmpty value)? empty,
     required TResult orElse(),
   }) {
     if (redirectUser != null) {
@@ -809,4 +845,171 @@ abstract class _FetchFavouriteStoreStateeRedirectUser
     implements FetchFavouriteStoreState {
   const factory _FetchFavouriteStoreStateeRedirectUser() =
       _$_FetchFavouriteStoreStateeRedirectUser;
+}
+
+/// @nodoc
+abstract class _$$_FetchFavouriteStoreStateEmptyCopyWith<$Res> {
+  factory _$$_FetchFavouriteStoreStateEmptyCopyWith(
+          _$_FetchFavouriteStoreStateEmpty value,
+          $Res Function(_$_FetchFavouriteStoreStateEmpty) then) =
+      __$$_FetchFavouriteStoreStateEmptyCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String message});
+}
+
+/// @nodoc
+class __$$_FetchFavouriteStoreStateEmptyCopyWithImpl<$Res>
+    extends _$FetchFavouriteStoreStateCopyWithImpl<$Res,
+        _$_FetchFavouriteStoreStateEmpty>
+    implements _$$_FetchFavouriteStoreStateEmptyCopyWith<$Res> {
+  __$$_FetchFavouriteStoreStateEmptyCopyWithImpl(
+      _$_FetchFavouriteStoreStateEmpty _value,
+      $Res Function(_$_FetchFavouriteStoreStateEmpty) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? message = null,
+  }) {
+    return _then(_$_FetchFavouriteStoreStateEmpty(
+      message: null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_FetchFavouriteStoreStateEmpty
+    implements _FetchFavouriteStoreStateEmpty {
+  const _$_FetchFavouriteStoreStateEmpty({required this.message});
+
+  @override
+  final String message;
+
+  @override
+  String toString() {
+    return 'FetchFavouriteStoreState.empty(message: $message)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_FetchFavouriteStoreStateEmpty &&
+            (identical(other.message, message) || other.message == message));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, message);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_FetchFavouriteStoreStateEmptyCopyWith<_$_FetchFavouriteStoreStateEmpty>
+      get copyWith => __$$_FetchFavouriteStoreStateEmptyCopyWithImpl<
+          _$_FetchFavouriteStoreStateEmpty>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function() $default, {
+    required TResult Function() loading,
+    required TResult Function(String message) error,
+    required TResult Function(List<AllStores> data) success,
+    required TResult Function() redirectUser,
+    required TResult Function(String message) empty,
+  }) {
+    return empty(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function()? $default, {
+    TResult? Function()? loading,
+    TResult? Function(String message)? error,
+    TResult? Function(List<AllStores> data)? success,
+    TResult? Function()? redirectUser,
+    TResult? Function(String message)? empty,
+  }) {
+    return empty?.call(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function()? $default, {
+    TResult Function()? loading,
+    TResult Function(String message)? error,
+    TResult Function(List<AllStores> data)? success,
+    TResult Function()? redirectUser,
+    TResult Function(String message)? empty,
+    required TResult orElse(),
+  }) {
+    if (empty != null) {
+      return empty(message);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_Initial value) $default, {
+    required TResult Function(_FetchFavouriteStoreStateLoading value) loading,
+    required TResult Function(_FetchFavouriteStoreStateError value) error,
+    required TResult Function(_FetchFavouriteStoreStateSuccess value) success,
+    required TResult Function(_FetchFavouriteStoreStateeRedirectUser value)
+        redirectUser,
+    required TResult Function(_FetchFavouriteStoreStateEmpty value) empty,
+  }) {
+    return empty(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_Initial value)? $default, {
+    TResult? Function(_FetchFavouriteStoreStateLoading value)? loading,
+    TResult? Function(_FetchFavouriteStoreStateError value)? error,
+    TResult? Function(_FetchFavouriteStoreStateSuccess value)? success,
+    TResult? Function(_FetchFavouriteStoreStateeRedirectUser value)?
+        redirectUser,
+    TResult? Function(_FetchFavouriteStoreStateEmpty value)? empty,
+  }) {
+    return empty?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_Initial value)? $default, {
+    TResult Function(_FetchFavouriteStoreStateLoading value)? loading,
+    TResult Function(_FetchFavouriteStoreStateError value)? error,
+    TResult Function(_FetchFavouriteStoreStateSuccess value)? success,
+    TResult Function(_FetchFavouriteStoreStateeRedirectUser value)?
+        redirectUser,
+    TResult Function(_FetchFavouriteStoreStateEmpty value)? empty,
+    required TResult orElse(),
+  }) {
+    if (empty != null) {
+      return empty(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _FetchFavouriteStoreStateEmpty
+    implements FetchFavouriteStoreState {
+  const factory _FetchFavouriteStoreStateEmpty(
+      {required final String message}) = _$_FetchFavouriteStoreStateEmpty;
+
+  String get message;
+  @JsonKey(ignore: true)
+  _$$_FetchFavouriteStoreStateEmptyCopyWith<_$_FetchFavouriteStoreStateEmpty>
+      get copyWith => throw _privateConstructorUsedError;
 }

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/ui/home/data/fetch_favourite_store.dart';
@@ -28,7 +29,7 @@ class FetchFavouriteStoreRepository extends _$FetchFavouriteStoreRepository {
     try {
       final snapshot = await _fireStore
           .collection(FavoriteConstant.favoriteCollection)
-          .where(FavoriteConstant.userIdField, isEqualTo: 'users/rbUVwnV1rpcTAOGyTv0ZyMDANsM2')
+          .where(FavoriteConstant.userIdField, isEqualTo: 'users/$userId')
           .get();
 
       final List<FetchFavouriteStores> stores = snapshot.docs.map((doc) {
@@ -39,6 +40,9 @@ class FetchFavouriteStoreRepository extends _$FetchFavouriteStoreRepository {
       }).toList();
 
       print("FVTTs ${stores.length}");
+      if(stores.isEmpty){
+        return [];
+      }
       return stores;
 
     } catch (error) {
@@ -48,6 +52,10 @@ class FetchFavouriteStoreRepository extends _$FetchFavouriteStoreRepository {
     }
   }
   Future<List<AllStores>> fetchAllStores(List<FetchFavouriteStores> stores) async {
+
+    if(stores.isNotEmpty){
+
+
     final List allStoreReferences = stores
         .expand((store) => store.store_ids.map((ref) => _fireStore.doc(ref)))
         .toList();
@@ -63,6 +71,9 @@ class FetchFavouriteStoreRepository extends _$FetchFavouriteStoreRepository {
         .map((document) => AllStores.fromJson(document.data())).toList();
 
     return favoriteStoreDetails;
+    }
+    else
+      return [];
   }
 
    Future<List<AllStores>> fetchAndDisplayFavouriteStores() async {
@@ -70,10 +81,19 @@ class FetchFavouriteStoreRepository extends _$FetchFavouriteStoreRepository {
     final List<FetchFavouriteStores> favouriteStores = await fetchFavouriteStores();
     final List<AllStores> allFavouriteStores = await fetchAllStores(favouriteStores);
 
+    if(allFavouriteStores.isNotEmpty){
+
     allFavouriteStores.forEach((store) {
       print("Favorite Store Name: ${store.name}");
     });
     state = FetchFavouriteStoreState.success(data: allFavouriteStores);
     return allFavouriteStores;
+
+    }
+    else{
+      state= FetchFavouriteStoreState.empty(message: "no store found");
+      return [];
+    }
+      
   }
 }

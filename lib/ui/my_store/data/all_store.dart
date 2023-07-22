@@ -11,7 +11,7 @@ class AllStores with _$AllStores {
       required String adress,
       required List<String> zipCodesList,
       required String logo,
-
+        @Default(false) bool isFavorite,
       required String groupName}) = _AllStores;
 
 

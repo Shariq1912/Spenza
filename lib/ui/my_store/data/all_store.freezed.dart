@@ -24,6 +24,7 @@ mixin _$AllStores {
   String get adress => throw _privateConstructorUsedError;
   List<String> get zipCodesList => throw _privateConstructorUsedError;
   String get logo => throw _privateConstructorUsedError;
+  bool get isFavorite => throw _privateConstructorUsedError;
   String get groupName => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -42,6 +43,7 @@ abstract class $AllStoresCopyWith<$Res> {
       String adress,
       List<String> zipCodesList,
       String logo,
+      bool isFavorite,
       String groupName});
 }
 
@@ -62,6 +64,7 @@ class _$AllStoresCopyWithImpl<$Res, $Val extends AllStores>
     Object? adress = null,
     Object? zipCodesList = null,
     Object? logo = null,
+    Object? isFavorite = null,
     Object? groupName = null,
   }) {
     return _then(_value.copyWith(
@@ -81,6 +84,10 @@ class _$AllStoresCopyWithImpl<$Res, $Val extends AllStores>
           ? _value.logo
           : logo // ignore: cast_nullable_to_non_nullable
               as String,
+      isFavorite: null == isFavorite
+          ? _value.isFavorite
+          : isFavorite // ignore: cast_nullable_to_non_nullable
+              as bool,
       groupName: null == groupName
           ? _value.groupName
           : groupName // ignore: cast_nullable_to_non_nullable
@@ -101,6 +108,7 @@ abstract class _$$_AllStoresCopyWith<$Res> implements $AllStoresCopyWith<$Res> {
       String adress,
       List<String> zipCodesList,
       String logo,
+      bool isFavorite,
       String groupName});
 }
 
@@ -119,6 +127,7 @@ class __$$_AllStoresCopyWithImpl<$Res>
     Object? adress = null,
     Object? zipCodesList = null,
     Object? logo = null,
+    Object? isFavorite = null,
     Object? groupName = null,
   }) {
     return _then(_$_AllStores(
@@ -138,6 +147,10 @@ class __$$_AllStoresCopyWithImpl<$Res>
           ? _value.logo
           : logo // ignore: cast_nullable_to_non_nullable
               as String,
+      isFavorite: null == isFavorite
+          ? _value.isFavorite
+          : isFavorite // ignore: cast_nullable_to_non_nullable
+              as bool,
       groupName: null == groupName
           ? _value.groupName
           : groupName // ignore: cast_nullable_to_non_nullable
@@ -154,6 +167,7 @@ class _$_AllStores with DiagnosticableTreeMixin implements _AllStores {
       required this.adress,
       required final List<String> zipCodesList,
       required this.logo,
+      this.isFavorite = false,
       required this.groupName})
       : _zipCodesList = zipCodesList;
 
@@ -175,11 +189,14 @@ class _$_AllStores with DiagnosticableTreeMixin implements _AllStores {
   @override
   final String logo;
   @override
+  @JsonKey()
+  final bool isFavorite;
+  @override
   final String groupName;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'AllStores(name: $name, adress: $adress, zipCodesList: $zipCodesList, logo: $logo, groupName: $groupName)';
+    return 'AllStores(name: $name, adress: $adress, zipCodesList: $zipCodesList, logo: $logo, isFavorite: $isFavorite, groupName: $groupName)';
   }
 
   @override
@@ -191,6 +208,7 @@ class _$_AllStores with DiagnosticableTreeMixin implements _AllStores {
       ..add(DiagnosticsProperty('adress', adress))
       ..add(DiagnosticsProperty('zipCodesList', zipCodesList))
       ..add(DiagnosticsProperty('logo', logo))
+      ..add(DiagnosticsProperty('isFavorite', isFavorite))
       ..add(DiagnosticsProperty('groupName', groupName));
   }
 
@@ -204,14 +222,22 @@ class _$_AllStores with DiagnosticableTreeMixin implements _AllStores {
             const DeepCollectionEquality()
                 .equals(other._zipCodesList, _zipCodesList) &&
             (identical(other.logo, logo) || other.logo == logo) &&
+            (identical(other.isFavorite, isFavorite) ||
+                other.isFavorite == isFavorite) &&
             (identical(other.groupName, groupName) ||
                 other.groupName == groupName));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, name, adress,
-      const DeepCollectionEquality().hash(_zipCodesList), logo, groupName);
+  int get hashCode => Object.hash(
+      runtimeType,
+      name,
+      adress,
+      const DeepCollectionEquality().hash(_zipCodesList),
+      logo,
+      isFavorite,
+      groupName);
 
   @JsonKey(ignore: true)
   @override
@@ -233,6 +259,7 @@ abstract class _AllStores implements AllStores {
       required final String adress,
       required final List<String> zipCodesList,
       required final String logo,
+      final bool isFavorite,
       required final String groupName}) = _$_AllStores;
 
   factory _AllStores.fromJson(Map<String, dynamic> json) =
@@ -246,6 +273,8 @@ abstract class _AllStores implements AllStores {
   List<String> get zipCodesList;
   @override
   String get logo;
+  @override
+  bool get isFavorite;
   @override
   String get groupName;
   @override

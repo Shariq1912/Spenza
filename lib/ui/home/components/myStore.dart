@@ -112,6 +112,7 @@ class _MyStoresState extends ConsumerState<MyStores> {
                         );
                       }
                     },
+                    empty: (message) => Text("You don't have any favourite store"),
                     redirectUser: () {
                       /*context.goNamed(RouteManager.homeScreen);*/
                       return Container();
