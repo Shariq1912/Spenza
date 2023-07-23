@@ -26,16 +26,17 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
     super.initState();
 
     print("Query is ${widget.query}");
-    Future.microtask(() =>
+    /*Future.microtask(() =>
         ref.read(addProductProvider.notifier).searchProducts(
-            query: widget.query));
-    }
+            query: widget.query));*/
+    Future.microtask(
+      () => ref.read(addProductProvider.notifier).cloneProductsCollection(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final poppinsFont = ref
-        .watch(poppinsFontProvider)
-        .fontFamily;
+    final poppinsFont = ref.watch(poppinsFontProvider).fontFamily;
 
     return GestureDetector(
       onTap: () {
@@ -56,20 +57,23 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
           },
         ),
         body: Consumer(
-          builder: (context, ref, child) =>
-              ref.watch(addProductProvider).when(
-                data: (data) =>
-                    ListView.builder(
-                      itemCount: data.length,
-                      itemBuilder: (context, index) {
-                        Map<String, dynamic> product = data[index];
-                        return ListTile(
-                          title: Text(product['name']),
-                          subtitle: Text(product['department']),
-                          // Display other product information as needed
-                        );
-                      },
-                    ),
+          builder: (context, ref, child) => ref.watch(addProductProvider).when(
+                data: (data) => ListView.builder(
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    Map<String, dynamic> product = data[index];
+                    return ProductCard(
+                      imageUrl: 'https://picsum.photos/250?image=9',
+                      title: product['name'],
+                      priceRange: "\$10.00 - \$20.15",
+                    );
+                    return ListTile(
+                      title: Text(product['name']),
+                      subtitle: Text(product['department']),
+                      // Display other product information as needed
+                    );
+                  },
+                ),
                 error: (error, stackTrace) => Center(child: Text("$error")),
                 loading: () => Center(child: CircularProgressIndicator()),
               ),

@@ -16,7 +16,84 @@ class AddProduct extends _$AddProduct {
     return [];
   }
 
-  Future<void> searchProducts({String query = "Achiote"}) async {
+  Future<void> cloneProductsCollection() async {
+    // Get all documents from the 'products' collection
+    /*QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('products').get();*/
+
+    // Create a new 'products_clone' collection
+    CollectionReference productsCloneRef =
+        FirebaseFirestore.instance.collection('products_clone');
+
+    QuerySnapshot cloneQuerySnapshot =
+        await FirebaseFirestore.instance.collection('products_clone').get();
+
+    // Create a set to store the existing 'idStore' values from the 'products_clone' collection
+    Set<String> existingIdStores =
+        Set<String>.from(cloneQuerySnapshot.docs.map((doc) => doc.id));
+
+    print(existingIdStores.toString());
+
+    // Query the 'products' collection and filter out the documents with matching 'idStore'
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('products')
+        .where('idStore', whereNotIn: existingIdStores.toList())
+        .get();
+
+
+    // Loop through each document
+    for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+
+      // Get the idStore from the original document
+      String idStore = documentSnapshot['idStore'];
+
+      // Fetch the 'genericNameRef' document
+      DocumentSnapshot genericNameSnapshot =
+          await documentSnapshot['genericNameRef'].get();
+
+      // Fetch the 'departmentRef' document
+      DocumentSnapshot departmentSnapshot =
+          await documentSnapshot['departmentRef'].get();
+
+      // Create a new document in the 'products_clone' collection with idStore as the document ID
+      DocumentReference newProductDocRef = productsCloneRef.doc(idStore);
+
+      // Set the data from the original document
+      await newProductDocRef.set({
+        'idStore': idStore,
+        // Set the document ID as the idStore
+        'is_exist': documentSnapshot['Existence'],
+        'department': documentSnapshot['department'],
+        'departmentRef': documentSnapshot['departmentRef'],
+        'genericNameRef': documentSnapshot['genericNameRef'],
+        'measure': documentSnapshot['measure'],
+        'name': documentSnapshot['name'],
+        'pImage': documentSnapshot['pImage'],
+        'genericNames': [genericNameSnapshot.data()],
+        // Add the 'genericNameRef' data as an array
+        'departments': [departmentSnapshot.data()],
+        // Add the 'departmentRef' data as an array
+      });
+
+      // Create a new 'prices' subcollection for the new document
+      CollectionReference pricesRef = newProductDocRef.collection('prices');
+      // Get the 'storeRef' from the original document and fetch the store data
+      DocumentSnapshot storeSnapshot = await documentSnapshot['bstoreRef'].get();
+
+
+      // Get the bPrice from the original document and add it to the 'prices' subcollection
+      await pricesRef.add({
+        'price': documentSnapshot['bPrice'] ?? 0,
+        'storeName': storeSnapshot['name'] ?? "Cool Store",
+        'logo': storeSnapshot['logo'] ?? "Cool Logo",
+      });
+    }
+
+    print('Products collection cloned successfully!');
+  }
+
+  Future<void> searchProducts2(
+      {String query = "Achiote La Anita 100 g"}) async {
     Future.delayed(Duration.zero);
 
     List<Map<String, dynamic>> searchResults = [];
@@ -31,7 +108,9 @@ class AddProduct extends _$AddProduct {
       QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore
           .collection('products')
           .where('Existence', isEqualTo: true)
-          .where('name', isEqualTo: query)
+          .where('name', isGreaterThanOrEqualTo: "Achiote")
+          .where('name', isLessThanOrEqualTo: "Achiote" + '\uf8ff')
+          // .where('name', arrayContains: "Achiote")
           .get();
 
       // Add the search results to the list
@@ -39,7 +118,8 @@ class AddProduct extends _$AddProduct {
       state = AsyncValue.data(searchResults);
     } catch (e) {
       print('Error searching products: $e');
-      state = AsyncValue.error('Error searching products: $e', StackTrace.current);
+      state =
+          AsyncValue.error('Error searching products: $e', StackTrace.current);
     }
   }
 
@@ -78,4 +158,42 @@ class AddProduct extends _$AddProduct {
 
     return searchResults;
   }*/
+
+  Future<void> searchProducts({String query = ""}) async {
+    // List to store search results
+    List<Map<String, dynamic>> searchResults = [];
+
+    try {
+      state = AsyncValue.loading();
+
+      // Create a single query with multiple arrayContains conditions
+      final query = _fireStore
+          .collection('products')
+          .where('Existence', isEqualTo: true)
+          .where(
+            'name',
+            arrayContains: "Achiote",
+          )
+          .where(
+            'department',
+            arrayContains: "Achiote",
+          )
+          .where(
+            'genericNameRef',
+            arrayContains: "Achiote",
+          );
+
+      // Perform the query and collect the results
+      final results = await query.get();
+
+      // Merge the results into a single list
+      searchResults.addAll(results.docs.map((doc) => doc.data()));
+
+      state = AsyncValue.data(searchResults);
+    } catch (e) {
+      print('Error searching products: $e');
+      state =
+          AsyncValue.error('Error searching products: $e', StackTrace.current);
+    }
+  }
 }
