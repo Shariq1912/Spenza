@@ -19,29 +19,31 @@ class AddProduct extends _$AddProduct {
   Future<void> cloneProductsCollection() async {
     // Fetch all generic names and department names in one batch
     Map<String, DocumentSnapshot> genericNamesMap = {};
-    Map<String, DocumentSnapshot> departmentsMap = {};
-    Map<String, DocumentSnapshot> storesMap = {};
 
     QuerySnapshot genericNamesSnapshot =
         await FirebaseFirestore.instance.collection('genericName').get();
     genericNamesMap = Map.fromEntries(
-      genericNamesSnapshot.docs.map((doc) => MapEntry(doc.reference.path, doc)),
+      genericNamesSnapshot.docs.map((doc) => MapEntry(doc.id, doc)),
     );
 
     QuerySnapshot departmentsSnapshot =
         await FirebaseFirestore.instance.collection('departments').get();
-    departmentsMap = Map.fromEntries(
-      departmentsSnapshot.docs.map((doc) => MapEntry(doc.reference.path, doc)),
-    );
+    // Convert the departmentsSnapshot to a Map<String, String>
+
+    Map<String, String> departmentsMap = Map.fromEntries(
+        departmentsSnapshot.docs.map((doc) => MapEntry(
+            doc.id, (doc.data() as Map<String, dynamic>)['name'].toString())));
 
     QuerySnapshot storesSnapshot =
         await FirebaseFirestore.instance.collection('stores').get();
-    storesMap = Map.fromEntries(
-      storesSnapshot.docs.map((doc) => MapEntry(doc.reference.path, doc)),
+
+    Map<String, Map<String, dynamic>> storesMap = Map.fromEntries(
+      storesSnapshot.docs
+          .map((doc) => MapEntry(doc.id, doc.data() as Map<String, dynamic>)),
     );
 
-    print('Generic Names Map: $genericNamesMap');
-    print('Departments Map: $departmentsMap');
+    // print('Generic Names Map: $genericNamesMap');
+    // print('Departments Map: $departmentsMap');
 
     // Get all documents from the 'products_clone' collection
     QuerySnapshot cloneQuerySnapshot =
@@ -50,14 +52,16 @@ class AddProduct extends _$AddProduct {
     // Create a set to store the existing 'idStore' values from the 'products_clone' collection
     Set<String> existingIdStores =
         Set<String>.from(cloneQuerySnapshot.docs.map((doc) => doc.id));
-    print(existingIdStores.toString());
+    // print(existingIdStores.toString());
 
     // Query the 'products' collection and filter out the documents with matching 'idStore'
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('products')
-        .where('idStore', whereNotIn: existingIdStores.toList())
+        // .where('idStore', whereNotIn: existingIdStores.toList())
         .limit(3)
         .get();
+
+    Set<String> trackedIdStores = {};
 
     // Create a new 'products_clone' collection
     CollectionReference productsCloneRef =
@@ -71,38 +75,50 @@ class AddProduct extends _$AddProduct {
       // Get the idStore from the original document
       String idStore = documentSnapshot['idStore'];
 
-      // Fetch the 'genericNameRef' and 'departmentRef' documents from the pre-fetched maps
-     /* DocumentSnapshot genericNameSnapshot =
-          genericNamesMap[documentSnapshot['genericNameRef']]!;
-      DocumentSnapshot departmentSnapshot =
-          departmentsMap[documentSnapshot['departmentRef']]!;*/
-
-
-      print("generic name before  = ${documentSnapshot['genericNameRef'].path}");
-      // print("generic names = ${genericNameSnapshot.data().toString()}");
-
-      // Create a new document in the 'products_clone' collection with idStore as the document ID
       DocumentReference newProductDocRef = productsCloneRef.doc(idStore);
 
-      // Add the 'set' operation to the batch for the new document
-      batch.set(newProductDocRef, {
-        'idStore': idStore,
-        // Set the document ID as the idStore
-        'is_exist': documentSnapshot['Existence'],
-        'department': documentSnapshot['department'],
-        'departmentRef': documentSnapshot['departmentRef'],
-        'genericNameRef': documentSnapshot['genericNameRef'],
-        'measure': documentSnapshot['measure'],
-        'name': documentSnapshot['name'],
-        'pImage': documentSnapshot['pImage'],
-        // 'genericNames': [genericNameSnapshot.data()],
-        // Add the 'genericNameRef' data as an array
-        // 'departments': [departmentSnapshot.data()],
-        // Add the 'departmentRef' data as an array
-      });
+      if (!trackedIdStores.contains(idStore)) {
+        String genericName = "";
+        for (DocumentReference genericNameRef
+            in documentSnapshot['genericNameRef']) {
+          DocumentSnapshot genericNameSnapshot = await genericNameRef.get();
+          print("generic name before  = ${genericNameSnapshot.id}");
+
+          // Check if the generic name exists in the map
+          if (genericNamesMap.containsKey(genericNameSnapshot.id)) {
+            // Access the 'genericName' field from the data of the DocumentSnapshot
+            Map<String, dynamic>? data = genericNamesMap[genericNameSnapshot.id]
+                ?.data() as Map<String, dynamic>?;
+            genericName = data?['genericName'];
+          } else {
+            print(
+                'Generic Name not found in the genericNamesMap for ID: ${genericNameSnapshot.id}');
+          }
+        }
+
+        DocumentReference departmentRef = documentSnapshot['departmentRef'];
+
+        trackedIdStores.add(idStore);
+        // Add the 'set' operation to the batch for the new document
+        batch.set(newProductDocRef, {
+          'idStore': idStore,
+          // Set the document ID as the idStore
+          'is_exist': documentSnapshot['Existence'],
+          'department': documentSnapshot['department'],
+          'departmentRef': documentSnapshot['departmentRef'],
+          'genericNameRef': documentSnapshot['genericNameRef'],
+          'measure': documentSnapshot['measure'],
+          'name': documentSnapshot['name'],
+          'pImage': documentSnapshot['pImage'],
+          'genericNames': [genericName],
+          'departments': [departmentsMap[departmentRef.id]],
+          // Add the 'departmentRef' data as an array
+        });
+      }
 
       // Create a new 'prices' subcollection for the new document
       CollectionReference pricesRef = newProductDocRef.collection('prices');
+      DocumentReference storeRef = documentSnapshot['bstoreRef'];
 
       // Get the 'storeRef' from the original document and fetch the store data
       /*DocumentSnapshot storeSnapshot =
@@ -113,10 +129,10 @@ class AddProduct extends _$AddProduct {
       // Add the 'set' operation to the batch for the 'prices' subcollection document
       batch.set(pricesRef.doc(), {
         'price': documentSnapshot['bPrice'] ?? 0,
-        // 'storeName': storeSnapshot['name'] ?? "Cool Store",
-        // 'logo': storeSnapshot['logo'] ?? "Cool Logo",
-        'storeName': "Cool Store",
-        'logo': "Cool Logo",
+        'storeName': storesMap[storeRef.id]?['name'] ?? "Cool Store",
+        'logo': storesMap[storeRef.id]?['logo'] ?? "Cool Logo",
+        // 'storeName': "Cool Store",
+        // 'logo': "Cool Logo",
       });
     }
 
