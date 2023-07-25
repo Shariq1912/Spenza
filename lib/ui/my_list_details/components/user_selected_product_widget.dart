@@ -1,42 +1,33 @@
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:spenza/ui/add_product/data/user_product.dart';
+import 'package:spenza/ui/my_list_details/provider/user_product_list_provider.dart';
 import 'package:spenza/utils/color_utils.dart';
 
-class UserSelectedProductCard extends StatefulWidget {
+class UserSelectedProductCard extends ConsumerWidget {
   final String imageUrl;
   final String title;
   final String priceRange;
+  final String department;
+  final UserProduct product;
+
+  // final Function(int quantity) quantity;
 
   const UserSelectedProductCard({
     required this.imageUrl,
     required this.title,
+    required this.department,
     required this.priceRange,
+    required this.product,
   });
 
   @override
-  _UserSelectedProductCardState createState() =>
-      _UserSelectedProductCardState();
-}
+  Widget build(BuildContext context, ref) {
+    /*ref.listen(productQuantityProvider, (previous, next) {
+      quantity.call(next);    /// Callback to provide latest quantity
+    });*/
 
-class _UserSelectedProductCardState extends State<UserSelectedProductCard> {
-  int quantity = 1;
-
-  void _increaseQuantity() {
-    setState(() {
-      quantity++;
-    });
-  }
-
-  void _decreaseQuantity() {
-    setState(() {
-      if (quantity > 1) {
-        quantity--;
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Card(
@@ -47,7 +38,7 @@ class _UserSelectedProductCardState extends State<UserSelectedProductCard> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               CachedNetworkImage(
-                imageUrl: widget.imageUrl,
+                imageUrl: imageUrl,
                 width: 50,
                 height: 50,
                 fit: BoxFit.cover,
@@ -58,21 +49,21 @@ class _UserSelectedProductCardState extends State<UserSelectedProductCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Category",
+                      department,
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey,
                       ),
                     ),
                     Text(
-                      widget.title,
+                      title,
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         color: Colors.black,
                       ),
                     ),
                     Text(
-                      widget.priceRange,
+                      priceRange,
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.black,
@@ -91,7 +82,16 @@ class _UserSelectedProductCardState extends State<UserSelectedProductCard> {
               ),
               SizedBox(width: 12),
               GestureDetector(
-                onTap: _decreaseQuantity,
+                onTap: () {
+                  if (product.quantity > 1) {
+                    ref
+                        .read(userProductListProvider.notifier)
+                        .updateUserProductList(
+                          product: product,
+                          quantity: product.quantity - 1,
+                        );
+                  }
+                },
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                   child: Text(
@@ -108,13 +108,21 @@ class _UserSelectedProductCardState extends State<UserSelectedProductCard> {
                   border: Border.all(color: Colors.black.withOpacity(0.3)),
                 ),
                 child: Text(
-                  quantity.toString(),
-                  style: TextStyle(fontSize: 16, color: ColorUtils.colorPrimary),
+                  product.quantity.toString(),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: ColorUtils.colorPrimary,
+                  ),
                 ),
               ),
               SizedBox(width: 4),
               GestureDetector(
-                onTap: _increaseQuantity,
+                onTap: () => ref
+                    .read(userProductListProvider.notifier)
+                    .updateUserProductList(
+                      product: product,
+                      quantity: product.quantity + 1,
+                    ),
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                   child: Text(

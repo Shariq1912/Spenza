@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 class SearchBox extends StatelessWidget {
   final String hint;
   final TextEditingController controller;
-  final ValueChanged<String>? onChanged;
+  final ValueChanged<String>? onSearch;
 
   const SearchBox(
-      {required this.controller, this.onChanged, required this.hint});
+      {required this.controller, this.onSearch, required this.hint});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class SearchBox extends StatelessWidget {
 
                       if (controller.text.isNotEmpty) {
                         print('Performing search...');
-                        onChanged!(controller.text);
+                        onSearch!(controller.text);
                       }
                     },
                     decoration: InputDecoration(
@@ -56,6 +56,4 @@ class SearchBox extends StatelessWidget {
       ),
     );
   }
-
-
 }

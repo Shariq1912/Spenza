@@ -89,7 +89,10 @@ class RouteManager {
         path: addProductScreen,
         builder: (context, state) {
           final String query = state.queryParameters['query'] ?? "";
-          return AddProductScreen(query: query);
+          final String userListId =
+              state.queryParameters['userListId'] ?? "4NlYnhmchdlu528Gw2yK";
+
+          return AddProductScreen(query: query, userListId: userListId);
         },
       ),
     ],

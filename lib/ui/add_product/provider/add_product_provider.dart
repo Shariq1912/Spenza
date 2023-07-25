@@ -1,8 +1,15 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/router/app_router.dart';
+import 'package:spenza/ui/add_product/data/product.dart';
+import 'package:spenza/ui/add_product/data/user_product.dart';
+import 'package:spenza/utils/firestore_constants.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
 part 'add_product_provider.g.dart';
@@ -12,7 +19,7 @@ class AddProduct extends _$AddProduct {
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
   @override
-  Future<List<Map<String, dynamic>>> build() async {
+  Future<List<Product>> build() async {
     return [];
   }
 
@@ -54,123 +61,233 @@ class AddProduct extends _$AddProduct {
         Set<String>.from(cloneQuerySnapshot.docs.map((doc) => doc.id));
     // print(existingIdStores.toString());
 
-    // Query the 'products' collection and filter out the documents with matching 'idStore'
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('products')
-        // .where('idStore', whereNotIn: existingIdStores.toList())
-        .limit(3)
-        .get();
-
     Set<String> trackedIdStores = {};
 
     // Create a new 'products_clone' collection
     CollectionReference productsCloneRef =
-        FirebaseFirestore.instance.collection('products_clone');
+        FirebaseFirestore.instance.collection('products_clone_new');
 
-    // Create a WriteBatch to perform batched writes
-    WriteBatch batch = FirebaseFirestore.instance.batch();
+    var counter = 0;
+    while (counter < 50) {
+      // Create a WriteBatch to perform batched writes
+      WriteBatch batch = FirebaseFirestore.instance.batch();
+      // Query the 'products' collection and filter out the documents with matching 'idStore'
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('products')
 
-    // Loop through each document
-    for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
-      // Get the idStore from the original document
-      String idStore = documentSnapshot['idStore'];
+          /// need to add start after else it will create duplicate values.
+          // .where('idStore', whereNotIn: existingIdStores.toList())
+          .limit(10)
+          .get();
 
-      DocumentReference newProductDocRef = productsCloneRef.doc(idStore);
+      // Loop through each document
+      for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+        // Get the idStore from the original document
+        String idStore = documentSnapshot['idStore'];
 
-      if (!trackedIdStores.contains(idStore)) {
-        String genericName = "";
-        for (DocumentReference genericNameRef
-            in documentSnapshot['genericNameRef']) {
-          DocumentSnapshot genericNameSnapshot = await genericNameRef.get();
-          print("generic name before  = ${genericNameSnapshot.id}");
+        DocumentReference newProductDocRef = productsCloneRef.doc(idStore);
 
-          // Check if the generic name exists in the map
-          if (genericNamesMap.containsKey(genericNameSnapshot.id)) {
-            // Access the 'genericName' field from the data of the DocumentSnapshot
-            Map<String, dynamic>? data = genericNamesMap[genericNameSnapshot.id]
-                ?.data() as Map<String, dynamic>?;
-            genericName = data?['genericName'];
-          } else {
-            print(
-                'Generic Name not found in the genericNamesMap for ID: ${genericNameSnapshot.id}');
+        if (!trackedIdStores.contains(idStore)) {
+          String genericName = "";
+          for (DocumentReference genericNameRef
+              in documentSnapshot['genericNameRef']) {
+            DocumentSnapshot genericNameSnapshot = await genericNameRef.get();
+            print("generic name before  = ${genericNameSnapshot.id}");
+
+            // Check if the generic name exists in the map
+            if (genericNamesMap.containsKey(genericNameSnapshot.id)) {
+              // Access the 'genericName' field from the data of the DocumentSnapshot
+              Map<String, dynamic>? data =
+                  genericNamesMap[genericNameSnapshot.id]?.data()
+                      as Map<String, dynamic>?;
+              genericName = data?['genericName'];
+            } else {
+              print(
+                  'Generic Name not found in the genericNamesMap for ID: ${genericNameSnapshot.id}');
+            }
           }
+
+          DocumentReference departmentRef = documentSnapshot['departmentRef'];
+
+          trackedIdStores.add(idStore);
+          // Add the 'set' operation to the batch for the new document
+          batch.set(newProductDocRef, {
+            'idStore': idStore,
+            // Set the document ID as the idStore
+            'is_exist': documentSnapshot['Existence'],
+            'department': documentSnapshot['department'],
+            'departmentRef': documentSnapshot['departmentRef'],
+            'genericNameRef': documentSnapshot['genericNameRef'],
+            'measure': documentSnapshot['measure'],
+            'name': documentSnapshot['name'],
+            'pImage': documentSnapshot['pImage'],
+            'genericNames': [genericName],
+            'departments': [departmentsMap[departmentRef.id]],
+            // Add the 'departmentRef' data as an array
+          });
         }
 
-        DocumentReference departmentRef = documentSnapshot['departmentRef'];
+        // Create a new 'prices' subcollection for the new document
+        CollectionReference pricesRef = newProductDocRef.collection('prices');
+        DocumentReference storeRef = documentSnapshot['bstoreRef'];
 
-        trackedIdStores.add(idStore);
-        // Add the 'set' operation to the batch for the new document
-        batch.set(newProductDocRef, {
-          'idStore': idStore,
-          // Set the document ID as the idStore
-          'is_exist': documentSnapshot['Existence'],
-          'department': documentSnapshot['department'],
-          'departmentRef': documentSnapshot['departmentRef'],
-          'genericNameRef': documentSnapshot['genericNameRef'],
-          'measure': documentSnapshot['measure'],
-          'name': documentSnapshot['name'],
-          'pImage': documentSnapshot['pImage'],
-          'genericNames': [genericName],
-          'departments': [departmentsMap[departmentRef.id]],
-          // Add the 'departmentRef' data as an array
-        });
-      }
-
-      // Create a new 'prices' subcollection for the new document
-      CollectionReference pricesRef = newProductDocRef.collection('prices');
-      DocumentReference storeRef = documentSnapshot['bstoreRef'];
-
-      // Get the 'storeRef' from the original document and fetch the store data
-      /*DocumentSnapshot storeSnapshot =
+        // Get the 'storeRef' from the original document and fetch the store data
+        /*DocumentSnapshot storeSnapshot =
           storesMap[documentSnapshot['bstoreRef']]!;
 
       print("stores names = ${storeSnapshot['name'].toString()}");*/
 
-      // Add the 'set' operation to the batch for the 'prices' subcollection document
-      batch.set(pricesRef.doc(), {
-        'price': documentSnapshot['bPrice'] ?? 0,
-        'storeName': storesMap[storeRef.id]?['name'] ?? "Cool Store",
-        'logo': storesMap[storeRef.id]?['logo'] ?? "Cool Logo",
-        // 'storeName': "Cool Store",
-        // 'logo': "Cool Logo",
-      });
+        // Add the 'set' operation to the batch for the 'prices' subcollection document
+        batch.set(pricesRef.doc(), {
+          'price': documentSnapshot['bPrice'] ?? 0,
+          'storeName': storesMap[storeRef.id]?['name'] ?? "Cool Store",
+          'logo': storesMap[storeRef.id]?['logo'] ?? "Cool Logo",
+          'storeRef': documentSnapshot['bstoreRef'] ?? "Cool Store",
+          'store_location':
+              storesMap[storeRef.id]?['location'] ?? "Cool Location",
+          // 'storeName': "Cool Store",
+          // 'logo': "Cool Logo",
+        });
+      }
+
+      // Commit the batch to perform the batched writes
+      await batch.commit();
+
+      print('Products collection cloned successfully!');
+      counter++;
+      Future.delayed(Duration(seconds: 3));
     }
-
-    // Commit the batch to perform the batched writes
-    await batch.commit();
-
-    print('Products collection cloned successfully!');
   }
 
-  Future<void> searchProducts2(
-      {String query = "Achiote La Anita 100 g"}) async {
+  Future<void> fakePricesForTesting() async {
+    String fakeId = "1238800330Walmart";
+    String fromId = "1238800248Walmart"; // Jagon Id
+
+    try {
+      // Get the reference to the 'prices' subcollection under the 'products' collection for the given 'fromId'
+      CollectionReference pricesRef = FirebaseFirestore.instance
+          .collection('products_clone')
+          .doc(fromId)
+          .collection('prices');
+
+      CollectionReference pricesRef2 = FirebaseFirestore.instance
+          .collection('products_clone')
+          .doc(fakeId)
+          .collection('prices');
+
+      // Query the 'prices' subcollection and fetch all the documents
+      QuerySnapshot pricesSnapshot = await pricesRef.get();
+
+      // Loop through the documents in the 'prices' subcollection
+      for (QueryDocumentSnapshot priceDoc in pricesSnapshot.docs) {
+
+        pricesRef2.add({
+          "logo": priceDoc['logo'],
+          "storeName": priceDoc['storeName'],
+          "storeRef": priceDoc['storeRef'],
+          "price": priceDoc['price'], // add random number here
+        });
+      }
+    } catch (e) {
+      print('Error fetching prices: $e');
+    }
+  }
+
+  Future<void> searchProducts({String query = "Achiote La Anita 100 g"}) async {
     Future.delayed(Duration.zero);
 
-    List<Map<String, dynamic>> searchResults = [];
+    // Available Products
+    // Papel Aluminio Reynolds Wrap 20 m,
+    // Jabon de tocador Lirio dermatologico 5 pzas de 120 g c/u,
+    // Detergente liquido Bold 3 carinitos de mama 4.23 l
+    // Ketchup Heinz 397 g
 
-    /// We can do first search on name field if empty then department and if empty then genericNameRef
+    List<Product> searchResults = [];
 
     try {
       state = AsyncValue.loading();
 
-      // Query the Firestore database for products that match the search query and have Existence as true
-
+      // todo query is case sensitive, regex not possible on firestore field
       QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore
-          .collection('products')
-          .where('Existence', isEqualTo: true)
-          .where('name', isGreaterThanOrEqualTo: "Achiote")
-          .where('name', isLessThanOrEqualTo: "Achiote" + '\uf8ff')
-          // .where('name', arrayContains: "Achiote")
+          .collection('products_clone')
+          .where('is_exist', isEqualTo: true)
+          // .where('name', isGreaterThanOrEqualTo: "Achiote")
+          // .where('name', isLessThanOrEqualTo: "Achiote" + '\uf8ff')
+          .where('name', isGreaterThanOrEqualTo: query)
+          .where('name', isLessThanOrEqualTo: query + '\uf8ff')
           .get();
 
-      // Add the search results to the list
-      searchResults = snapshot.docs.map((doc) => doc.data()).toList();
+      // Use Future.wait to wait for all the async operations to complete
+      searchResults = await Future.wait(snapshot.docs.map((doc) async {
+        QuerySnapshot<Map<String, dynamic>> pricesSnapshot = await _fireStore
+            .collection('products_clone')
+            .doc(doc.id)
+            .collection("prices")
+            .get();
+
+        List prices = pricesSnapshot.docs
+            .map((priceDoc) => priceDoc.data()['price'] ?? 0)
+            .toList();
+
+        var minPrice = prices.cast<num>().reduce(min);
+        var maxPrice = prices.cast<num>().reduce(max);
+
+        final Product product = Product(
+          idStore: doc.data()['idStore'],
+          isExist: doc.data()['is_exist'],
+          department: doc.data()['department'],
+          // departmentRef: doc.data()['departmentRef'].toString(),
+          // genericNameRef: doc.data()['genericNameRef'].toString(),
+          measure: doc.data()['measure'],
+          name: doc.data()['name'],
+          pImage: doc.data()['pImage'],
+          departments: doc.data()['departments'] ?? [],
+          genericNames: doc.data()['genericNames'] ?? [],
+          minPrice: minPrice.toString(),
+          maxPrice: maxPrice.toString(),
+        );
+
+        print(product.toString());
+
+        return product;
+        /*return {
+          ...doc.data(),
+          'minPrice': minPrice,
+          'maxPrice': maxPrice,
+        };*/
+      }));
+
       state = AsyncValue.data(searchResults);
     } catch (e) {
       print('Error searching products: $e');
       state =
           AsyncValue.error('Error searching products: $e', StackTrace.current);
     }
+  }
+
+  Future<void> addProductToUserList(BuildContext context,
+      {required Product product, required String userListId}) async {
+    // Create a new 'products_clone' collection
+
+    //todo change mylist name
+    CollectionReference userProductList = _fireStore
+        .collection('mylist')
+        .doc(userListId)
+        .collection(UserProductListCollection.collectionName);
+
+    final userProduct = UserProduct(
+      idStore: product.idStore,
+      department: product.department,
+      name: product.name,
+      pImage: product.pImage,
+      measure: product.measure,
+      minPrice: product.minPrice.toString(),
+      maxPrice: product.maxPrice.toString(),
+    );
+
+    userProductList
+        .add(userProduct.toJson())
+        .then((value) => context.pop('User Product Inserted'));
   }
 
 /*Future<List<Map<String, dynamic>>> searchProducts(String query) async {
@@ -209,7 +326,7 @@ class AddProduct extends _$AddProduct {
     return searchResults;
   }*/
 
-  Future<void> searchProducts({String query = ""}) async {
+/*Future<void> searchProducts({String query = ""}) async {
     // List to store search results
     List<Map<String, dynamic>> searchResults = [];
 
@@ -245,5 +362,5 @@ class AddProduct extends _$AddProduct {
       state =
           AsyncValue.error('Error searching products: $e', StackTrace.current);
     }
-  }
+  }*/
 }

@@ -4,15 +4,21 @@ import 'package:go_router/go_router.dart';
 import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/ui/add_product/components/product_card_widget.dart';
 import 'package:spenza/ui/add_product/components/product_card_widget.dart';
+import 'package:spenza/ui/add_product/components/selectable_chip.dart';
+import 'package:spenza/ui/add_product/components/selectable_chip.dart';
+import 'package:spenza/ui/add_product/components/selectable_chip.dart';
+import 'package:spenza/ui/add_product/data/product.dart';
 import 'package:spenza/ui/add_product/provider/add_product_provider.dart';
 import 'package:spenza/ui/my_list_details/components/custom_app_bar.dart';
 import 'package:spenza/ui/my_list_details/components/searchbox_widget.dart';
 import 'package:spenza/utils/color_utils.dart';
 
 class AddProductScreen extends ConsumerStatefulWidget {
-  const AddProductScreen({super.key, required this.query});
+  const AddProductScreen(
+      {super.key, required this.query, required this.userListId});
 
   final String query;
+  final String userListId;
 
   @override
   ConsumerState createState() => _AddProductScreenState();
@@ -26,12 +32,14 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
     super.initState();
 
     print("Query is ${widget.query}");
-    /*Future.microtask(() =>
-        ref.read(addProductProvider.notifier).searchProducts(
-            query: widget.query));*/
     Future.microtask(
-      () => ref.read(addProductProvider.notifier).cloneProductsCollection(),
+      () => ref
+          .read(addProductProvider.notifier)
+          .searchProducts(query: widget.query),
     );
+    /*Future.microtask(
+      () => ref.read(addProductProvider.notifier).cloneProductsCollection(),
+    );*/
   }
 
   @override
@@ -56,27 +64,74 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
             context.pop();
           },
         ),
-        body: Consumer(
-          builder: (context, ref, child) => ref.watch(addProductProvider).when(
-                data: (data) => ListView.builder(
-                  itemCount: data.length,
-                  itemBuilder: (context, index) {
-                    Map<String, dynamic> product = data[index];
-                    return ProductCard(
-                      imageUrl: 'https://picsum.photos/250?image=9',
-                      title: product['name'],
-                      priceRange: "\$10.00 - \$20.15",
-                    );
-                    return ListTile(
-                      title: Text(product['name']),
-                      subtitle: Text(product['department']),
-                      // Display other product information as needed
-                    );
-                  },
+        body: Column(
+          children: [
+            SearchBox(controller: _searchController, hint: "Search Product"),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+              child: SizedBox(
+                height: 40,
+                child: Consumer(
+                  builder: (context, ref, child) => ref
+                      .watch(addProductProvider)
+                      .when(
+                        data: (data) {
+                          final List<String> departments = [
+                            "All",
+                            ...data
+                                .expand((e) => e.departments)
+                                .toSet()
+                                .toList()
+                          ];
+
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: departments.length,
+                            itemBuilder: (context, index) {
+                              return SelectableChip(label: departments[index]);
+                            },
+                          );
+                        },
+                        error: (error, stackTrace) => Container(),
+                        loading: () => Container(),
+                      ),
                 ),
-                error: (error, stackTrace) => Center(child: Text("$error")),
-                loading: () => Center(child: CircularProgressIndicator()),
               ),
+            ),
+            Expanded(
+              child: Consumer(
+                builder: (context, ref, child) => ref
+                    .watch(addProductProvider)
+                    .when(
+                      data: (data) => ListView.builder(
+                        itemCount: data.length,
+                        itemBuilder: (context, index) {
+                          final Product product = data[index];
+                          return ProductCard(
+                            onClick: () => ref
+                                .read(addProductProvider.notifier)
+                                .addProductToUserList(
+                                  context,
+                                  product: product,
+                                  userListId: widget.userListId,
+                                ),
+                            measure: product.measure,
+                            imageUrl: product.pImage ??
+                                'https://picsum.photos/250?image=9',
+                            title: product.name,
+                            priceRange:
+                                "\$${product.minPrice} - \$${product.maxPrice}",
+                          );
+                        },
+                      ),
+                      error: (error, stackTrace) =>
+                          Center(child: Text("$error")),
+                      loading: () => Center(child: CircularProgressIndicator()),
+                    ),
+              ),
+            ),
+          ],
         ),
       ),
     );

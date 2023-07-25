@@ -3,9 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/router/app_router.dart';
+import 'package:spenza/ui/add_product/data/user_product.dart';
 import 'package:spenza/ui/my_list_details/components/custom_app_bar.dart';
 import 'package:spenza/ui/my_list_details/components/searchbox_widget.dart';
 import 'package:spenza/ui/my_list_details/components/user_selected_product_widget.dart';
+import 'package:spenza/ui/my_list_details/provider/user_product_list_provider.dart';
 import 'package:spenza/utils/color_utils.dart';
 
 class MyListDetailsScreen extends ConsumerStatefulWidget {
@@ -17,6 +19,15 @@ class MyListDetailsScreen extends ConsumerStatefulWidget {
 
 class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen> {
   final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(
+      () => ref.read(userProductListProvider.notifier).fetchProductFromListId(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,37 +53,49 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen> {
         ),
         body: Column(
           children: [
+            SearchBox(
+              hint: "Add products",
+              controller: _searchController,
+              onSearch: (value) {
+                context.pushNamed(
+                  RouteManager.addProductScreen,
+                  queryParameters: {'query': value},
+                );
+                _searchController.clear();
+              },
+            ),
+            const SizedBox(height: 10),
             Expanded(
-              child: ListView(
-                children: [
-                  SearchBox(
-                    hint: "Add products",
-                    controller: _searchController,
-                    onChanged: (value) {
-                      context.pushNamed(
-                        RouteManager.addProductScreen,
-                        queryParameters: {'query': value},
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  UserSelectedProductCard(
-                    imageUrl: 'https://picsum.photos/250?image=9',
-                    title: 'Product 1',
-                    priceRange: "\$10.00 - \$20.15",
-                  ),
-                  UserSelectedProductCard(
-                    imageUrl: 'https://picsum.photos/250?image=9',
-                    title: 'Product 2',
-                    priceRange: "\$10.00 - \$20.15",
-                  ),
-                  // Add more CustomCard widgets here for other items
-                ],
+              // Use a single Expanded widget to wrap the ListView
+              child: Consumer(
+                builder: (context, ref, child) => ref
+                    .watch(userProductListProvider)
+                    .when(
+                      data: (data) => ListView.builder(
+                        itemCount: data.length,
+                        itemBuilder: (context, index) {
+                          final UserProduct product = data[index];
+                          return UserSelectedProductCard(
+                            department: product.department,
+                            imageUrl: product.pImage,
+                            title: product.name,
+                            priceRange:
+                                "\$${product.minPrice} - \$${product.maxPrice}",
+                            product: product,
+                          );
+                        },
+                      ),
+                      error: (error, stackTrace) =>
+                          Center(child: Text("$error")),
+                      loading: () => Center(child: CircularProgressIndicator()),
+                    ),
               ),
             ),
             MaterialButton(
               onPressed: () {
-                // Add your button onPressed logic here
+                ref
+                    .read(userProductListProvider.notifier)
+                    .saveUserProductListToServer();
               },
               color: Colors.blue,
               // Change the button color to your desired color
