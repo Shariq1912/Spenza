@@ -206,6 +206,7 @@ class AddProduct extends _$AddProduct {
 
     try {
       state = AsyncValue.loading();
+      query = query.toCapitalized();
 
       // todo query is case sensitive, regex not possible on firestore field
       QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore

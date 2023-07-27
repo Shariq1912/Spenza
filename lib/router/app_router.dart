@@ -6,6 +6,7 @@ import 'package:spenza/ui/favourite_stores/favourite_store_screen.dart';
 import 'package:spenza/ui/home/home_screen.dart';
 import 'package:spenza/ui/location/location_screen.dart';
 import 'package:spenza/ui/login/login_screen.dart';
+import 'package:spenza/ui/matching_store/matching_store.dart';
 import 'package:spenza/ui/my_list_details/my_list_details_screen.dart';
 import 'package:spenza/ui/sign_up/register_screen.dart';
 import 'package:spenza/ui/splash/splash_screen.dart';
@@ -26,6 +27,7 @@ class RouteManager {
   static const String favouriteScreen = '/favouriteScreen';
   static const String homeScreen = '/homeScreen';
   static const String myListDetailScreen = '/';
+  static const String storeMatchingScreen = '/storeMatchingScreen';
   static const String addProductScreen = '/addProductScreen';
 
   /// The route configuration.
@@ -82,6 +84,16 @@ class RouteManager {
         path: myListDetailScreen,
         builder: (context, state) {
           return const MyListDetailsScreen();
+        },
+      ),
+      GoRoute(
+        name: storeMatchingScreen,
+        path: storeMatchingScreen,
+        builder: (context, state) {
+          final String userListId =
+              state.queryParameters['userListId'] ?? "4NlYnhmchdlu528Gw2yK";
+
+          return MatchingStoreScreen(userListId: userListId);
         },
       ),
       GoRoute(

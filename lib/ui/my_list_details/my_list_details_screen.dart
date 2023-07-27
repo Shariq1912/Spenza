@@ -95,7 +95,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen> {
               onPressed: () {
                 ref
                     .read(userProductListProvider.notifier)
-                    .rankStoresByPriceTotal();
+                    .saveUserProductListToServer(context: context);
               },
               color: Colors.blue,
               // Change the button color to your desired color

@@ -33,6 +33,28 @@ extension SharedPreferencesExtension on SharedPreferences {
   }
 }
 
+extension NumberFormat on double {
+  double toPrecision(int n) => double.parse(toStringAsFixed(n));
+}
+
+extension StringExtension on String {
+  String toCapitalized() =>
+      length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';
+
+  String toTitleCase() => replaceAll(RegExp(' +'), ' ')
+      .split(' ')
+      .map((str) => str.toCapitalized())
+      .join(' ');
+}
+
+extension LocationStringExtension on GeoPoint {
+  String getLocationString() {
+    String latitude = this.latitude.toString();
+    String longitude = this.longitude.toString();
+    return "($latitude, $longitude)";
+  }
+}
+
 mixin FirstTimeLoginMixin {
   Future<bool> isFirstTimeLogin(
       {required FirebaseFirestore firestore, required String userId}) async {
