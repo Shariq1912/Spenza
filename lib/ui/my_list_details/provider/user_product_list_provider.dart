@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spenza/network/api_responses.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/add_product/data/user_product.dart';
 import 'package:spenza/ui/my_list_details/data/matching_store.dart';
@@ -30,29 +31,58 @@ class UserProductList extends _$UserProductList {
     state = AsyncValue.loading();
 
     try {
-      final productListRef = await _fireStore
+      final productListRef = _fireStore
           .collection(MyList.collectionName)
           .doc(listId)
-          .collection(UserProductListCollection.collectionName)
-          .get();
+          .collection(UserProductListCollection.collectionName);
 
-      final productList = productListRef.docs
-          .map(
-            (data) => UserProduct(
-              idStore: data['idStore'],
-              department: data['department'],
-              name: data['name'],
-              minPrice: data['minPrice'].toString(),
-              maxPrice: data['maxPrice'].toString(),
-              quantity: data['quantity'],
-              pImage: data['pImage'],
-              measure: data['measure'],
-            ),
-          )
-          .toList();
+      final List<UserProduct> productList = [];
+      productListRef.snapshots().listen((event) async {
+        productList.clear();
+        for (var snapshot in event.docs) {
+          final idStore = snapshot['idStore'];
+          final productRef =
+              _fireStore.collection('products_clone').doc(idStore);
+          final pricesSnapshot = await productRef.collection("prices").get();
+          final data = await productRef.get();
 
-      print(productList.toString());
-      state = AsyncValue.data(productList);
+          List prices = pricesSnapshot.docs
+              .map((priceDoc) => priceDoc.data()['price'] ?? 0)
+              .toList();
+
+          var minPrice = prices.cast<num>().reduce(min);
+          var maxPrice = prices.cast<num>().reduce(max);
+
+          productList.add(UserProduct(
+            idStore: data['idStore'],
+            department: data['department'],
+            name: data['name'],
+            minPrice: minPrice.toString(),
+            maxPrice: maxPrice.toString(),
+            quantity: snapshot['quantity'],
+            pImage: data['pImage'],
+            measure: data['measure'],
+          ));
+        }
+
+        /*final productList = event.docs
+            .map(
+              (data) => UserProduct(
+            idStore: data['idStore'],
+            department: data['department'],
+            name: data['name'],
+            minPrice: data['minPrice'].toString(),
+            maxPrice: data['maxPrice'].toString(),
+            quantity: data['quantity'],
+            pImage: data['pImage'],
+            measure: data['measure'],
+          ),
+        )
+            .toList();*/
+
+        print(productList.toString());
+        state = AsyncValue.data(productList);
+      });
     } catch (e) {
       print('Error fetching Product List: $e');
     }
@@ -67,6 +97,28 @@ class UserProductList extends _$UserProductList {
     }
 
     state = AsyncValue.data(data);
+  }
+
+  Future<void> deleteProductFromUserList({
+    required UserProduct product,
+    required String listId,
+  }) async {
+    // Fetch the user's product list from the user_product_list subcollection
+    QuerySnapshot snapshot = await _fireStore
+        .collection('mylist')
+        .doc(listId)
+        .collection('user_product_list')
+        .where('idStore', isEqualTo: product.idStore)
+        .get();
+
+    for (var doc in snapshot.docs) {
+      await doc.reference.delete();
+
+      /*final data = state.requireValue;
+      data.remove(
+          data.firstWhere((element) => element.idStore == product.idStore));
+      state = AsyncValue.data(data);*/
+    }
   }
 
   Future<void> saveUserProductListToServer(
@@ -93,10 +145,8 @@ class UserProductList extends _$UserProductList {
     context.goNamed(RouteManager.storeMatchingScreen);
   }
 
-
   Future<void> rankStoresByPriceTotal(
       {String listId = "4NlYnhmchdlu528Gw2yK"}) async {
-
     try {
       Map<String, int> productQuantity = {};
       Map<DocumentReference, double> storeTotalPrices =

@@ -162,13 +162,17 @@ class AddProduct extends _$AddProduct {
   Future<void> fakePricesForTesting() async {
     String fakeId = "1238800330Walmart";
     String fromId = "1238800248Walmart"; // Jagon Id
+    String ketchUpId = "1300000124Walmart";
+    String jagonId = "1238800248Walmart";
+    String detergentId = "1238800330Walmart";
 
     try {
       // Get the reference to the 'prices' subcollection under the 'products' collection for the given 'fromId'
-      CollectionReference pricesRef = FirebaseFirestore.instance
+      /*CollectionReference pricesRef = FirebaseFirestore.instance
           .collection('products_clone')
           .doc(fromId)
           .collection('prices');
+
 
       CollectionReference pricesRef2 = FirebaseFirestore.instance
           .collection('products_clone')
@@ -180,14 +184,38 @@ class AddProduct extends _$AddProduct {
 
       // Loop through the documents in the 'prices' subcollection
       for (QueryDocumentSnapshot priceDoc in pricesSnapshot.docs) {
-
         pricesRef2.add({
           "logo": priceDoc['logo'],
           "storeName": priceDoc['storeName'],
           "storeRef": priceDoc['storeRef'],
           "price": priceDoc['price'], // add random number here
         });
+      }*/
+
+
+      QuerySnapshot query = await _fireStore
+          .collection('products_clone')
+          .where('idStore', whereIn: [ketchUpId, detergentId, jagonId]).get();
+
+
+      for (QueryDocumentSnapshot snapshot in query.docs) {
+
+        CollectionReference pricesRef =   _fireStore
+            .collection('products_clone')
+            .doc(snapshot.id)
+            .collection('prices');
+
+        QuerySnapshot pricesSnapshot = await pricesRef.get();
+
+
+        for (QueryDocumentSnapshot priceDoc in pricesSnapshot.docs) {
+          pricesRef.doc(priceDoc.id).update({
+            "is_exist": true,
+          });
+        }
+
       }
+
     } catch (e) {
       print('Error fetching prices: $e');
     }
@@ -275,6 +303,19 @@ class AddProduct extends _$AddProduct {
         .collection('mylist')
         .doc(userListId)
         .collection(UserProductListCollection.collectionName);
+
+
+    final query = await userProductList.where('idStore',isEqualTo: product.idStore).get();
+    var isProductExist  = false;
+
+    query.docs.forEach((element) {
+      isProductExist = element['idStore'] == product.idStore;
+    });
+
+    if(isProductExist){
+      context.showSnackBar(message: "Product Already Exist in the List");
+      return;
+    }
 
     final userProduct = UserProduct(
       idStore: product.idStore,

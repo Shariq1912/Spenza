@@ -13,6 +13,8 @@ import 'package:spenza/utils/color_utils.dart';
 class MyListDetailsScreen extends ConsumerStatefulWidget {
   const MyListDetailsScreen({super.key});
 
+  final String listId = "4NlYnhmchdlu528Gw2yK";
+
   @override
   ConsumerState createState() => _MyListDetailsScreenState();
 }
@@ -76,6 +78,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen> {
                         itemBuilder: (context, index) {
                           final UserProduct product = data[index];
                           return UserSelectedProductCard(
+                            listId: widget.listId,
                             department: product.department,
                             imageUrl: product.pImage,
                             title: product.name,

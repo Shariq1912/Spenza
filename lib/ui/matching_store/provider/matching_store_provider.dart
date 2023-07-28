@@ -75,6 +75,9 @@ class MatchingStore extends _$MatchingStore {
           // print("$element['storeName'] and $element['price']");
 
           // String storeName = element['storeName'].toString();
+
+          /// Add is_exist field in prices level not product level.
+          ///
           final storeRef = element['storeRef'];
           final price = (element['price'] as num).toDouble();
 
