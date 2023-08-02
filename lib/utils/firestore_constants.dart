@@ -27,7 +27,12 @@ class UserProductListCollection {
   static const String collectionName = 'user_product_list';
 }
 
-
 class MyList {
   static const String collectionName = 'mylist';
+}
+
+
+class ProductCollectionConstant {
+  static const String collectionName = 'products_mvp';
+  static const String productId = 'product_id';
 }

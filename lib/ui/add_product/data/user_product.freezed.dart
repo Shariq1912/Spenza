@@ -20,7 +20,7 @@ UserProduct _$UserProductFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$UserProduct {
-  String get idStore => throw _privateConstructorUsedError;
+  String get productId => throw _privateConstructorUsedError;
   String get department => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get pImage => throw _privateConstructorUsedError;
@@ -42,7 +42,7 @@ abstract class $UserProductCopyWith<$Res> {
       _$UserProductCopyWithImpl<$Res, UserProduct>;
   @useResult
   $Res call(
-      {String idStore,
+      {String productId,
       String department,
       String name,
       String pImage,
@@ -65,7 +65,7 @@ class _$UserProductCopyWithImpl<$Res, $Val extends UserProduct>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? idStore = null,
+    Object? productId = null,
     Object? department = null,
     Object? name = null,
     Object? pImage = null,
@@ -75,9 +75,9 @@ class _$UserProductCopyWithImpl<$Res, $Val extends UserProduct>
     Object? quantity = null,
   }) {
     return _then(_value.copyWith(
-      idStore: null == idStore
-          ? _value.idStore
-          : idStore // ignore: cast_nullable_to_non_nullable
+      productId: null == productId
+          ? _value.productId
+          : productId // ignore: cast_nullable_to_non_nullable
               as String,
       department: null == department
           ? _value.department
@@ -120,7 +120,7 @@ abstract class _$$_UserProductCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String idStore,
+      {String productId,
       String department,
       String name,
       String pImage,
@@ -141,7 +141,7 @@ class __$$_UserProductCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? idStore = null,
+    Object? productId = null,
     Object? department = null,
     Object? name = null,
     Object? pImage = null,
@@ -151,9 +151,9 @@ class __$$_UserProductCopyWithImpl<$Res>
     Object? quantity = null,
   }) {
     return _then(_$_UserProduct(
-      idStore: null == idStore
-          ? _value.idStore
-          : idStore // ignore: cast_nullable_to_non_nullable
+      productId: null == productId
+          ? _value.productId
+          : productId // ignore: cast_nullable_to_non_nullable
               as String,
       department: null == department
           ? _value.department
@@ -189,9 +189,10 @@ class __$$_UserProductCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
+@DocumentReferenceJsonConverter()
 class _$_UserProduct with DiagnosticableTreeMixin implements _UserProduct {
   const _$_UserProduct(
-      {required this.idStore,
+      {required this.productId,
       required this.department,
       required this.name,
       required this.pImage,
@@ -204,7 +205,7 @@ class _$_UserProduct with DiagnosticableTreeMixin implements _UserProduct {
       _$$_UserProductFromJson(json);
 
   @override
-  final String idStore;
+  final String productId;
   @override
   final String department;
   @override
@@ -223,7 +224,7 @@ class _$_UserProduct with DiagnosticableTreeMixin implements _UserProduct {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'UserProduct(idStore: $idStore, department: $department, name: $name, pImage: $pImage, measure: $measure, minPrice: $minPrice, maxPrice: $maxPrice, quantity: $quantity)';
+    return 'UserProduct(productId: $productId, department: $department, name: $name, pImage: $pImage, measure: $measure, minPrice: $minPrice, maxPrice: $maxPrice, quantity: $quantity)';
   }
 
   @override
@@ -231,7 +232,7 @@ class _$_UserProduct with DiagnosticableTreeMixin implements _UserProduct {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'UserProduct'))
-      ..add(DiagnosticsProperty('idStore', idStore))
+      ..add(DiagnosticsProperty('productId', productId))
       ..add(DiagnosticsProperty('department', department))
       ..add(DiagnosticsProperty('name', name))
       ..add(DiagnosticsProperty('pImage', pImage))
@@ -246,7 +247,8 @@ class _$_UserProduct with DiagnosticableTreeMixin implements _UserProduct {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_UserProduct &&
-            (identical(other.idStore, idStore) || other.idStore == idStore) &&
+            (identical(other.productId, productId) ||
+                other.productId == productId) &&
             (identical(other.department, department) ||
                 other.department == department) &&
             (identical(other.name, name) || other.name == name) &&
@@ -262,7 +264,7 @@ class _$_UserProduct with DiagnosticableTreeMixin implements _UserProduct {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, idStore, department, name,
+  int get hashCode => Object.hash(runtimeType, productId, department, name,
       pImage, measure, minPrice, maxPrice, quantity);
 
   @JsonKey(ignore: true)
@@ -281,7 +283,7 @@ class _$_UserProduct with DiagnosticableTreeMixin implements _UserProduct {
 
 abstract class _UserProduct implements UserProduct {
   const factory _UserProduct(
-      {required final String idStore,
+      {required final String productId,
       required final String department,
       required final String name,
       required final String pImage,
@@ -294,7 +296,7 @@ abstract class _UserProduct implements UserProduct {
       _$_UserProduct.fromJson;
 
   @override
-  String get idStore;
+  String get productId;
   @override
   String get department;
   @override

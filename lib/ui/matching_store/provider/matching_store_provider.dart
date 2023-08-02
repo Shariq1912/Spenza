@@ -149,6 +149,10 @@ class MatchingStore extends _$MatchingStore {
 
       var isExist = false;
       for (var element in productListNotExistSnapshot.docs) {
+
+        // var newGenericNames = element['genericNames'];    /// Key point to noted,
+
+
         final newIdStore = element['idStore'].toString();
         isExist = true;
         productList.add(

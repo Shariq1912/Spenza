@@ -78,6 +78,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen> {
                         itemBuilder: (context, index) {
                           final UserProduct product = data[index];
                           return UserSelectedProductCard(
+                            measure: product.measure,
                             listId: widget.listId,
                             department: product.department,
                             imageUrl: product.pImage,

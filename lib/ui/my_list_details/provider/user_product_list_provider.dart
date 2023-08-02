@@ -40,45 +40,29 @@ class UserProductList extends _$UserProductList {
       productListRef.snapshots().listen((event) async {
         productList.clear();
         for (var snapshot in event.docs) {
-          final idStore = snapshot['idStore'];
-          final productRef =
-              _fireStore.collection('products_clone').doc(idStore);
-          final pricesSnapshot = await productRef.collection("prices").get();
-          final data = await productRef.get();
+          final DocumentReference productRef =
+              snapshot[ProductCollectionConstant.productId];
+          final DocumentSnapshot<Object?> data = await productRef.get();
 
-          List prices = pricesSnapshot.docs
-              .map((priceDoc) => priceDoc.data()['price'] ?? 0)
+          final genericNames = (data['genericNames'] as List<dynamic>)
+              .map((name) => name.toString().toLowerCase())
+              .toSet()
               .toList();
 
-          var minPrice = prices.cast<num>().reduce(min);
-          var maxPrice = prices.cast<num>().reduce(max);
+          _findPriceRangeFromGenericNames(genericNames);
 
-          productList.add(UserProduct(
-            idStore: data['idStore'],
-            department: data['department'],
+
+           productList.add(UserProduct(
+            productId: productRef.id,
+            department: data['department_name'],
             name: data['name'],
-            minPrice: minPrice.toString(),
-            maxPrice: maxPrice.toString(),
+            minPrice: "minPrice".toString(),
+            maxPrice: "maxPrice".toString(),
             quantity: snapshot['quantity'],
             pImage: data['pImage'],
-            measure: data['measure'],
+            measure: data['measure'] == "kg" ? "1 kg" : data['measure'],
           ));
         }
-
-        /*final productList = event.docs
-            .map(
-              (data) => UserProduct(
-            idStore: data['idStore'],
-            department: data['department'],
-            name: data['name'],
-            minPrice: data['minPrice'].toString(),
-            maxPrice: data['maxPrice'].toString(),
-            quantity: data['quantity'],
-            pImage: data['pImage'],
-            measure: data['measure'],
-          ),
-        )
-            .toList();*/
 
         print(productList.toString());
         state = AsyncValue.data(productList);
@@ -86,6 +70,10 @@ class UserProductList extends _$UserProductList {
     } catch (e) {
       print('Error fetching Product List: $e');
     }
+  }
+
+  _findPriceRangeFromGenericNames(List<String> genericNames){
+
   }
 
   Future<void> updateUserProductList(
@@ -105,10 +93,16 @@ class UserProductList extends _$UserProductList {
   }) async {
     // Fetch the user's product list from the user_product_list subcollection
     QuerySnapshot snapshot = await _fireStore
-        .collection('mylist')
+        .collection(MyList.collectionName)
         .doc(listId)
-        .collection('user_product_list')
-        .where('idStore', isEqualTo: product.idStore)
+        .collection(UserProductListCollection.collectionName)
+        .where(
+          ProductCollectionConstant.productId,
+          isEqualTo: _fireStore.getDocumentReferenceFromString(
+            collectionName: ProductCollectionConstant.collectionName,
+            id: product.productId,
+          ),
+        )
         .get();
 
     for (var doc in snapshot.docs) {
@@ -133,8 +127,14 @@ class UserProductList extends _$UserProductList {
 
     final batch = FirebaseFirestore.instance.batch();
     userProductsCollection.docs.forEach((doc) {
-      final UserProduct matchingElement =
-          data.firstWhere((element) => element.idStore == doc['idStore']);
+      final UserProduct matchingElement = data.firstWhere(
+        (element) =>
+            doc['product_id'] ==
+            _fireStore.getDocumentReferenceFromString(
+              collectionName: ProductCollectionConstant.collectionName,
+              id: element.productId,
+            ),
+      );
       batch.update(doc.reference, {'quantity': matchingElement.quantity});
     });
 
@@ -142,7 +142,7 @@ class UserProductList extends _$UserProductList {
 
     print("Data Updated Successfully");
 
-    context.goNamed(RouteManager.storeMatchingScreen);
+    // context.goNamed(RouteManager.storeMatchingScreen);
   }
 
   Future<void> rankStoresByPriceTotal(

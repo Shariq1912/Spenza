@@ -20,7 +20,7 @@ Product _$ProductFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Product {
-  String get idStore => throw _privateConstructorUsedError;
+  String get productId => throw _privateConstructorUsedError;
   bool get isExist => throw _privateConstructorUsedError;
   String get department =>
       throw _privateConstructorUsedError; // required String departmentRef,
@@ -28,14 +28,15 @@ mixin _$Product {
   String get measure => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get pImage => throw _privateConstructorUsedError;
+  String get storeRef => throw _privateConstructorUsedError;
   @JsonKey(includeFromJson: true, includeToJson: false)
   List<dynamic> get departments => throw _privateConstructorUsedError;
   @JsonKey(includeFromJson: true, includeToJson: false)
   List<dynamic> get genericNames => throw _privateConstructorUsedError;
   @JsonKey(includeFromJson: true, includeToJson: false)
-  String? get minPrice => throw _privateConstructorUsedError;
+  String get minPrice => throw _privateConstructorUsedError;
   @JsonKey(includeFromJson: true, includeToJson: false)
-  String? get maxPrice => throw _privateConstructorUsedError;
+  String get maxPrice => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -48,18 +49,19 @@ abstract class $ProductCopyWith<$Res> {
       _$ProductCopyWithImpl<$Res, Product>;
   @useResult
   $Res call(
-      {String idStore,
+      {String productId,
       bool isExist,
       String department,
       String measure,
       String name,
       String pImage,
+      String storeRef,
       @JsonKey(includeFromJson: true, includeToJson: false)
       List<dynamic> departments,
       @JsonKey(includeFromJson: true, includeToJson: false)
       List<dynamic> genericNames,
-      @JsonKey(includeFromJson: true, includeToJson: false) String? minPrice,
-      @JsonKey(includeFromJson: true, includeToJson: false) String? maxPrice});
+      @JsonKey(includeFromJson: true, includeToJson: false) String minPrice,
+      @JsonKey(includeFromJson: true, includeToJson: false) String maxPrice});
 }
 
 /// @nodoc
@@ -75,21 +77,22 @@ class _$ProductCopyWithImpl<$Res, $Val extends Product>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? idStore = null,
+    Object? productId = null,
     Object? isExist = null,
     Object? department = null,
     Object? measure = null,
     Object? name = null,
     Object? pImage = null,
+    Object? storeRef = null,
     Object? departments = null,
     Object? genericNames = null,
-    Object? minPrice = freezed,
-    Object? maxPrice = freezed,
+    Object? minPrice = null,
+    Object? maxPrice = null,
   }) {
     return _then(_value.copyWith(
-      idStore: null == idStore
-          ? _value.idStore
-          : idStore // ignore: cast_nullable_to_non_nullable
+      productId: null == productId
+          ? _value.productId
+          : productId // ignore: cast_nullable_to_non_nullable
               as String,
       isExist: null == isExist
           ? _value.isExist
@@ -111,6 +114,10 @@ class _$ProductCopyWithImpl<$Res, $Val extends Product>
           ? _value.pImage
           : pImage // ignore: cast_nullable_to_non_nullable
               as String,
+      storeRef: null == storeRef
+          ? _value.storeRef
+          : storeRef // ignore: cast_nullable_to_non_nullable
+              as String,
       departments: null == departments
           ? _value.departments
           : departments // ignore: cast_nullable_to_non_nullable
@@ -119,14 +126,14 @@ class _$ProductCopyWithImpl<$Res, $Val extends Product>
           ? _value.genericNames
           : genericNames // ignore: cast_nullable_to_non_nullable
               as List<dynamic>,
-      minPrice: freezed == minPrice
+      minPrice: null == minPrice
           ? _value.minPrice
           : minPrice // ignore: cast_nullable_to_non_nullable
-              as String?,
-      maxPrice: freezed == maxPrice
+              as String,
+      maxPrice: null == maxPrice
           ? _value.maxPrice
           : maxPrice // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
     ) as $Val);
   }
 }
@@ -139,18 +146,19 @@ abstract class _$$_ProductCopyWith<$Res> implements $ProductCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String idStore,
+      {String productId,
       bool isExist,
       String department,
       String measure,
       String name,
       String pImage,
+      String storeRef,
       @JsonKey(includeFromJson: true, includeToJson: false)
       List<dynamic> departments,
       @JsonKey(includeFromJson: true, includeToJson: false)
       List<dynamic> genericNames,
-      @JsonKey(includeFromJson: true, includeToJson: false) String? minPrice,
-      @JsonKey(includeFromJson: true, includeToJson: false) String? maxPrice});
+      @JsonKey(includeFromJson: true, includeToJson: false) String minPrice,
+      @JsonKey(includeFromJson: true, includeToJson: false) String maxPrice});
 }
 
 /// @nodoc
@@ -163,21 +171,22 @@ class __$$_ProductCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? idStore = null,
+    Object? productId = null,
     Object? isExist = null,
     Object? department = null,
     Object? measure = null,
     Object? name = null,
     Object? pImage = null,
+    Object? storeRef = null,
     Object? departments = null,
     Object? genericNames = null,
-    Object? minPrice = freezed,
-    Object? maxPrice = freezed,
+    Object? minPrice = null,
+    Object? maxPrice = null,
   }) {
     return _then(_$_Product(
-      idStore: null == idStore
-          ? _value.idStore
-          : idStore // ignore: cast_nullable_to_non_nullable
+      productId: null == productId
+          ? _value.productId
+          : productId // ignore: cast_nullable_to_non_nullable
               as String,
       isExist: null == isExist
           ? _value.isExist
@@ -199,6 +208,10 @@ class __$$_ProductCopyWithImpl<$Res>
           ? _value.pImage
           : pImage // ignore: cast_nullable_to_non_nullable
               as String,
+      storeRef: null == storeRef
+          ? _value.storeRef
+          : storeRef // ignore: cast_nullable_to_non_nullable
+              as String,
       departments: null == departments
           ? _value._departments
           : departments // ignore: cast_nullable_to_non_nullable
@@ -207,14 +220,14 @@ class __$$_ProductCopyWithImpl<$Res>
           ? _value._genericNames
           : genericNames // ignore: cast_nullable_to_non_nullable
               as List<dynamic>,
-      minPrice: freezed == minPrice
+      minPrice: null == minPrice
           ? _value.minPrice
           : minPrice // ignore: cast_nullable_to_non_nullable
-              as String?,
-      maxPrice: freezed == maxPrice
+              as String,
+      maxPrice: null == maxPrice
           ? _value.maxPrice
           : maxPrice // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
     ));
   }
 }
@@ -223,18 +236,19 @@ class __$$_ProductCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_Product with DiagnosticableTreeMixin implements _Product {
   const _$_Product(
-      {required this.idStore,
+      {required this.productId,
       required this.isExist,
       required this.department,
       required this.measure,
       required this.name,
       required this.pImage,
+      this.storeRef = "",
       @JsonKey(includeFromJson: true, includeToJson: false)
       final List<dynamic> departments = const [],
       @JsonKey(includeFromJson: true, includeToJson: false)
       final List<dynamic> genericNames = const [],
-      @JsonKey(includeFromJson: true, includeToJson: false) this.minPrice,
-      @JsonKey(includeFromJson: true, includeToJson: false) this.maxPrice})
+      @JsonKey(includeFromJson: true, includeToJson: false) this.minPrice = "",
+      @JsonKey(includeFromJson: true, includeToJson: false) this.maxPrice = ""})
       : _departments = departments,
         _genericNames = genericNames;
 
@@ -242,7 +256,7 @@ class _$_Product with DiagnosticableTreeMixin implements _Product {
       _$$_ProductFromJson(json);
 
   @override
-  final String idStore;
+  final String productId;
   @override
   final bool isExist;
   @override
@@ -255,6 +269,9 @@ class _$_Product with DiagnosticableTreeMixin implements _Product {
   final String name;
   @override
   final String pImage;
+  @override
+  @JsonKey()
+  final String storeRef;
   final List<dynamic> _departments;
   @override
   @JsonKey(includeFromJson: true, includeToJson: false)
@@ -275,14 +292,14 @@ class _$_Product with DiagnosticableTreeMixin implements _Product {
 
   @override
   @JsonKey(includeFromJson: true, includeToJson: false)
-  final String? minPrice;
+  final String minPrice;
   @override
   @JsonKey(includeFromJson: true, includeToJson: false)
-  final String? maxPrice;
+  final String maxPrice;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Product(idStore: $idStore, isExist: $isExist, department: $department, measure: $measure, name: $name, pImage: $pImage, departments: $departments, genericNames: $genericNames, minPrice: $minPrice, maxPrice: $maxPrice)';
+    return 'Product(productId: $productId, isExist: $isExist, department: $department, measure: $measure, name: $name, pImage: $pImage, storeRef: $storeRef, departments: $departments, genericNames: $genericNames, minPrice: $minPrice, maxPrice: $maxPrice)';
   }
 
   @override
@@ -290,12 +307,13 @@ class _$_Product with DiagnosticableTreeMixin implements _Product {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'Product'))
-      ..add(DiagnosticsProperty('idStore', idStore))
+      ..add(DiagnosticsProperty('productId', productId))
       ..add(DiagnosticsProperty('isExist', isExist))
       ..add(DiagnosticsProperty('department', department))
       ..add(DiagnosticsProperty('measure', measure))
       ..add(DiagnosticsProperty('name', name))
       ..add(DiagnosticsProperty('pImage', pImage))
+      ..add(DiagnosticsProperty('storeRef', storeRef))
       ..add(DiagnosticsProperty('departments', departments))
       ..add(DiagnosticsProperty('genericNames', genericNames))
       ..add(DiagnosticsProperty('minPrice', minPrice))
@@ -307,13 +325,16 @@ class _$_Product with DiagnosticableTreeMixin implements _Product {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Product &&
-            (identical(other.idStore, idStore) || other.idStore == idStore) &&
+            (identical(other.productId, productId) ||
+                other.productId == productId) &&
             (identical(other.isExist, isExist) || other.isExist == isExist) &&
             (identical(other.department, department) ||
                 other.department == department) &&
             (identical(other.measure, measure) || other.measure == measure) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.pImage, pImage) || other.pImage == pImage) &&
+            (identical(other.storeRef, storeRef) ||
+                other.storeRef == storeRef) &&
             const DeepCollectionEquality()
                 .equals(other._departments, _departments) &&
             const DeepCollectionEquality()
@@ -328,12 +349,13 @@ class _$_Product with DiagnosticableTreeMixin implements _Product {
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      idStore,
+      productId,
       isExist,
       department,
       measure,
       name,
       pImage,
+      storeRef,
       const DeepCollectionEquality().hash(_departments),
       const DeepCollectionEquality().hash(_genericNames),
       minPrice,
@@ -355,25 +377,26 @@ class _$_Product with DiagnosticableTreeMixin implements _Product {
 
 abstract class _Product implements Product {
   const factory _Product(
-      {required final String idStore,
+      {required final String productId,
       required final bool isExist,
       required final String department,
       required final String measure,
       required final String name,
       required final String pImage,
+      final String storeRef,
       @JsonKey(includeFromJson: true, includeToJson: false)
       final List<dynamic> departments,
       @JsonKey(includeFromJson: true, includeToJson: false)
       final List<dynamic> genericNames,
       @JsonKey(includeFromJson: true, includeToJson: false)
-      final String? minPrice,
+      final String minPrice,
       @JsonKey(includeFromJson: true, includeToJson: false)
-      final String? maxPrice}) = _$_Product;
+      final String maxPrice}) = _$_Product;
 
   factory _Product.fromJson(Map<String, dynamic> json) = _$_Product.fromJson;
 
   @override
-  String get idStore;
+  String get productId;
   @override
   bool get isExist;
   @override
@@ -386,6 +409,8 @@ abstract class _Product implements Product {
   @override
   String get pImage;
   @override
+  String get storeRef;
+  @override
   @JsonKey(includeFromJson: true, includeToJson: false)
   List<dynamic> get departments;
   @override
@@ -393,10 +418,10 @@ abstract class _Product implements Product {
   List<dynamic> get genericNames;
   @override
   @JsonKey(includeFromJson: true, includeToJson: false)
-  String? get minPrice;
+  String get minPrice;
   @override
   @JsonKey(includeFromJson: true, includeToJson: false)
-  String? get maxPrice;
+  String get maxPrice;
   @override
   @JsonKey(ignore: true)
   _$$_ProductCopyWith<_$_Product> get copyWith =>

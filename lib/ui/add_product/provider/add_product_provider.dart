@@ -2,13 +2,14 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spenza/di/app_providers.dart';
-import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/add_product/data/product.dart';
 import 'package:spenza/ui/add_product/data/user_product.dart';
+import 'package:spenza/ui/add_product/data/user_product_insert.dart';
+import 'package:spenza/ui/favourite_stores/data/favourite_stores.dart';
 import 'package:spenza/utils/firestore_constants.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
@@ -21,6 +22,31 @@ class AddProduct extends _$AddProduct {
   @override
   Future<List<Product>> build() async {
     return [];
+  }
+
+
+  Future<void> collectionGroupViaStoreRef() async {
+    final firestore = FirebaseFirestore.instance;
+
+    try {
+      // Replace 'storeRef' with the actual name of the field that holds the store reference in the 'products' subcollection
+      final String storeRefString = "stores_clone/Vdw4xZvVjdIT8YQ1W6Y8";
+      final DocumentReference storeRef = firestore.doc(storeRefString);
+
+      final querySnapshot = await firestore
+          .collectionGroup('product')
+          .where('storeRef', isEqualTo: storeRef)
+          .get();
+
+      // Process the querySnapshot to get the product documents
+      final List products =
+          querySnapshot.docs.map((doc) => doc['departments']).toList();
+
+      // Now you have the list of products belonging to the specified storeRef
+      print(products);
+    } catch (e) {
+      print('Error fetching products: $e');
+    }
   }
 
   Future<void> cloneProductsCollection() async {
@@ -192,36 +218,30 @@ class AddProduct extends _$AddProduct {
         });
       }*/
 
-
       QuerySnapshot query = await _fireStore
           .collection('products_clone')
           .where('idStore', whereIn: [ketchUpId, detergentId, jagonId]).get();
 
-
       for (QueryDocumentSnapshot snapshot in query.docs) {
-
-        CollectionReference pricesRef =   _fireStore
+        CollectionReference pricesRef = _fireStore
             .collection('products_clone')
             .doc(snapshot.id)
             .collection('prices');
 
         QuerySnapshot pricesSnapshot = await pricesRef.get();
 
-
         for (QueryDocumentSnapshot priceDoc in pricesSnapshot.docs) {
           pricesRef.doc(priceDoc.id).update({
             "is_exist": true,
           });
         }
-
       }
-
     } catch (e) {
       print('Error fetching prices: $e');
     }
   }
 
-  Future<void> searchProducts({String query = "Achiote La Anita 100 g"}) async {
+  Future<void> searchProducts({String query = "Tomate"}) async {
     Future.delayed(Duration.zero);
 
     // Available Products
@@ -230,63 +250,113 @@ class AddProduct extends _$AddProduct {
     // Detergente liquido Bold 3 carinitos de mama 4.23 l
     // Ketchup Heinz 397 g
 
+    // Soriana City Center = 20.68016662, -103.3822084
+
     List<Product> searchResults = [];
+    List<DocumentReference> nearbyStoreRefs = [];
+
+    final nearbyStores = await _getNearbyStores(
+      userLocation: GeoPoint(20.68016662, -103.3822084),
+    );
+
+    nearbyStores.forEach(
+      (element) => nearbyStoreRefs.add(
+        _fireStore.collection('stores').doc(element.id),
+      ),
+    );
 
     try {
       state = AsyncValue.loading();
-      query = query.toCapitalized();
+      query = query.isEmpty ? "Tomate" : query.toLowerCase();
 
       // todo query is case sensitive, regex not possible on firestore field
-      QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore
-          .collection('products_clone')
+      QuerySnapshot snapshot = await _fireStore
+          .collection('products_mvp')
+          .where('storeRef', whereIn: nearbyStoreRefs)
           .where('is_exist', isEqualTo: true)
-          // .where('name', isGreaterThanOrEqualTo: "Achiote")
-          // .where('name', isLessThanOrEqualTo: "Achiote" + '\uf8ff')
-          .where('name', isGreaterThanOrEqualTo: query)
-          .where('name', isLessThanOrEqualTo: query + '\uf8ff')
           .get();
 
-      // Use Future.wait to wait for all the async operations to complete
-      searchResults = await Future.wait(snapshot.docs.map((doc) async {
-        QuerySnapshot<Map<String, dynamic>> pricesSnapshot = await _fireStore
-            .collection('products_clone')
-            .doc(doc.id)
-            .collection("prices")
-            .get();
-
-        List prices = pricesSnapshot.docs
-            .map((priceDoc) => priceDoc.data()['price'] ?? 0)
+      for (var value in snapshot.docs) {
+        final genericNames = (value['genericNames'] as List<dynamic> ?? [])
+            .map((name) => name.toString().toLowerCase())
+            .toSet()
             .toList();
 
-        var minPrice = prices.cast<num>().reduce(min);
-        var maxPrice = prices.cast<num>().reduce(max);
-
         final Product product = Product(
-          idStore: doc.data()['idStore'],
-          isExist: doc.data()['is_exist'],
-          department: doc.data()['department'],
-          // departmentRef: doc.data()['departmentRef'].toString(),
-          // genericNameRef: doc.data()['genericNameRef'].toString(),
-          measure: doc.data()['measure'],
-          name: doc.data()['name'],
-          pImage: doc.data()['pImage'],
-          departments: doc.data()['departments'] ?? [],
-          genericNames: doc.data()['genericNames'] ?? [],
+          productId: value.id,
+          isExist: value['is_exist'],
+          department: value['department_name'],
+          departments: [value['department_name']],
+          measure: value['measure'] == "kg" ? "1 kg" : value['measure'],
+          storeRef: value['storeRef'].id.toString(),
+          name: value['name'],
+          pImage: value['pImage'],
+          genericNames: genericNames,
+          minPrice: value['price'].toString(),
+          maxPrice:
+              "${value['storeRef'].id.toString()} - ${genericNames.toString()}",
+        );
+
+        var hasGenericNameMatched = product.genericNames.any((genericName) =>
+            genericName.toLowerCase().contains(query.toLowerCase()));
+
+        if (hasGenericNameMatched ||
+            product.name.toLowerCase().contains(query.toLowerCase())) {
+          searchResults.add(product);
+        }
+      }
+
+      /*searchResults.forEach(
+        (element) => print(
+          "ID : ${element.productId} == Product Name : ${element.name} == Store : ${element.storeRef} == Department Name : ${element.department} == Price : ${element.minPrice} == GenericNames : ${element.genericNames.toString()}",
+        ),
+      );*/
+
+      final List<Product> filteredList = [];
+
+      /// Works only if list sorted by product whose genericNames similar
+      if (searchResults.isNotEmpty) {
+        Product selectedProduct = searchResults.first;
+        double minPrice = double.parse(selectedProduct.minPrice);
+        double maxPrice = double.parse(selectedProduct.minPrice);
+
+        for (var i = 1; i < searchResults.length; i++) {
+          Product product = searchResults[i];
+
+          bool isSimilarProduct = selectedProduct.measure == product.measure &&
+              selectedProduct.department == product.department &&
+              selectedProduct.genericNames
+                  .toSet()
+                  .containsAll(product.genericNames.toSet());
+
+          if (isSimilarProduct) {
+            double productMinPrice = double.parse(product.minPrice);
+            minPrice = min(minPrice, productMinPrice);
+            maxPrice = max(maxPrice, productMinPrice);
+          } else {
+            Product filteredProduct = selectedProduct.copyWith(
+              minPrice: minPrice.toString(),
+              maxPrice: maxPrice.toString(),
+            );
+            filteredList.add(filteredProduct);
+
+            /// Reset selected Product to the current loop element and same for min and max price
+            selectedProduct = product;
+            minPrice = double.parse(product.minPrice);
+            maxPrice = double.parse(product.minPrice);
+          }
+        }
+        /// Last selected product will not be able to added list due to loop ended so handled outside
+        Product filteredProduct = selectedProduct.copyWith(
           minPrice: minPrice.toString(),
           maxPrice: maxPrice.toString(),
         );
+        filteredList.add(filteredProduct);
+      }
 
-        print(product.toString());
+      print('Filter List: ${filteredList.toString()}');
 
-        return product;
-        /*return {
-          ...doc.data(),
-          'minPrice': minPrice,
-          'maxPrice': maxPrice,
-        };*/
-      }));
-
-      state = AsyncValue.data(searchResults);
+      state = AsyncValue.data(filteredList);
     } catch (e) {
       print('Error searching products: $e');
       state =
@@ -294,43 +364,133 @@ class AddProduct extends _$AddProduct {
     }
   }
 
+  Future<List<Stores>> _getNearbyStores({required var userLocation}) async {
+    try {
+      // Create a GeoFirePoint for "User Location"
+      GeoFirePoint center = GeoFirePoint(userLocation);
+
+      // Reference to locations collection.
+      final CollectionReference<Map<String, dynamic>> locationCollectionRef =
+          _fireStore.collection('stores');
+
+      // Get the documents within a 3 km radius of "Akota Garden"
+      final result =
+          await GeoCollectionReference(locationCollectionRef).fetchWithin(
+        center: center,
+        radiusInKm: 3,
+        // todo make it dynamic via constant
+        field: 'geo',
+        strictMode: true,
+        geopointFrom: geopointFrom,
+      );
+
+      final List<Stores> stores = [];
+
+      for (var value in result) {
+        /*String storeId= value.id;
+        final distance =
+            center.distanceBetweenInKm(geopoint: value['location']);
+        print("StoreName : $storeId == Distance : $distance");*/
+
+        stores.add(Stores(
+          id: value.id,
+          name: value['name'],
+          adress: value['adress'],
+          zipCodesList: [],
+          logo: value['logo'],
+        ));
+      }
+
+      return stores;
+    } catch (e) {
+      print("ERROR IN LOCATION : $e");
+      return [];
+    }
+  }
+
+
   Future<void> addProductToUserList(BuildContext context,
       {required Product product, required String userListId}) async {
-    // Create a new 'products_clone' collection
 
-    //todo change mylist name
+    print(userListId);
+
     CollectionReference userProductList = _fireStore
-        .collection('mylist')
+        .collection(MyList.collectionName)
         .doc(userListId)
         .collection(UserProductListCollection.collectionName);
 
+    final query = await userProductList
+        .where(ProductCollectionConstant.productId, isEqualTo: product.productId)
+        .limit(1)
+        .get();
 
-    final query = await userProductList.where('idStore',isEqualTo: product.idStore).get();
-    var isProductExist  = false;
+    var isProductExist = query.docs.isNotEmpty;
 
-    query.docs.forEach((element) {
-      isProductExist = element['idStore'] == product.idStore;
-    });
-
-    if(isProductExist){
+    if (isProductExist) {
       context.showSnackBar(message: "Product Already Exist in the List");
       return;
     }
 
-    final userProduct = UserProduct(
-      idStore: product.idStore,
-      department: product.department,
-      name: product.name,
-      pImage: product.pImage,
-      measure: product.measure,
-      minPrice: product.minPrice.toString(),
-      maxPrice: product.maxPrice.toString(),
+    final userProduct = UserProductInsert(
+      productId: _fireStore.collection(ProductCollectionConstant.collectionName).doc(product.productId),
     );
 
     userProductList
         .add(userProduct.toJson())
         .then((value) => context.pop('User Product Inserted'));
   }
+
+
+
+  Future<void> findNearbyLocations() async {
+    Future.delayed(Duration.zero);
+
+    try {
+      // Query for "Akota Garden" location
+      QuerySnapshot querySnapshot = await _fireStore
+          .collection('locations')
+          .where('place_name', isEqualTo: 'Akota Garden')
+          .get();
+
+      // Get the first document from the query result
+      DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+
+      // Get the coordinates of "Akota Garden"
+      GeoPoint akotaGardenLocation = documentSnapshot['coordinates'];
+
+      // Create a GeoFirePoint for "Akota Garden"
+      GeoFirePoint center = GeoFirePoint(akotaGardenLocation);
+
+      /*final double distance = center.distance(lat: 22.2964, lng: 73.1647);
+      print(distance.toString());*/
+
+      // Reference to locations collection.
+      final CollectionReference<Map<String, dynamic>> locationCollectionRef =
+      _fireStore.collection('locations');
+
+      // Get the documents within a 3 km radius of "Akota Garden"
+      final result =
+      await GeoCollectionReference(locationCollectionRef).fetchWithin(
+        center: center,
+        radiusInKm: 3,
+        field: 'geo',
+        strictMode: true,
+        geopointFrom: geopointFrom,
+      );
+
+      for (var value in result) {
+        String placeName = value['place_name'];
+        final distance =
+        center.distanceBetweenInKm(geopoint: value['coordinates']);
+
+        print(placeName);
+        print("Distance : $distance");
+      }
+    } catch (e) {
+      print("ERROR IN LOCATION : $e");
+    }
+  }
+
 
 /*Future<List<Map<String, dynamic>>> searchProducts(String query) async {
     List<Map<String, dynamic>> searchResults = [];
@@ -406,3 +566,5 @@ class AddProduct extends _$AddProduct {
     }
   }*/
 }
+
+

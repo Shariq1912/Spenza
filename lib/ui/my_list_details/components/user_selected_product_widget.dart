@@ -11,6 +11,7 @@ class UserSelectedProductCard extends ConsumerWidget {
   final String priceRange;
   final String department;
   final String listId;
+  final String measure;
   final UserProduct product;
 
   // final Function(int quantity) quantity;
@@ -21,6 +22,7 @@ class UserSelectedProductCard extends ConsumerWidget {
     required this.department,
     required this.priceRange,
     required this.product,
+    required this.measure,
     required this.listId,
   });
 
@@ -74,7 +76,7 @@ class UserSelectedProductCard extends ConsumerWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          "5 kg",
+                          measure,
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey,

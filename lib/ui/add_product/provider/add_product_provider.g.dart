@@ -6,7 +6,7 @@ part of 'add_product_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$addProductHash() => r'ac0deca85173442e89766df03a6b154266a77fae';
+String _$addProductHash() => r'2e85852e0c531f3e712bbc112ae4fd1ff9f6fb79';
 
 /// See also [AddProduct].
 @ProviderFor(AddProduct)

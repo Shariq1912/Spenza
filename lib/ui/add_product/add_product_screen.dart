@@ -38,7 +38,7 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
           .searchProducts(query: widget.query),
     );
     /*Future.microtask(
-      () => ref.read(addProductProvider.notifier).fakePricesForTesting(),
+      () => ref.read(addProductProvider.notifier).findNearbyLocations(),
     );*/
   }
 

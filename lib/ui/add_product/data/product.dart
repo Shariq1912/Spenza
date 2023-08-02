@@ -8,7 +8,7 @@ part 'product.g.dart';
 @freezed
 class Product with _$Product {
   const factory Product({
-    required String idStore,
+    required String productId,
     required bool isExist,
     required String department,
     // required String departmentRef,
@@ -16,6 +16,7 @@ class Product with _$Product {
     required String measure,
     required String name,
     required String pImage,
+    @Default("") String storeRef,
     @JsonKey(includeFromJson: true, includeToJson: false)
     @Default([])
         List<dynamic> departments,
@@ -23,9 +24,11 @@ class Product with _$Product {
     @Default([])
         List<dynamic> genericNames,
     @JsonKey(includeFromJson: true, includeToJson: false)
-        String? minPrice,
+    @Default("")
+        String minPrice,
     @JsonKey(includeFromJson: true, includeToJson: false)
-        String? maxPrice,
+    @Default("")
+        String maxPrice,
   }) = _Product;
 
   factory Product.fromJson(Map<String, dynamic> json) =>
