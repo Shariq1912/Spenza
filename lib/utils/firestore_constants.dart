@@ -21,3 +21,8 @@ class StoreConstant {
   static const String groupNameField = 'groupName';
   static const String zipCodesListField = 'zipCodesList';
 }
+
+class MyListConstant {
+  static const String myListCollection = 'mylist';
+  static const String userProductList = 'user_product_list';
+}

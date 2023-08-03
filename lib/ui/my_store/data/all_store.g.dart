@@ -14,6 +14,7 @@ _$_AllStores _$$_AllStoresFromJson(Map<String, dynamic> json) => _$_AllStores(
           .toList(),
       logo: json['logo'] as String,
       isFavorite: json['isFavorite'] as bool? ?? false,
+      documentId: json['documentId'] as String?,
       groupName: json['groupName'] as String,
     );
 
@@ -24,5 +25,6 @@ Map<String, dynamic> _$$_AllStoresToJson(_$_AllStores instance) =>
       'zipCodesList': instance.zipCodesList,
       'logo': instance.logo,
       'isFavorite': instance.isFavorite,
+      'documentId': instance.documentId,
       'groupName': instance.groupName,
     };

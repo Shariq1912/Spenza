@@ -1,9 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/profile/profile_screen.dart';
 
 import 'components/card_item.dart';

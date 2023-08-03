@@ -31,6 +31,7 @@ class _StoresState extends ConsumerState<Stores> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        surfaceTintColor: Colors.white,
         title: Text(
           "Stores",
           style: TextStyle(

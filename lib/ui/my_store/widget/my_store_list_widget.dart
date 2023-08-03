@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:spenza/ui/favourite_stores/data/favourite_stores.dart';
 import 'package:spenza/ui/my_store/data/all_store.dart';
+import 'package:spenza/ui/my_store_products/my_store_product.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
 class MyStoreListWidget extends StatelessWidget {
@@ -10,6 +10,7 @@ class MyStoreListWidget extends StatelessWidget {
 
   final List<AllStores> stores;
   final Function(AllStores store) onButtonClicked;
+
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +42,13 @@ class MyStoreListWidget extends StatelessWidget {
               icon: store.isFavorite ? Icon(Icons.favorite_outlined, color: Colors.red) :Icon(Icons.favorite_border_outlined, color: Colors.red)
             ),
             onTap: (){
+              print(store.documentId);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => MyStoreProduct(documentId: store.documentId!),
+                ),
+              );
+
             },
           ),
         );

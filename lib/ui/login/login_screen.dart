@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:geocoding/geocoding.dart';
@@ -7,7 +8,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/login/login_provider.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'data/login_request.dart';
 

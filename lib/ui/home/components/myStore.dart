@@ -5,8 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/ui/home/repo/fetch_favourite_store_repository.dart';
 import 'package:spenza/ui/my_store/data/all_store.dart';
 
-import '../../../router/app_router.dart';
 import '../../my_store/my_store.dart';
+import '../../my_store_products/my_store_product.dart';
 
 class MyStores extends ConsumerStatefulWidget {
   @override
@@ -27,15 +27,18 @@ class _MyStoresState extends ConsumerState<MyStores> {
   _loadAllStore() async {
     await ref
         .read(fetchFavouriteStoreRepositoryProvider.notifier)
-        .fetchAndDisplayFavouriteStores();
+        .fetchFavStores();
+
+    await ref.read(fetchFavouriteStoreRepositoryProvider.notifier).exportDataToJson();
   }
+
 
   @override
   Widget build(BuildContext context) {
-    return _myStoriesWidget();
+    return _myStoresWidget();
   }
 
-  Widget _myStoriesWidget() {
+  Widget _myStoresWidget() {
     return Column(
       children: [
         Row(
@@ -76,9 +79,10 @@ class _MyStoresState extends ConsumerState<MyStores> {
               padding: const EdgeInsets.only(top: 10),
               child: Consumer(
                 builder: (context, ref, child) {
-                  final favProvider = ref.watch(fetchFavouriteStoreRepositoryProvider);
+                  final favProvider =
+                      ref.watch(fetchFavouriteStoreRepositoryProvider);
                   return favProvider.when(
-                        () => Container(),
+                    () => Container(),
                     loading: () => Center(child: CircularProgressIndicator()),
                     error: (message) => Center(child: Text(message)),
                     success: (data) {
@@ -91,37 +95,46 @@ class _MyStoresState extends ConsumerState<MyStores> {
                           itemBuilder: (context, index) {
                             AllStores store = data[index];
                             var fileName = store.logo;
-                            return SizedBox(
-                              width: 100,
-                              child: Card(
-                                elevation: 0,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    CachedNetworkImage(
-                                      imageUrl: fileName,
-                                      fit: BoxFit.fitWidth,
-                                      width: 100,
-                                      height: 100,
+                            return GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => MyStoreProduct(
+                                          documentId: store.documentId!),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            );
+                                  );
+                                },
+                                child: SizedBox(
+                                  width: 100,
+                                  child: Card(
+                                    elevation: 0,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        CachedNetworkImage(
+                                          imageUrl: fileName,
+                                          fit: BoxFit.fitWidth,
+                                          width: 100,
+                                          height: 100,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ));
                           },
                         );
                       }
                     },
-                    empty: (message) => Text("You don't have any favourite store"),
+                    empty: (message) =>
+                        Text("You don't have any favourite store"),
                     redirectUser: () {
                       /*context.goNamed(RouteManager.homeScreen);*/
                       return Container();
                     },
                   );
                 },
-              )
-
-          ),
+              )),
         )
       ],
     );

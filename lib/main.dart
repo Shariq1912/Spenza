@@ -9,10 +9,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await inject();
   await Firebase.initializeApp();
   final sharedPrefs = await SharedPreferences.getInstance();
-
   runApp(
     ProviderScope(
       overrides: [

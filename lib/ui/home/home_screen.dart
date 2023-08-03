@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:spenza/ui/home/repo/fetch_favourite_store_repository.dart';
 import 'package:spenza/ui/settings/setting_Screen.dart';
 
-import '../../router/app_router.dart';
 import 'components/myStore.dart';
 import 'components/preLoadedList.dart';
 import 'components/topStrip.dart';
@@ -19,8 +17,11 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
-    _loadStores();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+
+      _loadStores();
+    });
   }
 
   _loadStores() async {
@@ -35,10 +36,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
+
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Container(
-                  height: 190,
+                  constraints: BoxConstraints(
+                      minHeight: 190),
                   color: Colors.blue,
                   child: const TopStrip(),
                 ),

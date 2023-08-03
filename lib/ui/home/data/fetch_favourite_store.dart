@@ -7,7 +7,8 @@ part 'fetch_favourite_store.g.dart';
 class FetchFavouriteStores with _$FetchFavouriteStores{
   const factory FetchFavouriteStores({
     required List<String> store_ids,
-    required String uid
+    required String uid,
+    String? documentId,
 
 }) = _FetchFavouriteStores;
 factory FetchFavouriteStores.fromJson(Map<String, dynamic> json) => _$FetchFavouriteStoresFromJson(json);
