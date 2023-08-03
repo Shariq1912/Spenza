@@ -39,6 +39,22 @@ extension NumberFormat on double {
   double toPrecision(int n) => double.parse(toStringAsFixed(n));
 }
 
+extension DistanceFormatter on double {
+  String formatDistance() {
+    double distanceInMeters = this;
+
+    if (distanceInMeters < 1000) {
+      // If distance is less than 1 kilometer, display it in meters
+      return '${distanceInMeters.toStringAsFixed(0)} m';
+    } else {
+      // If distance is equal to or greater than 1 kilometer, display it in kilometers
+      double distanceInKilometers = distanceInMeters / 1000;
+      return '${distanceInKilometers.toStringAsFixed(1)} km';
+    }
+  }
+}
+
+
 extension StringExtension on String {
   String toCapitalized() =>
       length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';

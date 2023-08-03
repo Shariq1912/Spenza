@@ -11,8 +11,9 @@ _$_MatchingStore _$$_MatchingStoreFromJson(Map<String, dynamic> json) =>
       logo: json['logo'] as String,
       name: json['name'] as String,
       totalPrice: (json['totalPrice'] as num).toDouble(),
-      location: json['location'] as String,
+      distance: json['distance'] as String,
       address: json['address'] as String,
+      matchingPercentage: json['matchingPercentage'] as int,
     );
 
 Map<String, dynamic> _$$_MatchingStoreToJson(_$_MatchingStore instance) =>
@@ -20,6 +21,7 @@ Map<String, dynamic> _$$_MatchingStoreToJson(_$_MatchingStore instance) =>
       'logo': instance.logo,
       'name': instance.name,
       'totalPrice': instance.totalPrice,
-      'location': instance.location,
+      'distance': instance.distance,
       'address': instance.address,
+      'matchingPercentage': instance.matchingPercentage,
     };

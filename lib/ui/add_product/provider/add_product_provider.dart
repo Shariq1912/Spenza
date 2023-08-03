@@ -2,12 +2,11 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:spenza/helpers/nearby_store_helper.dart';
 import 'package:spenza/ui/add_product/data/product.dart';
-import 'package:spenza/ui/add_product/data/user_product.dart';
 import 'package:spenza/ui/add_product/data/user_product_insert.dart';
 import 'package:spenza/ui/favourite_stores/data/favourite_stores.dart';
 import 'package:spenza/utils/firestore_constants.dart';
@@ -16,7 +15,7 @@ import 'package:spenza/utils/spenza_extensions.dart';
 part 'add_product_provider.g.dart';
 
 @riverpod
-class AddProduct extends _$AddProduct {
+class AddProduct extends _$AddProduct with NearbyStoreMixin {
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
   @override
@@ -24,7 +23,7 @@ class AddProduct extends _$AddProduct {
     return [];
   }
 
-
+  /// Not much useful
   Future<void> collectionGroupViaStoreRef() async {
     final firestore = FirebaseFirestore.instance;
 
@@ -49,6 +48,7 @@ class AddProduct extends _$AddProduct {
     }
   }
 
+  /// Not much useful
   Future<void> cloneProductsCollection() async {
     // Fetch all generic names and department names in one batch
     Map<String, DocumentSnapshot> genericNamesMap = {};
@@ -185,6 +185,7 @@ class AddProduct extends _$AddProduct {
     }
   }
 
+  /// Not much useful
   Future<void> fakePricesForTesting() async {
     String fakeId = "1238800330Walmart";
     String fromId = "1238800248Walmart"; // Jagon Id
@@ -241,6 +242,7 @@ class AddProduct extends _$AddProduct {
     }
   }
 
+  /// Main searching Algorithm
   Future<void> searchProducts({String query = "Tomate"}) async {
     Future.delayed(Duration.zero);
 
@@ -250,23 +252,25 @@ class AddProduct extends _$AddProduct {
     // Detergente liquido Bold 3 carinitos de mama 4.23 l
     // Ketchup Heinz 397 g
 
-    // Soriana City Center = 20.68016662, -103.3822084
 
     List<Product> searchResults = [];
     List<DocumentReference> nearbyStoreRefs = [];
 
-    final nearbyStores = await _getNearbyStores(
-      userLocation: GeoPoint(20.68016662, -103.3822084),
-    );
-
-    nearbyStores.forEach(
-      (element) => nearbyStoreRefs.add(
-        _fireStore.collection('stores').doc(element.id),
-      ),
-    );
 
     try {
       state = AsyncValue.loading();
+
+      final nearbyStores = await getNearbyStores(
+        firestore: _fireStore,
+        userLocation: GeoPoint(20.68016662, -103.3822084),
+      );
+
+      nearbyStores.forEach(
+            (element) => nearbyStoreRefs.add(
+          _fireStore.collection('stores').doc(element.id),
+        ),
+      );
+
       query = query.isEmpty ? "Tomate" : query.toLowerCase();
 
       // todo query is case sensitive, regex not possible on firestore field
@@ -283,7 +287,8 @@ class AddProduct extends _$AddProduct {
             .toList();
 
         final Product product = Product(
-          productId: value.id,
+          productRef: value.id,
+          productId: value['product_id'],
           isExist: value['is_exist'],
           department: value['department_name'],
           departments: [value['department_name']],
@@ -346,6 +351,7 @@ class AddProduct extends _$AddProduct {
             maxPrice = double.parse(product.minPrice);
           }
         }
+
         /// Last selected product will not be able to added list due to loop ended so handled outside
         Product filteredProduct = selectedProduct.copyWith(
           minPrice: minPrice.toString(),
@@ -364,54 +370,9 @@ class AddProduct extends _$AddProduct {
     }
   }
 
-  Future<List<Stores>> _getNearbyStores({required var userLocation}) async {
-    try {
-      // Create a GeoFirePoint for "User Location"
-      GeoFirePoint center = GeoFirePoint(userLocation);
-
-      // Reference to locations collection.
-      final CollectionReference<Map<String, dynamic>> locationCollectionRef =
-          _fireStore.collection('stores');
-
-      // Get the documents within a 3 km radius of "Akota Garden"
-      final result =
-          await GeoCollectionReference(locationCollectionRef).fetchWithin(
-        center: center,
-        radiusInKm: 3,
-        // todo make it dynamic via constant
-        field: 'geo',
-        strictMode: true,
-        geopointFrom: geopointFrom,
-      );
-
-      final List<Stores> stores = [];
-
-      for (var value in result) {
-        /*String storeId= value.id;
-        final distance =
-            center.distanceBetweenInKm(geopoint: value['location']);
-        print("StoreName : $storeId == Distance : $distance");*/
-
-        stores.add(Stores(
-          id: value.id,
-          name: value['name'],
-          adress: value['adress'],
-          zipCodesList: [],
-          logo: value['logo'],
-        ));
-      }
-
-      return stores;
-    } catch (e) {
-      print("ERROR IN LOCATION : $e");
-      return [];
-    }
-  }
-
-
+  /// Add The selected product in user my list
   Future<void> addProductToUserList(BuildContext context,
       {required Product product, required String userListId}) async {
-
     print(userListId);
 
     CollectionReference userProductList = _fireStore
@@ -420,7 +381,8 @@ class AddProduct extends _$AddProduct {
         .collection(UserProductListCollection.collectionName);
 
     final query = await userProductList
-        .where(ProductCollectionConstant.productId, isEqualTo: product.productId)
+        .where(ProductCollectionConstant.productId,
+            isEqualTo: product.productId)
         .limit(1)
         .get();
 
@@ -432,7 +394,10 @@ class AddProduct extends _$AddProduct {
     }
 
     final userProduct = UserProductInsert(
-      productId: _fireStore.collection(ProductCollectionConstant.collectionName).doc(product.productId),
+        productRef: _fireStore
+          .collection(ProductCollectionConstant.collectionName)
+          .doc(product.productRef),
+      productId: product.productId
     );
 
     userProductList
@@ -442,6 +407,7 @@ class AddProduct extends _$AddProduct {
 
 
 
+  /// Not much useful
   Future<void> findNearbyLocations() async {
     Future.delayed(Duration.zero);
 
@@ -466,11 +432,11 @@ class AddProduct extends _$AddProduct {
 
       // Reference to locations collection.
       final CollectionReference<Map<String, dynamic>> locationCollectionRef =
-      _fireStore.collection('locations');
+          _fireStore.collection('locations');
 
       // Get the documents within a 3 km radius of "Akota Garden"
       final result =
-      await GeoCollectionReference(locationCollectionRef).fetchWithin(
+          await GeoCollectionReference(locationCollectionRef).fetchWithin(
         center: center,
         radiusInKm: 3,
         field: 'geo',
@@ -481,7 +447,7 @@ class AddProduct extends _$AddProduct {
       for (var value in result) {
         String placeName = value['place_name'];
         final distance =
-        center.distanceBetweenInKm(geopoint: value['coordinates']);
+            center.distanceBetweenInKm(geopoint: value['coordinates']);
 
         print(placeName);
         print("Distance : $distance");
@@ -490,7 +456,6 @@ class AddProduct extends _$AddProduct {
       print("ERROR IN LOCATION : $e");
     }
   }
-
 
 /*Future<List<Map<String, dynamic>>> searchProducts(String query) async {
     List<Map<String, dynamic>> searchResults = [];
@@ -566,5 +531,3 @@ class AddProduct extends _$AddProduct {
     }
   }*/
 }
-
-

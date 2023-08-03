@@ -9,6 +9,7 @@ part 'product.g.dart';
 class Product with _$Product {
   const factory Product({
     required String productId,
+    required String productRef,
     required bool isExist,
     required String department,
     // required String departmentRef,

@@ -16,7 +16,8 @@ class UserProductInsert with _$UserProductInsert {
     includeIfNull: false,
   )
   const factory UserProductInsert({
-    DocumentReference? productId,
+    DocumentReference? productRef,
+    required String productId,
     @Default(1) int quantity,
   }) = _UserProductInsert;
 

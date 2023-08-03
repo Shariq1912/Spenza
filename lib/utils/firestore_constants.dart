@@ -35,4 +35,5 @@ class MyList {
 class ProductCollectionConstant {
   static const String collectionName = 'products_mvp';
   static const String productId = 'product_id';
+  static const String productRef = 'product_ref';
 }

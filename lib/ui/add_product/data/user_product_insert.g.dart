@@ -8,8 +8,9 @@ part of 'user_product_insert.dart';
 
 _$_UserProductInsert _$$_UserProductInsertFromJson(Map<String, dynamic> json) =>
     _$_UserProductInsert(
-      productId:
-          const DocumentReferenceJsonConverter().fromJson(json['product_id']),
+      productRef:
+          const DocumentReferenceJsonConverter().fromJson(json['product_ref']),
+      productId: json['product_id'] as String,
       quantity: json['quantity'] as int? ?? 1,
     );
 
@@ -23,8 +24,9 @@ Map<String, dynamic> _$$_UserProductInsertToJson(
     }
   }
 
-  writeNotNull('product_id',
-      const DocumentReferenceJsonConverter().toJson(instance.productId));
+  writeNotNull('product_ref',
+      const DocumentReferenceJsonConverter().toJson(instance.productRef));
+  val['product_id'] = instance.productId;
   val['quantity'] = instance.quantity;
   return val;
 }

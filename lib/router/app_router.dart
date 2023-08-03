@@ -27,7 +27,7 @@ class RouteManager {
   static const String favouriteScreen = '/favouriteScreen';
   static const String homeScreen = '/homeScreen';
   static const String myListDetailScreen = '/';
-  static const String storeMatchingScreen = '/storeMatchingScreen';
+  static const String storeRankingScreen = '/storeMatchingScreen';
   static const String addProductScreen = '/addProductScreen';
 
   /// The route configuration.
@@ -87,8 +87,8 @@ class RouteManager {
         },
       ),
       GoRoute(
-        name: storeMatchingScreen,
-        path: storeMatchingScreen,
+        name: storeRankingScreen,
+        path: storeRankingScreen,
         builder: (context, state) {
           final String userListId =
               state.queryParameters['userListId'] ?? "4NlYnhmchdlu528Gw2yK";

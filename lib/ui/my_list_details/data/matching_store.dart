@@ -10,8 +10,9 @@ class MatchingStores with _$MatchingStores {
      required String logo,
      required String name,
      required double totalPrice,
-     required String location,
+     required String distance,
      required String address,
+     required int matchingPercentage,
   }) = _MatchingStore;
 
 

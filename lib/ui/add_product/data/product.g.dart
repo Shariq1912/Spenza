@@ -8,6 +8,7 @@ part of 'product.dart';
 
 _$_Product _$$_ProductFromJson(Map<String, dynamic> json) => _$_Product(
       productId: json['productId'] as String,
+      productRef: json['productRef'] as String,
       isExist: json['isExist'] as bool,
       department: json['department'] as String,
       measure: json['measure'] as String,
@@ -23,6 +24,7 @@ _$_Product _$$_ProductFromJson(Map<String, dynamic> json) => _$_Product(
 Map<String, dynamic> _$$_ProductToJson(_$_Product instance) =>
     <String, dynamic>{
       'productId': instance.productId,
+      'productRef': instance.productRef,
       'isExist': instance.isExist,
       'department': instance.department,
       'measure': instance.measure,

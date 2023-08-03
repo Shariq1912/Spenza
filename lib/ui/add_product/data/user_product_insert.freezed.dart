@@ -20,8 +20,9 @@ UserProductInsert _$UserProductInsertFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$UserProductInsert {
-  DocumentReference<Object?>? get productId =>
+  DocumentReference<Object?>? get productRef =>
       throw _privateConstructorUsedError;
+  String get productId => throw _privateConstructorUsedError;
   int get quantity => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -36,7 +37,8 @@ abstract class $UserProductInsertCopyWith<$Res> {
           UserProductInsert value, $Res Function(UserProductInsert) then) =
       _$UserProductInsertCopyWithImpl<$Res, UserProductInsert>;
   @useResult
-  $Res call({DocumentReference<Object?>? productId, int quantity});
+  $Res call(
+      {DocumentReference<Object?>? productRef, String productId, int quantity});
 }
 
 /// @nodoc
@@ -52,14 +54,19 @@ class _$UserProductInsertCopyWithImpl<$Res, $Val extends UserProductInsert>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? productId = freezed,
+    Object? productRef = freezed,
+    Object? productId = null,
     Object? quantity = null,
   }) {
     return _then(_value.copyWith(
-      productId: freezed == productId
+      productRef: freezed == productRef
+          ? _value.productRef
+          : productRef // ignore: cast_nullable_to_non_nullable
+              as DocumentReference<Object?>?,
+      productId: null == productId
           ? _value.productId
           : productId // ignore: cast_nullable_to_non_nullable
-              as DocumentReference<Object?>?,
+              as String,
       quantity: null == quantity
           ? _value.quantity
           : quantity // ignore: cast_nullable_to_non_nullable
@@ -76,7 +83,8 @@ abstract class _$$_UserProductInsertCopyWith<$Res>
       __$$_UserProductInsertCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({DocumentReference<Object?>? productId, int quantity});
+  $Res call(
+      {DocumentReference<Object?>? productRef, String productId, int quantity});
 }
 
 /// @nodoc
@@ -90,14 +98,19 @@ class __$$_UserProductInsertCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? productId = freezed,
+    Object? productRef = freezed,
+    Object? productId = null,
     Object? quantity = null,
   }) {
     return _then(_$_UserProductInsert(
-      productId: freezed == productId
+      productRef: freezed == productRef
+          ? _value.productRef
+          : productRef // ignore: cast_nullable_to_non_nullable
+              as DocumentReference<Object?>?,
+      productId: null == productId
           ? _value.productId
           : productId // ignore: cast_nullable_to_non_nullable
-              as DocumentReference<Object?>?,
+              as String,
       quantity: null == quantity
           ? _value.quantity
           : quantity // ignore: cast_nullable_to_non_nullable
@@ -114,20 +127,23 @@ class __$$_UserProductInsertCopyWithImpl<$Res>
 class _$_UserProductInsert
     with DiagnosticableTreeMixin
     implements _UserProductInsert {
-  const _$_UserProductInsert({this.productId, this.quantity = 1});
+  const _$_UserProductInsert(
+      {this.productRef, required this.productId, this.quantity = 1});
 
   factory _$_UserProductInsert.fromJson(Map<String, dynamic> json) =>
       _$$_UserProductInsertFromJson(json);
 
   @override
-  final DocumentReference<Object?>? productId;
+  final DocumentReference<Object?>? productRef;
+  @override
+  final String productId;
   @override
   @JsonKey()
   final int quantity;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'UserProductInsert(productId: $productId, quantity: $quantity)';
+    return 'UserProductInsert(productRef: $productRef, productId: $productId, quantity: $quantity)';
   }
 
   @override
@@ -135,6 +151,7 @@ class _$_UserProductInsert
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'UserProductInsert'))
+      ..add(DiagnosticsProperty('productRef', productRef))
       ..add(DiagnosticsProperty('productId', productId))
       ..add(DiagnosticsProperty('quantity', quantity));
   }
@@ -144,6 +161,8 @@ class _$_UserProductInsert
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_UserProductInsert &&
+            (identical(other.productRef, productRef) ||
+                other.productRef == productRef) &&
             (identical(other.productId, productId) ||
                 other.productId == productId) &&
             (identical(other.quantity, quantity) ||
@@ -152,7 +171,7 @@ class _$_UserProductInsert
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, productId, quantity);
+  int get hashCode => Object.hash(runtimeType, productRef, productId, quantity);
 
   @JsonKey(ignore: true)
   @override
@@ -171,14 +190,17 @@ class _$_UserProductInsert
 
 abstract class _UserProductInsert implements UserProductInsert {
   const factory _UserProductInsert(
-      {final DocumentReference<Object?>? productId,
+      {final DocumentReference<Object?>? productRef,
+      required final String productId,
       final int quantity}) = _$_UserProductInsert;
 
   factory _UserProductInsert.fromJson(Map<String, dynamic> json) =
       _$_UserProductInsert.fromJson;
 
   @override
-  DocumentReference<Object?>? get productId;
+  DocumentReference<Object?>? get productRef;
+  @override
+  String get productId;
   @override
   int get quantity;
   @override

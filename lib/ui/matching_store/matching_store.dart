@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/ui/matching_store/components/matching_store_card.dart';
-import 'package:spenza/ui/matching_store/provider/matching_store_provider.dart';
+import 'package:spenza/ui/matching_store/provider/store_ranking_provider.dart';
 import 'package:spenza/ui/my_list_details/components/custom_app_bar.dart';
 import 'package:spenza/ui/my_list_details/data/matching_store.dart';
 import 'package:spenza/utils/color_utils.dart';
@@ -23,7 +23,7 @@ class _MatchingStoreScreenState extends ConsumerState<MatchingStoreScreen> {
     super.initState();
 
     Future.microtask(
-      () => ref.read(matchingStoreProvider.notifier).rankStoresByPriceTotal(),
+      () => ref.read(storeRankingProvider.notifier).rankStoresByPriceTotal(),
     );
   }
 
@@ -51,17 +51,18 @@ class _MatchingStoreScreenState extends ConsumerState<MatchingStoreScreen> {
         ),
         body: Consumer(
           builder: (context, ref, child) =>
-              ref.watch(matchingStoreProvider).when(
+              ref.watch(storeRankingProvider).when(
                     data: (data) => ListView.builder(
                       itemCount: data.length,
                       itemBuilder: (context, index) {
                         final MatchingStores store = data[index];
                         return MatchingStoreCard(
+                          matchingPercentage: store.matchingPercentage,
                           address: store.address,
                           imageUrl: store.logo,
                           title: store.name,
                           totalPrice: store.totalPrice.toString(),
-                          distance: store.location,
+                          distance: store.distance,
                           onClick: () {
                             print('Card clicked!');
                           },

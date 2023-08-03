@@ -7,6 +7,7 @@ class MatchingStoreCard extends StatelessWidget {
   final String totalPrice;
   final String distance;
   final String address;
+  final int matchingPercentage;
   final bool isCheapestVisible;
   final VoidCallback onClick;
 
@@ -14,6 +15,7 @@ class MatchingStoreCard extends StatelessWidget {
     required this.imageUrl,
     required this.title,
     required this.totalPrice,
+    required this.matchingPercentage,
     required this.address,
     required this.distance,
     this.isCheapestVisible = true,
@@ -86,14 +88,11 @@ class MatchingStoreCard extends StatelessWidget {
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.green,
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(4),
-                      topRight: Radius.circular(4),
-                    ),
+                    borderRadius: BorderRadius.circular(4),
                   ),
                   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   child: Text(
-                    'Cheapest',
+                    "$matchingPercentage% Match",
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,

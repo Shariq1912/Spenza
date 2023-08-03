@@ -21,6 +21,7 @@ Product _$ProductFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Product {
   String get productId => throw _privateConstructorUsedError;
+  String get productRef => throw _privateConstructorUsedError;
   bool get isExist => throw _privateConstructorUsedError;
   String get department =>
       throw _privateConstructorUsedError; // required String departmentRef,
@@ -50,6 +51,7 @@ abstract class $ProductCopyWith<$Res> {
   @useResult
   $Res call(
       {String productId,
+      String productRef,
       bool isExist,
       String department,
       String measure,
@@ -78,6 +80,7 @@ class _$ProductCopyWithImpl<$Res, $Val extends Product>
   @override
   $Res call({
     Object? productId = null,
+    Object? productRef = null,
     Object? isExist = null,
     Object? department = null,
     Object? measure = null,
@@ -93,6 +96,10 @@ class _$ProductCopyWithImpl<$Res, $Val extends Product>
       productId: null == productId
           ? _value.productId
           : productId // ignore: cast_nullable_to_non_nullable
+              as String,
+      productRef: null == productRef
+          ? _value.productRef
+          : productRef // ignore: cast_nullable_to_non_nullable
               as String,
       isExist: null == isExist
           ? _value.isExist
@@ -147,6 +154,7 @@ abstract class _$$_ProductCopyWith<$Res> implements $ProductCopyWith<$Res> {
   @useResult
   $Res call(
       {String productId,
+      String productRef,
       bool isExist,
       String department,
       String measure,
@@ -172,6 +180,7 @@ class __$$_ProductCopyWithImpl<$Res>
   @override
   $Res call({
     Object? productId = null,
+    Object? productRef = null,
     Object? isExist = null,
     Object? department = null,
     Object? measure = null,
@@ -187,6 +196,10 @@ class __$$_ProductCopyWithImpl<$Res>
       productId: null == productId
           ? _value.productId
           : productId // ignore: cast_nullable_to_non_nullable
+              as String,
+      productRef: null == productRef
+          ? _value.productRef
+          : productRef // ignore: cast_nullable_to_non_nullable
               as String,
       isExist: null == isExist
           ? _value.isExist
@@ -237,6 +250,7 @@ class __$$_ProductCopyWithImpl<$Res>
 class _$_Product with DiagnosticableTreeMixin implements _Product {
   const _$_Product(
       {required this.productId,
+      required this.productRef,
       required this.isExist,
       required this.department,
       required this.measure,
@@ -257,6 +271,8 @@ class _$_Product with DiagnosticableTreeMixin implements _Product {
 
   @override
   final String productId;
+  @override
+  final String productRef;
   @override
   final bool isExist;
   @override
@@ -299,7 +315,7 @@ class _$_Product with DiagnosticableTreeMixin implements _Product {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Product(productId: $productId, isExist: $isExist, department: $department, measure: $measure, name: $name, pImage: $pImage, storeRef: $storeRef, departments: $departments, genericNames: $genericNames, minPrice: $minPrice, maxPrice: $maxPrice)';
+    return 'Product(productId: $productId, productRef: $productRef, isExist: $isExist, department: $department, measure: $measure, name: $name, pImage: $pImage, storeRef: $storeRef, departments: $departments, genericNames: $genericNames, minPrice: $minPrice, maxPrice: $maxPrice)';
   }
 
   @override
@@ -308,6 +324,7 @@ class _$_Product with DiagnosticableTreeMixin implements _Product {
     properties
       ..add(DiagnosticsProperty('type', 'Product'))
       ..add(DiagnosticsProperty('productId', productId))
+      ..add(DiagnosticsProperty('productRef', productRef))
       ..add(DiagnosticsProperty('isExist', isExist))
       ..add(DiagnosticsProperty('department', department))
       ..add(DiagnosticsProperty('measure', measure))
@@ -327,6 +344,8 @@ class _$_Product with DiagnosticableTreeMixin implements _Product {
             other is _$_Product &&
             (identical(other.productId, productId) ||
                 other.productId == productId) &&
+            (identical(other.productRef, productRef) ||
+                other.productRef == productRef) &&
             (identical(other.isExist, isExist) || other.isExist == isExist) &&
             (identical(other.department, department) ||
                 other.department == department) &&
@@ -350,6 +369,7 @@ class _$_Product with DiagnosticableTreeMixin implements _Product {
   int get hashCode => Object.hash(
       runtimeType,
       productId,
+      productRef,
       isExist,
       department,
       measure,
@@ -378,6 +398,7 @@ class _$_Product with DiagnosticableTreeMixin implements _Product {
 abstract class _Product implements Product {
   const factory _Product(
       {required final String productId,
+      required final String productRef,
       required final bool isExist,
       required final String department,
       required final String measure,
@@ -397,6 +418,8 @@ abstract class _Product implements Product {
 
   @override
   String get productId;
+  @override
+  String get productRef;
   @override
   bool get isExist;
   @override
