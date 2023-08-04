@@ -64,7 +64,13 @@ class _MatchingStoreScreenState extends ConsumerState<MatchingStoreScreen> {
                           totalPrice: store.totalPrice.toString(),
                           distance: store.distance,
                           onClick: () {
-                            print('Card clicked!');
+                            ref
+                                .read(storeRankingProvider.notifier)
+                                .redirectUserToStoreDetails(
+                                  storeRef: store.storeRef!,
+                                  context: context,
+                                  total: store.totalPrice,
+                                );
                           },
                         );
                       },

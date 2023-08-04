@@ -8,6 +8,8 @@ part of 'matching_store.dart';
 
 _$_MatchingStore _$$_MatchingStoreFromJson(Map<String, dynamic> json) =>
     _$_MatchingStore(
+      storeRef:
+          const DocumentReferenceJsonConverter().fromJson(json['storeRef']),
       logo: json['logo'] as String,
       name: json['name'] as String,
       totalPrice: (json['totalPrice'] as num).toDouble(),
@@ -16,12 +18,22 @@ _$_MatchingStore _$$_MatchingStoreFromJson(Map<String, dynamic> json) =>
       matchingPercentage: json['matchingPercentage'] as int,
     );
 
-Map<String, dynamic> _$$_MatchingStoreToJson(_$_MatchingStore instance) =>
-    <String, dynamic>{
-      'logo': instance.logo,
-      'name': instance.name,
-      'totalPrice': instance.totalPrice,
-      'distance': instance.distance,
-      'address': instance.address,
-      'matchingPercentage': instance.matchingPercentage,
-    };
+Map<String, dynamic> _$$_MatchingStoreToJson(_$_MatchingStore instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('storeRef',
+      const DocumentReferenceJsonConverter().toJson(instance.storeRef));
+  val['logo'] = instance.logo;
+  val['name'] = instance.name;
+  val['totalPrice'] = instance.totalPrice;
+  val['distance'] = instance.distance;
+  val['address'] = instance.address;
+  val['matchingPercentage'] = instance.matchingPercentage;
+  return val;
+}

@@ -20,6 +20,8 @@ MatchingStores _$MatchingStoresFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$MatchingStores {
+  DocumentReference<Object?>? get storeRef =>
+      throw _privateConstructorUsedError;
   String get logo => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   double get totalPrice => throw _privateConstructorUsedError;
@@ -40,7 +42,8 @@ abstract class $MatchingStoresCopyWith<$Res> {
       _$MatchingStoresCopyWithImpl<$Res, MatchingStores>;
   @useResult
   $Res call(
-      {String logo,
+      {DocumentReference<Object?>? storeRef,
+      String logo,
       String name,
       double totalPrice,
       String distance,
@@ -61,6 +64,7 @@ class _$MatchingStoresCopyWithImpl<$Res, $Val extends MatchingStores>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? storeRef = freezed,
     Object? logo = null,
     Object? name = null,
     Object? totalPrice = null,
@@ -69,6 +73,10 @@ class _$MatchingStoresCopyWithImpl<$Res, $Val extends MatchingStores>
     Object? matchingPercentage = null,
   }) {
     return _then(_value.copyWith(
+      storeRef: freezed == storeRef
+          ? _value.storeRef
+          : storeRef // ignore: cast_nullable_to_non_nullable
+              as DocumentReference<Object?>?,
       logo: null == logo
           ? _value.logo
           : logo // ignore: cast_nullable_to_non_nullable
@@ -106,7 +114,8 @@ abstract class _$$_MatchingStoreCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String logo,
+      {DocumentReference<Object?>? storeRef,
+      String logo,
       String name,
       double totalPrice,
       String distance,
@@ -125,6 +134,7 @@ class __$$_MatchingStoreCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? storeRef = freezed,
     Object? logo = null,
     Object? name = null,
     Object? totalPrice = null,
@@ -133,6 +143,10 @@ class __$$_MatchingStoreCopyWithImpl<$Res>
     Object? matchingPercentage = null,
   }) {
     return _then(_$_MatchingStore(
+      storeRef: freezed == storeRef
+          ? _value.storeRef
+          : storeRef // ignore: cast_nullable_to_non_nullable
+              as DocumentReference<Object?>?,
       logo: null == logo
           ? _value.logo
           : logo // ignore: cast_nullable_to_non_nullable
@@ -162,10 +176,13 @@ class __$$_MatchingStoreCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@DocumentReferenceJsonConverter()
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class _$_MatchingStore with DiagnosticableTreeMixin implements _MatchingStore {
   const _$_MatchingStore(
-      {required this.logo,
+      {this.storeRef,
+      required this.logo,
       required this.name,
       required this.totalPrice,
       required this.distance,
@@ -175,6 +192,8 @@ class _$_MatchingStore with DiagnosticableTreeMixin implements _MatchingStore {
   factory _$_MatchingStore.fromJson(Map<String, dynamic> json) =>
       _$$_MatchingStoreFromJson(json);
 
+  @override
+  final DocumentReference<Object?>? storeRef;
   @override
   final String logo;
   @override
@@ -190,7 +209,7 @@ class _$_MatchingStore with DiagnosticableTreeMixin implements _MatchingStore {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'MatchingStores(logo: $logo, name: $name, totalPrice: $totalPrice, distance: $distance, address: $address, matchingPercentage: $matchingPercentage)';
+    return 'MatchingStores(storeRef: $storeRef, logo: $logo, name: $name, totalPrice: $totalPrice, distance: $distance, address: $address, matchingPercentage: $matchingPercentage)';
   }
 
   @override
@@ -198,6 +217,7 @@ class _$_MatchingStore with DiagnosticableTreeMixin implements _MatchingStore {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'MatchingStores'))
+      ..add(DiagnosticsProperty('storeRef', storeRef))
       ..add(DiagnosticsProperty('logo', logo))
       ..add(DiagnosticsProperty('name', name))
       ..add(DiagnosticsProperty('totalPrice', totalPrice))
@@ -211,6 +231,8 @@ class _$_MatchingStore with DiagnosticableTreeMixin implements _MatchingStore {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_MatchingStore &&
+            (identical(other.storeRef, storeRef) ||
+                other.storeRef == storeRef) &&
             (identical(other.logo, logo) || other.logo == logo) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.totalPrice, totalPrice) ||
@@ -224,8 +246,8 @@ class _$_MatchingStore with DiagnosticableTreeMixin implements _MatchingStore {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, logo, name, totalPrice, distance,
-      address, matchingPercentage);
+  int get hashCode => Object.hash(runtimeType, storeRef, logo, name, totalPrice,
+      distance, address, matchingPercentage);
 
   @JsonKey(ignore: true)
   @override
@@ -243,7 +265,8 @@ class _$_MatchingStore with DiagnosticableTreeMixin implements _MatchingStore {
 
 abstract class _MatchingStore implements MatchingStores {
   const factory _MatchingStore(
-      {required final String logo,
+      {final DocumentReference<Object?>? storeRef,
+      required final String logo,
       required final String name,
       required final double totalPrice,
       required final String distance,
@@ -253,6 +276,8 @@ abstract class _MatchingStore implements MatchingStores {
   factory _MatchingStore.fromJson(Map<String, dynamic> json) =
       _$_MatchingStore.fromJson;
 
+  @override
+  DocumentReference<Object?>? get storeRef;
   @override
   String get logo;
   @override

@@ -115,13 +115,15 @@ class UserProductList extends _$UserProductList {
       {String listId = "4NlYnhmchdlu528Gw2yK",
       required BuildContext context}) async {
     final List<UserProduct> data = state.requireValue;
+
+
     final userProductsCollection = await _fireStore
         .collection(MyList.collectionName)
         .doc(listId)
         .collection(UserProductListCollection.collectionName)
         .get();
 
-    final batch = FirebaseFirestore.instance.batch();
+    final batch = _fireStore.batch();
     userProductsCollection.docs.forEach((doc) {
       final UserProduct matchingElement = data.firstWhere(
         (element) => doc['product_id'] == element.productId,
