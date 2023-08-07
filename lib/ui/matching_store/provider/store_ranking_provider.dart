@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:spenza/helpers/nearby_store_helper.dart';
+import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/add_product/data/product.dart';
 import 'package:spenza/ui/favourite_stores/data/favourite_stores.dart';
 import 'package:spenza/ui/my_list_details/data/matching_store.dart';
@@ -483,7 +485,7 @@ class StoreRanking extends _$StoreRanking with NearbyStoreMixin {
 
         return {
           "name": productData.name,
-          "price": productData.minPrice,
+          "price": double.tryParse(productData.minPrice) ?? 0.0,
           "product_image": productData.pImage,
           "measure": productData.measure,
           "quantity": product['quantity'],
@@ -494,7 +496,7 @@ class StoreRanking extends _$StoreRanking with NearbyStoreMixin {
 
         return {
           "name": productData.name,
-          "price": productData.minPrice,
+          "price": double.tryParse(productData.minPrice) ?? 0.0,
           "product_image": productData.pImage,
           "measure": productData.measure,
           "quantity": product['quantity'],
@@ -505,7 +507,7 @@ class StoreRanking extends _$StoreRanking with NearbyStoreMixin {
 
         return {
           "name": productData.name,
-          "price": productData.minPrice,
+          "price": double.tryParse(productData.minPrice) ?? 0.0,
           "product_image": productData.pImage,
           "measure": productData.measure,
           "quantity": product['quantity'],
@@ -526,6 +528,8 @@ class StoreRanking extends _$StoreRanking with NearbyStoreMixin {
       batch.commit();
 
       print("Product Saved Successfully!");
+
+      context.pushNamed(RouteManager.selectedStoreScreen);
     } catch (e) {
       print("Error saving product data: $e");
     }

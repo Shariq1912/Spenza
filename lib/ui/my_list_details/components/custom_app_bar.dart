@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  final String logo;
   final TextStyle textStyle;
   final displayActionIcon;
 
@@ -12,6 +13,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     Key? key,
     required this.title,
     required this.textStyle,
+    this.logo = "https://picsum.photos/250?image=9",
     required this.onBackIconPressed,
     required this.displayActionIcon,
   }) : super(key: key);
@@ -49,7 +51,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     radius: 40,
                     child: ClipOval(
                       child: CachedNetworkImage(
-                        imageUrl: 'https://picsum.photos/250?image=9',
+                        imageUrl: logo,
                       ),
                     ),
                   ),

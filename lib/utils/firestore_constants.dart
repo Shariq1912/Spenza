@@ -37,3 +37,9 @@ class ProductCollectionConstant {
   static const String productId = 'product_id';
   static const String productRef = 'product_ref';
 }
+
+
+
+class RankedStoreConstant {
+  static const String collectionName = 'ranked_store_products';
+}
