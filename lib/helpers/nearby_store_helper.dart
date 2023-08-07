@@ -5,7 +5,7 @@ import 'package:spenza/utils/spenza_extensions.dart';
 
 mixin NearbyStoreMixin {
   Future<List<Stores>> getNearbyStores(
-      {required var firestore, required var userLocation}) async {
+      {required var firestore, required var userLocation,double radius = 3}) async {
     try {
       // Create a GeoFirePoint for "User Location"
       GeoFirePoint center = GeoFirePoint(userLocation);
@@ -18,7 +18,7 @@ mixin NearbyStoreMixin {
       final result =
           await GeoCollectionReference(locationCollectionRef).fetchWithin(
         center: center,
-        radiusInKm: 3,
+        radiusInKm: radius,
         // todo make it dynamic via constant
         field: 'geo',
         strictMode: true,

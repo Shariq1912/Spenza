@@ -87,7 +87,7 @@ class MatchingStoreCard extends StatelessWidget {
                 ),
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.green,
+                    color: _getColorForPercentage(matchingPercentage),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -118,4 +118,15 @@ class MatchingStoreCard extends StatelessWidget {
       ),
     );
   }
+
+  Color _getColorForPercentage(int percentage) {
+    if (percentage > 80) {
+      return Colors.green;
+    } else if (percentage >= 30) {
+      return Colors.orange;
+    } else {
+      return Colors.red;
+    }
+  }
+
 }
