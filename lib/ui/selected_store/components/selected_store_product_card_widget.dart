@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:spenza/utils/spenza_extensions.dart';
 
 class SelectedStoreProductCard extends StatelessWidget {
   final String imageUrl;
@@ -68,7 +69,7 @@ class SelectedStoreProductCard extends StatelessWidget {
 
                     if (!isMissing) ...[
                       Text(
-                        "$quantity $measure",
+                        "(x $quantity)",
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
@@ -76,7 +77,7 @@ class SelectedStoreProductCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "\$ ${price * quantity}",
+                        "\$ ${(price * quantity).toPrecision(2)}",
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w500,

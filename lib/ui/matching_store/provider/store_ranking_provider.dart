@@ -2,55 +2,54 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:spenza/helpers/fireStore_pref_mixin.dart';
 import 'package:spenza/helpers/nearby_store_helper.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/add_product/data/product.dart';
 import 'package:spenza/ui/favourite_stores/data/favourite_stores.dart';
 import 'package:spenza/ui/my_list_details/data/matching_store.dart';
-import 'package:spenza/utils/firestore_constants.dart';
+import 'package:spenza/utils/fireStore_constants.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 import 'package:collection/collection.dart';
 
 part 'store_ranking_provider.g.dart';
 
 @riverpod
-class StoreRanking extends _$StoreRanking with NearbyStoreMixin {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
+class StoreRanking extends _$StoreRanking
+    with NearbyStoreMixin, FirestoreAndPrefsMixin {
   final Map<DocumentReference, List<Map<String, dynamic>>> missingProductMap =
-  {};
+      {};
   final Map<DocumentReference, List<Map<String, dynamic>>> similarProductMap =
-  {};
+      {};
   final Map<DocumentReference, List<Map<String, dynamic>>> productInListMap =
-  {};
+      {};
 
   @override
   Future<List<MatchingStores>> build() async {
     return [];
   }
 
-  Future<void> rankStoresByPriceTotal(
-      {String listId = "4NlYnhmchdlu528Gw2yK"}) async {
+  Future<void> rankStoresByPriceTotal({double radius = 6}) async {
     state = AsyncValue.loading();
+
+    final listId = await prefs.then((prefs) => prefs.getUserListId());
 
     try {
       // Soriana City Center = 20.68016662, -103.3822084
       final List<Stores> nearbyStores = await getNearbyStores(
-        radius: 5,
-        firestore: _firestore,
+        radius: radius,
+        firestore: fireStore,
         userLocation: GeoPoint(20.68016662, -103.3822084),
       );
 
       // Fetch the products in a batched read
       final List<DocumentReference> storeRefs = nearbyStores
           .map((store) =>
-          _firestore
-              .collection(StoreConstant.storeCollection)
-              .doc(store.id))
+              fireStore.collection(StoreConstant.storeCollection).doc(store.id))
           .toList();
 
       // Fetch all store products that meet the conditions
-      final QuerySnapshot storeProductsSnapshot = await _firestore
+      final QuerySnapshot storeProductsSnapshot = await fireStore
           .collection('products_mvp')
           .where('is_exist', isEqualTo: true)
           .where('storeRef', whereIn: storeRefs)
@@ -76,10 +75,10 @@ class StoreRanking extends _$StoreRanking with NearbyStoreMixin {
       }).toList();
 
       final Map<DocumentReference, double> storeTotal = {};
-      final Map<DocumentReference, int> matchingProductCounts = {};
+      final Map<DocumentReference, double> matchingProductCounts = {};
 
       // Fetch the user's product list from the user_product_list subcollection
-      QuerySnapshot productListSnapshot = await _firestore
+      QuerySnapshot productListSnapshot = await fireStore
           .collection('mylist')
           .doc(listId)
           .collection('user_product_list')
@@ -88,13 +87,13 @@ class StoreRanking extends _$StoreRanking with NearbyStoreMixin {
       // Build a list of product references to fetch in a batched read
       final List<DocumentReference> productRefs = productListSnapshot.docs
           .map((productSnapshot) =>
-      productSnapshot['product_ref'] as DocumentReference)
+              productSnapshot['product_ref'] as DocumentReference)
           .toList();
 
       // Fetch the products in a batched read
       final List<Product> userProducts = await Future.wait(
         productRefs.map(
-              (ref) async {
+          (ref) async {
             final productSnapshot = await ref.get();
 
             return Product(
@@ -146,6 +145,7 @@ class StoreRanking extends _$StoreRanking with NearbyStoreMixin {
             storeRef: storeRef.path,
             product: product,
             storeProducts: storeProducts,
+            matchingProductCounts: matchingProductCounts,
           );
           if (productInStore == null) {
             // print("MISSING PRODUCT == ${product['name']} - STORE - ${storeRef.id} == Product STORE - ${productStoreRef.id}");
@@ -171,110 +171,8 @@ class StoreRanking extends _$StoreRanking with NearbyStoreMixin {
             storeTotal[storeRef] =
                 (storeTotal[storeRef] ?? 0) + (quantity * price);
 
-            (similarProductMap[storeRef] ??= [])
-                .add({'product': productInStore, 'quantity': quantity});
-          }
-        }
-      }
-
-      final List<MatchingStores> stores = [];
-      for (MapEntry<DocumentReference<Object?>, double> entry
-      in storeTotal.entries) {
-        final storeRef = entry.key;
-        final totalPrice = entry.value;
-
-        final matchingProductCount = matchingProductCounts[storeRef] ?? 0;
-
-        // Calculate matching product percentage
-        final matchingPercentage =
-            (matchingProductCount / productListSnapshot.size) * 100;
-
-        // print(
-        //     'Store: ${storeRef.id}, Total Price: ${totalPrice.toPrecision(2)}, Matching Percentage: ${matchingPercentage.toStringAsFixed(2)}%');
-
-        final store = await _getStoreFromPath(
-          path: storeRef,
-          totalPrice: totalPrice.toPrecision(2),
-          matchingPercentage: matchingPercentage,
-        );
-        stores.add(store);
-      }
-
-
-      // Sort the stores based on the matching percentage
-      stores.sort((a, b) {
-        final result = b.matchingPercentage.compareTo(a.matchingPercentage);
-        if (result == 0) {
-          return a.distance.compareTo(b.distance); // Sort by distance when matchingPercentage is the same
-        }
-        return result;
-      });
-
-      state = AsyncValue.data(stores);
-
-      // print('Stores List: ${stores.toString()}');
-
-      /* for (final Stores store in nearbyStores) {
-        final DocumentReference storeRef =
-            _firestore.collection(StoreConstant.storeCollection).doc(store.id);
-
-        for (var i = 0; i < productListSnapshot.size; i++) {
-          final productSnapshot = productListSnapshot.docs[i];
-          // final productRef = productRef[i];
-          final DocumentSnapshot<Object?> product = productSnapshots[i];
-
-          final isProductExist = product['is_exist'];
-          final quantity = productSnapshot['quantity'];
-          final price = (product['price'] as num).toDouble();
-          final productStoreRef = product['storeRef'];
-          final productId = product['product_id'];
-
-          // print(
-          //     "STORE - ${storeRef.id} == Product STORE - ${productStoreRef.id} == Product - ${product['name']} == Price & Qty - $price & $quantity");
-
-          if (isProductExist && productStoreRef.id == storeRef.id) {
-            storeTotal[storeRef] =
-                (storeTotal[storeRef] ?? 0) + (quantity * price);
-
             matchingProductCounts[storeRef] =
-                (matchingProductCounts[storeRef] ?? 0) + 1;
-
-            (productInListMap[storeRef] ??= [])
-                .add({'product': product, 'quantity': quantity});
-
-            continue;
-          }
-
-          final QueryDocumentSnapshot<Map<String, dynamic>>? productInStore =
-              await _getSimilarProduct(
-            product: product,
-            storeRef: storeRef,
-            isExist: isProductExist,
-          );
-
-          if (productInStore == null) {
-            // print("MISSING PRODUCT == ${product['name']} - STORE - ${storeRef.id} == Product STORE - ${productStoreRef.id}");
-
-            (missingProductMap[storeRef] ??= [])
-                .add({'product': product, 'quantity': quantity});
-          } else if (productInStore['product_id'] == productId) {
-            final price = (productInStore['price'] as num).toDouble();
-
-            storeTotal[storeRef] =
-                (storeTotal[storeRef] ?? 0) + (quantity * price);
-
-            matchingProductCounts[storeRef] =
-                (matchingProductCounts[storeRef] ?? 0) + 1;
-
-            (productInListMap[storeRef] ??= [])
-                .add({'product': product, 'quantity': quantity});
-          } else {
-            final price = (productInStore['price'] as num).toDouble();
-
-            /// similar product price
-
-            storeTotal[storeRef] =
-                (storeTotal[storeRef] ?? 0) + (quantity * price);
+                (matchingProductCounts[storeRef] ?? 0) + 0.9;
 
             (similarProductMap[storeRef] ??= [])
                 .add({'product': productInStore, 'quantity': quantity});
@@ -298,19 +196,39 @@ class StoreRanking extends _$StoreRanking with NearbyStoreMixin {
         //     'Store: ${storeRef.id}, Total Price: ${totalPrice.toPrecision(2)}, Matching Percentage: ${matchingPercentage.toStringAsFixed(2)}%');
 
         final store = await _getStoreFromPath(
-            path: storeRef,
-            totalPrice: totalPrice,
-            matchingPercentage: matchingPercentage);
-        stores.add(store.copyWith(storeRef: storeRef));
+          path: storeRef,
+          totalPrice: totalPrice.toPrecision(2),
+          matchingPercentage: matchingPercentage,
+        );
+        stores.add(store);
       }
 
-      // print('Stores List: ${stores.toString()}');
+      // Sort the stores based on the matching percentage
+      stores.sort((a, b) {
+        final result = b.matchingPercentage.compareTo(a.matchingPercentage);
+        if (result == 0) {
+          return a.distance.compareTo(b
+              .distance); // Sort by distance when matchingPercentage is the same
+        }
+        return result;
+      });
 
-      state = AsyncValue.data(stores);*/
+      state = AsyncValue.data(stores);
+    } on NearbyStoreException catch (e) {
+      print('Error Nearby stores: $e');
+      rankStoresByPriceTotal(
+          radius: radius -
+              1); // Recursion to avoid radius issues of geo flutter fire plus package.
     } catch (e) {
+      //todo Handle in filter exception separately to avoid conflict
       print('Error ranking stores: $e');
-      state =
-          AsyncValue.error('Error searching stores: $e', StackTrace.current);
+      if (radius > 3) {
+        rankStoresByPriceTotal(
+            radius: radius -
+                1); // Recursion to avoid radius issues of geo flutter fire plus package.
+      } else
+        state =
+            AsyncValue.error('Error searching stores: $e', StackTrace.current);
     }
   }
 
@@ -318,6 +236,7 @@ class StoreRanking extends _$StoreRanking with NearbyStoreMixin {
     required Product product,
     required List<Product> storeProducts,
     required String storeRef,
+    required Map<DocumentReference<Object?>, double> matchingProductCounts,
   }) {
     final productId = product.productId;
     final genericNames = List<String>.from(product.genericNames);
@@ -331,8 +250,8 @@ class StoreRanking extends _$StoreRanking with NearbyStoreMixin {
     print('Department: $department');
 
     final exactProduct = storeProducts.firstWhereOrNull(
-          (element) =>
-      element.storeRef == storeRef &&
+      (element) =>
+          element.storeRef == storeRef &&
           element.productId == productId &&
           element.isExist,
     );
@@ -356,6 +275,7 @@ class StoreRanking extends _$StoreRanking with NearbyStoreMixin {
           similarDepartment == department &&
           similarGenericNames.length >= genericNames.length &&
           similarGenericNames.every((name) => genericNames.contains(name))) {
+        //todo add count of 0.3 + 0.3 + 0.4 (according to the numbers of generic name characters match and then put inside matching count map)
         final similarPrice = double.tryParse(similarProduct.minPrice);
         if (similarPrice != null &&
             (bestMatch == null ||
@@ -395,7 +315,7 @@ class StoreRanking extends _$StoreRanking with NearbyStoreMixin {
     // print('Measure: $measure');
     // print('Department: $department');
 
-    final exactProduct = await _firestore
+    final exactProduct = await fireStore
         .collection('products_mvp')
         .where('is_exist', isEqualTo: true)
         .where('storeRef', isEqualTo: storeRef)
@@ -409,7 +329,7 @@ class StoreRanking extends _$StoreRanking with NearbyStoreMixin {
       return exactProduct.docs.first;
     }
 
-    final similarProducts = await _firestore
+    final similarProducts = await fireStore
         .collection('products_mvp')
         .where('is_exist', isEqualTo: true)
         .where('storeRef', isEqualTo: storeRef)
@@ -421,7 +341,7 @@ class StoreRanking extends _$StoreRanking with NearbyStoreMixin {
 
     for (final similarProduct in similarProducts.docs) {
       final productGenericNames =
-      List<String>.from(similarProduct['genericNames']);
+          List<String>.from(similarProduct['genericNames']);
 
       if (productGenericNames.every((name) => genericNames.contains(name))) {
         if (bestMatch == null || similarProduct['price'] < bestMatch['price']) {
@@ -442,9 +362,10 @@ class StoreRanking extends _$StoreRanking with NearbyStoreMixin {
     return bestMatch;
   }
 
-  Future<MatchingStores> _getStoreFromPath({required DocumentReference path,
-    required double totalPrice,
-    required double matchingPercentage}) async {
+  Future<MatchingStores> _getStoreFromPath(
+      {required DocumentReference path,
+      required double totalPrice,
+      required double matchingPercentage}) async {
     final storeSnapshot = await path.get();
 
     final location = storeSnapshot['location'] as GeoPoint;
@@ -461,7 +382,7 @@ class StoreRanking extends _$StoreRanking with NearbyStoreMixin {
       matchingPercentage: matchingPercentage.toInt(),
       distance: distance.formatDistance(),
       address: storeSnapshot[
-      'adress'], //todo change the typo address once field changed in db
+          'adress'], //todo change the typo address once field changed in db
     );
   }
 
@@ -478,7 +399,8 @@ class StoreRanking extends _$StoreRanking with NearbyStoreMixin {
 
     print("In List Product = ${productInListProducts.toString()}");
 
-    final userId = "Cool User";
+    final userId = await prefs.then((prefs) => prefs.getUserId());
+
     final rankedData = {
       "similar_products": similarProducts.map((product) {
         final productData = product['product'];
@@ -520,9 +442,9 @@ class StoreRanking extends _$StoreRanking with NearbyStoreMixin {
     print(rankedData.toString());
 
     try {
-      final batch = _firestore.batch();
+      final batch = fireStore.batch();
       batch.set(
-        _firestore.collection("ranked_store_products").doc(userId),
+        fireStore.collection("ranked_store_products").doc(userId),
         rankedData,
       );
       batch.commit();

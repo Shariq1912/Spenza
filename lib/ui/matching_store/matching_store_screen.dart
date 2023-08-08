@@ -9,9 +9,8 @@ import 'package:spenza/ui/my_list_details/data/matching_store.dart';
 import 'package:spenza/utils/color_utils.dart';
 
 class MatchingStoreScreen extends ConsumerStatefulWidget {
-  const MatchingStoreScreen({super.key, required this.userListId});
+  const MatchingStoreScreen({super.key});
 
-  final String userListId;
 
   @override
   ConsumerState createState() => _MatchingStoreScreenState();
@@ -22,9 +21,10 @@ class _MatchingStoreScreenState extends ConsumerState<MatchingStoreScreen> {
   void initState() {
     super.initState();
 
-    Future.microtask(
-      () => ref.read(storeRankingProvider.notifier).rankStoresByPriceTotal(),
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(storeRankingProvider.notifier).rankStoresByPriceTotal();
+    });
+
   }
 
   @override

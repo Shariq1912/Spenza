@@ -26,9 +26,9 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen> {
   void initState() {
     super.initState();
 
-    Future.microtask(
-      () => ref.read(userProductListProvider.notifier).fetchProductFromListId(),
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(userProductListProvider.notifier).fetchProductFromListId();
+    });
   }
 
   @override
@@ -49,8 +49,15 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen> {
             fontSize: 20,
             color: ColorUtils.colorPrimary,
           ),
-          onBackIconPressed: () {
-            context.pushNamed(RouteManager.addProductScreen);
+          onBackIconPressed: () async {
+            final bool? result =
+                await context.pushNamed(RouteManager.addProductScreen);
+            if (result ?? false) {
+              debugPrint("Return from Add Product with $result");
+              ref
+                  .read(userProductListProvider.notifier)
+                  .fetchProductFromListId();
+            }
           },
         ),
         body: Column(

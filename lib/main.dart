@@ -12,6 +12,7 @@ import 'package:spenza/utils/color_utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   final sharedPrefs = await SharedPreferences.getInstance();
   runApp(

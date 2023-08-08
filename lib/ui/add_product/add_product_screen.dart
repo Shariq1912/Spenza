@@ -14,11 +14,9 @@ import 'package:spenza/ui/my_list_details/components/searchbox_widget.dart';
 import 'package:spenza/utils/color_utils.dart';
 
 class AddProductScreen extends ConsumerStatefulWidget {
-  const AddProductScreen(
-      {super.key, required this.query, required this.userListId});
+  const AddProductScreen({super.key, required this.query});
 
   final String query;
-  final String userListId;
 
   @override
   ConsumerState createState() => _AddProductScreenState();
@@ -30,13 +28,12 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
   @override
   void initState() {
     super.initState();
-
     print("Query is ${widget.query}");
-    Future.microtask(
-      () => ref
-          .read(addProductProvider.notifier)
-          .searchProducts(query: widget.query),
-    );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(addProductProvider.notifier).searchProducts(query: widget.query);
+    });
+
     /*Future.microtask(
       () => ref.read(addProductProvider.notifier).findNearbyLocations(),
     );*/
@@ -114,7 +111,6 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                                 .addProductToUserList(
                                   context,
                                   product: product,
-                                  userListId: widget.userListId,
                                 ),
                             measure: product.measure,
                             imageUrl: product.pImage ??

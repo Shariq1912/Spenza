@@ -1,36 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:spenza/helpers/nearby_store_helper.dart';
-import 'package:spenza/ui/add_product/data/product.dart';
-import 'package:spenza/ui/favourite_stores/data/favourite_stores.dart';
-import 'package:spenza/ui/my_list_details/data/matching_store.dart';
+import 'package:spenza/helpers/fireStore_pref_mixin.dart';
 import 'package:spenza/ui/selected_store/data/selected_product.dart';
 import 'package:spenza/ui/selected_store/data/selected_product_elements.dart';
 import 'package:spenza/ui/selected_store/data/selected_product_list.dart';
-import 'package:spenza/utils/firestore_constants.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
-import 'package:collection/collection.dart';
 
 part 'selected_store_provider.g.dart';
 
 @riverpod
-class SelectedStore extends _$SelectedStore {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+class SelectedStore extends _$SelectedStore with FirestoreAndPrefsMixin {
 
   @override
   Future<SelectedProduct> build() async {
     return SelectedProduct();
   }
 
-  Future<void> getSelectedStoreProducts(
-      {String listId = "4NlYnhmchdlu528Gw2yK"}) async {
+  Future<void> getSelectedStoreProducts() async {
     state = AsyncValue.loading();
+    final userId = await prefs.then((prefs) => prefs.getUserId());
 
-    final userId = "Cool User";
-    final List<SelectedProductList> list = [];
     final DocumentSnapshot<Map<String, dynamic>> query =
-        await _firestore.collection('ranked_store_products').doc(userId).get();
+        await fireStore.collection('ranked_store_products').doc(userId).get();
 
     final total = query['total'] ?? 0.0;
     final storeRef = query['store_ref'];

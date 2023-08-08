@@ -20,16 +20,16 @@ final GlobalKey<NavigatorState> _shellNavigator =
     GlobalKey(debugLabel: 'shell');
 
 class RouteManager {
-  static const String splashScreen = '/selectedStoreScreen';
+  static const String splashScreen = '/myListDetailScreen';
 
   static const String loginScreen = '/loginScreen';
   static const String registerScreen = '/registerScreen';
   static const String locationScreen = '/locationScreen';
   static const String favouriteScreen = '/favouriteScreen';
   static const String homeScreen = '/homeScreen';
-  static const String myListDetailScreen = '/myListDetailScreen';
+  static const String myListDetailScreen = '/';
   static const String storeRankingScreen = '/storeMatchingScreen';
-  static const String selectedStoreScreen = '/';
+  static const String selectedStoreScreen = '/selectedStoreScreen';
   static const String addProductScreen = '/addProductScreen';
 
   /// The route configuration.
@@ -94,10 +94,7 @@ class RouteManager {
         path: addProductScreen,
         builder: (context, state) {
           final String query = state.queryParameters['query'] ?? "";
-          final String userListId =
-              state.queryParameters['userListId'] ?? "4NlYnhmchdlu528Gw2yK";
-
-          return AddProductScreen(query: query, userListId: userListId);
+          return AddProductScreen(query: query);
         },
       ),
 
@@ -105,10 +102,7 @@ class RouteManager {
         name: storeRankingScreen,
         path: storeRankingScreen,
         builder: (context, state) {
-          final String userListId =
-              state.queryParameters['userListId'] ?? "4NlYnhmchdlu528Gw2yK";
-
-          return MatchingStoreScreen(userListId: userListId);
+          return MatchingStoreScreen();
         },
       ),
 
@@ -116,10 +110,7 @@ class RouteManager {
         name: selectedStoreScreen,
         path: selectedStoreScreen,
         builder: (context, state) {
-          final String userListId =
-              state.queryParameters['userListId'] ?? "4NlYnhmchdlu528Gw2yK";
-
-          return SelectedStoreScreen(userListId: userListId);
+          return SelectedStoreScreen();
         },
       ),
     ],

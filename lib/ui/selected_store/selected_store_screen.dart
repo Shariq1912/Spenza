@@ -15,9 +15,7 @@ import 'package:spenza/ui/selected_store/provider/store_details_provider.dart';
 import 'package:spenza/utils/color_utils.dart';
 
 class SelectedStoreScreen extends ConsumerStatefulWidget {
-  const SelectedStoreScreen({super.key, required this.userListId});
-
-  final String userListId;
+  const SelectedStoreScreen({super.key});
 
   @override
   ConsumerState createState() => _SelectedStoreScreenState();
@@ -30,9 +28,9 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
   void initState() {
     super.initState();
 
-    Future.microtask(
-      () => ref.read(selectedStoreProvider.notifier).getSelectedStoreProducts(),
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(selectedStoreProvider.notifier).getSelectedStoreProducts();
+    });
   }
 
   @override

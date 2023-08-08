@@ -5,7 +5,9 @@ import 'package:spenza/utils/spenza_extensions.dart';
 
 mixin NearbyStoreMixin {
   Future<List<Stores>> getNearbyStores(
-      {required var firestore, required var userLocation,double radius = 3}) async {
+      {required var firestore,
+      required var userLocation,
+      double radius = 3}) async {
     try {
       // Create a GeoFirePoint for "User Location"
       GeoFirePoint center = GeoFirePoint(userLocation);
@@ -45,7 +47,7 @@ mixin NearbyStoreMixin {
       return stores;
     } catch (e) {
       print("ERROR IN LOCATION : $e");
-      rethrow;
+      throw new NearbyStoreException('Firebase Exception', e);
     }
   }
 
@@ -64,5 +66,17 @@ mixin NearbyStoreMixin {
       print("ERROR IN Distance : $e");
       return 0;
     }
+  }
+}
+
+class NearbyStoreException implements Exception {
+  final String message;
+  final dynamic error;
+
+  NearbyStoreException(this.message, this.error);
+
+  @override
+  String toString() {
+    return 'CustomException: $message, $error';
   }
 }

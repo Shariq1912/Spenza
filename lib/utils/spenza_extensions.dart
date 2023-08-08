@@ -29,7 +29,7 @@ extension SnackbarExtension on BuildContext {
 
 extension SharedPreferencesExtension on SharedPreferences {
   String getUserId() {
-    return getString('uid')!;
+    return getString('uid') ?? "Cool User";
   }
 
   bool isUserLoggedIn() {
@@ -38,6 +38,14 @@ extension SharedPreferencesExtension on SharedPreferences {
 
   bool isFirstLogin() {
     return getBool('is_first_login') ?? true;
+  }
+
+  String getUserListId() {
+    return getString('user_list_id') ?? "4NlYnhmchdlu528Gw2yK";
+  }
+
+  String getUserListName() {
+    return getString('user_list_name') ?? MyListConstant.myListCollection;
   }
 }
 
@@ -60,7 +68,6 @@ extension DistanceFormatter on double {
   }
 }
 
-
 extension StringExtension on String {
   String toCapitalized() =>
       length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';
@@ -80,10 +87,10 @@ extension LocationStringExtension on GeoPoint {
 }
 
 extension FirestoreExtension on FirebaseFirestore {
-  DocumentReference getDocumentReferenceFromString({required String collectionName,required String id}) {
+  DocumentReference getDocumentReferenceFromString(
+      {required String collectionName, required String id}) {
     return this.collection(collectionName).doc(id);
   }
-
 }
 
 mixin FirstTimeLoginMixin {
@@ -108,6 +115,7 @@ mixin FirstTimeLoginMixin {
     }
   }
 }
+
 /// extension for image selection
 extension ImagePickerExtension on ImagePicker {
   Future<File?> pickImageFromGallery() async {
@@ -132,7 +140,7 @@ extension ImagePickerExtension on ImagePicker {
 extension FileExtension on File {
   Future<String?> uploadImageToFirebase() async {
     try {
-      final storageReference =FirebaseStorage.instance
+      final storageReference = FirebaseStorage.instance
           .ref()
           .child('images')
           .child('${DateTime.now().millisecondsSinceEpoch}.jpg');
@@ -152,21 +160,18 @@ extension FileExtension on File {
   }
 }
 
-
 /// Not much accurate
 double calculateDistance(
-    double lat1,
-    double lon1,
-    double lat2,
-    double lon2,
-    ) {
+  double lat1,
+  double lon1,
+  double lat2,
+  double lon2,
+) {
   const int earthRadius = 6371; // in km
   final double dLat = _toRadians(lat2 - lat1);
   final double dLon = _toRadians(lon2 - lon1);
   final double a = pow(sin(dLat / 2), 2) +
-      cos(_toRadians(lat1)) *
-          cos(_toRadians(lat2)) *
-          pow(sin(dLon / 2), 2);
+      cos(_toRadians(lat1)) * cos(_toRadians(lat2)) * pow(sin(dLon / 2), 2);
   final double c = 2 * atan2(sqrt(a), sqrt(1 - a));
   final double distance = earthRadius * c;
   return distance;
@@ -179,5 +184,3 @@ double _toRadians(double degree) {
 // Function to get GeoPoint instance from Cloud Firestore document data.
 GeoPoint geopointFrom(Map<String, dynamic> data) =>
     (data['geo'] as Map<String, dynamic>)['geopoint'] as GeoPoint;
-
-
