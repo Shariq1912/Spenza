@@ -12,6 +12,7 @@ _$_FetchFavouriteStores _$$_FetchFavouriteStoresFromJson(
       store_ids:
           (json['store_ids'] as List<dynamic>).map((e) => e as String).toList(),
       uid: json['uid'] as String,
+      documentId: json['documentId'] as String?,
     );
 
 Map<String, dynamic> _$$_FetchFavouriteStoresToJson(
@@ -19,4 +20,5 @@ Map<String, dynamic> _$$_FetchFavouriteStoresToJson(
     <String, dynamic>{
       'store_ids': instance.store_ids,
       'uid': instance.uid,
+      'documentId': instance.documentId,
     };
