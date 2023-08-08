@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/ui/home/repo/fetch_favourite_store_repository.dart';
 import 'package:spenza/ui/my_store/data/all_store.dart';
-
 import '../../my_store/my_store.dart';
 import '../../my_store_products/my_store_product.dart';
 
@@ -28,8 +27,6 @@ class _MyStoresState extends ConsumerState<MyStores> {
     await ref
         .read(fetchFavouriteStoreRepositoryProvider.notifier)
         .fetchFavStores();
-
-    await ref.read(fetchFavouriteStoreRepositoryProvider.notifier).exportDataToJson();
   }
 
 
@@ -100,7 +97,7 @@ class _MyStoresState extends ConsumerState<MyStores> {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (context) => MyStoreProduct(
-                                          documentId: store.documentId!),
+                                          documentId: store.documentId!, logo: store.logo),
                                     ),
                                   );
                                 },
@@ -118,6 +115,7 @@ class _MyStoresState extends ConsumerState<MyStores> {
                                           width: 100,
                                           height: 100,
                                         ),
+                                        Text(store.name)
                                       ],
                                     ),
                                   ),

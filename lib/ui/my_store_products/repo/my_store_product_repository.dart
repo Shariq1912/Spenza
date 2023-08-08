@@ -16,8 +16,7 @@ class MyStoreProductRepository extends _$MyStoreProductRepository  {
   }
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  Future<List<Product>> getProductsForStore(String documentId) async {
+  Future<List<ProductModel>> getProductsForStore(String documentId) async {
     state = ApiResponse.loading();
     DocumentReference storeRef = _firestore.doc('/stores/$documentId'); //created the document ref object
 
@@ -26,9 +25,9 @@ class MyStoreProductRepository extends _$MyStoreProductRepository  {
         .where('bstoreRef', isEqualTo: storeRef)
         .get();
 
-    final List<Product> pro = productsSnapshot.docs.map((doc) {
+    final List<ProductModel> pro = productsSnapshot.docs.map((doc) {
       final data = doc.data();
-      final pros = Product.fromJson(data).copyWith(documentId: doc.id);
+      final pros = ProductModel.fromJson(data).copyWith(documentId: doc.id);
       return pros;
     }).toList();
 
@@ -41,24 +40,32 @@ class MyStoreProductRepository extends _$MyStoreProductRepository  {
 
 
 
-  Future<void> addProductToMyList(String documentId,UserProductData userProductData, String productId) async {
 
-    DocumentReference<Map<String, dynamic>> productReference = await _firestore
+
+  Future<void> addProductToMyList(String? documentId, String productId, String productRef) async {
+    try{
+      DocumentReference<Map<String, dynamic>> productReference = await _firestore
         .collection('products')
-        .doc(productId);
+        .doc(productRef);
 
     CollectionReference<Map<String, dynamic>> userProductList = await _firestore
         .collection(MyListConstant.myListCollection)
         .doc(documentId)
         .collection(MyListConstant.userProductList);
 
-    final userProductRequest = userProductData.copyWith(productId: 'products/$productId');
+//    final userProductRequest = userProductData.copyWith(productId: 'products/$productId');
     userProductList.add({
-      'product_id':productReference,
+      'product_ref':productReference,
+      'product_id':productId,
       'quantity' : 1
     });
-    userProductList.add(userProductRequest.toJson());
+   // userProductList.add(userProductRequest.toJson());
     print("productId : $productId");
 
+  }catch(error){print("Error adding product to user's list: $error");
+    }
   }
+
+  
+
 }

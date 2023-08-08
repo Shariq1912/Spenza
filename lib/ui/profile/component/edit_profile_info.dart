@@ -1,8 +1,13 @@
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:spenza/ui/profile/component/profile_fields_row.dart';
 import 'package:spenza/ui/profile/profile_screen.dart';
+import 'package:spenza/utils/spenza_extensions.dart';
 
 import '../data/user_profile_data.dart';
 import '../profile_repository.dart';
@@ -23,6 +28,7 @@ class _ProfileCardState extends ConsumerState<EditProfileInformation> {
   final TextEditingController zipCodeController = TextEditingController();
   final poppinsFont = GoogleFonts.poppins().fontFamily;
   String sex = "Male";
+  File? selectedImage;
 
   @override
   void initState() {
@@ -41,12 +47,13 @@ class _ProfileCardState extends ConsumerState<EditProfileInformation> {
       district: districtController.text,
       state: stateController.text,
       zipCode: zipCodeController.text,
+      profilePhoto: selectedImage!.path
     );
 
 
     bool isDataSaved = await ref
         .read(profileRepositoryProvider.notifier)
-        .saveZipCodeToServer(userProfileData);
+        .saveZipCodeToServer(userProfileData,selectedImage);
 
 
     if (isDataSaved) {
@@ -100,6 +107,8 @@ class _ProfileCardState extends ConsumerState<EditProfileInformation> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(height: 10),
+                              
+                              Center(child: leadingWidget("")),
                               buildCard(
                                 "Profile Information",
                                 [
@@ -189,7 +198,7 @@ class _ProfileCardState extends ConsumerState<EditProfileInformation> {
                 await _saveData();
                 //ref.watch(profileRepositoryProvider.notifier).getStateName("45110");
 
-                Navigator.of(context).push(MaterialPageRoute(
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => ProfileScreen(),
                 ));
               },
@@ -199,6 +208,7 @@ class _ProfileCardState extends ConsumerState<EditProfileInformation> {
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   fontFamily: poppinsFont,
+                    color :Color(0xFF0CA9E6)
                 ),
               )),
         ]);
@@ -212,4 +222,46 @@ class _ProfileCardState extends ConsumerState<EditProfileInformation> {
 
     super.dispose();
   }
+
+  Widget leadingWidget(String fileName) {
+    return GestureDetector(
+      onTap: () async {
+        final pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+        if (pickedImage != null) {
+          setState(() {
+            selectedImage = File(pickedImage.path);
+          });
+        }
+      },
+      child: Stack(
+        alignment: Alignment.topRight,
+        children: [
+          CircleAvatar(
+            radius: 50,
+            child: selectedImage != null
+                ? Image.file(
+              selectedImage!, // Use the selected image file if not null
+              fit: BoxFit.cover,
+              width: 100,
+              height: 100,
+            )
+                : (fileName.isEmpty
+                ? Image.asset(
+              "assets/images/logo.png",
+              fit: BoxFit.fill,
+              width: 100,
+              height: 100,
+            )
+                : CircleAvatar(
+              radius: 50,
+              backgroundImage: CachedNetworkImageProvider(fileName),
+            )),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+
 }

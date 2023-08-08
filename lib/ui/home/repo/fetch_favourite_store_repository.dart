@@ -192,48 +192,4 @@ class FetchFavouriteStoreRepository extends _$FetchFavouriteStoreRepository {
     }
   }
 
-  Future<Map<String, dynamic>> fetchCollectionDataAsJson() async {
-    final QuerySnapshot<Map<String, dynamic>> querySnapshot =
-    await FirebaseFirestore.instance.collection('products_mvp').get();
-
-    final List<Map<String, dynamic>> data = [];
-    for (var docSnapshot in querySnapshot.docs) {
-      final Map<String, dynamic> documentData = docSnapshot.data();
-      for (var key in documentData.keys) {
-        if (documentData[key] is DocumentReference) {
-          DocumentReference reference = documentData[key];
-          documentData[key] = reference.path;
-        }
-      }
-      data.add(documentData);
-    }
-
-    final jsonData = {
-      'collection_data': data,
-    };
-
-    return jsonData;
-  }
-
-
-
-  Future<File> writeDataToFile(Map<String, dynamic> jsonData) async {
-    final String jsonString = jsonEncode(jsonData);
-
-    final Directory? directory = await getExternalStorageDirectory();
-    final File file = File('${directory!.path}/data.json');
-
-    return file.writeAsString(jsonString);
-  }
-
-  Future<void> exportDataToJson() async {
-    try {
-      final jsonData = await fetchCollectionDataAsJson();
-
-      final File file = await writeDataToFile(jsonData);
-      print('Data exported to ${file.path}');
-    } catch (e) {
-      print('Errors: $e');
-    }
-  }
 }

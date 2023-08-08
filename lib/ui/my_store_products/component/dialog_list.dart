@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spenza/ui/home/components/add_list.dart';
 import 'package:spenza/ui/home/data/my_list_model.dart';
+import 'package:spenza/ui/my_store_products/component/add_product_to_new_list.dart';
 import 'package:spenza/ui/my_store_products/data/user_product_list_data.dart';
 import 'package:spenza/ui/my_store_products/repo/my_store_product_repository.dart';
 
@@ -10,7 +11,8 @@ import '../../home/repo/my_list_repository.dart';
 
 class MyListDialog extends ConsumerStatefulWidget {
   final String productId;
-  MyListDialog({Key? key, required this.productId}) : super(key: key);
+  final String productRef;
+  MyListDialog({Key? key, required this.productId, required this.productRef}) : super(key: key);
 
   @override
   ConsumerState<MyListDialog> createState() => _MyListDialogState();
@@ -35,7 +37,14 @@ class _MyListDialogState extends ConsumerState<MyListDialog> {
 
     //ref.read(myStoreProductRepositoryProvider.notifier).addProductToMyList(documentId, myListData);
 
-
+  void _showSnackbar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,8 +73,10 @@ class _MyListDialogState extends ConsumerState<MyListDialog> {
                       child: ListTile(
                         leading: leadingWidget(fileName),
                         title: Text(item.name),
-                        trailing: IconButton(onPressed: (){
-                          ref.read(myStoreProductRepositoryProvider.notifier).addProductToMyList(item.documentId!, myListData, widget.productId);
+                        trailing: IconButton(onPressed: ()async{
+                          await ref.read(myStoreProductRepositoryProvider.notifier).addProductToMyList(item.documentId!,  widget.productId, widget.productRef);
+                          Navigator.pop(context);
+                          _showSnackbar(context, "Product added successfully");
                         }, icon: Icon(Icons.playlist_add_sharp)),
                       ),
                     );
@@ -77,7 +88,7 @@ class _MyListDialogState extends ConsumerState<MyListDialog> {
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AddItemToList()));
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AddProductToNewList(productId: widget.productId, productRef: widget.productRef)));
           },
           child: Text("Create new list"),
         ),

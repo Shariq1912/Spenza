@@ -40,6 +40,42 @@ class MyListRepository extends _$MyListRepository {
     }
   }
 
+  Future<void> addProductToNewList(MyListModel myListModel,File? image,String productId, String productRef) async {
+    try{
+      final prefs = await SharedPreferences.getInstance();
+      final userId = prefs.getUserId();
+
+      String? downloadURL;
+      if (image != null) {
+        downloadURL = await image.uploadImageToFirebase();
+      }
+      DocumentReference<Map<String, dynamic>> myListDocument = _firestore
+          .collection(MyListConstant.myListCollection)
+          .doc();
+
+      final myListRequest = myListModel.copyWith(uid: userId, usersRef: "/users/$userId", myListPhoto: downloadURL);
+      await myListDocument.set(myListRequest.toJson());
+
+      CollectionReference<Map<String, dynamic>> userProductList =
+      myListDocument.collection(MyListConstant.userProductList);
+
+      DocumentReference<Map<String, dynamic>> productReference = await _firestore
+          .collection('products')
+          .doc(productRef);
+
+
+      userProductList.add({
+        'product_ref':productReference,
+        'product_id':productId,
+        'quantity' : 1
+      });
+      // userProductList.add(userProductRequest.toJson());
+      print("productId : $productId");
+
+    }catch(error){print("Error adding product to user's list: $error");
+    }
+  }
+
   Future<List<MyListModel>> fetchMyList() async {
     try {
       final prefs = await SharedPreferences.getInstance();

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -40,11 +42,16 @@ class ProfileRepository extends _$ProfileRepository {
     }
   }
 
-  Future<bool> saveZipCodeToServer(UserProfileData userProfileData) async {
+  Future<bool> saveZipCodeToServer(UserProfileData userProfileData, File? image) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String userId = prefs.getUserId();
     state = ApiResponse.loading();
-    final Map<String, dynamic> userData = userProfileData.toJson();
+    String? downloadURL;
+    if (image != null) {
+      downloadURL = await image.uploadImageToFirebase();
+    }
+
+    final Map<String, dynamic> userData = userProfileData.copyWith(profilePhoto: downloadURL).toJson();
 
     userData.entries.forEach((element) {
       print("userDaa ${element.value}");

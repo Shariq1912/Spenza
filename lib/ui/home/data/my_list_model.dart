@@ -11,7 +11,7 @@ class MyListModel with _$MyListModel {
     required String uid,
     required String usersRef,
      String? myListPhoto,
-     String? documentId,
+     @Default(null) String? documentId,
 }) =_MyListModel;
 
   factory MyListModel.fromJson(Map<String, dynamic> json) => _$MyListModelFromJson(json);

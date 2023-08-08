@@ -155,5 +155,45 @@ class MyStoreRepository extends StateNotifier<ApiResponse> {
     }
   }
 
+  Future<void> toggleFavoriteStore(AllStores store) async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getUserId();
+    final storeReference = 'stores/${store.documentId}';
+
+    try {
+      final snapshot = await _fireStore
+          .collection(FavoriteConstant.favoriteCollection)
+          .where(FavoriteConstant.userIdField, isEqualTo: 'users/$userId')
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        final docId = snapshot.docs.first.id;
+        final currentStores = snapshot.docs.first.data()[FavoriteConstant.storeIdsField] as List;
+        final isFavorite = currentStores.contains(storeReference);
+
+        if (isFavorite) {
+          currentStores.remove(storeReference);
+        } else {
+          currentStores.add(storeReference);
+        }
+
+        await _fireStore.collection(FavoriteConstant.favoriteCollection).doc(docId).update({
+          FavoriteConstant.storeIdsField: currentStores,
+        });
+      } else {
+        await _fireStore.collection(FavoriteConstant.favoriteCollection).add({
+          FavoriteConstant.userIdField: 'users/$userId',
+          FavoriteConstant.storeIdsField: [storeReference],
+        });
+      }
+
+      await fetchAllStores();
+    } catch (error) {
+      state = ApiResponse.error(errorMsg: error.toString());
+      print("Error toggling favorite store: $error");
+    }
+  }
+
+
 
 }

@@ -45,7 +45,7 @@ class MyStoreListWidget extends StatelessWidget {
               print(store.documentId);
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => MyStoreProduct(documentId: store.documentId!),
+                  builder: (context) => MyStoreProduct(documentId: store.documentId!, logo: store.logo,),
                 ),
               );
 

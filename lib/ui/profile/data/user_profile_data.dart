@@ -15,6 +15,7 @@ class UserProfileData with _$UserProfileData {
      String? streetNumber,
      String? district,
      String? state,
+    String? profilePhoto,
   }) = _UserProfileData;
 
   factory UserProfileData.fromJson(Map<String, dynamic> json) =>

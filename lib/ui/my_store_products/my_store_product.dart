@@ -1,15 +1,18 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/ui/my_store_products/component/product_card_widgets.dart';
 import 'package:spenza/ui/my_store_products/data/products.dart';
+import 'package:spenza/ui/my_store_products/repo/department_repository.dart';
 import 'package:spenza/ui/my_store_products/repo/my_store_product_repository.dart';
 
 import 'component/my_product_list_widget.dart';
 
 class MyStoreProduct extends ConsumerStatefulWidget{
-  const MyStoreProduct({Key ? key,required this.documentId, }) : super(key: key);
+  const MyStoreProduct({Key ? key,required this.documentId, required this.logo }) : super(key: key);
   final String documentId;
+  final String logo;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _MyStoreProductState();
@@ -29,6 +32,7 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct>{
 
   _loadProducts() async{
     await ref.read(myStoreProductRepositoryProvider.notifier).getProductsForStore(widget.documentId);
+    await ref.read(departmentRepositoryProvider.notifier).getDepartments();
   }
 
   @override
@@ -61,7 +65,7 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct>{
               child: CircleAvatar(
                 radius: 40,
                 child: ClipOval(
-                  child: Image.network('https://picsum.photos/250?image=9'),
+                  child: CachedNetworkImage(imageUrl: widget.logo,),
                 ),
               ),
             ),
@@ -73,17 +77,29 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct>{
         child: Consumer(
           builder: (context, ref, child) {
             final productProvider = ref.watch(myStoreProductRepositoryProvider);
+            final departmentProvider = ref.watch(departmentRepositoryProvider);
             return productProvider.when(
                   () => Container(),
               loading: () => Center(child: CircularProgressIndicator()),
-              error: (message) {
-                print("errorMrss $message");
-                return Center(child: Text(message));
-              },
+              error: (message) {print("errorMrss $message");
+                    return Center(child: Text(message));},
               success: (data) {
 
-                print("productData $data");
-                return MyProductListWidget(stores: data, onButtonClicked: (Product product) {});
+                /*print("productData $data");
+                return MyProductListWidget(stores: data, onButtonClicked: (Product product) {});*/
+                return departmentProvider.when(
+                        () => Container(),
+                    loading: () => Center(child: CircularProgressIndicator()),
+                    error: (message) {print("errorMrss $message");
+                      return Center(child: Text(message));},
+                    success: (departments) {
+                      return MyProductListWidget(
+                        stores: data,
+                        department: departments,
+                        onButtonClicked: (ProductModel product) {},
+                      );
+                    },);
+
               },
             );
           },

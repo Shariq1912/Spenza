@@ -188,18 +188,24 @@ class _TopStripState extends ConsumerState<TopStrip> {
   }
   Widget leadingWidget(String fileName) {
     if (fileName.isEmpty) {
-      return Image.asset(
-        "assets/images/logo.png",
-        fit: BoxFit.fill,
-        width: 100,
-        height: 130,
+      return Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Image.asset(
+          "assets/images/logo.png",
+          fit: BoxFit.fill,
+          width: 100,
+          height: 130,
+        ),
       );
     } else {
-      return CachedNetworkImage(
-        imageUrl: fileName,
-        fit: BoxFit.fill,
-        width: 100,
-        height: 130,
+      return Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: CachedNetworkImage(
+          imageUrl: fileName,
+          fit: BoxFit.fill,
+          width: 100,
+          height: 130,
+        ),
       );
     }
   }
