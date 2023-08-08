@@ -4,7 +4,7 @@ part 'products.freezed.dart';
 part 'products.g.dart';
 
 @freezed
-class ProductModel with _$Product{
+class ProductModel with _$ProductModel{
   const factory ProductModel({
    required String name,
     required String pImage,
@@ -13,7 +13,7 @@ class ProductModel with _$Product{
     required String department,
      String? documentId,
 
-}) = _Product;
+}) = _ProductModel;
 
-  factory ProductModel.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
+  factory ProductModel.fromJson(Map<String, dynamic> json) => _$ProductModelFromJson(json);
 }
