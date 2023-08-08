@@ -1,7 +1,13 @@
 import 'dart:math';
 
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/utils/firestore_constants.dart';
 
@@ -102,6 +108,50 @@ mixin FirstTimeLoginMixin {
     }
   }
 }
+/// extension for image selection
+extension ImagePickerExtension on ImagePicker {
+  Future<File?> pickImageFromGallery() async {
+    try {
+      final pickedImage = await this.pickImage(source: ImageSource.gallery);
+      if (pickedImage == null) {
+        return null;
+      }
+
+      final imageFile = File(pickedImage.path);
+      return imageFile;
+    } on PlatformException catch (e) {
+      print('Failed to pick image: $e');
+      return null;
+    } catch (e) {
+      print('Error occurred: $e');
+      return null;
+    }
+  }
+}
+
+extension FileExtension on File {
+  Future<String?> uploadImageToFirebase() async {
+    try {
+      final storageReference =FirebaseStorage.instance
+          .ref()
+          .child('images')
+          .child('${DateTime.now().millisecondsSinceEpoch}.jpg');
+
+      final uploadTask = storageReference.putFile(this);
+      final snapshot = await uploadTask.whenComplete(() {});
+
+      if (snapshot.state == TaskState.success) {
+        final downloadURL = await snapshot.ref.getDownloadURL();
+        return downloadURL;
+      }
+    } catch (e) {
+      print('Error uploading image to Firebase Storage: $e');
+    }
+
+    return null;
+  }
+}
+
 
 /// Not much accurate
 double calculateDistance(

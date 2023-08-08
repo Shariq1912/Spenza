@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:spenza/router/app_router.dart';
-import 'package:spenza/ui/favourite_stores/favourite_store_screen.dart';
 import 'package:spenza/ui/location/location_provider.dart';
 import 'package:spenza/ui/location/widget/zip_code_widget.dart';
-import 'package:spenza/utils/spenza_extensions.dart';
-
-import 'lat_lng_provider.dart';
 
 class LocationScreen extends ConsumerStatefulWidget {
   const LocationScreen({Key? key}) : super(key: key);

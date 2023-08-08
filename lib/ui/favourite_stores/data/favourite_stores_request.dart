@@ -1,9 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'favourite_stores_request.freezed.dart';
-
 part 'favourite_stores_request.g.dart';
 
 @freezed

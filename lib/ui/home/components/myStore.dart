@@ -1,27 +1,44 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:spenza/ui/home/repo/fetch_favourite_store_repository.dart';
+import 'package:spenza/ui/my_store/data/all_store.dart';
 import '../../my_store/my_store.dart';
+import '../../my_store_products/my_store_product.dart';
 
-class MyStores extends StatefulWidget {
-  const MyStores({Key? key}) : super(key: key);
-
+class MyStores extends ConsumerStatefulWidget {
   @override
-  State<MyStores> createState() => _MyStoresState();
+  ConsumerState<MyStores> createState() => _MyStoresState();
 }
 
-class _MyStoresState extends State<MyStores> {
+class _MyStoresState extends ConsumerState<MyStores> {
   final poppinsFont = GoogleFonts.poppins().fontFamily;
+
   @override
-  Widget build(BuildContext context) {
-    return _myStoriesWidget();
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadAllStore();
+    });
+  }
+
+  _loadAllStore() async {
+    await ref
+        .read(fetchFavouriteStoreRepositoryProvider.notifier)
+        .fetchFavStores();
   }
 
 
-  Widget _myStoriesWidget() {
+  @override
+  Widget build(BuildContext context) {
+    return _myStoresWidget();
+  }
+
+  Widget _myStoresWidget() {
     return Column(
       children: [
-         Row(
+        Row(
           children: [
             Expanded(
               flex: 1,
@@ -32,7 +49,7 @@ class _MyStoresState extends State<MyStores> {
                     color: Color(0xFF0CA9E6),
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
-                fontFamily: poppinsFont),
+                    fontFamily: poppinsFont),
               ),
             ),
             Expanded(
@@ -41,7 +58,8 @@ class _MyStoresState extends State<MyStores> {
                 alignment: Alignment.topRight,
                 child: IconButton(
                     onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Stores()));
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => Stores()));
                     },
                     icon: Icon(
                       Icons.arrow_forward_ios,
@@ -55,30 +73,66 @@ class _MyStoresState extends State<MyStores> {
         SizedBox(
           height: 200,
           child: Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                myStoryListItem(),
-                Padding(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: myStoryListItem(),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: myStoryListItem(),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: myStoryListItem(),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: myStoryListItem(),
-                )
-              ],
-            ),
-          ),
+              padding: const EdgeInsets.only(top: 10),
+              child: Consumer(
+                builder: (context, ref, child) {
+                  final favProvider =
+                      ref.watch(fetchFavouriteStoreRepositoryProvider);
+                  return favProvider.when(
+                    () => Container(),
+                    loading: () => Center(child: CircularProgressIndicator()),
+                    error: (message) => Center(child: Text(message)),
+                    success: (data) {
+                      if (data.isEmpty) {
+                        return Center(child: Text("No stores available"));
+                      } else {
+                        return ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: data.length,
+                          itemBuilder: (context, index) {
+                            AllStores store = data[index];
+                            var fileName = store.logo;
+                            return GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => MyStoreProduct(
+                                          documentId: store.documentId!, logo: store.logo),
+                                    ),
+                                  );
+                                },
+                                child: SizedBox(
+                                  width: 100,
+                                  child: Card(
+                                    elevation: 0,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        CachedNetworkImage(
+                                          imageUrl: fileName,
+                                          fit: BoxFit.fitWidth,
+                                          width: 100,
+                                          height: 100,
+                                        ),
+                                        Text(store.name)
+                                      ],
+                                    ),
+                                  ),
+                                ));
+                          },
+                        );
+                      }
+                    },
+                    empty: (message) =>
+                        Text("You don't have any favourite store"),
+                    redirectUser: () {
+                      /*context.goNamed(RouteManager.homeScreen);*/
+                      return Container();
+                    },
+                  );
+                },
+              )),
         )
       ],
     );
@@ -93,9 +147,7 @@ class _MyStoresState extends State<MyStores> {
           height: 100,
           color: Colors.red,
         ),
-
       ],
     );
   }
-
 }

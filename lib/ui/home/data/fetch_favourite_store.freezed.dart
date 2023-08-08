@@ -22,6 +22,7 @@ FetchFavouriteStores _$FetchFavouriteStoresFromJson(Map<String, dynamic> json) {
 mixin _$FetchFavouriteStores {
   List<String> get store_ids => throw _privateConstructorUsedError;
   String get uid => throw _privateConstructorUsedError;
+  String? get documentId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,7 +36,7 @@ abstract class $FetchFavouriteStoresCopyWith<$Res> {
           $Res Function(FetchFavouriteStores) then) =
       _$FetchFavouriteStoresCopyWithImpl<$Res, FetchFavouriteStores>;
   @useResult
-  $Res call({List<String> store_ids, String uid});
+  $Res call({List<String> store_ids, String uid, String? documentId});
 }
 
 /// @nodoc
@@ -54,6 +55,7 @@ class _$FetchFavouriteStoresCopyWithImpl<$Res,
   $Res call({
     Object? store_ids = null,
     Object? uid = null,
+    Object? documentId = freezed,
   }) {
     return _then(_value.copyWith(
       store_ids: null == store_ids
@@ -64,6 +66,10 @@ class _$FetchFavouriteStoresCopyWithImpl<$Res,
           ? _value.uid
           : uid // ignore: cast_nullable_to_non_nullable
               as String,
+      documentId: freezed == documentId
+          ? _value.documentId
+          : documentId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -76,7 +82,7 @@ abstract class _$$_FetchFavouriteStoresCopyWith<$Res>
       __$$_FetchFavouriteStoresCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<String> store_ids, String uid});
+  $Res call({List<String> store_ids, String uid, String? documentId});
 }
 
 /// @nodoc
@@ -92,6 +98,7 @@ class __$$_FetchFavouriteStoresCopyWithImpl<$Res>
   $Res call({
     Object? store_ids = null,
     Object? uid = null,
+    Object? documentId = freezed,
   }) {
     return _then(_$_FetchFavouriteStores(
       store_ids: null == store_ids
@@ -102,6 +109,10 @@ class __$$_FetchFavouriteStoresCopyWithImpl<$Res>
           ? _value.uid
           : uid // ignore: cast_nullable_to_non_nullable
               as String,
+      documentId: freezed == documentId
+          ? _value.documentId
+          : documentId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -110,7 +121,9 @@ class __$$_FetchFavouriteStoresCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_FetchFavouriteStores implements _FetchFavouriteStores {
   const _$_FetchFavouriteStores(
-      {required final List<String> store_ids, required this.uid})
+      {required final List<String> store_ids,
+      required this.uid,
+      this.documentId})
       : _store_ids = store_ids;
 
   factory _$_FetchFavouriteStores.fromJson(Map<String, dynamic> json) =>
@@ -126,10 +139,12 @@ class _$_FetchFavouriteStores implements _FetchFavouriteStores {
 
   @override
   final String uid;
+  @override
+  final String? documentId;
 
   @override
   String toString() {
-    return 'FetchFavouriteStores(store_ids: $store_ids, uid: $uid)';
+    return 'FetchFavouriteStores(store_ids: $store_ids, uid: $uid, documentId: $documentId)';
   }
 
   @override
@@ -139,13 +154,15 @@ class _$_FetchFavouriteStores implements _FetchFavouriteStores {
             other is _$_FetchFavouriteStores &&
             const DeepCollectionEquality()
                 .equals(other._store_ids, _store_ids) &&
-            (identical(other.uid, uid) || other.uid == uid));
+            (identical(other.uid, uid) || other.uid == uid) &&
+            (identical(other.documentId, documentId) ||
+                other.documentId == documentId));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_store_ids), uid);
+  int get hashCode => Object.hash(runtimeType,
+      const DeepCollectionEquality().hash(_store_ids), uid, documentId);
 
   @JsonKey(ignore: true)
   @override
@@ -165,7 +182,8 @@ class _$_FetchFavouriteStores implements _FetchFavouriteStores {
 abstract class _FetchFavouriteStores implements FetchFavouriteStores {
   const factory _FetchFavouriteStores(
       {required final List<String> store_ids,
-      required final String uid}) = _$_FetchFavouriteStores;
+      required final String uid,
+      final String? documentId}) = _$_FetchFavouriteStores;
 
   factory _FetchFavouriteStores.fromJson(Map<String, dynamic> json) =
       _$_FetchFavouriteStores.fromJson;
@@ -174,6 +192,8 @@ abstract class _FetchFavouriteStores implements FetchFavouriteStores {
   List<String> get store_ids;
   @override
   String get uid;
+  @override
+  String? get documentId;
   @override
   @JsonKey(ignore: true)
   _$$_FetchFavouriteStoresCopyWith<_$_FetchFavouriteStores> get copyWith =>

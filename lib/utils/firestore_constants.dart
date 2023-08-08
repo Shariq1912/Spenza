@@ -43,3 +43,13 @@ class ProductCollectionConstant {
 class RankedStoreConstant {
   static const String collectionName = 'ranked_store_products';
 }
+
+class MyListConstant {
+  static const String myListCollection = 'mylist';
+  static const String userProductList = 'user_product_list';
+}
+
+class Department {
+  static const String departmentCollection = 'departments';
+  static const String userProductList = 'user_product_list';
+}

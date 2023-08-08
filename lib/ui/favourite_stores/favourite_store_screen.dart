@@ -1,13 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:searchable_listview/searchable_listview.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/favourite_stores/favorite_repository.dart';
 import 'package:spenza/ui/favourite_stores/widgets/custom_searchbar.dart';
-import 'package:spenza/utils/spenza_extensions.dart';
+import 'package:spenza/ui/favourite_stores/widgets/favorite_store_list_widget.dart';
 
 import 'data/favourite_stores.dart';
 
@@ -24,9 +22,13 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
   late CustomSearchDelegate _searchDelegate;
   String searchInput = "";
 
+
   @override
   void initState() {
-    _loadStores();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadStores();
+    });
+
     _searchDelegate = CustomSearchDelegate([]);
     super.initState();
   }
@@ -77,15 +79,15 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
                   // success: (stores) => Container(),
                   success: (data) {
                     // debugPrint("$data");
-                    return /*FavoriteStoreListWidget(
+                    return FavoriteStoreListWidget(
                       stores: data,
                       onButtonClicked: (Stores store) {
                         ref
                             .read(favoriteRepositoryProvider.notifier)
                             .toggleFavorite(store);
                       },
-                    );*/
-                        SearchableList<Stores>(
+                    );
+                        /*SearchableList<Stores>(
                       displayClearIcon: true,
                       initialList: data,
                       builder: (filteredList) => ListTile(
@@ -127,14 +129,14 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
-                            /*borderSide: const BorderSide(
+                            *//*borderSide: const BorderSide(
                                 color: Colors.grey,
                                 width: 1.0,
                               ),
-                              borderRadius: BorderRadius.circular(10.0),*/
+                              borderRadius: BorderRadius.circular(10.0),*//*
                             ),
                       ),
-                    );
+                    );*/
                   },
                   redirectUser: () {
                     buildContext.goNamed(RouteManager.homeScreen);
@@ -153,7 +155,7 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
                 ref
                     .read(favoriteRepositoryProvider.notifier)
                     .saveFavouriteStoreIfAny();
-                // context.goNamed(RouteManager.homeScreen);
+                context.goNamed(RouteManager.homeScreen);
               },
               child: Consumer(
                 builder: (context, ref, child) {

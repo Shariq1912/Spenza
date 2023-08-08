@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
