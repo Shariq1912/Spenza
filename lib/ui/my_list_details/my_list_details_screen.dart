@@ -11,9 +11,9 @@ import 'package:spenza/ui/my_list_details/provider/user_product_list_provider.da
 import 'package:spenza/utils/color_utils.dart';
 
 class MyListDetailsScreen extends ConsumerStatefulWidget {
-  const MyListDetailsScreen({super.key});
+  const MyListDetailsScreen({super.key, required this.listId});
 
-  final String listId = "4NlYnhmchdlu528Gw2yK";
+  final String listId;
 
   @override
   ConsumerState createState() => _MyListDetailsScreenState();
@@ -42,7 +42,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen> {
       child: Scaffold(
         appBar: CustomAppBar(
           displayActionIcon: true,
-          title: 'Cool List',
+          title: 'My Cool List',
           textStyle: TextStyle(
             fontFamily: poppinsFont,
             fontWeight: FontWeight.bold,
@@ -102,38 +102,47 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen> {
                     ),
               ),
             ),
-            MaterialButton(
-              onPressed: () {
-                ref
-                    .read(userProductListProvider.notifier)
-                    .saveUserProductListToServer(context: context);
-              },
-              color: Colors.blue,
-              // Change the button color to your desired color
-              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.arrow_forward,
-                    color: Colors
-                        .white, // Change the icon color to your desired color
-                  ),
-                  SizedBox(width: 8),
-                  Text(
-                    'Continue',
-                    style: TextStyle(
-                      color: Colors.white,
-                      // Change the text color to your desired color
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
-              ),
+            Consumer(
+              builder: (context, ref, child) =>
+                  ref.watch(userProductListProvider).maybeWhen(
+                        orElse: () => buildMaterialButton(context),
+                        loading: () => Container(),
+                      ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  MaterialButton buildMaterialButton(BuildContext context) {
+    return MaterialButton(
+      onPressed: () {
+        ref
+            .read(userProductListProvider.notifier)
+            .saveUserProductListToServer(context: context);
+      },
+      color: Colors.blue,
+      // Change the button color to your desired color
+      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.arrow_forward,
+            color: Colors.white, // Change the icon color to your desired color
+          ),
+          SizedBox(width: 8),
+          Text(
+            'Continue',
+            style: TextStyle(
+              color: Colors.white,
+              // Change the text color to your desired color
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+        ],
       ),
     );
   }

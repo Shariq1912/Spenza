@@ -8,6 +8,7 @@ import 'package:spenza/ui/location/location_screen.dart';
 import 'package:spenza/ui/login/login_screen.dart';
 import 'package:spenza/ui/matching_store/matching_store_screen.dart';
 import 'package:spenza/ui/my_list_details/my_list_details_screen.dart';
+import 'package:spenza/ui/pre_loaded_list_details/pre_loaded_list_details_screen.dart';
 import 'package:spenza/ui/selected_store/selected_store_screen.dart';
 import 'package:spenza/ui/sign_up/register_screen.dart';
 import 'package:spenza/ui/splash/splash_screen.dart';
@@ -28,6 +29,7 @@ class RouteManager {
   static const String favouriteScreen = '/favouriteScreen';
   static const String homeScreen = '/homeScreen';
   static const String myListDetailScreen = '/';
+  static const String preLoadedListDetailScreen = '/preLoadedListDetailScreen';
   static const String storeRankingScreen = '/storeMatchingScreen';
   static const String selectedStoreScreen = '/selectedStoreScreen';
   static const String addProductScreen = '/addProductScreen';
@@ -85,7 +87,16 @@ class RouteManager {
         name: myListDetailScreen,
         path: myListDetailScreen,
         builder: (context, state) {
-          return const MyListDetailsScreen();
+          final String listId = state.queryParameters['list_id'] ?? "4NlYnhmchdlu528Gw2yK";
+          return MyListDetailsScreen(listId: listId);
+        },
+      ),
+      GoRoute(
+        name: preLoadedListDetailScreen,
+        path: preLoadedListDetailScreen,
+        builder: (context, state) {
+          final String listId = state.queryParameters['list_id'] ?? "4NlYnhmchdlu528Gw2yK";
+          return PreLoadedListDetailsScreen(listId: listId);
         },
       ),
 

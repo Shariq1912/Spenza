@@ -1,5 +1,5 @@
 import 'dart:math';
-
+import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
@@ -23,10 +23,12 @@ class UserProductList extends _$UserProductList with FirestoreAndPrefsMixin {
     state = AsyncValue.loading();
 
     final listId = await prefs.then((prefs) => prefs.getUserListId());
+    final listName = await prefs.then((prefs) => prefs.getUserListName());
 
     try {
       final productListRef = await fireStore
-          .collection(MyList.collectionName)
+          // .collection(MyList.collectionName)    /// get name from SharedPref
+          .collection(listName)
           .doc(listId)
           .collection(UserProductListCollection.collectionName)
           .get();
@@ -141,6 +143,68 @@ class UserProductList extends _$UserProductList with FirestoreAndPrefsMixin {
 
     print("Data Updated Successfully");
 
+    context.pushNamed(RouteManager.storeRankingScreen);
+  }
+
+  Future<void> copyTheList({required BuildContext context}) async {
+    final listId = await prefs.then((prefs) => prefs.getUserListId());
+    final collectionName = await prefs.then((prefs) => prefs.getUserListName());
+    final userList = fireStore.collection(collectionName).doc(listId);
+
+    final userListSnapshot = await userList.get();
+    final userProductListSnapshot =
+        await userList.collection(MyListConstant.userProductList).get();
+
+    final batch = fireStore.batch();
+    // Create a new map with modified name
+    final modifiedData = Map<String, dynamic>.from(userListSnapshot.data()!);
+    // Format current datetime and append it to the original name
+    final currentDate = DateTime.now();
+    final formattedDate = DateFormat('yyyy-MM-dd_HH:mm:ss').format(currentDate);
+    final newName = 'Copied ${modifiedData['name']} ($formattedDate)';
+
+    modifiedData['name'] = newName; // Change to the desired modified name
+
+    // Create a new document to store the copied list
+    final newListRef =
+        await fireStore.collection(collectionName).add(modifiedData);
+
+    // Iterate through the user_product_list subcollection and add each document to the new list
+    userProductListSnapshot.docs.forEach((doc) {
+      final data = doc.data();
+      batch.set(
+          newListRef.collection(MyListConstant.userProductList).doc(), data);
+    });
+
+    // Commit the batch operation to Firestore
+    await batch.commit();
+
+    context.showSnackBar(message: "$listId Copied Successfully!");
+  }
+
+  Future<void> deleteTheList({required BuildContext context}) async {
+    final listId = await prefs.then((prefs) => prefs.getUserListId());
+    final collectionName = await prefs.then((prefs) => prefs.getUserListName());
+    final userList =
+        fireStore.collection(collectionName).doc("guCMnbhN0R081n5RxFyl");
+    final userProductListSnapshot =
+        await userList.collection(MyListConstant.userProductList).get();
+
+    final batch = fireStore.batch();
+    // Delete documents in the subcollection
+    userProductListSnapshot.docs.forEach((doc) {
+      batch.delete(doc.reference);
+    });
+
+    batch
+      ..delete(userList)
+      ..commit();
+
+    context.showSnackBar(message: "$listId Deleted Successfully!");
+  }
+
+  Future<void> redirectFromPreloadedList(
+      {required BuildContext context}) async {
     context.pushNamed(RouteManager.storeRankingScreen);
   }
 }
