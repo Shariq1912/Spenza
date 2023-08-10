@@ -39,7 +39,6 @@ class _TopStripState extends ConsumerState<TopStrip> {
     await ref.read(myListRepositoryProvider.notifier).fetchMyList();
   }
 
-
   @override
   Widget build(BuildContext context) {
     final items = ref.watch(myListRepositoryProvider);
@@ -96,8 +95,7 @@ class _TopStripState extends ConsumerState<TopStrip> {
                       itemCount: data.length,
                       itemBuilder: (context, index) {
                         MyListModel list = data[index];
-                        var fileName =
-                            list.myListPhoto ?? "";
+                        var fileName = list.myListPhoto ?? "";
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -166,10 +164,12 @@ class _TopStripState extends ConsumerState<TopStrip> {
                 child: ClipOval(
                   child: IconButton(
                       onPressed: () async {
-                          Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (context) => AddItemToList()),
-                        ).then((value) => _loadMyList());
+                        Navigator.of(context)
+                            .push(
+                              MaterialPageRoute(
+                                  builder: (context) => AddItemToList()),
+                            )
+                            .then((value) => _loadMyList());
                       },
                       icon: Icon(
                         Icons.add,
@@ -184,6 +184,7 @@ class _TopStripState extends ConsumerState<TopStrip> {
       ),
     );
   }
+
   Widget leadingWidget(String fileName) {
     if (fileName.isEmpty) {
       return Padding(
@@ -207,5 +208,4 @@ class _TopStripState extends ConsumerState<TopStrip> {
       );
     }
   }
-
 }

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:spenza/ui/add_product/add_product_screen.dart';
 import 'package:spenza/ui/favourite_stores/favourite_store_screen.dart';
 import 'package:spenza/ui/home/components/add_list.dart';
+import 'package:spenza/ui/home/edit_list_screen.dart';
 import 'package:spenza/ui/home/home_screen.dart';
 import 'package:spenza/ui/location/location_screen.dart';
 import 'package:spenza/ui/login/login_screen.dart';
@@ -24,19 +25,20 @@ final GlobalKey<NavigatorState> _shellNavigator =
     GlobalKey(debugLabel: 'shell');
 
 class RouteManager {
-  static const String splashScreen = '/';
+  static const String splashScreen = '/myListDetailScreen';
 
   static const String loginScreen = '/loginScreen';
   static const String registerScreen = '/registerScreen';
   static const String locationScreen = '/locationScreen';
   static const String favouriteScreen = '/favouriteScreen';
   static const String homeScreen = '/homeScreen';
-  static const String myListDetailScreen = '/myListDetailScreen';
+  static const String myListDetailScreen = '/';
   static const String preLoadedListDetailScreen = '/preLoadedListDetailScreen';
   static const String storeRankingScreen = '/storeMatchingScreen';
   static const String selectedStoreScreen = '/selectedStoreScreen';
   static const String addProductScreen = '/addProductScreen';
   static const String addNewList = '/addNewList';
+  static const String editListScreen = '/editListScreen';
   static const String addProductToNewList = '/addProductToNewList';
   static const String stores = '/stores';
   static const String settingScreen = '/settingScreen';
@@ -138,6 +140,14 @@ class RouteManager {
         path: addNewList,
         builder: (context, state) {
           return AddItemToList();
+        },
+      ),
+
+      GoRoute(
+        name: editListScreen,
+        path: editListScreen,
+        builder: (context, state) {
+          return EditListScreen();
         },
       ),
 

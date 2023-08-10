@@ -138,11 +138,11 @@ extension ImagePickerExtension on ImagePicker {
 }
 
 extension FileExtension on File {
-  Future<String?> uploadImageToFirebase() async {
+  Future<String?> uploadImageToFirebase({String path = "images"}) async {
     try {
       final storageReference = FirebaseStorage.instance
           .ref()
-          .child('images')
+          .child(path)
           .child('${DateTime.now().millisecondsSinceEpoch}.jpg');
 
       final uploadTask = storageReference.putFile(this);

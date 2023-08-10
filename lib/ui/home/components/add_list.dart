@@ -25,23 +25,26 @@ class _AddItemToListState extends ConsumerState<AddItemToList> {
 
   final fieldValidator = MultiValidator([
     RequiredValidator(errorText: 'Field is required'),
-
   ]);
 
-  Future<void> _saveData() async {
+  Future<void> _saveData(BuildContext context) async {
+    if(selectedImage == null || selectedImage?.path == null){
+      context.showSnackBar(message: "Please choose image");
+      return;
+    }
     MyListModel myListData = MyListModel(
-        description: descriptionController.text,
-        name: nameController.text,
-        uid: "",
-        usersRef: "",
-        myListPhoto: selectedImage!.path);
+      description: descriptionController.text.trim(),
+      name: nameController.text.trim(),
+      uid: "",
+      usersRef: "",
+      myListPhoto: selectedImage?.path,
+    );
 
-
-     ref.read(myListRepositoryProvider.notifier).saveMyList(myListData, selectedImage);
-     ref.read(myListRepositoryProvider.notifier).fetchMyList();
-
+    ref
+        .read(myListRepositoryProvider.notifier)
+        .saveMyList(myListData, selectedImage);
+    ref.read(myListRepositoryProvider.notifier).fetchMyList();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -114,8 +117,8 @@ class _AddItemToListState extends ConsumerState<AddItemToList> {
                   child: ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                       await _saveData();
-                        Navigator.pop(context,true);
+                        await _saveData(context);
+                        Navigator.pop(context, true);
                       }
                     },
                     style: ElevatedButton.styleFrom(

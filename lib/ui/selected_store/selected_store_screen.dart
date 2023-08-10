@@ -63,7 +63,7 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
                     ),
                     orElse: () => CustomAppBar(
                       displayActionIcon: true,
-                      title: "Store",
+                      title: "",
                       textStyle: TextStyle(
                         fontFamily: poppinsFont,
                         fontWeight: FontWeight.bold,
