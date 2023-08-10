@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spenza/helpers/firestore_pref_mixin.dart';
 import 'package:spenza/network/api_responses.dart';
 import 'package:spenza/ui/home/data/my_list_model.dart';
 import 'package:spenza/utils/firestore_constants.dart';
@@ -11,28 +12,27 @@ import 'package:spenza/utils/spenza_extensions.dart';
 part 'my_list_repository.g.dart';
 
 @riverpod
-class MyListRepository extends _$MyListRepository {
+class MyListRepository extends _$MyListRepository with FirestoreAndPrefsMixin {
   @override
   ApiResponse build() {
     return ApiResponse();
   }
 
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
   Future<void> saveMyList(MyListModel myListModel, File? image) async {
     try {
       state = ApiResponse.loading();
 
-      final prefs = await SharedPreferences.getInstance();
-      final userId = prefs.getUserId();
+      final userId = await prefs.then((prefs) => prefs.getUserId());
 
       String? downloadURL;
       if (image != null) {
         downloadURL = await image.uploadImageToFirebase();
       }
 
-      final myListCollection = _firestore.collection(MyListConstant.myListCollection);
-      final myListRequest = myListModel.copyWith(uid: userId, usersRef: "/users/$userId", myListPhoto: downloadURL);
+      final myListCollection =
+          fireStore.collection(MyListConstant.myListCollection);
+      final myListRequest = myListModel.copyWith(
+          uid: userId, usersRef: "/users/$userId", myListPhoto: downloadURL);
 
       await myListCollection.add(myListRequest.toJson());
     } catch (error) {
@@ -40,8 +40,9 @@ class MyListRepository extends _$MyListRepository {
     }
   }
 
-  Future<void> addProductToNewList(MyListModel myListModel,File? image,String productId, String productRef) async {
-    try{
+  Future<void> addProductToNewList(MyListModel myListModel, File? image,
+      String productId, String productRef) async {
+    try {
       final prefs = await SharedPreferences.getInstance();
       final userId = prefs.getUserId();
 
@@ -49,30 +50,28 @@ class MyListRepository extends _$MyListRepository {
       if (image != null) {
         downloadURL = await image.uploadImageToFirebase();
       }
-      DocumentReference<Map<String, dynamic>> myListDocument = _firestore
-          .collection(MyListConstant.myListCollection)
-          .doc();
+      DocumentReference<Map<String, dynamic>> myListDocument =
+          fireStore.collection(MyListConstant.myListCollection).doc();
 
-      final myListRequest = myListModel.copyWith(uid: userId, usersRef: "/users/$userId", myListPhoto: downloadURL);
+      final myListRequest = myListModel.copyWith(
+          uid: userId, usersRef: "/users/$userId", myListPhoto: downloadURL);
       await myListDocument.set(myListRequest.toJson());
 
       CollectionReference<Map<String, dynamic>> userProductList =
-      myListDocument.collection(MyListConstant.userProductList);
+          myListDocument.collection(MyListConstant.userProductList);
 
-      DocumentReference<Map<String, dynamic>> productReference = await _firestore
-          .collection('products')
-          .doc(productRef);
-
+      DocumentReference<Map<String, dynamic>> productReference =
+          await fireStore.collection('products').doc(productRef);
 
       userProductList.add({
-        'product_ref':productReference,
-        'product_id':productId,
-        'quantity' : 1
+        'product_ref': productReference,
+        'product_id': productId,
+        'quantity': 1
       });
       // userProductList.add(userProductRequest.toJson());
       print("productId : $productId");
-
-    }catch(error){print("Error adding product to user's list: $error");
+    } catch (error) {
+      print("Error adding product to user's list: $error");
     }
   }
 
@@ -82,7 +81,7 @@ class MyListRepository extends _$MyListRepository {
       final userId = prefs.getUserId();
 
       state = ApiResponse.loading();
-      final snapShot = await _firestore
+      final snapShot = await fireStore
           .collection(MyListConstant.myListCollection)
           .where('uid', isEqualTo: userId)
           .get();
@@ -93,13 +92,12 @@ class MyListRepository extends _$MyListRepository {
         return list;
       }).toList();
 
-
       mylists.forEach((element) {
         print("mylists: ${element.name}");
       });
 
       state = ApiResponse.success(data: mylists);
-      if(mylists.isEmpty){
+      if (mylists.isEmpty) {
         return [];
       }
 
@@ -109,8 +107,4 @@ class MyListRepository extends _$MyListRepository {
       return [];
     }
   }
-
-
-
-
 }
