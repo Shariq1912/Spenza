@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/home/components/add_list.dart';
 import 'package:spenza/ui/home/data/my_list_model.dart';
 import 'package:spenza/ui/home/repo/my_list_repository.dart';
@@ -70,11 +72,7 @@ class _TopStripState extends ConsumerState<TopStrip> {
                   alignment: Alignment.topRight,
                   child: IconButton(
                     onPressed: () {
-                      // Navigate to the AddItemToList screen
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) => AddItemToList()),
-                      );
+                      context.goNamed(RouteManager.addNewList);
                     },
                     icon: Icon(
                       Icons.arrow_forward_ios,

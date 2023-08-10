@@ -21,7 +21,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   void initState() {
     super.initState();
 
-    Future.microtask(() => ref.read(splashProvider.notifier).isLoggedIn());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(splashProvider.notifier).isLoggedIn();
+    });
   }
 
   @override

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -27,7 +29,7 @@ extension SnackbarExtension on BuildContext {
 
 extension SharedPreferencesExtension on SharedPreferences {
   String getUserId() {
-    return getString('uid')!;
+    return getString('uid') ?? "Cool User";
   }
 
   bool isUserLoggedIn() {
@@ -36,6 +38,58 @@ extension SharedPreferencesExtension on SharedPreferences {
 
   bool isFirstLogin() {
     return getBool('is_first_login') ?? true;
+  }
+
+  String getUserListId() {
+    return getString('user_list_id') ?? "4NlYnhmchdlu528Gw2yK";
+  }
+
+  String getUserListName() {
+    return getString('user_list_name') ?? MyListConstant.myListCollection;
+  }
+}
+
+extension NumberFormat on double {
+  double toPrecision(int n) => double.parse(toStringAsFixed(n));
+}
+
+extension DistanceFormatter on double {
+  String formatDistance() {
+    double distanceInMeters = this;
+
+    if (distanceInMeters < 1000) {
+      // If distance is less than 1 kilometer, display it in meters
+      return '${distanceInMeters.toStringAsFixed(0)} m';
+    } else {
+      // If distance is equal to or greater than 1 kilometer, display it in kilometers
+      double distanceInKilometers = distanceInMeters / 1000;
+      return '${distanceInKilometers.toStringAsFixed(1)} km';
+    }
+  }
+}
+
+extension StringExtension on String {
+  String toCapitalized() =>
+      length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';
+
+  String toTitleCase() => replaceAll(RegExp(' +'), ' ')
+      .split(' ')
+      .map((str) => str.toCapitalized())
+      .join(' ');
+}
+
+extension LocationStringExtension on GeoPoint {
+  String getLocationString() {
+    String latitude = this.latitude.toString();
+    String longitude = this.longitude.toString();
+    return "($latitude, $longitude)";
+  }
+}
+
+extension FirestoreExtension on FirebaseFirestore {
+  DocumentReference getDocumentReferenceFromString(
+      {required String collectionName, required String id}) {
+    return this.collection(collectionName).doc(id);
   }
 }
 
@@ -61,6 +115,7 @@ mixin FirstTimeLoginMixin {
     }
   }
 }
+
 /// extension for image selection
 extension ImagePickerExtension on ImagePicker {
   Future<File?> pickImageFromGallery() async {
@@ -85,7 +140,7 @@ extension ImagePickerExtension on ImagePicker {
 extension FileExtension on File {
   Future<String?> uploadImageToFirebase() async {
     try {
-      final storageReference =FirebaseStorage.instance
+      final storageReference = FirebaseStorage.instance
           .ref()
           .child('images')
           .child('${DateTime.now().millisecondsSinceEpoch}.jpg');
@@ -105,3 +160,27 @@ extension FileExtension on File {
   }
 }
 
+/// Not much accurate
+double calculateDistance(
+  double lat1,
+  double lon1,
+  double lat2,
+  double lon2,
+) {
+  const int earthRadius = 6371; // in km
+  final double dLat = _toRadians(lat2 - lat1);
+  final double dLon = _toRadians(lon2 - lon1);
+  final double a = pow(sin(dLat / 2), 2) +
+      cos(_toRadians(lat1)) * cos(_toRadians(lat2)) * pow(sin(dLon / 2), 2);
+  final double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+  final double distance = earthRadius * c;
+  return distance;
+}
+
+double _toRadians(double degree) {
+  return degree * pi / 180;
+}
+
+// Function to get GeoPoint instance from Cloud Firestore document data.
+GeoPoint geopointFrom(Map<String, dynamic> data) =>
+    (data['geo'] as Map<String, dynamic>)['geopoint'] as GeoPoint;
