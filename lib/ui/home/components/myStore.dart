@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/home/repo/fetch_favourite_store_repository.dart';
 import 'package:spenza/ui/my_store/data/all_store.dart';
 import '../../my_store/my_store.dart';
@@ -58,9 +60,9 @@ class _MyStoresState extends ConsumerState<MyStores> {
                 alignment: Alignment.topRight,
                 child: IconButton(
                     onPressed: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => Stores()));
+                      context.push(RouteManager.stores);
                     },
+
                     icon: Icon(
                       Icons.arrow_forward_ios,
                       color: Color(0xFF0CA9E6),

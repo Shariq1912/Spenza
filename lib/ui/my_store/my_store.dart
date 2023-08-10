@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/home/home_screen.dart';
 import 'package:spenza/ui/my_store/data/all_store.dart';
 import 'package:spenza/ui/my_store/my_store_provider.dart';
@@ -36,8 +38,9 @@ class _StoresState extends ConsumerState<Stores> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>HomeScreen()));
-        return true;
+        context.pushReplacement(RouteManager.homeScreen);
+        //context.pop();
+        return false;
       },
       child: Scaffold(
         appBar: AppBar(
@@ -54,7 +57,7 @@ class _StoresState extends ConsumerState<Stores> {
           centerTitle: true,
           leading: IconButton(
             onPressed: () {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>HomeScreen()));
+              context.pushReplacement(RouteManager.homeScreen);
             },
             icon: Icon(Icons.arrow_back_ios, color: Color(0xFF0CA9E6)),
           ),

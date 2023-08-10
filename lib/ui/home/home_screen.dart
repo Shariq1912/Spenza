@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:spenza/ui/home/repo/fetch_favourite_store_repository.dart';
 import 'package:spenza/ui/settings/setting_Screen.dart';
 
+import '../../router/app_router.dart';
 import 'components/myStore.dart';
 import 'components/preLoadedList.dart';
 import 'components/topStrip.dart';
@@ -74,7 +76,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child:
             InkWell(
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SettingScreen()));
+               context.push(RouteManager.settingScreen);
               },
               child: CircleAvatar(
                 radius: 40,

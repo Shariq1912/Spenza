@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/ui/profile/profile_screen.dart';
 
+import '../../router/app_router.dart';
 import 'components/card_item.dart';
 
 class SettingScreen extends ConsumerStatefulWidget {
@@ -57,7 +59,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                 ),
                 IconButton(
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ProfileScreen()));
+                    context.push(RouteManager.profileScreen);
                   },
                   icon: Icon(
                     Icons.arrow_forward_ios,
