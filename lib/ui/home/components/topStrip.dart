@@ -72,7 +72,7 @@ class _TopStripState extends ConsumerState<TopStrip> {
                   alignment: Alignment.topRight,
                   child: IconButton(
                     onPressed: () {
-                      context.goNamed(RouteManager.addNewList);
+                      context.goNamed(RouteManager.myListDetailScreen);
                     },
                     icon: Icon(
                       Icons.arrow_forward_ios,
@@ -86,9 +86,11 @@ class _TopStripState extends ConsumerState<TopStrip> {
           ),
           Consumer(builder: (context, ref, child) {
             final mylist = ref.watch(myListRepositoryProvider);
-            return mylist.maybeWhen(() => Container(),
+            return mylist.maybeWhen
+              (
+
                 loading: () => Center(child: CircularProgressIndicator()),
-                success: (data) {
+                data: (data) {
                   return Container(
                     height: 200,
                     child: ListView.builder(

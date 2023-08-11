@@ -48,7 +48,7 @@ class ProfileRepository extends _$ProfileRepository {
     state = ApiResponse.loading();
     String? downloadURL;
     if (image != null) {
-      downloadURL = await image.uploadImageToFirebase();
+      downloadURL = await image.uploadImageToFirebase("profilePictures");
     }
 
     final Map<String, dynamic> userData = userProfileData.copyWith(profilePhoto: downloadURL).toJson();

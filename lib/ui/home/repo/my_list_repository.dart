@@ -13,30 +13,38 @@ part 'my_list_repository.g.dart';
 @riverpod
 class MyListRepository extends _$MyListRepository {
   @override
-  ApiResponse build() {
-    return ApiResponse();
+  FutureOr<List<MyListModel>> build() {
+  return [];
   }
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> saveMyList(MyListModel myListModel, File? image) async {
     try {
-      state = ApiResponse.loading();
+      state = AsyncValue.loading();
 
       final prefs = await SharedPreferences.getInstance();
       final userId = prefs.getUserId();
 
       String? downloadURL;
       if (image != null) {
-        downloadURL = await image.uploadImageToFirebase();
+        downloadURL = await image.uploadImageToFirebase("myList");
       }
 
       final myListCollection = _firestore.collection(MyListConstant.myListCollection);
       final myListRequest = myListModel.copyWith(uid: userId, usersRef: "/users/$userId", myListPhoto: downloadURL);
 
-      await myListCollection.add(myListRequest.toJson());
-    } catch (error) {
-      state = ApiResponse.error(errorMsg: error.toString());
+      //await myListCollection.add(myListRequest.toJson());
+      final DocumentReference docRef = await myListCollection.add(myListRequest.toJson());
+      final savedMyList = myListModel.copyWith(documentId: docRef.id);
+
+      final currentList = state.asData?.value ?? [];
+      currentList.add(savedMyList);
+
+      state = AsyncValue.data(currentList);
+
+    } catch (error,stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
     }
   }
 
@@ -47,7 +55,7 @@ class MyListRepository extends _$MyListRepository {
 
       String? downloadURL;
       if (image != null) {
-        downloadURL = await image.uploadImageToFirebase();
+        downloadURL = await image.uploadImageToFirebase("myList");
       }
       DocumentReference<Map<String, dynamic>> myListDocument = _firestore
           .collection(MyListConstant.myListCollection)
@@ -76,12 +84,12 @@ class MyListRepository extends _$MyListRepository {
     }
   }
 
-  Future<List<MyListModel>> fetchMyList() async {
+  Future<void> fetchMyList() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final userId = prefs.getUserId();
 
-      state = ApiResponse.loading();
+      state = AsyncValue.loading();
       final snapShot = await _firestore
           .collection(MyListConstant.myListCollection)
           .where('uid', isEqualTo: userId)
@@ -98,15 +106,15 @@ class MyListRepository extends _$MyListRepository {
         print("mylists: ${element.name}");
       });
 
-      state = ApiResponse.success(data: mylists);
-      if(mylists.isEmpty){
-        return [];
-      }
 
-      return mylists;
-    } catch (error) {
-      state = ApiResponse.error(errorMsg: error.toString());
-      return [];
+      if(mylists.isEmpty){
+        //return [];
+      }
+      state = AsyncValue.data(mylists);
+      //return mylists;
+    } catch (error,stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+      //return [];
     }
   }
 

@@ -61,7 +61,7 @@ class _AddProductToNewListState extends ConsumerState<AddProductToNewList> {
                   onTap: () async {
                     // Call the pickImageFromGallery extension function
                     final pickedImage =
-                    await ImagePicker().pickImageFromGallery();
+                    await ImagePicker().pickImageFromGallery(context);
                     if (pickedImage != null) {
                       setState(() {
                         selectedImage = File(pickedImage.path);

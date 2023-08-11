@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -118,9 +119,47 @@ mixin FirstTimeLoginMixin {
 
 /// extension for image selection
 extension ImagePickerExtension on ImagePicker {
-  Future<File?> pickImageFromGallery() async {
+  Future<File?> pickImageFromGallery(BuildContext context) async {
     try {
-      final pickedImage = await this.pickImage(source: ImageSource.gallery);
+      final pickedImage = await showDialog<File?>(
+        context: context,
+        builder: (BuildContext context) {
+          return CupertinoAlertDialog(
+            title: Text('Select Image'),
+            actions: <Widget>[
+              CupertinoDialogAction(
+                onPressed: () async {
+                  Navigator.pop(context, await _pickImage(ImageSource.gallery));
+                },
+                child: const Text('Choose from Gallery',style: TextStyle(color: Color(0xFF0CA9E6)),),
+              ),
+              CupertinoDialogAction(
+                onPressed: () async {
+                  Navigator.pop(context, await _pickImage(ImageSource.camera));
+                },
+                child: const Text('Capture from Camera',style: TextStyle(color: Color(0xFF0CA9E6)),),
+              ),
+              CupertinoDialogAction(
+                onPressed: () {
+                  Navigator.pop(context, null);
+                },
+                child: const Text('Cancel',style: TextStyle(color: Colors.redAccent,)),
+              ),
+            ],
+          );
+        },
+      );
+
+      return pickedImage;
+    } catch (e) {
+      print('Error occurred: $e');
+      return null;
+    }
+  }
+
+  Future<File?> _pickImage(ImageSource source) async {
+    try {
+      final pickedImage = await this.pickImage(source: source);
       if (pickedImage == null) {
         return null;
       }
@@ -130,19 +169,16 @@ extension ImagePickerExtension on ImagePicker {
     } on PlatformException catch (e) {
       print('Failed to pick image: $e');
       return null;
-    } catch (e) {
-      print('Error occurred: $e');
-      return null;
     }
   }
 }
 
 extension FileExtension on File {
-  Future<String?> uploadImageToFirebase() async {
+  Future<String?> uploadImageToFirebase(String pathName) async {
     try {
       final storageReference = FirebaseStorage.instance
           .ref()
-          .child('images')
+          .child(pathName)
           .child('${DateTime.now().millisecondsSinceEpoch}.jpg');
 
       final uploadTask = storageReference.putFile(this);

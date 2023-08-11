@@ -55,13 +55,13 @@ class _MyListDialogState extends ConsumerState<MyListDialog> {
         width: double.maxFinite,
         child: Consumer(builder: (context, ref, child) {
           final mylist = ref.watch(myListRepositoryProvider);
-          return mylist.when(() => Container(),
+          return mylist.when(
               loading: () => Center(child: CircularProgressIndicator()),
-              error: (error) {
+              error: (error,stackTrace) {
                 print("errorMrss $error");
-                return Center(child: Text(error));
+                return Center(child: Text(error.toString()));
               },
-              success: (data) {
+              data: (data) {
                 return ListView.builder(
                   shrinkWrap: true,
                   itemCount: data.length,
@@ -90,14 +90,14 @@ class _MyListDialogState extends ConsumerState<MyListDialog> {
           onPressed: () {
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AddProductToNewList(productId: widget.productId, productRef: widget.productRef)));
           },
-          child: Text("Create new list"),
+          child: Text("Create new list",style: TextStyle(color: Color(0xFF0CA9E6)),),
         ),
         SizedBox(width: 50,),
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text("Close"),
+          child: Text("Close",style: TextStyle(color: Color(0xFF0CA9E6)),),
         ),
       ],
     );

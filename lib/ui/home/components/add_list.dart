@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/home/data/my_list_model.dart';
 import 'package:spenza/ui/home/repo/my_list_repository.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
@@ -57,9 +59,8 @@ class _AddItemToListState extends ConsumerState<AddItemToList> {
               children: [
                 InkWell(
                   onTap: () async {
-                    // Call the pickImageFromGallery extension function
                     final pickedImage =
-                        await ImagePicker().pickImageFromGallery();
+                        await ImagePicker().pickImageFromGallery(context);
                     if (pickedImage != null) {
                       setState(() {
                         selectedImage = File(pickedImage.path);
@@ -114,8 +115,8 @@ class _AddItemToListState extends ConsumerState<AddItemToList> {
                   child: ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                       await _saveData();
-                        Navigator.pop(context,true);
+                        _saveData();
+                        context.pushReplacement(RouteManager.homeScreen);
                       }
                     },
                     style: ElevatedButton.styleFrom(
