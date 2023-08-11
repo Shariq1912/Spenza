@@ -162,7 +162,7 @@ class StoreRanking extends _$StoreRanking
                 (matchingProductCounts[storeRef] ?? 0) + 1;
 
             (productInListMap[storeRef] ??= [])
-                .add({'product': product, 'quantity': quantity});
+                .add({'product': productInStore, 'quantity': quantity});
           } else {
             final price = double.parse(productInStore.minPrice);
 

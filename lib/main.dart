@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/di/app_providers.dart';
+
 // import 'package:spenza/firebase_options.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -31,8 +32,6 @@ class SpenzaApp extends ConsumerWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
-
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       onGenerateTitle: (context) {

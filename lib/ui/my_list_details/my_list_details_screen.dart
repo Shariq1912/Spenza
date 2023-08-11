@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/di/app_providers.dart';
+import 'package:spenza/helpers/popup_menu_mixin.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/add_product/data/user_product.dart';
 import 'package:spenza/ui/my_list_details/components/custom_app_bar.dart';
 import 'package:spenza/ui/my_list_details/components/searchbox_widget.dart';
 import 'package:spenza/ui/my_list_details/components/user_selected_product_widget.dart';
+import 'package:spenza/ui/my_list_details/provider/list_details_provider.dart';
 import 'package:spenza/ui/my_list_details/provider/user_product_list_provider.dart';
 import 'package:spenza/utils/color_utils.dart';
+import 'package:spenza/utils/spenza_extensions.dart';
 
 class MyListDetailsScreen extends ConsumerStatefulWidget {
   const MyListDetailsScreen({super.key, required this.listId});
@@ -19,8 +22,40 @@ class MyListDetailsScreen extends ConsumerStatefulWidget {
   ConsumerState createState() => _MyListDetailsScreenState();
 }
 
-class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen> {
+class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
+    with PopupMenuMixin {
   final TextEditingController _searchController = TextEditingController();
+
+  final List<PopupMenuItem<PopupMenuAction>> items = [
+    PopupMenuItem(
+      child: ListTile(
+        trailing: const Icon(Icons.edit),
+        title: Text(PopupMenuAction.edit.value),
+      ),
+      value: PopupMenuAction.edit,
+    ),
+    PopupMenuItem(
+      child: ListTile(
+        trailing: const Icon(Icons.copy),
+        title: Text(PopupMenuAction.copy.value),
+      ),
+      value: PopupMenuAction.copy,
+    ),
+    PopupMenuItem(
+      child: ListTile(
+        trailing: const Icon(Icons.delete),
+        title: Text(PopupMenuAction.delete.value),
+      ),
+      value: PopupMenuAction.delete,
+    ),
+  ];
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    _searchController.dispose();
+  }
 
   @override
   void initState() {
@@ -28,6 +63,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(userProductListProvider.notifier).fetchProductFromListId();
+      ref.read(listDetailsProvider.notifier).getSelectedListDetails();
     });
   }
 
@@ -40,25 +76,43 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        appBar: CustomAppBar(
-          displayActionIcon: true,
-          title: 'My Cool List',
-          textStyle: TextStyle(
-            fontFamily: poppinsFont,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-            color: ColorUtils.colorPrimary,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(kToolbarHeight),
+          child: Consumer(
+            builder: (context, ref, child) {
+              return ref.watch(listDetailsProvider).maybeWhen(
+                    data: (data) => CustomAppBar(
+                      displayActionIcon: true,
+                      title: data.name,
+                      logo: data.myListPhoto ?? "",
+                      textStyle: TextStyle(
+                        fontFamily: poppinsFont,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: ColorUtils.colorPrimary,
+                      ),
+                      onBackIconPressed: () {
+                        context.pushNamed(RouteManager.addProductScreen);
+                      },
+                      onActionIconPressed: _onActionIconPressed,
+                    ),
+                    orElse: () => CustomAppBar(
+                      displayActionIcon: true,
+                      title: "",
+                      textStyle: TextStyle(
+                        fontFamily: poppinsFont,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: ColorUtils.colorPrimary,
+                      ),
+                      onBackIconPressed: () {
+                        context.pushNamed(RouteManager.addProductScreen);
+                      },
+                      onActionIconPressed: _onActionIconPressed,
+                    ),
+                  );
+            },
           ),
-          onBackIconPressed: () async {
-            final bool? result =
-                await context.pushNamed(RouteManager.addProductScreen);
-            if (result ?? false) {
-              debugPrint("Return from Add Product with $result");
-              ref
-                  .read(userProductListProvider.notifier)
-                  .fetchProductFromListId();
-            }
-          },
         ),
         body: Column(
           children: [
@@ -112,6 +166,44 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  void _onActionIconPressed() {
+    final RenderBox customAppBarRenderBox =
+        context.findRenderObject() as RenderBox;
+    final customAppBarPosition =
+        customAppBarRenderBox.localToGlobal(Offset.zero);
+
+    showPopupMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        customAppBarPosition.dx + customAppBarRenderBox.size.width - 40,
+        customAppBarPosition.dy + kToolbarHeight + 30,
+        0.0,
+        0.0,
+      ),
+      items: items,
+      onSelected: (PopupMenuAction value) async {
+        if (value == PopupMenuAction.copy) {
+          debugPrint("copy action");
+          ref
+              .read(userProductListProvider.notifier)
+              .copyTheList(context: context);
+        } else if (value == PopupMenuAction.delete) {
+          debugPrint("delete action");
+          ref
+              .read(userProductListProvider.notifier)
+              .deleteTheList(context: context);
+        } else if (value == PopupMenuAction.edit) {
+          debugPrint("edit action");
+          final bool? result = await context.pushNamed(RouteManager.editListScreen);
+          if(result ?? false){
+              context.showSnackBar(message: "List Edited Successfully!");
+              ref.read(listDetailsProvider.notifier).getSelectedListDetails();
+          }
+        }
+      },
     );
   }
 

@@ -3,10 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/home/data/my_list_model.dart';
 import 'package:spenza/ui/home/repo/my_list_repository.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
@@ -27,23 +25,26 @@ class _AddItemToListState extends ConsumerState<AddItemToList> {
 
   final fieldValidator = MultiValidator([
     RequiredValidator(errorText: 'Field is required'),
-
   ]);
 
-  Future<void> _saveData() async {
+  Future<void> _saveData(BuildContext context) async {
+    if(selectedImage == null || selectedImage?.path == null){
+      context.showSnackBar(message: "Please choose image");
+      return;
+    }
     MyListModel myListData = MyListModel(
-        description: descriptionController.text,
-        name: nameController.text,
-        uid: "",
-        usersRef: "",
-        myListPhoto: selectedImage!.path);
+      description: descriptionController.text.trim(),
+      name: nameController.text.trim(),
+      uid: "",
+      usersRef: "",
+      myListPhoto: selectedImage?.path,
+    );
 
-
-     ref.read(myListRepositoryProvider.notifier).saveMyList(myListData, selectedImage);
-     ref.read(myListRepositoryProvider.notifier).fetchMyList();
-
+    ref
+        .read(myListRepositoryProvider.notifier)
+        .saveMyList(myListData, selectedImage);
+    ref.read(myListRepositoryProvider.notifier).fetchMyList();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -59,8 +60,9 @@ class _AddItemToListState extends ConsumerState<AddItemToList> {
               children: [
                 InkWell(
                   onTap: () async {
+                    // Call the pickImageFromGallery extension function
                     final pickedImage =
-                        await ImagePicker().pickImageFromGallery(context);
+                        await ImagePicker().pickImageFromGallery();
                     if (pickedImage != null) {
                       setState(() {
                         selectedImage = File(pickedImage.path);
@@ -115,8 +117,8 @@ class _AddItemToListState extends ConsumerState<AddItemToList> {
                   child: ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        _saveData();
-                        context.pushReplacement(RouteManager.homeScreen);
+                        await _saveData(context);
+                        Navigator.pop(context, true);
                       }
                     },
                     style: ElevatedButton.styleFrom(

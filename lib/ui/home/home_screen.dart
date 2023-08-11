@@ -21,14 +21,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-
       _loadStores();
     });
   }
 
   _loadStores() async {
-    await ref.read(fetchFavouriteStoreRepositoryProvider.notifier).fetchAndDisplayFavouriteStores();
+    await ref
+        .read(fetchFavouriteStoreRepositoryProvider.notifier)
+        .fetchAndDisplayFavouriteStores();
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -38,12 +40,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Container(
-                  constraints: BoxConstraints(
-                      minHeight: 190),
+                  constraints: BoxConstraints(minHeight: 190),
                   color: Colors.blue,
                   child: const TopStrip(),
                 ),
@@ -51,8 +51,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               const Padding(
                 padding: EdgeInsets.only(top: 25, left: 10, right: 10),
                 child: PreLoadedList(),
-              ), Padding(
-                padding: EdgeInsets.only( left: 10, right: 10),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 10, right: 10),
                 child: MyStores(),
               )
             ],
@@ -73,10 +74,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             padding: const EdgeInsets.only(
               top: 5,
             ),
-            child:
-            InkWell(
+            child: InkWell(
               onTap: () {
-               context.push(RouteManager.settingScreen);
+                context.push(RouteManager.settingScreen);
               },
               child: CircleAvatar(
                 radius: 40,
