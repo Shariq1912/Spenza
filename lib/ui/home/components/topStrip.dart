@@ -30,15 +30,12 @@ class _TopStripState extends ConsumerState<TopStrip> {
     });
   }
 
-
-
   _loadMyList() async {
     await ref.read(fetchMyListProvider.notifier).fetchMyListFun();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Padding(
       padding: EdgeInsets.only(left: 10, right: 10),
       child: Column(
@@ -122,9 +119,10 @@ class _TopStripState extends ConsumerState<TopStrip> {
                         var fileName = list.myListPhoto ?? "";
                         return GestureDetector(
                           onTap: () {
-                           context.pushNamed(RouteManager.myListDetailScreen, queryParameters: {'list_id':list.documentId});
-                           print("${list.documentId}");
-                             },
+                            context.pushNamed(RouteManager.myListDetailScreen,
+                                queryParameters: {'list_id': list.documentId});
+                            print("${list.documentId}");
+                          },
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -153,13 +151,12 @@ class _TopStripState extends ConsumerState<TopStrip> {
                       },
                     ),
                   );
-
                 }
-              }, error: (Object error, StackTrace stackTrace) => Center(child: Text(error.toString())),
-
+              },
+              error: (Object error, StackTrace stackTrace) =>
+                  Center(child: Text(error.toString())),
             );
           }),
-
           Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: Align(

@@ -27,6 +27,10 @@ class UserProductListCollection {
   static const String collectionName = 'user_product_list';
 }
 
+class PreloadedListCollection {
+  static const String collectionName = 'preloaded_product_list';
+}
+
 class MyList {
   static const String collectionName = 'mylist';
 }

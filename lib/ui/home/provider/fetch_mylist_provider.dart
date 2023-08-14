@@ -1,5 +1,8 @@
+import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:spenza/helpers/fireStore_pref_mixin.dart';
+import 'package:spenza/router/app_router.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
 import '../../../utils/fireStore_constants.dart';
@@ -54,4 +57,19 @@ class FetchMyList extends _$FetchMyList with FirestoreAndPrefsMixin {
       return [];
     }
   }
+  Future<void> redirectUserToListDetailsScreen({required BuildContext context, required String listId}) async {
+     await prefs.then((prefs){
+       prefs.setString("user_list_name", MyListConstant.myListCollection);
+       prefs.setString("user_list_id", listId);
+     });
+
+     final bool? result = await context.pushNamed(RouteManager.myListDetailScreen,
+         queryParameters: {'list_id': listId});
+
+     if(result ?? false){
+       fetchMyListFun();
+     }
+
+  }
+
 }

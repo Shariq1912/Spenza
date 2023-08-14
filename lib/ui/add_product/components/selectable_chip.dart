@@ -4,25 +4,19 @@ import 'package:spenza/utils/color_utils.dart';
 class SelectableChip extends StatelessWidget {
   final String label;
   final bool isSelected;
-  final VoidCallback? onSelect;
-  final VoidCallback? onDeselect;
+  final Function(bool isSelected)? onSelected;
 
   const SelectableChip({
     this.label = "All",
     this.isSelected = false,
-    this.onSelect,
-    this.onDeselect,
+    this.onSelected,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (isSelected) {
-          onDeselect?.call();
-        } else {
-          onSelect?.call();
-        }
+        onSelected?.call(!isSelected);
       },
       child: Material(
         child: Chip(
@@ -32,7 +26,8 @@ class SelectableChip extends StatelessWidget {
               color: isSelected ? Colors.white : Colors.black,
             ),
           ),
-          backgroundColor: isSelected ? ColorUtils.colorPrimary : Colors.grey.shade200,
+          backgroundColor:
+              isSelected ? ColorUtils.colorPrimary : Colors.grey.shade200,
         ),
       ),
     );

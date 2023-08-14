@@ -153,26 +153,20 @@ class StoreRanking extends _$StoreRanking
             (missingProductMap[storeRef] ??= [])
                 .add({'product': product, 'quantity': quantity});
           } else if (productInStore.productId == productId) {
+            /// Matching product price
             final price = double.parse(productInStore.minPrice);
 
             storeTotal[storeRef] =
                 (storeTotal[storeRef] ?? 0) + (quantity * price);
-
-            matchingProductCounts[storeRef] =
-                (matchingProductCounts[storeRef] ?? 0) + 1;
 
             (productInListMap[storeRef] ??= [])
                 .add({'product': productInStore, 'quantity': quantity});
           } else {
-            final price = double.parse(productInStore.minPrice);
-
             /// similar product price
+            final price = double.parse(productInStore.minPrice);
 
             storeTotal[storeRef] =
                 (storeTotal[storeRef] ?? 0) + (quantity * price);
-
-            matchingProductCounts[storeRef] =
-                (matchingProductCounts[storeRef] ?? 0) + 0.9;
 
             (similarProductMap[storeRef] ??= [])
                 .add({'product': productInStore, 'quantity': quantity});
@@ -242,6 +236,7 @@ class StoreRanking extends _$StoreRanking
     final genericNames = List<String>.from(product.genericNames);
     final measure = product.measure;
     final department = product.department;
+    final actualStoreRef = fireStore.doc(storeRef);
 
     print('Searching for similar product:');
     print('Product ID: $productId');
@@ -259,11 +254,14 @@ class StoreRanking extends _$StoreRanking
     if (exactProduct != null) {
       print('Found exact product match:');
       print('Product ID: $productId');
+      matchingProductCounts[actualStoreRef] =
+          (matchingProductCounts[storeRef] ?? 0) + 1;
       return exactProduct;
     }
 
     Product? bestMatch;
     double? bestMatchPrice;
+    double bestMatchPercentage = 0;
 
     for (final similarProduct in storeProducts) {
       final similarGenericNames = similarProduct.genericNames;
@@ -272,20 +270,30 @@ class StoreRanking extends _$StoreRanking
 
       if (similarProduct.storeRef == storeRef &&
           similarMeasure == measure &&
-          similarDepartment == department &&
-          similarGenericNames.length >= genericNames.length &&
-          similarGenericNames.every((name) => genericNames.contains(name))) {
-        //todo add count of 0.3 + 0.3 + 0.4 (according to the numbers of generic name characters match and then put inside matching count map)
+          similarDepartment == department) {
         final similarPrice = double.tryParse(similarProduct.minPrice);
+        final double relationPercentage = _calculateRelation(
+            genericNames, similarGenericNames.cast<String>());
+
         if (similarPrice != null &&
             (bestMatch == null ||
                 bestMatchPrice == null ||
-                similarPrice < bestMatchPrice)) {
+                relationPercentage > bestMatchPercentage ||
+                (relationPercentage == bestMatchPercentage &&
+                    similarPrice < bestMatchPrice))) {
           bestMatch = similarProduct;
           bestMatchPrice = similarPrice;
+          bestMatchPercentage = relationPercentage;
         }
       }
     }
+
+    if (bestMatchPercentage <= 0.65) {
+      print(' similar product Found BUT with ${bestMatchPercentage * 100} %:');
+      return null;
+    }
+    matchingProductCounts[actualStoreRef] =
+        (matchingProductCounts[actualStoreRef] ?? 0) + bestMatchPercentage;
 
     if (bestMatch != null) {
       print('Found similar product:');
@@ -297,6 +305,22 @@ class StoreRanking extends _$StoreRanking
     }
 
     return bestMatch;
+  }
+
+  double _calculateRelation(
+      List<String> mainGenericNames, List<String> otherGenericNames) {
+    final otherGenericNamesSet = otherGenericNames.toSet();
+
+    final matches = mainGenericNames
+        .where((item) => otherGenericNamesSet.contains(item))
+        .length;
+    final mainLength = mainGenericNames.length;
+    final otherLength = otherGenericNames.length;
+
+    final relationPercentage =
+        (matches / (mainLength > otherLength ? mainLength : otherLength));
+
+    return relationPercentage.toPrecision(2);
   }
 
   Future<QueryDocumentSnapshot<Map<String, dynamic>>?> _getSimilarProduct({
