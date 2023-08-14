@@ -9,7 +9,7 @@ import 'package:spenza/ui/my_store_products/data/user_product_list_data.dart';
 import 'package:spenza/ui/my_store_products/provider/add_product_to_my_list_provider.dart';
 import 'package:spenza/ui/my_store_products/repo/my_store_product_repository.dart';
 
-import '../../home/provider/add_product_to _new_list_provider.dart';
+import '../../home/provider/add_product_to_new_list_provider.dart';
 
 
 

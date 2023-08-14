@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:spenza/ui/home/provider/add_product_to%20_new_list_provider.dart';
+import 'package:spenza/ui/home/provider/add_product_to_new_list_provider.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
 import '../../home/data/my_list_model.dart';

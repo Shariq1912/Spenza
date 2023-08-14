@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/ui/home/provider/fetch_mylist_provider.dart';
-import 'package:spenza/ui/home/provider/home_preloaded_list.dart';
 import 'package:spenza/ui/home/repo/fetch_favourite_store_repository.dart';
 import '../../router/app_router.dart';
 import 'components/myStore.dart';
@@ -32,7 +31,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         .fetchFavStores();
     await ref.read(homePreloadedListProvider.notifier).fetchPreloadedList();
   }
-
   @override
   void dispose() {
     ref.invalidate(fetchMyListProvider);
@@ -56,7 +54,30 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 child: Container(
                   constraints: BoxConstraints(minHeight: 190),
                   color: Colors.blue,
-                  child: const TopStrip(),
+                  child: Consumer(
+                    builder: (context, ref, child) =>
+                        ref.watch(fetchMyListProvider).when(
+                              data: (data) => TopStrip(
+                                data: data,
+                                onCreateList: () async {
+                                  final bool? result = await context
+                                      .pushNamed(RouteManager.addNewList);
+                                  if (result ?? false) {
+                                    ref
+                                        .read(fetchMyListProvider.notifier)
+                                        .fetchMyListFun();
+                                  }
+                                },
+                                onAllList: () {
+                                  // todo redirect user to display all lists with receipt count
+                                  context.showSnackBar(message: "Display All User My List");
+                                },
+                              ),
+                              error: (error, stackTrace) => Text('$error'),
+                              loading: () =>
+                                  Center(child: CircularProgressIndicator()),
+                            ),
+                  ),
                 ),
               ),
 
@@ -100,7 +121,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     return Container();
                   },
                 );
-              })
+                }
+              )
             ],
           ),
         ),
