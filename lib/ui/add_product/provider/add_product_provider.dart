@@ -145,7 +145,7 @@ class AddProduct extends _$AddProduct
       } else {
         print('Firestore exception: ${e.message}');
       }
-      state = AsyncValue.error('Error searching products: ${e.message}');
+      state = AsyncValue.error('Error searching products: ${e.message}',StackTrace.current);
     } catch (e) {
       print('Error searching products: $e');
       state =
