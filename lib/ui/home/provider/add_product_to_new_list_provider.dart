@@ -8,7 +8,7 @@ import 'package:spenza/utils/spenza_extensions.dart';
 import '../../../utils/fireStore_constants.dart';
 import '../data/my_list_model.dart';
 
-part 'add_product_to _new_list_provider.g.dart';
+part 'add_product_to_new_list_provider.g.dart';
 
 
 @riverpod

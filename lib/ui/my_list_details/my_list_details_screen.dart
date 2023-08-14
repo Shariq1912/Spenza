@@ -62,7 +62,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(userProductListProvider.notifier).fetchProductFromListId(widget.listId);
+      ref.read(userProductListProvider.notifier).fetchProductFromListId();
       ref.read(listDetailsProvider.notifier).getSelectedListDetails();
     });
   }

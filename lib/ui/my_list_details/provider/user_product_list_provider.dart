@@ -19,10 +19,10 @@ class UserProductList extends _$UserProductList with FirestoreAndPrefsMixin {
     return [];
   }
 
-  Future<void> fetchProductFromListId(String listId) async {
+  Future<void> fetchProductFromListId() async {
     state = AsyncValue.loading();
 
-    //final listId = await prefs.then((prefs) => prefs.getUserListId());
+    final listId = await prefs.then((prefs) => prefs.getUserListId());
     final listName = await prefs.then((prefs) => prefs.getUserListName());
 
     try {

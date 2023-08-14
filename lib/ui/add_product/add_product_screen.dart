@@ -44,8 +44,8 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
   @override
   void dispose() {
     super.dispose();
-    ref.read(selectedDepartmentsProvider.notifier).dispose();
-    ref.read(searchQueryProvider.notifier).dispose();
+    ref.invalidate(selectedDepartmentsProvider);
+    ref.invalidate(searchQueryProvider);
     _searchController.dispose();
   }
 
