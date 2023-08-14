@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:spenza/network/api_responses.dart';
-import 'package:spenza/ui/my_store_products/data/user_product_list_data.dart';
 import 'package:spenza/utils/firestore_constants.dart';
 
 import '../data/products.dart';

@@ -1,17 +1,14 @@
-import 'dart:io';
+
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/ui/home/data/my_list_model.dart';
 import 'package:spenza/ui/home/provider/edit_list_provider.dart';
 import 'package:spenza/ui/home/provider/image_picker_provider.dart';
-import 'package:spenza/ui/home/repo/my_list_repository.dart';
 import 'package:spenza/ui/my_list_details/provider/list_details_provider.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
@@ -102,7 +99,7 @@ class _EditListState extends ConsumerState<EditListScreen> {
                   onTap: () async {
                     // Call the pickImageFromGallery extension function
                     final pickedImage =
-                        await ImagePicker().pickImageFromGallery();
+                        await ImagePicker().pickImageFromGallery(context);
                     if (pickedImage != null) {
                       debugPrint("PICKED IMAGE = $pickedImage");
                       ref.read(imagePickerProvider.notifier).state =

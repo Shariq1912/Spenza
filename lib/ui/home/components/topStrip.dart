@@ -6,7 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/home/components/add_list.dart';
 import 'package:spenza/ui/home/data/my_list_model.dart';
-import 'package:spenza/ui/home/repo/my_list_repository.dart';
+
+import '../provider/fetch_mylist_provider.dart';
 
 class TopStrip extends ConsumerStatefulWidget {
   const TopStrip({Key? key}) : super(key: key);
@@ -29,23 +30,15 @@ class _TopStripState extends ConsumerState<TopStrip> {
     });
   }
 
-  @override
-  void didUpdateWidget(TopStrip oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _loadMyList();
-  }
+
 
   _loadMyList() async {
-    await ref.read(myListRepositoryProvider.notifier).fetchMyList();
+    await ref.read(fetchMyListProvider.notifier).fetchMyListFun();
   }
 
   @override
   Widget build(BuildContext context) {
-    final items = ref.watch(myListRepositoryProvider);
-    if (result == true) {
-      print("truuuu $result");
-      _loadMyList();
-    }
+
     return Padding(
       padding: EdgeInsets.only(left: 10, right: 10),
       child: Column(
@@ -71,7 +64,7 @@ class _TopStripState extends ConsumerState<TopStrip> {
                   alignment: Alignment.topRight,
                   child: IconButton(
                     onPressed: () {
-                      context.goNamed(RouteManager.addNewList);
+                      context.goNamed(RouteManager.myListDetailScreen);
                     },
                     icon: Icon(
                       Icons.arrow_forward_ios,
@@ -84,45 +77,11 @@ class _TopStripState extends ConsumerState<TopStrip> {
             ],
           ),
           Consumer(builder: (context, ref, child) {
-            final mylist = ref.watch(myListRepositoryProvider);
-            return mylist.maybeWhen(() => Container(),
-                loading: () => Center(child: CircularProgressIndicator()),
-                success: (data) {
-                  return Container(
-                    height: 200,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: data.length,
-                      itemBuilder: (context, index) {
-                        MyListModel list = data[index];
-                        var fileName = list.myListPhoto ?? "";
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            leadingWidget(fileName),
-                            Text(
-                              list.name ?? '',
-                              style: const TextStyle(
-                                  decoration: TextDecoration.none,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16),
-                            ),
-                            Text(
-                              list.description ?? '',
-                              style: const TextStyle(
-                                  decoration: TextDecoration.none,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  );
-                },
-                orElse: () {
+            final mylist = ref.watch(fetchMyListProvider);
+            return mylist.when(
+              loading: () => Center(child: CircularProgressIndicator()),
+              data: (data) {
+                if (data.isEmpty) {
                   return Padding(
                     padding: const EdgeInsets.only(top: 10),
                     child: Row(
@@ -152,8 +111,55 @@ class _TopStripState extends ConsumerState<TopStrip> {
                       ],
                     ),
                   );
-                });
+                } else {
+                  return Container(
+                    height: 200,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: data.length,
+                      itemBuilder: (context, index) {
+                        MyListModel list = data[index];
+                        var fileName = list.myListPhoto ?? "";
+                        return GestureDetector(
+                          onTap: () {
+                           context.pushNamed(RouteManager.myListDetailScreen, queryParameters: {'list_id':list.documentId});
+                           print("${list.documentId}");
+                             },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              leadingWidget(fileName),
+                              Text(
+                                list.name ?? '',
+                                style: const TextStyle(
+                                  decoration: TextDecoration.none,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              Text(
+                                list.description ?? '',
+                                style: const TextStyle(
+                                  decoration: TextDecoration.none,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  );
+
+                }
+              }, error: (Object error, StackTrace stackTrace) => Center(child: Text(error.toString())),
+
+            );
           }),
+
           Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: Align(
