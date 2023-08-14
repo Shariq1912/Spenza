@@ -153,26 +153,20 @@ class StoreRanking extends _$StoreRanking
             (missingProductMap[storeRef] ??= [])
                 .add({'product': product, 'quantity': quantity});
           } else if (productInStore.productId == productId) {
+            /// Matching product price
             final price = double.parse(productInStore.minPrice);
 
             storeTotal[storeRef] =
                 (storeTotal[storeRef] ?? 0) + (quantity * price);
-
-            matchingProductCounts[storeRef] =
-                (matchingProductCounts[storeRef] ?? 0) + 1;
 
             (productInListMap[storeRef] ??= [])
                 .add({'product': productInStore, 'quantity': quantity});
           } else {
-            final price = double.parse(productInStore.minPrice);
-
             /// similar product price
+            final price = double.parse(productInStore.minPrice);
 
             storeTotal[storeRef] =
                 (storeTotal[storeRef] ?? 0) + (quantity * price);
-
-            matchingProductCounts[storeRef] =
-                (matchingProductCounts[storeRef] ?? 0) + 0.9;
 
             (similarProductMap[storeRef] ??= [])
                 .add({'product': productInStore, 'quantity': quantity});
@@ -242,6 +236,7 @@ class StoreRanking extends _$StoreRanking
     final genericNames = List<String>.from(product.genericNames);
     final measure = product.measure;
     final department = product.department;
+    final actualStoreRef = fireStore.doc(storeRef);
 
     print('Searching for similar product:');
     print('Product ID: $productId');
@@ -259,6 +254,8 @@ class StoreRanking extends _$StoreRanking
     if (exactProduct != null) {
       print('Found exact product match:');
       print('Product ID: $productId');
+      matchingProductCounts[actualStoreRef] =
+          (matchingProductCounts[storeRef] ?? 0) + 1;
       return exactProduct;
     }
 
@@ -295,7 +292,6 @@ class StoreRanking extends _$StoreRanking
       print(' similar product Found BUT with ${bestMatchPercentage * 100} %:');
       return null;
     }
-    final actualStoreRef = fireStore.doc(storeRef);
     matchingProductCounts[actualStoreRef] =
         (matchingProductCounts[actualStoreRef] ?? 0) + bestMatchPercentage;
 

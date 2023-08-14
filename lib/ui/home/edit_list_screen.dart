@@ -64,9 +64,11 @@ class _EditListState extends ConsumerState<EditListScreen> {
 
   @override
   void dispose() {
+    super.dispose();
     nameController.dispose();
     descriptionController.dispose();
-    super.dispose();
+    ref.read(networkImageProvider.notifier).dispose();
+    ref.read(imagePickerProvider.notifier).dispose();
   }
 
   @override

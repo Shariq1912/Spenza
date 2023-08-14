@@ -139,6 +139,13 @@ class AddProduct extends _$AddProduct
       print('Filter List: ${filteredList.toString()}');
 
       state = AsyncValue.data(filteredList);
+    } on FirebaseException catch (e) {
+      if (e.code == 'no-internet') {
+        print('No internet connection. Please check your network.');
+      } else {
+        print('Firestore exception: ${e.message}');
+      }
+      state = AsyncValue.error('Error searching products: ${e.message}');
     } catch (e) {
       print('Error searching products: $e');
       state =
@@ -149,37 +156,49 @@ class AddProduct extends _$AddProduct
   /// Add The selected product in user my list
   Future<void> addProductToUserList(BuildContext context,
       {required Product product}) async {
-    final userListId = await prefs.then((prefs) => prefs.getUserListId());
+    try {
+      final userListId = await prefs.then((prefs) => prefs.getUserListId());
 
-    print(userListId);
+      print(userListId);
 
-    CollectionReference userProductList = fireStore
-        .collection(MyList.collectionName)
-        .doc(userListId)
-        .collection(UserProductListCollection.collectionName);
+      CollectionReference userProductList = fireStore
+          .collection(MyList.collectionName)
+          .doc(userListId)
+          .collection(UserProductListCollection.collectionName);
 
-    final query = await userProductList
-        .where(ProductCollectionConstant.productId,
-            isEqualTo: product.productId)
-        .limit(1)
-        .get();
+      final query = await userProductList
+          .where(ProductCollectionConstant.productId,
+              isEqualTo: product.productId)
+          .limit(1)
+          .get();
 
-    var isProductExist = query.docs.isNotEmpty;
+      var isProductExist = query.docs.isNotEmpty;
 
-    if (isProductExist) {
-      context.showSnackBar(message: "Product Already Exist in the List");
-      return;
+      if (isProductExist) {
+        context.showSnackBar(message: "Product Already Exist in the List");
+        return;
+      }
+
+      final userProduct = UserProductInsert(
+          productRef: fireStore
+              .collection(ProductCollectionConstant.collectionName)
+              .doc(product.productRef),
+          productId: product.productId);
+
+      userProductList
+          .add(userProduct.toJson())
+          .then((value) => context.pop(true));
+    }  on FirebaseException catch (e) {
+      if (e.code == 'no-internet') {
+        print('No internet connection. Please check your network.');
+      } else {
+        print('Firestore exception: ${e.message}');
+      }
+      context.showSnackBar(message: 'Firestore exception: ${e.message}');
+    } catch (e) {
+      print('Error adding product to user list: $e');
+      context.showSnackBar(message: 'Error adding product to user list: $e');
     }
-
-    final userProduct = UserProductInsert(
-        productRef: fireStore
-            .collection(ProductCollectionConstant.collectionName)
-            .doc(product.productRef),
-        productId: product.productId);
-
-    userProductList
-        .add(userProduct.toJson())
-        .then((value) => context.pop(true));
   }
 
   /// Not much useful
