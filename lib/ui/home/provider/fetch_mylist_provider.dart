@@ -42,10 +42,6 @@ class FetchMyList extends _$FetchMyList with FirestoreAndPrefsMixin {
         print("mylists: ${element.name}");
       });
 
-      /*if(mylists.isEmpty){
-        print("mylists: emptylist");
-        return [];
-      }*/
 
       state = AsyncValue.data(mylists);
       return mylists;

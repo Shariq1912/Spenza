@@ -53,3 +53,7 @@ class Department {
   static const String departmentCollection = 'departments';
   static const String userProductList = 'user_product_list';
 }
+
+class PreloadedListConstant {
+  static const String preloadedListCollection = 'preloaded_default';
+}
