@@ -29,7 +29,7 @@ class _PreLoadedListDetailsScreenState
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(userProductListProvider.notifier).fetchProductFromListId();
+      ref.read(userProductListProvider.notifier).fetchProductFromListId(widget.listId);
     });
   }
 
@@ -58,7 +58,7 @@ class _PreLoadedListDetailsScreenState
               debugPrint("Return from Add Product with $result");
               ref
                   .read(userProductListProvider.notifier)
-                  .fetchProductFromListId();
+                  .fetchProductFromListId(widget.listId);
             }
           },
         ),

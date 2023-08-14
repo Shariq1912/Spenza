@@ -11,6 +11,7 @@ import 'package:spenza/ui/matching_store/matching_store_screen.dart';
 import 'package:spenza/ui/my_list_details/my_list_details_screen.dart';
 import 'package:spenza/ui/pre_loaded_list_details/pre_loaded_list_details_screen.dart';
 import 'package:spenza/ui/profile/profile_screen.dart';
+import 'package:spenza/ui/receipts/upload_receipt.dart';
 import 'package:spenza/ui/selected_store/selected_store_screen.dart';
 import 'package:spenza/ui/settings/setting_Screen.dart';
 import 'package:spenza/ui/sign_up/register_screen.dart';
@@ -25,14 +26,14 @@ final GlobalKey<NavigatorState> _shellNavigator =
     GlobalKey(debugLabel: 'shell');
 
 class RouteManager {
-  static const String splashScreen = '/myListDetailScreen';
+  static const String splashScreen = '/';
 
   static const String loginScreen = '/loginScreen';
   static const String registerScreen = '/registerScreen';
   static const String locationScreen = '/locationScreen';
   static const String favouriteScreen = '/favouriteScreen';
   static const String homeScreen = '/homeScreen';
-  static const String myListDetailScreen = '/';
+  static const String myListDetailScreen = '/myListDetailScreen';
   static const String preLoadedListDetailScreen = '/preLoadedListDetailScreen';
   static const String storeRankingScreen = '/storeMatchingScreen';
   static const String selectedStoreScreen = '/selectedStoreScreen';
@@ -43,6 +44,7 @@ class RouteManager {
   static const String stores = '/stores';
   static const String settingScreen = '/settingScreen';
   static const String profileScreen = '/profileScreen';
+  static const String uploadReceiptScreen = '/uploadReceiptScreen';
 
   /// The route configuration.
   static final GoRouter router = GoRouter(
@@ -98,7 +100,14 @@ class RouteManager {
         path: myListDetailScreen,
         builder: (context, state) {
           final String listId = state.queryParameters['list_id'] ?? "4NlYnhmchdlu528Gw2yK";
-          return MyListDetailsScreen(listId: listId);
+          //return MyListDetailsScreen(listId: listId);
+          if (listId != "4NlYnhmchdlu528Gw2yK") {
+            print("Notequal $listId");
+            return MyListDetailsScreen(listId: listId);
+          } else {
+            print("equal $listId");
+            return MyListDetailsScreen(listId: listId); // For example
+          }
         },
       ),
       GoRoute(
@@ -172,6 +181,14 @@ class RouteManager {
         path: profileScreen,
         builder: (context, state) {
           return ProfileScreen();
+        },
+      ),
+
+      GoRoute(
+        name: uploadReceiptScreen,
+        path: uploadReceiptScreen,
+        builder: (context, state) {
+          return UploadReceipt();
         },
       ),
     ],
