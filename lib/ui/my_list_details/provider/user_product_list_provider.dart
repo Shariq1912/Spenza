@@ -19,18 +19,22 @@ class UserProductList extends _$UserProductList with FirestoreAndPrefsMixin {
     return [];
   }
 
-  Future<void> fetchProductFromListId() async {
+  Future<void> fetchProductFromListId({bool isPreloadedList = false}) async {
     state = AsyncValue.loading();
 
     final listId = await prefs.then((prefs) => prefs.getUserListId());
     final listName = await prefs.then((prefs) => prefs.getUserListName());
-
+    var subCollectionName;
+    if(isPreloadedList) {
+      subCollectionName =  PreloadedListCollection.collectionName;
+    } else {
+      subCollectionName = UserProductListCollection.collectionName;
+    }
     try {
       final productListRef = await fireStore
-          // .collection(MyList.collectionName)    /// get name from SharedPref
           .collection(listName)
           .doc(listId)
-          .collection(UserProductListCollection.collectionName)
+          .collection(subCollectionName)
           .get();
 
       // Create a list of Product Ref objects
@@ -186,7 +190,7 @@ class UserProductList extends _$UserProductList with FirestoreAndPrefsMixin {
     final listId = await prefs.then((prefs) => prefs.getUserListId());
     final collectionName = await prefs.then((prefs) => prefs.getUserListName());
     final userList =
-        fireStore.collection(collectionName).doc("guCMnbhN0R081n5RxFyl");
+        fireStore.collection(collectionName).doc(listId);
     final userProductListSnapshot =
         await userList.collection(MyListConstant.userProductList).get();
 
@@ -200,7 +204,9 @@ class UserProductList extends _$UserProductList with FirestoreAndPrefsMixin {
       ..delete(userList)
       ..commit();
 
-    context.showSnackBar(message: "$listId Deleted Successfully!");
+    context.showSnackBar(message: "Deleted Successfully!");
+
+    context.pop(true);
   }
 
   Future<void> redirectFromPreloadedList(

@@ -119,12 +119,19 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
             SearchBox(
               hint: "Add products",
               controller: _searchController,
-              onSearch: (value) {
-                context.pushNamed(
+              onSearch: (value) async {
+                _searchController.clear();
+
+                final bool? result = await context.pushNamed(
                   RouteManager.addProductScreen,
                   queryParameters: {'query': value},
                 );
-                _searchController.clear();
+
+                if (result ?? false) {
+                  ref
+                      .read(userProductListProvider.notifier)
+                      .fetchProductFromListId();
+                }
               },
             ),
             const SizedBox(height: 10),
@@ -197,10 +204,11 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
               .deleteTheList(context: context);
         } else if (value == PopupMenuAction.edit) {
           debugPrint("edit action");
-          final bool? result = await context.pushNamed(RouteManager.editListScreen);
-          if(result ?? false){
-              context.showSnackBar(message: "List Edited Successfully!");
-              ref.read(listDetailsProvider.notifier).getSelectedListDetails();
+          final bool? result =
+              await context.pushNamed(RouteManager.editListScreen);
+          if (result ?? false) {
+            context.showSnackBar(message: "List Edited Successfully!");
+            ref.read(listDetailsProvider.notifier).getSelectedListDetails();
           }
         }
       },
