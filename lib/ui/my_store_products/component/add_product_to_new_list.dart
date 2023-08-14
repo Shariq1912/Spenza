@@ -5,10 +5,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:spenza/ui/home/provider/add_product_to%20_new_list_provider.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
 import '../../home/data/my_list_model.dart';
-import '../../home/repo/my_list_repository.dart';
 
 class AddProductToNewList extends ConsumerStatefulWidget {
   final String productId;
@@ -31,7 +31,7 @@ class _AddProductToNewListState extends ConsumerState<AddProductToNewList> {
 
   ]);
 
-  Future<void> _saveData() async {
+  Future<void> _saveData(BuildContext context) async {
     MyListModel myListData = MyListModel(
         description: descriptionController.text,
         name: nameController.text,
@@ -41,7 +41,7 @@ class _AddProductToNewListState extends ConsumerState<AddProductToNewList> {
 
 
     //await ref.read(myListRepositoryProvider.notifier).saveMyList(myListData, selectedImage);
-    ref.read(myListRepositoryProvider.notifier).addProductToNewList(myListData, selectedImage,widget.productId, widget.productRef);
+    ref.read(addProdToNewListProvider.notifier).addProductToNewList(myListData, selectedImage,widget.productId, widget.productRef,context);
   }
 
 
@@ -113,27 +113,33 @@ class _AddProductToNewListState extends ConsumerState<AddProductToNewList> {
                 SizedBox(height: 10),
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                         _saveData();
-                        Navigator.pop(context,true);
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF0CA9E6),
-                      foregroundColor: Colors.white,
-                      textStyle: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: poppinsFont,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                    child: Text("Create new list"),
-                  ),
+                  child: Consumer(
+                      builder: (context, ref, child) =>
+                          ref.watch(addProdToNewListProvider).maybeWhen(
+                            loading: () => Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            orElse: () => ElevatedButton(
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  _saveData(context);
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xFF0CA9E6),
+                                foregroundColor: Colors.white,
+                                textStyle: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: poppinsFont,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                              ),
+                              child: Text("Create new list"),
+                            ),
+                          )),
                 ),
               ],
             ),

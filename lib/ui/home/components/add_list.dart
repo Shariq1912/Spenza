@@ -3,11 +3,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:spenza/ui/home/data/my_list_model.dart';
-import 'package:spenza/ui/home/repo/my_list_repository.dart';
+import 'package:spenza/ui/home/provider/save_mylist_provider.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
+
+import '../provider/fetch_mylist_provider.dart';
 
 class AddItemToList extends ConsumerStatefulWidget {
   const AddItemToList({Key? key}) : super(key: key);
@@ -41,9 +44,9 @@ class _AddItemToListState extends ConsumerState<AddItemToList> {
     );
 
     ref
-        .read(myListRepositoryProvider.notifier)
-        .saveMyList(myListData, selectedImage);
-    ref.read(myListRepositoryProvider.notifier).fetchMyList();
+        .read(saveMyListProvider.notifier)
+        .saveMyListFun(myListData, selectedImage,context);
+    //ref.read(fetchMyListProvider.notifier).fetchMyListFun();
   }
 
   @override
@@ -62,7 +65,7 @@ class _AddItemToListState extends ConsumerState<AddItemToList> {
                   onTap: () async {
                     // Call the pickImageFromGallery extension function
                     final pickedImage =
-                        await ImagePicker().pickImageFromGallery();
+                        await ImagePicker().pickImageFromGallery(context);
                     if (pickedImage != null) {
                       setState(() {
                         selectedImage = File(pickedImage.path);
@@ -112,29 +115,36 @@ class _AddItemToListState extends ConsumerState<AddItemToList> {
                   ),
                 ),
                 SizedBox(height: 10),
+
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        await _saveData(context);
-                        Navigator.pop(context, true);
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF0CA9E6),
-                      foregroundColor: Colors.white,
-                      textStyle: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: poppinsFont,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                    child: Text("Create new list"),
-                  ),
+                  child: Consumer(
+                      builder: (context, ref, child) =>
+                          ref.watch(saveMyListProvider).maybeWhen(
+                            loading: () => Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            orElse: () => ElevatedButton(
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  _saveData(context);
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xFF0CA9E6),
+                                foregroundColor: Colors.white,
+                                textStyle: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: poppinsFont,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                              ),
+                              child: Text("Create new list"),
+                            ),
+                          )),
                 ),
               ],
             ),

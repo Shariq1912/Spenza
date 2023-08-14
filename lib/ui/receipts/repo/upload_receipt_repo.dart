@@ -36,7 +36,7 @@ class UploadReceiptRepo extends _$UploadReceiptRepo {
 
       String? downloadURL;
       if (image != null) {
-        downloadURL = await image.uploadImageToFirebase("receipts");
+        downloadURL = await image.uploadImageToFirebase( path: "receipts");
       }
       final receiptModel = ReceiptModel(name: name, receipt: "", uid: userId);
 

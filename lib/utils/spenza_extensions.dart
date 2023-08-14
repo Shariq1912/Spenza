@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -176,11 +177,11 @@ extension ImagePickerExtension on ImagePicker {
 }
 
 extension FileExtension on File {
-  Future<String?> uploadImageToFirebase() async {
+  Future<String?> uploadImageToFirebase({ required String path}) async {
     try {
       final storageReference = FirebaseStorage.instance
           .ref()
-          .child('images')
+          .child(path)
           .child('${DateTime.now().millisecondsSinceEpoch}.jpg');
 
       final uploadTask = storageReference.putFile(this);

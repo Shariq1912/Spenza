@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:spenza/ui/home/provider/fetch_mylist_provider.dart';
 import 'package:spenza/ui/home/repo/fetch_favourite_store_repository.dart';
-import 'package:spenza/ui/settings/setting_Screen.dart';
-
 import '../../router/app_router.dart';
 import 'components/myStore.dart';
 import 'components/preLoadedList.dart';
@@ -26,9 +25,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   _loadStores() async {
+    await ref.read(fetchMyListProvider.notifier).fetchMyListFun();
     await ref
         .read(fetchFavouriteStoreRepositoryProvider.notifier)
-        .fetchAndDisplayFavouriteStores();
+        .fetchFavStores();
+  }
+  @override
+  void dispose() {
+    // Dispose Riverpod providers or any resources here
+    ref.invalidate(fetchMyListProvider);
+    ref.invalidate(fetchFavouriteStoreRepositoryProvider);
+
+    super.dispose();
   }
 
   @override
@@ -52,9 +60,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 padding: EdgeInsets.only(top: 25, left: 10, right: 10),
                 child: PreLoadedList(),
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 10, right: 10),
-                child: MyStores(),
+
+
+              Consumer( builder: (context, ref, child) {
+                final storeProvider = ref.watch(fetchFavouriteStoreRepositoryProvider);
+                return storeProvider.when(
+                        () => Container(),
+                    loading: () => Center(child: CircularProgressIndicator()),
+                    error: (message) => Center(child: Text(message)),
+                    success: (data){
+                      if (data.isEmpty) {return Center(child: Text("No stores available"));}
+                      else {
+                        return Padding(padding: EdgeInsets.only(left: 10, right: 10), child: MyStores(data: data),
+                        );
+                      }
+                    },
+                  empty: (message) => Text("You don't have any favourite store"),
+                  redirectUser: () {return Container();},
+                );
+                }
               )
             ],
           ),

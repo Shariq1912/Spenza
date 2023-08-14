@@ -26,14 +26,14 @@ final GlobalKey<NavigatorState> _shellNavigator =
     GlobalKey(debugLabel: 'shell');
 
 class RouteManager {
-  static const String splashScreen = '/myListDetailScreen';
+  static const String splashScreen = '/';
 
   static const String loginScreen = '/loginScreen';
   static const String registerScreen = '/registerScreen';
   static const String locationScreen = '/locationScreen';
   static const String favouriteScreen = '/favouriteScreen';
   static const String homeScreen = '/homeScreen';
-  static const String myListDetailScreen = '/';
+  static const String myListDetailScreen = '/myListDetailScreen';
   static const String preLoadedListDetailScreen = '/preLoadedListDetailScreen';
   static const String storeRankingScreen = '/storeMatchingScreen';
   static const String selectedStoreScreen = '/selectedStoreScreen';
@@ -100,7 +100,14 @@ class RouteManager {
         path: myListDetailScreen,
         builder: (context, state) {
           final String listId = state.queryParameters['list_id'] ?? "4NlYnhmchdlu528Gw2yK";
-          return MyListDetailsScreen(listId: listId);
+          //return MyListDetailsScreen(listId: listId);
+          if (listId != "4NlYnhmchdlu528Gw2yK") {
+            print("Notequal $listId");
+            return MyListDetailsScreen(listId: listId);
+          } else {
+            print("equal $listId");
+            return MyListDetailsScreen(listId: listId); // For example
+          }
         },
       ),
       GoRoute(
