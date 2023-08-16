@@ -3,16 +3,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:spenza/ui/home/components/image_text_card.dart';
 
 import '../../../router/app_router.dart';
 import '../data/preloaded_list_model.dart';
 
 class PreLoadedList extends ConsumerWidget {
   final List<PreloadedListModel> data;
+  final String title;
+  final TextStyle poppinsFont;
+  final VoidCallback onAllClicked;
 
-   PreLoadedList({Key? key, required this.data}) : super(key: key);
-
-  final poppinsFont = GoogleFonts.poppins().fontFamily;
+  PreLoadedList({
+    required this.data,
+    required this.title,
+    required this.poppinsFont,
+    required this.onAllClicked,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,9 +30,9 @@ class PreLoadedList extends ConsumerWidget {
             Expanded(
               flex: 1,
               child: Text(
-                'Preloaded list',
+                title,
                 style: TextStyle(
-                  fontFamily: poppinsFont,
+                  fontFamily: poppinsFont.fontFamily,
                   decoration: TextDecoration.none,
                   color: Color(0xFF0CA9E6),
                   fontWeight: FontWeight.bold,
@@ -38,10 +45,7 @@ class PreLoadedList extends ConsumerWidget {
               child: Align(
                 alignment: Alignment.topRight,
                 child: IconButton(
-                  onPressed: () {
-                    context.push(RouteManager.preLoadedListScreen);
-
-                  },
+                  onPressed: onAllClicked,
                   icon: Icon(
                     Icons.arrow_forward_ios,
                     color: Color(0xFF0CA9E6),
@@ -62,36 +66,10 @@ class PreLoadedList extends ConsumerWidget {
               itemBuilder: (context, index) {
                 PreloadedListModel store = data[index];
                 var fileName = store.preloaded_photo;
-                return GestureDetector(
-                  onTap: () {
-                    /*  Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => MyStoreProduct(
-                          documentId: store.documentId!,
-                          logo: store.logo,
-                        ),
-                      ),
-                    );*/
-                  },
-                  child: SizedBox(
-                    width: 100,
-                    child: Card(
-                      color: Colors.white,
-                      elevation: 0,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          CachedNetworkImage(
-                            imageUrl: fileName,
-                            fit: BoxFit.cover,
-                            width: 100,
-                            height: 100,
-                          ),
-                          Text(store.name),
-                        ],
-                      ),
-                    ),
-                  ),
+                return ImageTextCard(
+                  imageUrl: fileName,
+                  title: store.name,
+                  onTap: () {},
                 );
               },
             ),
@@ -101,7 +79,3 @@ class PreLoadedList extends ConsumerWidget {
     );
   }
 }
-
-
-
-

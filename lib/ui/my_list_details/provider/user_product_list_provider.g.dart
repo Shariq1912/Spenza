@@ -6,7 +6,7 @@ part of 'user_product_list_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$userProductListHash() => r'35d3e3924f4bc1b801dd066353a84a288648ed4b';
+String _$userProductListHash() => r'a49f6e0a5ba4b5a304dee8247ceabe6e32eaa632';
 
 /// See also [UserProductList].
 @ProviderFor(UserProductList)

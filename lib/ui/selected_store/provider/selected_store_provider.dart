@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:spenza/helpers/fireStore_pref_mixin.dart';
+import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/selected_store/data/selected_product.dart';
 import 'package:spenza/ui/selected_store/data/selected_product_elements.dart';
 import 'package:spenza/ui/selected_store/data/selected_product_list.dart';
@@ -10,7 +13,6 @@ part 'selected_store_provider.g.dart';
 
 @riverpod
 class SelectedStore extends _$SelectedStore with FirestoreAndPrefsMixin {
-
   @override
   Future<SelectedProduct> build() async {
     return SelectedProduct();
@@ -71,5 +73,18 @@ class SelectedStore extends _$SelectedStore with FirestoreAndPrefsMixin {
     print(selectedProduct.toString());
 
     state = AsyncValue.data(selectedProduct);
+  }
+
+  Future<void> redirectUserToStoreProductsScreen(
+      {required BuildContext context,
+      required String storeId,
+      required String storeLogo}) async {
+    final listId = await prefs.then((prefs) => prefs.getUserListId());
+
+    context.pushNamed(RouteManager.myStoreProductScreen, queryParameters: {
+      "store_id": storeId,
+      "logo": storeLogo,
+      "list_id": listId
+    });
   }
 }

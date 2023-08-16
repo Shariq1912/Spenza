@@ -8,19 +8,27 @@ import 'package:spenza/ui/my_store_products/provider/product_for_store_provider.
 import 'package:spenza/ui/my_store_products/repo/department_repository.dart';
 
 import '../../router/app_router.dart';
+import 'component/dialog_list.dart';
 import 'component/my_product_list_widget.dart';
+import 'provider/add_product_to_my_list_provider.dart';
 
-class MyStoreProduct extends ConsumerStatefulWidget{
-  const MyStoreProduct({Key ? key,required this.documentId, required this.logo }) : super(key: key);
-  final String documentId;
+class MyStoreProduct extends ConsumerStatefulWidget {
+  final String storeId;
   final String logo;
+  final String? listId;
+
+  const MyStoreProduct({
+    Key? key,
+    required this.storeId,
+    required this.logo,
+    this.listId,
+  }) : super(key: key);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _MyStoreProductState();
 }
 
-class _MyStoreProductState extends ConsumerState<MyStoreProduct>{
-
+class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
   final poppinsFont = GoogleFonts.poppins().fontFamily;
 
   @override
@@ -31,91 +39,110 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct>{
     });
   }
 
-  _loadProducts() async{
-    await ref.read(productForStoreProvider.notifier).getProductsForStore(widget.documentId);
+  _loadProducts() async {
+    await ref
+        .read(productForStoreProvider.notifier)
+        .getProductsForStore(widget.storeId);
     await ref.read(departmentRepositoryProvider.notifier).getDepartments();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        context.pushReplacement(RouteManager.stores);
-        return true;
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          surfaceTintColor: Colors.white,
-          title: Text(
-            "Stores",
-            style: TextStyle(
-              fontFamily: poppinsFont,
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              color: Color(0xFF0CA9E6),
+    return Scaffold(
+      appBar: AppBar(
+        surfaceTintColor: Colors.white,
+        title: Text(
+          "Stores",
+          style: TextStyle(
+            fontFamily: poppinsFont,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Color(0xFF0CA9E6),
+          ),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          onPressed: () {
+            context.pop();
+          },
+          icon: Icon(Icons.arrow_back_ios, color: Color(0xFF0CA9E6)),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 5,
             ),
-          ),
-          centerTitle: true,
-          leading: IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.arrow_back_ios, color: Color(0xFF0CA9E6)),
-          ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 5,
-              ),
-              child: InkWell(
-                onTap: () {
-                  //Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SettingScreen()));
-                },
-                child: CircleAvatar(
-                  radius: 40,
-                  child: ClipOval(
-                    child: CachedNetworkImage(imageUrl: widget.logo),
-                  ),
+            child: InkWell(
+              onTap: () {
+                //Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SettingScreen()));
+              },
+              child: CircleAvatar(
+                radius: 40,
+                child: ClipOval(
+                  child: CachedNetworkImage(imageUrl: widget.logo),
                 ),
               ),
-            )
-          ],
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Consumer(
-            builder: (context, ref, child) {
-              final productProvider = ref.watch(productForStoreProvider);
-              final departmentProvider = ref.watch(departmentRepositoryProvider);
-              return productProvider.when(
+            ),
+          )
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Consumer(
+          builder: (context, ref, child) {
+            final productProvider = ref.watch(productForStoreProvider);
+            final departmentProvider =
+                ref.watch(departmentRepositoryProvider);
+            return productProvider.when(
+              loading: () => Center(child: CircularProgressIndicator()),
+              error: (error, stackTrace) {
+                print("errorMrss $error");
+                return Center(child: Text(error.toString()));
+              },
+              data: (data) {
+                /*print("productData $data");
+              return MyProductListWidget(stores: data, onButtonClicked: (Product product) {});*/
+                return departmentProvider.when(
+                  () => Container(),
+                  loading: () => Center(child: CircularProgressIndicator()),
+                  error: (message) {
+                    print("errorMrss $message");
+                    return Center(child: Text(message));
+                  },
+                  success: (departments) {
+                    return MyProductListWidget(
+                      stores: data,
+                      department: departments,
+                      onButtonClicked: (ProductModel product) {
+                        if (widget.listId != null) {
+                          ref
+                              .read(addProductToMyListProvider.notifier)
+                              .addProductToMyList(
+                                widget.listId!,
+                                product.productId,
+                                context,
+                              );
+                          return;
+                        }
 
-                loading: () => Center(child: CircularProgressIndicator()),
-                error: (error,stackTrace) {print("errorMrss $error");
-                return Center(child: Text(error.toString()));},
-                data: (data) {
-
-                  /*print("productData $data");
-                return MyProductListWidget(stores: data, onButtonClicked: (Product product) {});*/
-                  return departmentProvider.when(
-                        () => Container(),
-                    loading: () => Center(child: CircularProgressIndicator()),
-                    error: (message) {print("errorMrss $message");
-                    return Center(child: Text(message));},
-                    success: (departments) {
-                      return MyProductListWidget(
-                        stores: data,
-                        department: departments,
-                        onButtonClicked: (ProductModel product) {},
-                      );
-                    },);
-
-                },
-              );
-            },
-          ),
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return MyListDialog(
+                              productRef: product.documentId!,
+                              productId: product.productId,
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            );
+          },
         ),
       ),
     );
   }
-
 }

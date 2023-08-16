@@ -1,27 +1,23 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/di/app_providers.dart';
-import 'package:spenza/router/app_router.dart';
-import 'package:spenza/ui/home/components/add_list.dart';
 import 'package:spenza/ui/home/components/my_list_item.dart';
 import 'package:spenza/ui/home/data/my_list_model.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
-
-import '../provider/fetch_mylist_provider.dart';
 
 class TopStrip extends ConsumerWidget {
   final List<MyListModel> data;
   final VoidCallback onCreateList;
   final VoidCallback onAllList;
+  final Function(String listId) onListClick;
 
   TopStrip({
     Key? key,
     required this.data,
     required this.onCreateList,
     required this.onAllList,
+    required this.onListClick,
   }) : super(key: key);
 
   @override
@@ -37,7 +33,7 @@ class TopStrip extends ConsumerWidget {
               Expanded(
                 flex: 1,
                 child: Text(
-                  'My Lists',
+                  AppLocalizations.of(context)!.myListsTitle, // Updated
                   style: TextStyle(
                     fontFamily: poppinsFont,
                     decoration: TextDecoration.none,
@@ -65,10 +61,10 @@ class TopStrip extends ConsumerWidget {
           ),
           SizedBox(height: 10),
           if (data.isEmpty)
-            _noItemInTheList()
+            _noItemInTheList(context)
           else
             Container(
-              height: 210,
+              height: 180,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: data.length,
@@ -78,14 +74,7 @@ class TopStrip extends ConsumerWidget {
                     imageUrl: list.myListPhoto ?? "",
                     name: list.name ?? "",
                     description: list.description ?? "",
-                    onTap: () {
-                      ref
-                          .read(fetchMyListProvider.notifier)
-                          .redirectUserToListDetailsScreen(
-                        context: context,
-                        listId: list.documentId!,
-                      );
-                    },
+                    onTap: () => onListClick.call(list.documentId!),
                   );
                 },
               ),
@@ -115,7 +104,7 @@ class TopStrip extends ConsumerWidget {
     );
   }
 
-  Row _noItemInTheList() {
+  Row _noItemInTheList(BuildContext context) {
     return Row(
       children: [
         SizedBox(
@@ -130,7 +119,7 @@ class TopStrip extends ConsumerWidget {
         ),
         Expanded(
           child: Text(
-            'You don\'t have any\nlists yet, make one\nnow',
+            AppLocalizations.of(context)!.noListsMessage,
             textAlign: TextAlign.justify,
             style: TextStyle(
               decoration: TextDecoration.none,
