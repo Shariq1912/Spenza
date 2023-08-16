@@ -69,5 +69,18 @@
   "terms_of_service_intro": "Al crear una cuenta aceptas a nuestros",
   "terms_of_service": "Términos de Servicio",
   "privacy_policy": "Política de Privacidad",
-  "create_account": "Crear cuenta"
+  "create_account": "Crear cuenta",
+
+  "myListsTitle": "Mis Listas",
+    "@myListsTitle": {
+      "description": "Título para la sección 'Mis Listas'"
+    },
+    "noListsMessage": "Aún no tienes ninguna\nlista, ¡crea una ahora!",
+    "@noListsMessage": {
+      "description": "Mensaje que se muestra cuando el usuario no tiene listas"
+    },
+    "addToMyList": "Agregar a mi lista",
+    "@addToMyList": {
+      "description": "Texto del botón para agregar un elemento a la lista"
+    }
 }

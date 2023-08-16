@@ -6,17 +6,23 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/my_store/data/all_store.dart';
 import '../../my_store_products/my_store_product.dart';
+import 'image_text_card.dart';
 
-class MyStores extends ConsumerWidget {
+class MyStores extends StatelessWidget {
   final List<AllStores> data;
-  final poppinsFont = GoogleFonts
-      .poppins()
-      .fontFamily;
+  final String title;
+  final TextStyle poppinsFont;
+  final VoidCallback onAllStoreClicked;
 
-  MyStores({required this.data});
+  MyStores({
+    required this.data,
+    required this.title,
+    required this.poppinsFont,
+    required this.onAllStoreClicked,
+  });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Column(
       children: [
         Row(
@@ -24,13 +30,13 @@ class MyStores extends ConsumerWidget {
             Expanded(
               flex: 1,
               child: Text(
-                'My Store',
+                title,
                 style: TextStyle(
                   decoration: TextDecoration.none,
                   color: Color(0xFF0CA9E6),
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
-                  fontFamily: poppinsFont,
+                  fontFamily: poppinsFont.fontFamily,
                 ),
               ),
             ),
@@ -39,9 +45,7 @@ class MyStores extends ConsumerWidget {
               child: Align(
                 alignment: Alignment.topRight,
                 child: IconButton(
-                  onPressed: () {
-                    context.push(RouteManager.stores);
-                  },
+                  onPressed: onAllStoreClicked,
                   icon: Icon(
                     Icons.arrow_forward_ios,
                     color: Color(0xFF0CA9E6),
@@ -52,43 +56,27 @@ class MyStores extends ConsumerWidget {
             ),
           ],
         ),
-        SizedBox(
-          height: 200,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 10),
+        Padding(
+          padding: const EdgeInsets.only(top: 2),
+          child: Container(
+            height: 150, // Adjust the height as needed
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: data.length,
               itemBuilder: (context, index) {
                 AllStores store = data[index];
-                var fileName = store.logo;
-                return GestureDetector(
+                return ImageTextCard(
+                  imageUrl: store.logo,
+                  title: store.name,
                   onTap: () {
-
-                    context.pushNamed(RouteManager.myStoreProductScreen,
+                    context.pushNamed(
+                      RouteManager.myStoreProductScreen,
                       queryParameters: {
                         "store_id": store.documentId!,
-                        "logo": store.logo
-                      },);
+                        "logo": store.logo,
+                      },
+                    );
                   },
-                  child: SizedBox(
-                    width: 100,
-                    child: Card(
-                      elevation: 0,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          CachedNetworkImage(
-                            imageUrl: fileName,
-                            fit: BoxFit.fitWidth,
-                            width: 100,
-                            height: 100,
-                          ),
-                          Text(store.name),
-                        ],
-                      ),
-                    ),
-                  ),
                 );
               },
             ),
@@ -98,4 +86,3 @@ class MyStores extends ConsumerWidget {
     );
   }
 }
-

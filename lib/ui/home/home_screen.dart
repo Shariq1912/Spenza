@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/ui/home/provider/fetch_mylist_provider.dart';
 import 'package:spenza/ui/home/repo/fetch_favourite_store_repository.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
@@ -43,6 +44,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final poppinsFont = ref.watch(poppinsFontProvider);
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -50,6 +53,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
+
+              /// My List
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Container(
@@ -59,6 +64,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     builder: (context, ref, child) =>
                         ref.watch(fetchMyListProvider).when(
                               data: (data) => TopStrip(
+                                onListClick: (listId) {
+                                  ref
+                                      .read(fetchMyListProvider.notifier)
+                                      .redirectUserToListDetailsScreen(
+                                        context: context,
+                                        listId: listId,
+                                      );
+                                },
                                 data: data,
                                 onCreateList: () async {
                                   final bool? result = await context
@@ -71,7 +84,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 },
                                 onAllList: () {
                                   // todo redirect user to display all lists with receipt count
-                                  context.showSnackBar(message: "Display All User My List");
+                                  context.showSnackBar(
+                                      message: "Display All User My List");
                                 },
                               ),
                               error: (error, stackTrace) => Text('$error'),
@@ -85,30 +99,41 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 padding: EdgeInsets.only(top: 25, left: 10, right: 10),
                 child: PreLoadedList(),
               ),
-              Consumer(builder: (context, ref, child) {
-                final storeProvider =
-                    ref.watch(fetchFavouriteStoreRepositoryProvider);
-                return storeProvider.when(
-                  () => Container(),
-                  loading: () => Center(child: CircularProgressIndicator()),
-                  error: (message) => Center(child: Text(message)),
-                  success: (data) {
-                    if (data.isEmpty) {
-                      return Center(child: Text("No stores available"));
-                    } else {
-                      return Padding(
-                        padding: EdgeInsets.only(left: 10, right: 10),
-                        child: MyStores(data: data),
-                      );
-                    }
-                  },
-                  empty: (message) =>
-                      Text("You don't have any favourite store"),
-                  redirectUser: () {
-                    return Container();
-                  },
-                );
-              })
+
+              /// Store List
+              Consumer(
+                builder: (context, ref, child) {
+                  final storeProvider =
+                      ref.watch(fetchFavouriteStoreRepositoryProvider);
+                  return storeProvider.when(
+                    () => Container(),
+                    loading: () => Center(child: CircularProgressIndicator()),
+                    error: (message) => Center(child: Text(message)),
+                    success: (data) {
+                      if (data.isEmpty) {
+                        return Center(child: Text("No stores available"));
+                      } else {
+                        return Padding(
+                          padding: EdgeInsets.only(left: 10, right: 10),
+                          child: MyStores(
+                            data: data,
+                            title: 'My Store',
+                            poppinsFont: poppinsFont,
+                            onAllStoreClicked: () {
+                              context.pushNamed(RouteManager.stores);
+                            },
+                          ),
+                        );
+                      }
+                    },
+                    empty: (message) =>
+                        Text("You don't have any favourite store"),
+                    redirectUser: () {
+                      return Container();
+                    },
+                  );
+                },
+              )
             ],
           ),
         ),
@@ -118,33 +143,34 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   AppBar topAppBar() {
     return AppBar(
-        elevation: 5.0,
-        surfaceTintColor: Colors.white,
-        backgroundColor: Colors.white,
-        automaticallyImplyLeading: false,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 5,
-            ),
-            child: InkWell(
-              onTap: () {
-                context.push(RouteManager.settingScreen);
-              },
-              child: CircleAvatar(
-                radius: 40,
-                child: ClipOval(
-                  child: Image.network('https://picsum.photos/250?image=9'),
-                ),
+      elevation: 5.0,
+      surfaceTintColor: Colors.white,
+      backgroundColor: Colors.white,
+      automaticallyImplyLeading: false,
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(
+            top: 5,
+          ),
+          child: InkWell(
+            onTap: () {
+              context.pushNamed(RouteManager.settingScreen);
+            },
+            child: CircleAvatar(
+              radius: 40,
+              child: ClipOval(
+                child: Image.network('https://picsum.photos/250?image=9'),
               ),
             ),
-          )
-        ],
-        title: SizedBox(
-          width: 100,
-          height: 100,
-          child: Image.asset('assets/images/logo.gif'),
-        ),
-        centerTitle: true);
+          ),
+        )
+      ],
+      title: SizedBox(
+        width: 100,
+        height: 100,
+        child: Image.asset("logo.gif".assetImageUrl),
+      ),
+      centerTitle: true,
+    );
   }
 }

@@ -69,6 +69,18 @@
   "terms_of_service_intro": "By Using this application, you agree to our",
   "terms_of_service": "Terms of Service",
   "privacy_policy": "Privacy Policy",
-  "create_account": "Create Account"
+  "create_account": "Create Account",
 
+  "myListsTitle": "My Lists",
+  "@myListsTitle": {
+    "description": "Title for the 'My Lists' section"
+  },
+  "noListsMessage": "You don't have any\nlists yet, make one\nnow",
+  "@noListsMessage": {
+    "description": "Message displayed when the user has no lists"
+  },
+  "addToMyList": "Add to My List",
+  "@addToMyList": {
+    "description": "Button text for adding an item to the list"
+  }
 }

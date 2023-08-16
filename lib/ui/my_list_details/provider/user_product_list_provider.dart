@@ -25,8 +25,8 @@ class UserProductList extends _$UserProductList with FirestoreAndPrefsMixin {
     final listId = await prefs.then((prefs) => prefs.getUserListId());
     final listName = await prefs.then((prefs) => prefs.getUserListName());
     var subCollectionName;
-    if(isPreloadedList) {
-      subCollectionName =  PreloadedListCollection.collectionName;
+    if (isPreloadedList) {
+      subCollectionName = PreloadedListCollection.collectionName;
     } else {
       subCollectionName = UserProductListCollection.collectionName;
     }
@@ -150,63 +150,89 @@ class UserProductList extends _$UserProductList with FirestoreAndPrefsMixin {
     context.pushNamed(RouteManager.storeRankingScreen);
   }
 
-  Future<void> copyTheList({required BuildContext context}) async {
-    final listId = await prefs.then((prefs) => prefs.getUserListId());
-    final collectionName = await prefs.then((prefs) => prefs.getUserListName());
-    final userList = fireStore.collection(collectionName).doc(listId);
+  Future<bool> copyTheList({required BuildContext context}) async {
+    try {
+      final listId = await prefs.then((prefs) => prefs.getUserListId());
+      final collectionName =
+          await prefs.then((prefs) => prefs.getUserListName());
+      final userList = fireStore.collection(collectionName).doc(listId);
 
-    final userListSnapshot = await userList.get();
-    final userProductListSnapshot =
-        await userList.collection(MyListConstant.userProductList).get();
+      final userListSnapshot = await userList.get();
+      final userProductListSnapshot =
+          await userList.collection(MyListConstant.userProductList).get();
 
-    final batch = fireStore.batch();
-    // Create a new map with modified name
-    final modifiedData = Map<String, dynamic>.from(userListSnapshot.data()!);
-    // Format current datetime and append it to the original name
-    final currentDate = DateTime.now();
-    final formattedDate = DateFormat('yyyy-MM-dd_HH:mm:ss').format(currentDate);
-    final newName = 'Copied ${modifiedData['name']} ($formattedDate)';
+      final batch = fireStore.batch();
+      // Create a new map with modified name
+      final modifiedData = Map<String, dynamic>.from(userListSnapshot.data()!);
+      // Format current datetime and append it to the original name
+      final currentDate = DateTime.now();
+      final formattedDate =
+          DateFormat('yyyy-MM-dd_HH:mm:ss').format(currentDate);
+      final newName = 'Copied ${modifiedData['name']} ($formattedDate)';
 
-    modifiedData['name'] = newName; // Change to the desired modified name
+      modifiedData['name'] = newName; // Change to the desired modified name
 
-    // Create a new document to store the copied list
-    final newListRef =
-        await fireStore.collection(collectionName).add(modifiedData);
+      // Create a new document to store the copied list
+      final newListRef =
+          await fireStore.collection(collectionName).add(modifiedData);
 
-    // Iterate through the user_product_list subcollection and add each document to the new list
-    userProductListSnapshot.docs.forEach((doc) {
-      final data = doc.data();
-      batch.set(
-          newListRef.collection(MyListConstant.userProductList).doc(), data);
-    });
+      // Iterate through the user_product_list subcollection and add each document to the new list
+      userProductListSnapshot.docs.forEach((doc) {
+        final data = doc.data();
+        batch.set(
+            newListRef.collection(MyListConstant.userProductList).doc(), data);
+      });
 
-    // Commit the batch operation to Firestore
-    await batch.commit();
+      // Commit the batch operation to Firestore
+      await batch.commit();
 
-    context.showSnackBar(message: "$listId Copied Successfully!");
+      return true;
+    } on FirebaseException catch (e) {
+      if (e.code == 'no-internet') {
+        debugPrint('No internet connection. Please check your network.');
+      } else {
+        debugPrint('Firestore exception: ${e.message}');
+      }
+      return false;
+    } catch (e) {
+      debugPrint('Error searching products: $e');
+      return false;
+    }
   }
 
-  Future<void> deleteTheList({required BuildContext context}) async {
-    final listId = await prefs.then((prefs) => prefs.getUserListId());
-    final collectionName = await prefs.then((prefs) => prefs.getUserListName());
-    final userList =
-        fireStore.collection(collectionName).doc(listId);
-    final userProductListSnapshot =
-        await userList.collection(MyListConstant.userProductList).get();
+  Future<bool> deleteTheList({required BuildContext context}) async {
+    try {
+      final listId = await prefs.then((prefs) => prefs.getUserListId());
+      final collectionName =
+          await prefs.then((prefs) => prefs.getUserListName());
+      final userList = fireStore.collection(collectionName).doc(listId);
+      final userProductListSnapshot =
+          await userList.collection(MyListConstant.userProductList).get();
 
-    final batch = fireStore.batch();
-    // Delete documents in the subcollection
-    userProductListSnapshot.docs.forEach((doc) {
-      batch.delete(doc.reference);
-    });
+      final batch = fireStore.batch();
+      // Delete documents in the subcollection
+      userProductListSnapshot.docs.forEach((doc) {
+        batch.delete(doc.reference);
+      });
 
-    batch
-      ..delete(userList)
-      ..commit();
+      batch
+        ..delete(userList)
+        ..commit();
 
-    context.showSnackBar(message: "Deleted Successfully!");
+      context.pop(true);
 
-    context.pop(true);
+      return true;
+    } on FirebaseException catch (e) {
+      if (e.code == 'no-internet') {
+        debugPrint('No internet connection. Please check your network.');
+      } else {
+        debugPrint('Firestore exception: ${e.message}');
+      }
+      return false;
+    } catch (e) {
+      debugPrint('Error searching products: $e');
+      return false;
+    }
   }
 
   Future<void> redirectFromPreloadedList(
