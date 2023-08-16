@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:spenza/ui/home/components/image_text_card.dart';
 
-import '../../../router/app_router.dart';
 import '../data/preloaded_list_model.dart';
 
 class PreLoadedList extends ConsumerWidget {
@@ -60,7 +56,8 @@ class PreLoadedList extends ConsumerWidget {
           height: 180,
           child: Padding(
             padding: const EdgeInsets.only(top: 10),
-            child: ListView.builder(
+            child: data.isNotEmpty
+                ? ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: data.length,
               itemBuilder: (context, index) {
@@ -72,6 +69,14 @@ class PreLoadedList extends ConsumerWidget {
                   onTap: () {},
                 );
               },
+            ):Center(
+              child: Text(
+                "No data available.",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontFamily: poppinsFont.fontFamily,
+                ),
+              ),
             ),
           ),
         ),

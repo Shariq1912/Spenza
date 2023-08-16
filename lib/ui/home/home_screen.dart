@@ -85,11 +85,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   }
                                 },
                                 onAllList: () {
-                                  // todo redirect user to display all lists with receipt count
-                                  context.showSnackBar(
-                                    message: AppLocalizations.of(context)!
-                                        .displayAllUserMyList,
-                                  );
+                                  context.push(RouteManager.myListScreen);
                                 },
                               ),
                               error: (error, stackTrace) => Text('$error'),
@@ -107,13 +103,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ref.watch(homePreloadedListProvider);
                   return preloadedProvider.when(
                     data: (data) {
-                      if (data.isEmpty) {
-                        return Center(
-                          child: Text(
-                            AppLocalizations.of(context)!.noStoresAvailable,
-                          ),
-                        );
-                      } else {
                         return Padding(
                           padding:
                               EdgeInsets.only(left: 10, right: 10, top: 25),
@@ -128,7 +117,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             },
                           ),
                         );
-                      }
                     },
                     loading: () => Center(child: CircularProgressIndicator()),
                     error: (error, stackTrace) =>
@@ -147,13 +135,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     loading: () => Center(child: CircularProgressIndicator()),
                     error: (message) => Center(child: Text(message)),
                     success: (data) {
-                      if (data.isEmpty) {
-                        return Center(
-                          child: Text(
-                            AppLocalizations.of(context)!.noStoresAvailable,
-                          ),
-                        );
-                      } else {
+
                         return Padding(
                           padding: EdgeInsets.only(left: 10, right: 10),
                           child: MyStores(
@@ -165,7 +147,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             },
                           ),
                         );
-                      }
                     },
                     empty: (message) =>
                         Text(AppLocalizations.of(context)!.noStoresAvailable),

@@ -247,10 +247,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Widget _buildImageWidget(String? image) {
 
     return image!=null
-        ? CachedNetworkImage( fit: BoxFit.cover, imageUrl: image,)
+        ? CachedNetworkImage( fit: BoxFit.fill, imageUrl: image,)
         : Image.asset(
       'list_image.png'.assetImageUrl,
-      fit: BoxFit.fitWidth,
+      fit: BoxFit.fill,
     );
   }
 }

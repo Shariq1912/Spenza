@@ -28,8 +28,7 @@ class ProfileRepository extends _$ProfileRepository {
       final DocumentSnapshot<Map<String, dynamic>> snapshot =
           await _fireStore.collection('users').doc(userId).get();
       if (snapshot.exists) {
-        state = ApiResponse.success(
-            data: UserProfileData.fromJson(snapshot.data()!));
+        state = ApiResponse.success(data: UserProfileData.fromJson(snapshot.data()!));
         print("resss ${snapshot.data()}");
         return UserProfileData.fromJson(snapshot.data()!);
       } else {
@@ -41,6 +40,9 @@ class ProfileRepository extends _$ProfileRepository {
       return null;
     }
   }
+
+
+
 /*
   Future<bool> saveZipCodeToServer(UserProfileData userProfileData, File? image) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
