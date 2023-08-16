@@ -35,23 +35,6 @@ class MyListItem extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 4),
-          Visibility(
-            visible: false,
-            child: Text(
-              // Use the '...' property to handle long text
-              description.length > 20
-                  ? '${description.substring(0, 20)}...'
-                  : description,
-              style: const TextStyle(
-                decoration: TextDecoration.none,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
         ],
       ),
     );
@@ -75,8 +58,8 @@ class MyListItem extends StatelessWidget {
         ),
         imageUrl: fileName,
         fit: BoxFit.fill,
-        width: 100,
-        height: 130,
+        width: 120,
+        height: 120,
       ),
     );
   }

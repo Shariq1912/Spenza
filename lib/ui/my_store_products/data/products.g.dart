@@ -11,8 +11,8 @@ _$_ProductModel _$$_ProductModelFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       pImage: json['pImage'] as String,
       measure: json['measure'] as String,
-      idStore: json['idStore'] as String,
-      department: json['department'] as String,
+      productId: json['product_id'] as String,
+      departmentName: json['department_name'] as String,
       documentId: json['documentId'] as String?,
     );
 
@@ -21,7 +21,7 @@ Map<String, dynamic> _$$_ProductModelToJson(_$_ProductModel instance) =>
       'name': instance.name,
       'pImage': instance.pImage,
       'measure': instance.measure,
-      'idStore': instance.idStore,
-      'department': instance.department,
+      'product_id': instance.productId,
+      'department_name': instance.departmentName,
       'documentId': instance.documentId,
     };

@@ -26,6 +26,7 @@ class PreLoadedListDetailsScreen extends ConsumerStatefulWidget {
 class _PreLoadedListDetailsScreenState
     extends ConsumerState<PreLoadedListDetailsScreen> with PopupMenuMixin {
   final TextEditingController _searchController = TextEditingController();
+  bool hasValueChanged = false;
 
   final List<PopupMenuItem<PopupMenuAction>> items = [
     PopupMenuItem(
@@ -56,7 +57,9 @@ class _PreLoadedListDetailsScreenState
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(userProductListProvider.notifier).fetchProductFromListId();
+      ref.read(userProductListProvider.notifier).fetchProductFromListId(
+            isPreloadedList: true,
+          );
       ref.read(listDetailsProvider.notifier).getSelectedListDetails();
     });
   }
@@ -76,95 +79,101 @@ class _PreLoadedListDetailsScreenState
       onTap: () {
         FocusScope.of(context).unfocus();
       },
-      child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(kToolbarHeight),
-          child: Consumer(
-            builder: (context, ref, child) {
-              return ref.watch(listDetailsProvider).maybeWhen(
-                    data: (data) => CustomAppBar(
-                      displayActionIcon: true,
-                      title: data.name,
-                      logo: data.myListPhoto ?? "",
-                      textStyle: TextStyle(
-                        fontFamily: poppinsFont,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: ColorUtils.colorPrimary,
+      child: WillPopScope(
+        onWillPop: () async {
+          context.pop(hasValueChanged);
+          return true;
+        },
+        child: Scaffold(
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(kToolbarHeight),
+            child: Consumer(
+              builder: (context, ref, child) {
+                return ref.watch(listDetailsProvider).maybeWhen(
+                      data: (data) => CustomAppBar(
+                        displayActionIcon: true,
+                        title: data.name,
+                        logo: data.myListPhoto ?? "",
+                        textStyle: TextStyle(
+                          fontFamily: poppinsFont,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: ColorUtils.colorPrimary,
+                        ),
+                        onBackIconPressed: () {
+                          context.pushNamed(RouteManager.addProductScreen);
+                        },
+                        onActionIconPressed: _onActionIconPressed,
                       ),
-                      onBackIconPressed: () {
-                        context.pushNamed(RouteManager.addProductScreen);
-                      },
-                      onActionIconPressed: _onActionIconPressed,
-                    ),
-                    orElse: () => CustomAppBar(
-                      displayActionIcon: true,
-                      title: "",
-                      textStyle: TextStyle(
-                        fontFamily: poppinsFont,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: ColorUtils.colorPrimary,
+                      orElse: () => CustomAppBar(
+                        displayActionIcon: true,
+                        title: "",
+                        textStyle: TextStyle(
+                          fontFamily: poppinsFont,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: ColorUtils.colorPrimary,
+                        ),
+                        onBackIconPressed: () {
+                          context.pushNamed(RouteManager.addProductScreen);
+                        },
+                        onActionIconPressed: _onActionIconPressed,
                       ),
-                      onBackIconPressed: () {
-                        context.pushNamed(RouteManager.addProductScreen);
-                      },
-                      onActionIconPressed: _onActionIconPressed,
-                    ),
-                  );
-            },
-          ),
-        ),
-        body: Column(
-          children: [
-            /*SearchBox(
-              hint: "Add products",
-              controller: _searchController,
-              onSearch: (value) {
-                context.pushNamed(
-                  RouteManager.addProductScreen,
-                  queryParameters: {'query': value},
-                );
-                _searchController.clear();
+                    );
               },
             ),
-            const SizedBox(height: 10),*/
-            Expanded(
-              // Use a single Expanded widget to wrap the ListView
-              child: Consumer(
-                builder: (context, ref, child) => ref
-                    .watch(userProductListProvider)
-                    .when(
-                      data: (data) => ListView.builder(
-                        itemCount: data.length,
-                        itemBuilder: (context, index) {
-                          final UserProduct product = data[index];
-                          return PreloadedProductCard(
-                            measure: product.measure,
-                            listId: widget.listId,
-                            department: product.department,
-                            imageUrl: product.pImage,
-                            title: product.name,
-                            priceRange:
-                                "\$${product.minPrice} - \$${product.maxPrice}",
-                            product: product,
-                          );
-                        },
-                      ),
-                      error: (error, stackTrace) =>
-                          Center(child: Text("$error")),
-                      loading: () => Center(child: CircularProgressIndicator()),
-                    ),
+          ),
+          body: Column(
+            children: [
+              /*SearchBox(
+                hint: "Add products",
+                controller: _searchController,
+                onSearch: (value) {
+                  context.pushNamed(
+                    RouteManager.addProductScreen,
+                    queryParameters: {'query': value},
+                  );
+                  _searchController.clear();
+                },
               ),
-            ),
-            Consumer(
-              builder: (context, ref, child) =>
-                  ref.watch(userProductListProvider).maybeWhen(
-                        orElse: () => buildMaterialButton(context),
-                        loading: () => Container(),
-                      ),
-            ),
-          ],
+              const SizedBox(height: 10),*/
+              Expanded(
+                // Use a single Expanded widget to wrap the ListView
+                child: Consumer(
+                  builder: (context, ref, child) =>
+                      ref.watch(userProductListProvider).when(
+                            data: (data) => ListView.builder(
+                              itemCount: data.length,
+                              itemBuilder: (context, index) {
+                                final UserProduct product = data[index];
+                                return PreloadedProductCard(
+                                  measure: product.measure,
+                                  listId: widget.listId,
+                                  department: product.department,
+                                  imageUrl: product.pImage,
+                                  title: product.name,
+                                  priceRange:
+                                      "\$${product.minPrice} - \$${product.maxPrice}",
+                                  product: product,
+                                );
+                              },
+                            ),
+                            error: (error, stackTrace) =>
+                                Center(child: Text("$error")),
+                            loading: () =>
+                                Center(child: CircularProgressIndicator()),
+                          ),
+                ),
+              ),
+              Consumer(
+                builder: (context, ref, child) =>
+                    ref.watch(userProductListProvider).maybeWhen(
+                          orElse: () => buildMaterialButton(context),
+                          loading: () => Container(),
+                        ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -188,22 +197,32 @@ class _PreLoadedListDetailsScreenState
       onSelected: (PopupMenuAction value) async {
         if (value == PopupMenuAction.copy) {
           debugPrint("copy action");
-          ref
+          final bool result = await ref
               .read(userProductListProvider.notifier)
               .copyTheList(context: context);
+
+          if (result) {
+            hasValueChanged = true;
+            context.showSnackBar(message: "List copied successfully!");
+          }
         } else if (value == PopupMenuAction.delete) {
           debugPrint("delete action");
-          ref
+          final bool result = await ref
               .read(userProductListProvider.notifier)
               .deleteTheList(context: context);
+
+          if (result) {
+            hasValueChanged = true;
+            context.showSnackBar(message: "List deleted successfully!");
+          }
         } else if (value == PopupMenuAction.edit) {
           debugPrint("edit action");
           final bool? result =
               await context.pushNamed(RouteManager.editListScreen);
           if (result ?? false) {
-            //todo Change Static Text
             context.showSnackBar(message: "List Edited Successfully!");
             ref.read(listDetailsProvider.notifier).getSelectedListDetails();
+            hasValueChanged = true;
           }
         }
       },

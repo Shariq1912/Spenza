@@ -25,6 +25,7 @@ class StoreDetails extends _$StoreDetails {
     final DocumentSnapshot<Object?> storeSnapshot = await storeRef.get();
 
     final store = Stores(
+        id: storeSnapshot.id,
         name: storeSnapshot['name'],
         adress: "",
         zipCodesList: [],

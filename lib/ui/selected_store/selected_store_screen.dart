@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/di/app_providers.dart';
+import 'package:spenza/router/app_router.dart';
+import 'package:spenza/ui/favourite_stores/data/favourite_stores.dart';
 import 'package:spenza/ui/matching_store/components/matching_store_card.dart';
 import 'package:spenza/ui/matching_store/provider/store_ranking_provider.dart';
 import 'package:spenza/ui/my_list_details/components/custom_app_bar.dart';
@@ -23,6 +25,7 @@ class SelectedStoreScreen extends ConsumerStatefulWidget {
 
 class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
   final TextEditingController _searchController = TextEditingController();
+  final _focusNode = FocusNode();
 
   @override
   void initState() {
@@ -31,6 +34,35 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(selectedStoreProvider.notifier).getSelectedStoreProducts();
     });
+
+    _focusNode.addListener(() {
+      print("Has focus: ${_focusNode.hasFocus}");
+
+      if (_focusNode.hasFocus) {
+        final Stores store = ref.read(storeDetailsProvider).requireValue;
+        if (store.id.isEmpty) {
+          debugPrint("Store ID is Empty");
+          return;
+        }
+
+        _focusNode.unfocus();
+
+        ref
+            .read(selectedStoreProvider.notifier)
+            .redirectUserToStoreProductsScreen(
+              context: context,
+              storeId: store.id,
+              storeLogo: store.logo,
+            );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    _focusNode.dispose();
   }
 
   @override
@@ -81,11 +113,9 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
         body: Column(
           children: [
             SearchBox(
+              focusNode: _focusNode,
               controller: _searchController,
               hint: "Add Product",
-              onSearch: (value) {
-                //todo Navigate to add product screen of particular store.
-              },
             ),
             Expanded(
               child: Consumer(

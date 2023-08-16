@@ -7,13 +7,15 @@ import 'package:spenza/ui/preloaded_list_screen/component/preloaded_list_widget.
 import '../../router/app_router.dart';
 import '../home/provider/home_preloaded_list.dart';
 
-class PreloadedListScreen extends ConsumerStatefulWidget{
+class PreloadedListScreen extends ConsumerStatefulWidget {
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _PreloadedListScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _PreloadedListScreenState();
 }
 
 class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> {
   final poppinsFont = GoogleFonts.poppins().fontFamily;
+
   @override
   void initState() {
     super.initState();
@@ -25,8 +27,6 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> {
   Future<void> _loadAllStore() async {
     await ref.read(homePreloadedListProvider.notifier).fetchPreloadedList();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -70,8 +70,8 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> {
         padding: const EdgeInsets.all(10.0),
         child: Consumer(
           builder: (context, ref, child) {
-            final storeProvider = ref.watch(homePreloadedListProvider);
-            return storeProvider.when(
+            final preloadedListProvider = ref.watch(homePreloadedListProvider);
+            return preloadedListProvider.when(
               loading: () => Center(child: CircularProgressIndicator()),
               error: (error, stackTrace) {
                 print("errorMrss $error");
@@ -81,7 +81,7 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> {
                 print("allStoredata $data");
                 return PreloadedListWidget(
                   data: data,
-                 /* onButtonClicked: (AllStores allstore) {
+                  /* onButtonClicked: (AllStores allstore) {
                     _toggleFavorite(allstore);
                   },*/
                 );
@@ -92,5 +92,4 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> {
       ),
     );
   }
-
 }

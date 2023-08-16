@@ -159,7 +159,7 @@ extension ImagePickerExtension on ImagePicker {
 
   Future<File?> _pickImage(ImageSource source) async {
     try {
-      final pickedImage = await this.pickImage(source: ImageSource.gallery);
+      final pickedImage = await this.pickImage(source: source);
       if (pickedImage == null) {
         return null;
       }
