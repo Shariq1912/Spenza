@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import '../../../router/app_router.dart';
 import '../data/preloaded_list_model.dart';
 
 class PreLoadedList extends ConsumerWidget {
@@ -36,7 +38,10 @@ class PreLoadedList extends ConsumerWidget {
               child: Align(
                 alignment: Alignment.topRight,
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.push(RouteManager.preLoadedListScreen);
+
+                  },
                   icon: Icon(
                     Icons.arrow_forward_ios,
                     color: Color(0xFF0CA9E6),
@@ -71,6 +76,7 @@ class PreLoadedList extends ConsumerWidget {
                   child: SizedBox(
                     width: 100,
                     child: Card(
+                      color: Colors.white,
                       elevation: 0,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,

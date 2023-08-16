@@ -4,7 +4,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:spenza/helpers/fireStore_pref_mixin.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
-
 import '../../../utils/fireStore_constants.dart';
 import '../data/my_list_model.dart';
 

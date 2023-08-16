@@ -8,6 +8,7 @@ class PreloadedListModel with _$PreloadedListModel{
   const factory PreloadedListModel({
     required String name,
     required String preloaded_photo,
+    required String description,
 
 })= _PreloadedListModel;
 

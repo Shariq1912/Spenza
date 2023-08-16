@@ -10,6 +10,7 @@ import 'package:spenza/ui/login/login_screen.dart';
 import 'package:spenza/ui/matching_store/matching_store_screen.dart';
 import 'package:spenza/ui/my_list_details/my_list_details_screen.dart';
 import 'package:spenza/ui/pre_loaded_list_details/pre_loaded_list_details_screen.dart';
+import 'package:spenza/ui/preloaded_list_screen/preloaded_list_screen.dart';
 import 'package:spenza/ui/profile/profile_screen.dart';
 import 'package:spenza/ui/receipts/upload_receipt.dart';
 import 'package:spenza/ui/selected_store/selected_store_screen.dart';
@@ -45,6 +46,7 @@ class RouteManager {
   static const String settingScreen = '/settingScreen';
   static const String profileScreen = '/profileScreen';
   static const String uploadReceiptScreen = '/uploadReceiptScreen';
+  static const String preLoadedListScreen = '/preLoadedListScreen';
 
   /// The route configuration.
   static final GoRouter router = GoRouter(
@@ -189,6 +191,14 @@ class RouteManager {
         path: uploadReceiptScreen,
         builder: (context, state) {
           return UploadReceipt();
+        },
+      ),
+
+      GoRoute(
+        name: preLoadedListScreen,
+        path: preLoadedListScreen,
+        builder: (context, state) {
+          return PreloadedListScreen();
         },
       ),
     ],

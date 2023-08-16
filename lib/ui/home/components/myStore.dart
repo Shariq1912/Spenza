@@ -74,6 +74,7 @@ class MyStores extends ConsumerWidget {
                   child: SizedBox(
                     width: 100,
                     child: Card(
+                      color: Colors.white,
                       elevation: 0,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,

@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/ui/home/provider/fetch_mylist_provider.dart';
+import 'package:spenza/ui/home/provider/home_preloaded_list.dart';
 import 'package:spenza/ui/home/repo/fetch_favourite_store_repository.dart';
+import 'package:spenza/utils/spenza_extensions.dart';
 import '../../router/app_router.dart';
 import 'components/myStore.dart';
 import 'components/preLoadedList.dart';
-import 'components/topStrip.dart';
+import 'components/topStrip2.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
