@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/di/app_providers.dart';
+import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/home/provider/fetch_mylist_provider.dart';
 import 'package:spenza/ui/home/provider/home_preloaded_list.dart';
 import 'package:spenza/ui/home/repo/fetch_favourite_store_repository.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
-import '../../router/app_router.dart';
 import 'components/myStore.dart';
 import 'components/preLoadedList.dart';
 import 'components/topStrip2.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -34,13 +35,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         .fetchFavStores();
     await ref.read(homePreloadedListProvider.notifier).fetchPreloadedList();
   }
+
   @override
   void dispose() {
+    super.dispose();
+
     ref.invalidate(fetchMyListProvider);
     ref.invalidate(fetchFavouriteStoreRepositoryProvider);
     ref.invalidate(homePreloadedListProvider);
-
-    super.dispose();
   }
 
   @override
@@ -54,7 +56,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-
               /// My List
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
@@ -86,7 +87,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 onAllList: () {
                                   // todo redirect user to display all lists with receipt count
                                   context.showSnackBar(
-                                      message: "Display All User My List");
+                                    message: AppLocalizations.of(context)!
+                                        .displayAllUserMyList,
+                                  );
                                 },
                               ),
                               error: (error, stackTrace) => Text('$error'),
@@ -97,51 +100,41 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               ),
 
-              Consumer(builder: (context, ref, child) {
-                final preloadedProvider = ref.watch(homePreloadedListProvider);
-                return preloadedProvider.when(
-                  data: (data) {
-                    if (data.isEmpty) {
-                      return Center(/*child: Text("No stores available")*/);
-                    } else {
-                      return Padding(
-                        padding: EdgeInsets.only(left: 10, right: 10, top: 25),
-                        child: PreLoadedList(data: data),
-                      );
-                    }
-                  },
-                  loading: () => Center(child: CircularProgressIndicator()),
-                  error: (error, stackTrace) =>
-                      Center(child: Text(error.toString())),
-                );
-              }),
-              Consumer(builder: (context, ref, child) {
-                final storeProvider = ref.watch(fetchFavouriteStoreRepositoryProvider);
-                return storeProvider.when(
-                  () => Container(),
-                  loading: () => Center(child: CircularProgressIndicator()),
-                  error: (message) => Center(child: Text(message)),
-                  success: (data) {
-                    if (data.isEmpty) {
-                      return Center(child: Text("No stores available"));
-                    } else {
-                      return Padding(
-                        padding: EdgeInsets.only(left: 10, right: 10),
-                        child: MyStores(data: data),
-                      );
-                    }
-                  },
-                  empty: (message) =>
-                      Text("You don't have any favourite store"),
-                  redirectUser: () {
-                    return Container();
-                  },
-                );
-                }
-              )
-              const Padding(
-                padding: EdgeInsets.only(top: 25, left: 10, right: 10),
-                child: PreLoadedList(),
+              /// Pre Loaded List
+              Consumer(
+                builder: (context, ref, child) {
+                  final preloadedProvider =
+                      ref.watch(homePreloadedListProvider);
+                  return preloadedProvider.when(
+                    data: (data) {
+                      if (data.isEmpty) {
+                        return Center(
+                          child: Text(
+                            AppLocalizations.of(context)!.noStoresAvailable,
+                          ),
+                        );
+                      } else {
+                        return Padding(
+                          padding:
+                              EdgeInsets.only(left: 10, right: 10, top: 25),
+                          child: PreLoadedList(
+                            data: data,
+                            title: AppLocalizations.of(context)!
+                                .preloadedListTitle,
+                            poppinsFont: poppinsFont,
+                            onAllClicked: () {
+                              context
+                                  .pushNamed(RouteManager.preLoadedListScreen);
+                            },
+                          ),
+                        );
+                      }
+                    },
+                    loading: () => Center(child: CircularProgressIndicator()),
+                    error: (error, stackTrace) =>
+                        Center(child: Text(error.toString())),
+                  );
+                },
               ),
 
               /// Store List
@@ -155,13 +148,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     error: (message) => Center(child: Text(message)),
                     success: (data) {
                       if (data.isEmpty) {
-                        return Center(child: Text("No stores available"));
+                        return Center(
+                          child: Text(
+                            AppLocalizations.of(context)!.noStoresAvailable,
+                          ),
+                        );
                       } else {
                         return Padding(
                           padding: EdgeInsets.only(left: 10, right: 10),
                           child: MyStores(
                             data: data,
-                            title: 'My Store',
+                            title: AppLocalizations.of(context)!.myStoreTitle,
                             poppinsFont: poppinsFont,
                             onAllStoreClicked: () {
                               context.pushNamed(RouteManager.stores);
@@ -171,7 +168,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       }
                     },
                     empty: (message) =>
-                        Text("You don't have any favourite store"),
+                        Text(AppLocalizations.of(context)!.noStoresAvailable),
                     redirectUser: () {
                       return Container();
                     },

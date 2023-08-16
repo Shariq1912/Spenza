@@ -25,7 +25,7 @@ class ImageTextCard extends StatelessWidget {
             children: [
               CachedNetworkImage(
                 imageUrl: imageUrl,
-                fit: BoxFit.fitWidth,
+                fit: BoxFit.cover,
                 width: 100,
                 height: 100,
               ),

@@ -1,11 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/my_store/data/all_store.dart';
-import '../../my_store_products/my_store_product.dart';
+
 import 'image_text_card.dart';
 
 class MyStores extends StatelessWidget {

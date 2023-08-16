@@ -82,5 +82,26 @@
   "addToMyList": "Add to My List",
   "@addToMyList": {
     "description": "Button text for adding an item to the list"
-  }
+  },
+
+  "noStoresAvailable": "No stores available",
+    "@noStoresAvailable": {
+      "description": "Message displayed when no stores are available"
+    },
+    "noFavouriteStoreMessage": "You don't have any favourite store",
+    "@noFavouriteStoreMessage": {
+      "description": "Message displayed when the user has no favourite store"
+    },
+    "displayAllUserMyList": "Display All User My List",
+    "@displayAllUserMyList": {
+      "description": "Message for displaying all user's lists"
+    },
+    "preloadedListTitle": "Preloaded List",
+    "@preloadedListTitle": {
+      "description": "Title for the 'Preloaded List' section"
+    },
+    "myStoreTitle": "My Store",
+    "@myStoreTitle": {
+      "description": "Title for the 'My Store' section"
+    }
 }
