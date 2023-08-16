@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/ui/home/provider/fetch_mylist_provider.dart';
+import 'package:spenza/ui/home/provider/home_preloaded_list.dart';
 import 'package:spenza/ui/home/repo/fetch_favourite_store_repository.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 import '../../router/app_router.dart';
@@ -31,13 +32,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     await ref
         .read(fetchFavouriteStoreRepositoryProvider.notifier)
         .fetchFavStores();
+    await ref.read(homePreloadedListProvider.notifier).fetchPreloadedList();
   }
-
   @override
   void dispose() {
-    // Dispose Riverpod providers or any resources here
     ref.invalidate(fetchMyListProvider);
     ref.invalidate(fetchFavouriteStoreRepositoryProvider);
+    ref.invalidate(homePreloadedListProvider);
 
     super.dispose();
   }
@@ -95,6 +96,49 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                 ),
               ),
+
+              Consumer(builder: (context, ref, child) {
+                final preloadedProvider = ref.watch(homePreloadedListProvider);
+                return preloadedProvider.when(
+                  data: (data) {
+                    if (data.isEmpty) {
+                      return Center(/*child: Text("No stores available")*/);
+                    } else {
+                      return Padding(
+                        padding: EdgeInsets.only(left: 10, right: 10, top: 25),
+                        child: PreLoadedList(data: data),
+                      );
+                    }
+                  },
+                  loading: () => Center(child: CircularProgressIndicator()),
+                  error: (error, stackTrace) =>
+                      Center(child: Text(error.toString())),
+                );
+              }),
+              Consumer(builder: (context, ref, child) {
+                final storeProvider = ref.watch(fetchFavouriteStoreRepositoryProvider);
+                return storeProvider.when(
+                  () => Container(),
+                  loading: () => Center(child: CircularProgressIndicator()),
+                  error: (message) => Center(child: Text(message)),
+                  success: (data) {
+                    if (data.isEmpty) {
+                      return Center(child: Text("No stores available"));
+                    } else {
+                      return Padding(
+                        padding: EdgeInsets.only(left: 10, right: 10),
+                        child: MyStores(data: data),
+                      );
+                    }
+                  },
+                  empty: (message) =>
+                      Text("You don't have any favourite store"),
+                  redirectUser: () {
+                    return Container();
+                  },
+                );
+                }
+              )
               const Padding(
                 padding: EdgeInsets.only(top: 25, left: 10, right: 10),
                 child: PreLoadedList(),

@@ -21,7 +21,6 @@ class MyProductListWidget extends ConsumerStatefulWidget {
   final List<ProductModel> stores;
   final List<DepartmentDataClass> department;
   final Function(ProductModel store) onButtonClicked;
-
   final poppins = GoogleFonts.poppins().fontFamily;
 
   @override

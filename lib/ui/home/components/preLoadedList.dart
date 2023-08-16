@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
-class PreLoadedList extends StatefulWidget {
-  const PreLoadedList({Key? key}) : super(key: key);
+import '../../../router/app_router.dart';
+import '../data/preloaded_list_model.dart';
 
-  @override
-  State<PreLoadedList> createState() => _PreLoadedListState();
-}
+class PreLoadedList extends ConsumerWidget {
+  final List<PreloadedListModel> data;
 
-class _PreLoadedListState extends State<PreLoadedList> {
+   PreLoadedList({Key? key, required this.data}) : super(key: key);
+
   final poppinsFont = GoogleFonts.poppins().fontFamily;
-  @override
-  Widget build(BuildContext context) {
-    return _preloadedListWidget();
-  }
 
-  Widget _preloadedListWidget() {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
-         Row(
+        Row(
           children: [
             Expanded(
               flex: 1,
@@ -26,10 +26,11 @@ class _PreLoadedListState extends State<PreLoadedList> {
                 'Preloaded list',
                 style: TextStyle(
                   fontFamily: poppinsFont,
-                    decoration: TextDecoration.none,
-                    color: Color(0xFF0CA9E6),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20),
+                  decoration: TextDecoration.none,
+                  color: Color(0xFF0CA9E6),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
               ),
             ),
             Expanded(
@@ -37,69 +38,70 @@ class _PreLoadedListState extends State<PreLoadedList> {
               child: Align(
                 alignment: Alignment.topRight,
                 child: IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.arrow_forward_ios,
-                      color: Color(0xFF0CA9E6),
-                      size: 32,
-                    )),
+                  onPressed: () {
+                    context.push(RouteManager.preLoadedListScreen);
+
+                  },
+                  icon: Icon(
+                    Icons.arrow_forward_ios,
+                    color: Color(0xFF0CA9E6),
+                    size: 32,
+                  ),
+                ),
               ),
-            )
+            ),
           ],
         ),
         SizedBox(
           height: 180,
           child: Padding(
             padding: const EdgeInsets.only(top: 10),
-            child: ListView(
+            child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              children: [
-                preloadedListItem('Single'),
-                Padding(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: preloadedListItem('Couple'),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: preloadedListItem('Family'),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: preloadedListItem('Couple'),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: preloadedListItem('Family'),
-                )
-              ],
+              itemCount: data.length,
+              itemBuilder: (context, index) {
+                PreloadedListModel store = data[index];
+                var fileName = store.preloaded_photo;
+                return GestureDetector(
+                  onTap: () {
+                    /*  Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => MyStoreProduct(
+                          documentId: store.documentId!,
+                          logo: store.logo,
+                        ),
+                      ),
+                    );*/
+                  },
+                  child: SizedBox(
+                    width: 100,
+                    child: Card(
+                      color: Colors.white,
+                      elevation: 0,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          CachedNetworkImage(
+                            imageUrl: fileName,
+                            fit: BoxFit.cover,
+                            width: 100,
+                            height: 100,
+                          ),
+                          Text(store.name),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
           ),
-        )
-      ],
-    );
-  }
-
-  Widget preloadedListItem(String text) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 100,
-          height: 100,
-          color: Colors.red,
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 5),
-          child: Text(
-            text ?? '',
-            style: const TextStyle(
-                decoration: TextDecoration.none,
-                color: Colors.blue,
-                fontWeight: FontWeight.bold,
-                fontSize: 16),
-          ),
-        )
       ],
     );
   }
 }
+
+
+
+
