@@ -6,7 +6,7 @@ part of 'selected_store_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$selectedStoreHash() => r'93caa0129f939978ab5057084c4a7aa294a939da';
+String _$selectedStoreHash() => r'1cb7df418e83b690c12c080cd4298235e5e973fa';
 
 /// See also [SelectedStore].
 @ProviderFor(SelectedStore)

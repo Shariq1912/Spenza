@@ -9,20 +9,21 @@ part 'product_for_store_provider.g.dart';
 
 @riverpod
 class ProductForStore extends _$ProductForStore with FirestoreAndPrefsMixin {
-
   @override
-  FutureOr<List<ProductModel>> build(){
+  FutureOr<List<ProductModel>> build() {
     return [];
   }
 
   Future<List<ProductModel>> getProductsForStore(String documentId) async {
-    try{
+    try {
       state = AsyncValue.loading();
-      DocumentReference storeRef = fireStore.doc('/stores/$documentId'); //created the document ref object
+      DocumentReference storeRef = fireStore
+          .collection("stores")
+          .doc(documentId); //created the document ref object
 
       QuerySnapshot<Map<String, dynamic>> productsSnapshot = await fireStore
-          .collection('products')
-          .where('bstoreRef', isEqualTo: storeRef)
+          .collection('products_mvp')
+          .where('storeRef', isEqualTo: storeRef)
           .get();
 
       final List<ProductModel> pro = productsSnapshot.docs.map((doc) {
@@ -36,7 +37,7 @@ class ProductForStore extends _$ProductForStore with FirestoreAndPrefsMixin {
       });
       state = AsyncValue.data(pro);
       return pro;
-    }catch(error, stackTrace){
+    } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
       return [];
     }

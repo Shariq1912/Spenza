@@ -4,9 +4,14 @@ class SearchBox extends StatelessWidget {
   final String hint;
   final TextEditingController controller;
   final ValueChanged<String>? onSearch;
+  final FocusNode? focusNode; // Callback for focus change
 
-  const SearchBox(
-      {required this.controller, this.onSearch, required this.hint});
+  const SearchBox({
+    required this.controller,
+    this.onSearch,
+    required this.hint,
+    this.focusNode,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +36,7 @@ class SearchBox extends StatelessWidget {
                 SizedBox(width: 8),
                 Expanded(
                   child: TextField(
+                    focusNode: focusNode,
                     controller: controller,
                     textInputAction: TextInputAction.search,
                     onSubmitted: (_) {

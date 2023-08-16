@@ -11,12 +11,12 @@ import 'package:spenza/ui/my_store_products/repo/my_store_product_repository.dar
 
 import '../../home/provider/add_product_to_new_list_provider.dart';
 
-
-
 class MyListDialog extends ConsumerStatefulWidget {
   final String productId;
   final String productRef;
-  MyListDialog({Key? key, required this.productId, required this.productRef}) : super(key: key);
+
+  MyListDialog({Key? key, required this.productId, required this.productRef})
+      : super(key: key);
 
   @override
   ConsumerState<MyListDialog> createState() => _MyListDialogState();
@@ -35,11 +35,9 @@ class _MyListDialogState extends ConsumerState<MyListDialog> {
     await ref.read(fetchMyListProvider.notifier).fetchMyListFun();
   }
 
+  UserProductData myListData = UserProductData(productId: "");
 
-    UserProductData myListData = UserProductData(
-       productId: "");
-
-    //ref.read(myStoreProductRepositoryProvider.notifier).addProductToMyList(documentId, myListData);
+  //ref.read(myStoreProductRepositoryProvider.notifier).addProductToMyList(documentId, myListData);
 
   void _showSnackbar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -54,14 +52,17 @@ class _MyListDialogState extends ConsumerState<MyListDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       surfaceTintColor: Colors.white,
-      title: Text("My List",style: TextStyle(fontSize: 16),),
+      title: Text(
+        "My List",
+        style: TextStyle(fontSize: 16),
+      ),
       content: Container(
         width: double.maxFinite,
         child: Consumer(builder: (context, ref, child) {
           final mylist = ref.watch(fetchMyListProvider);
           return mylist.when(
               loading: () => Center(child: CircularProgressIndicator()),
-              error: (error,stackTrace) {
+              error: (error, stackTrace) {
                 print("errorMrss $error");
                 return Center(child: Text(error.toString()));
               },
@@ -71,16 +72,25 @@ class _MyListDialogState extends ConsumerState<MyListDialog> {
                   itemCount: data.length,
                   itemBuilder: (context, index) {
                     MyListModel item = data[index];
-                    var fileName = item.myListPhoto ?? "" ;
+                    var fileName = item.myListPhoto ?? "";
                     return Card(
                       color: Colors.white,
                       child: ListTile(
                         leading: leadingWidget(fileName),
                         title: Text(item.name),
-                        trailing: IconButton(onPressed: ()async{
-                          await ref.read(addProductToMyListProvider.notifier).addProductToMyList(item.documentId!,  widget.productId, widget.productRef, context);
-                          _showSnackbar(context, "Product added successfully");
-                        }, icon: Icon(Icons.playlist_add_sharp)),
+                        trailing: IconButton(
+                            onPressed: () async {
+                              await ref
+                                  .read(addProductToMyListProvider.notifier)
+                                  .addProductToMyList(
+                                    item.documentId!,
+                                    widget.productId,
+                                    context,
+                                  );
+                              _showSnackbar(
+                                  context, "Product added successfully");
+                            },
+                            icon: Icon(Icons.playlist_add_sharp)),
                       ),
                     );
                   },
@@ -91,16 +101,30 @@ class _MyListDialogState extends ConsumerState<MyListDialog> {
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AddProductToNewList(productId: widget.productId, productRef: widget.productRef)));
+            // todo change to go router
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AddProductToNewList(
+                        productId: widget.productId,
+                        productRef: widget.productRef)));
           },
-          child: Text("Create new list",style: TextStyle(color: Color(0xFF0CA9E6)),),
+          child: Text(
+            "Create new list",
+            style: TextStyle(color: Color(0xFF0CA9E6)),
+          ),
         ),
-        SizedBox(width: 50,),
+        SizedBox(
+          width: 50,
+        ),
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text("Close",style: TextStyle(color: Color(0xFF0CA9E6)),),
+          child: Text(
+            "Close",
+            style: TextStyle(color: Color(0xFF0CA9E6)),
+          ),
         ),
       ],
     );
@@ -123,5 +147,4 @@ class _MyListDialogState extends ConsumerState<MyListDialog> {
       );
     }
   }
-
 }

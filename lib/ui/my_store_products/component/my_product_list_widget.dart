@@ -32,23 +32,22 @@ class _MyProductListWidgetState extends ConsumerState<MyProductListWidget> {
   List<ProductModel> filteredStores = [];
   List<String> selectedChips = [];
 
-
   @override
   void initState() {
     super.initState();
     filteredStores.addAll(widget.stores);
-
   }
 
   void _filterStores(String keyword) {
     setState(() {
-      filteredStores = widget.stores.where((store) =>
-          store.name.toLowerCase().contains(keyword.toLowerCase()))
-          .where((store) => selectedChips.isEmpty || selectedChips.contains(store.department))
+      filteredStores = widget.stores
+          .where((product) =>
+              product.name.toLowerCase().contains(keyword.toLowerCase()))
+          .where((store) =>
+              selectedChips.isEmpty || selectedChips.contains(store.departmentName))
           .toList();
     });
   }
-
 
   void _onChipSelected(String chipText) {
     setState(() {
@@ -61,25 +60,35 @@ class _MyProductListWidgetState extends ConsumerState<MyProductListWidget> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
-    if(widget.stores.isEmpty){
-      return Center(child: Text("No data available", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold, color: Colors.black,fontFamily: poppinsFont),),);
-    } else{
+    if (widget.stores.isEmpty) {
+      return Center(
+        child: Text(
+          "No data available",
+          style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+              fontFamily: poppinsFont),
+        ),
+      );
+    } else {
       return Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: searchBox()
+          Padding(padding: const EdgeInsets.all(8.0), child: searchBox()),
+          ChipsWidget(
+              departments: widget.department,
+              selectedChips: selectedChips,
+              onChipSelected: _onChipSelected),
+          SizedBox(
+            height: 10,
           ),
-          ChipsWidget(departments: widget.department, selectedChips: selectedChips, onChipSelected: _onChipSelected),
-          SizedBox(height: 10,),
           Expanded(
             child: ListView.builder(
               itemCount: filteredStores.length,
               itemBuilder: (context, index) {
-                ProductModel store = filteredStores[index];
+                ProductModel product = filteredStores[index];
                 return Card(
                   color: Colors.white,
                   surfaceTintColor: Colors.white,
@@ -88,27 +97,42 @@ class _MyProductListWidgetState extends ConsumerState<MyProductListWidget> {
                     children: [
                       ListTile(
                         horizontalTitleGap: 10,
-                        leading: store.pImage.isNotEmpty
+                        leading: product.pImage.isNotEmpty
                             ? CachedNetworkImage(
-                          width: 50,
-                          height: 55,
-                          fit: BoxFit.cover,
-                          imageUrl: store.pImage,
-                        )
+                                width: 50,
+                                height: 55,
+                                fit: BoxFit.cover,
+                                imageUrl: product.pImage,
+                              )
                             : Image.asset(
-                          'favicon.png'.assetImageUrl,
-                          fit: BoxFit.cover,
+                                'favicon.png'.assetImageUrl,
+                                fit: BoxFit.cover,
+                              ),
+                        title: Text(
+                          product.name,
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontFamily: poppinsFont),
                         ),
-                        title: Text(store.name, style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold, color: Colors.black,fontFamily: poppinsFont),),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(store.measure, style: TextStyle(fontSize: 12, color: Colors.grey,),),
-                            SizedBox(height: 5,),
-                            ],
+                            Text(
+                              product.measure,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                          ],
                         ),
                       ),
-                      addProduct(store.documentId!, store.idStore),
+                      addProduct(product),
                     ],
                   ),
                 );
@@ -118,32 +142,24 @@ class _MyProductListWidgetState extends ConsumerState<MyProductListWidget> {
         ],
       );
     }
-
   }
 
-  Widget addProduct(String documentId, String productId) {
+  Widget addProduct(ProductModel product) {
     return Positioned(
       top: 34,
       right: 5,
       child: Container(
         decoration: BoxDecoration(
           color: const Color(0xFF0CA9E6),
-          border: Border.all(color: const Color(0xFF0CA9E6),),
+          border: Border.all(
+            color: const Color(0xFF0CA9E6),
+          ),
           borderRadius: BorderRadius.all(Radius.circular(5)),
         ),
         child: Text.rich(
           TextSpan(
             recognizer: TapGestureRecognizer()
-              ..onTap = () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return MyListDialog(
-                      productRef: documentId, productId: productId,
-                    );
-                  },
-                );
-              },
+              ..onTap = () => widget.onButtonClicked(product),
             text: "Add to list ",
             style: TextStyle(
               fontSize: 12,
@@ -166,8 +182,7 @@ class _MyProductListWidgetState extends ConsumerState<MyProductListWidget> {
           Icons.search,
           color: Colors.grey,
         ),
-        contentPadding:
-        EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+        contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
         border: OutlineInputBorder(),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey, width: 2),
@@ -176,8 +191,3 @@ class _MyProductListWidgetState extends ConsumerState<MyProductListWidget> {
     );
   }
 }
-
-
-
-
-

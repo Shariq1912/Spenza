@@ -9,7 +9,9 @@ import '../../my_store_products/my_store_product.dart';
 
 class MyStores extends ConsumerWidget {
   final List<AllStores> data;
-  final poppinsFont = GoogleFonts.poppins().fontFamily;
+  final poppinsFont = GoogleFonts
+      .poppins()
+      .fontFamily;
 
   MyStores({required this.data});
 
@@ -62,14 +64,12 @@ class MyStores extends ConsumerWidget {
                 var fileName = store.logo;
                 return GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => MyStoreProduct(
-                          documentId: store.documentId!,
-                          logo: store.logo,
-                        ),
-                      ),
-                    );
+
+                    context.pushNamed(RouteManager.myStoreProductScreen,
+                      queryParameters: {
+                        "store_id": store.documentId!,
+                        "logo": store.logo
+                      },);
                   },
                   child: SizedBox(
                     width: 100,

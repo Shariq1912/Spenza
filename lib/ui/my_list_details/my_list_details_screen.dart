@@ -25,6 +25,7 @@ class MyListDetailsScreen extends ConsumerStatefulWidget {
 class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
     with PopupMenuMixin {
   final TextEditingController _searchController = TextEditingController();
+  bool hasValueChanged = false;
 
   final List<PopupMenuItem<PopupMenuAction>> items = [
     PopupMenuItem(

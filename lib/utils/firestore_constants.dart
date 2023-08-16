@@ -5,7 +5,6 @@ class UserConstant {
   static const String userIdField = 'uid';
   static const String zipCodeField = 'zipCode';
   static const String locationField = 'location';
-
 }
 
 class FavoriteConstant {
@@ -14,14 +13,12 @@ class FavoriteConstant {
   static const String userIdField = 'uid';
 }
 
-
 class StoreConstant {
   static const String storeCollection = 'stores';
   static const String addressField = 'address';
   static const String groupNameField = 'groupName';
   static const String zipCodesListField = 'zipCodesList';
 }
-
 
 class UserProductListCollection {
   static const String collectionName = 'user_product_list';
@@ -35,14 +32,11 @@ class MyList {
   static const String collectionName = 'mylist';
 }
 
-
 class ProductCollectionConstant {
   static const String collectionName = 'products_mvp';
   static const String productId = 'product_id';
   static const String productRef = 'product_ref';
 }
-
-
 
 class RankedStoreConstant {
   static const String collectionName = 'ranked_store_products';

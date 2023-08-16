@@ -9,6 +9,7 @@ import 'package:spenza/ui/location/location_screen.dart';
 import 'package:spenza/ui/login/login_screen.dart';
 import 'package:spenza/ui/matching_store/matching_store_screen.dart';
 import 'package:spenza/ui/my_list_details/my_list_details_screen.dart';
+import 'package:spenza/ui/my_store_products/my_store_product.dart';
 import 'package:spenza/ui/pre_loaded_list_details/pre_loaded_list_details_screen.dart';
 import 'package:spenza/ui/profile/profile_screen.dart';
 import 'package:spenza/ui/receipts/upload_receipt.dart';
@@ -42,6 +43,7 @@ class RouteManager {
   static const String editListScreen = '/editListScreen';
   static const String addProductToNewList = '/addProductToNewList';
   static const String stores = '/stores';
+  static const String myStoreProductScreen = '/myStoreProductScreen';
   static const String settingScreen = '/settingScreen';
   static const String profileScreen = '/profileScreen';
   static const String uploadReceiptScreen = '/uploadReceiptScreen';
@@ -99,7 +101,8 @@ class RouteManager {
         name: myListDetailScreen,
         path: myListDetailScreen,
         builder: (context, state) {
-          final String listId = state.queryParameters['list_id'] ?? "4NlYnhmchdlu528Gw2yK";
+          final String listId =
+              state.queryParameters['list_id'] ?? "4NlYnhmchdlu528Gw2yK";
           //return MyListDetailsScreen(listId: listId);
           if (listId != "4NlYnhmchdlu528Gw2yK") {
             print("Notequal $listId");
@@ -114,11 +117,11 @@ class RouteManager {
         name: preLoadedListDetailScreen,
         path: preLoadedListDetailScreen,
         builder: (context, state) {
-          final String listId = state.queryParameters['list_id'] ?? "4NlYnhmchdlu528Gw2yK";
+          final String listId =
+              state.queryParameters['list_id'] ?? "4NlYnhmchdlu528Gw2yK";
           return PreLoadedListDetailsScreen(listId: listId);
         },
       ),
-
       GoRoute(
         name: addProductScreen,
         path: addProductScreen,
@@ -127,7 +130,6 @@ class RouteManager {
           return AddProductScreen(query: query);
         },
       ),
-
       GoRoute(
         name: storeRankingScreen,
         path: storeRankingScreen,
@@ -135,7 +137,6 @@ class RouteManager {
           return MatchingStoreScreen();
         },
       ),
-
       GoRoute(
         name: selectedStoreScreen,
         path: selectedStoreScreen,
@@ -143,7 +144,6 @@ class RouteManager {
           return SelectedStoreScreen();
         },
       ),
-
       GoRoute(
         name: addNewList,
         path: addNewList,
@@ -151,7 +151,6 @@ class RouteManager {
           return AddItemToList();
         },
       ),
-
       GoRoute(
         name: editListScreen,
         path: editListScreen,
@@ -159,7 +158,6 @@ class RouteManager {
           return EditListScreen();
         },
       ),
-
       GoRoute(
         name: stores,
         path: stores,
@@ -167,7 +165,17 @@ class RouteManager {
           return Stores();
         },
       ),
+      GoRoute(
+        name: myStoreProductScreen,
+        path: myStoreProductScreen,
+        builder: (context, state) {
+          final String storeId = state.queryParameters['store_id'] ?? "";
+          final String logo = state.queryParameters['logo'] ?? "";
+          final String? listId = state.queryParameters['list_id'];
 
+          return MyStoreProduct(storeId: storeId, logo: logo,listId:listId);
+        },
+      ),
       GoRoute(
         name: settingScreen,
         path: settingScreen,
@@ -175,7 +183,6 @@ class RouteManager {
           return SettingScreen();
         },
       ),
-
       GoRoute(
         name: profileScreen,
         path: profileScreen,
@@ -183,7 +190,6 @@ class RouteManager {
           return ProfileScreen();
         },
       ),
-
       GoRoute(
         name: uploadReceiptScreen,
         path: uploadReceiptScreen,
