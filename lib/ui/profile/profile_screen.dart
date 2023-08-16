@@ -1,10 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/ui/profile/component/edit_profile_info.dart';
 import 'package:spenza/ui/profile/profile_repository.dart';
+import 'package:spenza/ui/profile/provider/user_profile_data.dart';
+import 'package:spenza/utils/spenza_extensions.dart';
 
+import '../../router/app_router.dart';
 import '../login/login_provider.dart';
 import '../login/login_screen.dart';
 import 'component/profile_info.dart';
@@ -60,9 +65,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                          children: [
                            CircleAvatar(
                              radius: 40,
-                             child: ClipOval(
-                               child: Image.asset("assets/images/avatar.gif"),
-                             ),
+                             child: _buildImageWidget(userData.profilePhoto)
                            ),
                            SizedBox(height: 10),
                            Text(
@@ -216,15 +219,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   fontFamily: poppinsFont,
                 ),
               )),
-       /* if (!isEditing)*/
+
           IconButton(
             onPressed: () {
-              // setState(() {
-              //   isEditing = !isEditing;
-              // });
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => EditProfileInformation(),
-              ));
+
+              context.push(RouteManager.editProfileScreen);
             },
             icon: Icon(
               Icons.edit,
@@ -242,6 +241,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           fontSize: 20,
         ),
       ),
+    );
+  }
+
+  Widget _buildImageWidget(String? image) {
+
+    return image!=null
+        ? CachedNetworkImage( fit: BoxFit.cover, imageUrl: image,)
+        : Image.asset(
+      'list_image.png'.assetImageUrl,
+      fit: BoxFit.fitWidth,
     );
   }
 }

@@ -9,6 +9,8 @@ import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/location/state/location_state.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
+import '../../../utils/fireStore_constants.dart';
+
 class LocationRepository extends StateNotifier<LocationState> {
   LocationRepository() : super(const LocationState());
 
@@ -140,6 +142,7 @@ class LocationRepository extends StateNotifier<LocationState> {
   Future<void> _saveZipCodeToServer(String postalCode) async {
     /// Due to State notifier not accepting Future temporary solution
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(UserConstant.zipCodeField, postalCode);
     await _fireStore.collection('users').doc(prefs.getUserId()).update(
       {
         'zipCode': postalCode,

@@ -11,6 +11,7 @@ import 'package:spenza/ui/matching_store/matching_store_screen.dart';
 import 'package:spenza/ui/my_list_details/my_list_details_screen.dart';
 import 'package:spenza/ui/pre_loaded_list_details/pre_loaded_list_details_screen.dart';
 import 'package:spenza/ui/preloaded_list_screen/preloaded_list_screen.dart';
+import 'package:spenza/ui/profile/component/edit_profile_info.dart';
 import 'package:spenza/ui/profile/profile_screen.dart';
 import 'package:spenza/ui/receipts/upload_receipt.dart';
 import 'package:spenza/ui/selected_store/selected_store_screen.dart';
@@ -45,6 +46,7 @@ class RouteManager {
   static const String stores = '/stores';
   static const String settingScreen = '/settingScreen';
   static const String profileScreen = '/profileScreen';
+  static const String editProfileScreen = '/editProfileScreen';
   static const String uploadReceiptScreen = '/uploadReceiptScreen';
   static const String preLoadedListScreen = '/preLoadedListScreen';
 
@@ -201,6 +203,14 @@ class RouteManager {
           return PreloadedListScreen();
         },
       ),
+
+      GoRoute(
+        name: editProfileScreen,
+        path: editProfileScreen,
+        builder: (context, state) {
+          return EditProfileInformation();
+        },
+      )
     ],
   );
 }

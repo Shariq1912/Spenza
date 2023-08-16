@@ -41,7 +41,7 @@ class ProfileRepository extends _$ProfileRepository {
       return null;
     }
   }
-
+/*
   Future<bool> saveZipCodeToServer(UserProfileData userProfileData, File? image) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String userId = prefs.getUserId();
@@ -154,7 +154,7 @@ class ProfileRepository extends _$ProfileRepository {
       print("Error fetching district data: $error");
       return DistrictData(name: '');
     }
-    }
+    }*/
 
   /*Future<void> rankStoresByPriceTotal(
       {String listId = "4NlYnhmchdlu528Gw2yK"}) async {

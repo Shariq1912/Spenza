@@ -59,7 +59,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                 ),
                 IconButton(
                   onPressed: () {
-                    context.push(RouteManager.uploadReceiptScreen);
+                    context.push(RouteManager.profileScreen);
                   },
                   icon: Icon(
                     Icons.arrow_forward_ios,

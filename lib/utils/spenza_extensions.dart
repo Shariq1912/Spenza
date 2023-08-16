@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -47,6 +46,10 @@ extension SharedPreferencesExtension on SharedPreferences {
 
   String getUserListName() {
     return getString('user_list_name') ?? MyListConstant.myListCollection;
+  }
+
+  String getPostalCode() {
+    return getString('zipCode') ?? "44110";
   }
 }
 
@@ -159,7 +162,7 @@ extension ImagePickerExtension on ImagePicker {
 
   Future<File?> _pickImage(ImageSource source) async {
     try {
-      final pickedImage = await this.pickImage(source: ImageSource.gallery);
+      final pickedImage = await this.pickImage(source: source);
       if (pickedImage == null) {
         return null;
       }
