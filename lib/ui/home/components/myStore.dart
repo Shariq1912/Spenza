@@ -55,7 +55,8 @@ class MyStores extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.only(top: 2),
-          child: Container(
+          child: data.isNotEmpty
+              ? Container(
             height: 150, // Adjust the height as needed
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
@@ -77,9 +78,19 @@ class MyStores extends StatelessWidget {
                 );
               },
             ),
+          )
+              : Center(
+            child: Text(
+              "No stores available.",
+              style: TextStyle(
+                fontSize: 16,
+                fontFamily: poppinsFont.fontFamily,
+              ),
+            ),
           ),
         ),
       ],
     );
   }
 }
+

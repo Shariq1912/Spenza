@@ -8,10 +8,12 @@ import 'package:spenza/ui/home/home_screen.dart';
 import 'package:spenza/ui/location/location_screen.dart';
 import 'package:spenza/ui/login/login_screen.dart';
 import 'package:spenza/ui/matching_store/matching_store_screen.dart';
+import 'package:spenza/ui/my_list_details/my_list.dart';
 import 'package:spenza/ui/my_list_details/my_list_details_screen.dart';
 import 'package:spenza/ui/my_store_products/my_store_product.dart';
 import 'package:spenza/ui/pre_loaded_list_details/pre_loaded_list_details_screen.dart';
 import 'package:spenza/ui/preloaded_list_screen/preloaded_list_screen.dart';
+import 'package:spenza/ui/profile/component/edit_profile_info.dart';
 import 'package:spenza/ui/profile/profile_screen.dart';
 import 'package:spenza/ui/receipts/upload_receipt.dart';
 import 'package:spenza/ui/selected_store/selected_store_screen.dart';
@@ -36,6 +38,7 @@ class RouteManager {
   static const String favouriteScreen = '/favouriteScreen';
   static const String homeScreen = '/homeScreen';
   static const String myListDetailScreen = '/myListDetailScreen';
+  static const String myListScreen = '/myListScreen';
   static const String preLoadedListDetailScreen = '/preLoadedListDetailScreen';
   static const String storeRankingScreen = '/storeMatchingScreen';
   static const String selectedStoreScreen = '/selectedStoreScreen';
@@ -47,6 +50,7 @@ class RouteManager {
   static const String myStoreProductScreen = '/myStoreProductScreen';
   static const String settingScreen = '/settingScreen';
   static const String profileScreen = '/profileScreen';
+  static const String editProfileScreen = '/editProfileScreen';
   static const String uploadReceiptScreen = '/uploadReceiptScreen';
   static const String preLoadedListScreen = '/preLoadedListScreen';
 
@@ -207,6 +211,22 @@ class RouteManager {
           return PreloadedListScreen();
         },
       ),
+
+      GoRoute(
+        name: editProfileScreen,
+        path: editProfileScreen,
+        builder: (context, state) {
+          return EditProfileInformation();
+        },
+      ),
+
+      GoRoute(
+        name: myListScreen,
+        path: myListScreen,
+        builder: (context, state) {
+          return MyList();
+        },
+      )
     ],
   );
 }

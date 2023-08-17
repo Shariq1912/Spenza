@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:spenza/ui/profile/component/profile_fields_row.dart';
 import 'package:spenza/ui/profile/profile_screen.dart';
+import 'package:spenza/ui/profile/provider/save_zipcode.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
 import '../data/user_profile_data.dart';
@@ -38,6 +39,7 @@ class _ProfileCardState extends ConsumerState<EditProfileInformation> {
 
 
   Future<void> _saveData() async {
+    String zipCodeValue = zipCodeController.text.trim();
     UserProfileData userProfileData = UserProfileData(
       name: nameController.text,
       surName: surnameController.text,
@@ -47,40 +49,14 @@ class _ProfileCardState extends ConsumerState<EditProfileInformation> {
       district: districtController.text,
       state: stateController.text,
       zipCode: zipCodeController.text,
-      profilePhoto: selectedImage!.path
+      profilePhoto: selectedImage?.path ?? ""
     );
 
+    await ref
+        .read(saveUserDataProvider.notifier)
+        .saveZipCodeToServer(userProfileData,selectedImage,context);
 
-    bool isDataSaved = await ref
-        .read(profileRepositoryProvider.notifier)
-        .saveZipCodeToServer(userProfileData,selectedImage);
 
-
-    if (isDataSaved) {
-
-     /* Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => ProfileScreen(),
-      ));*/
-    } else {
-
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text("Error"),
-            content: Text("Failed to save data. Please try again."),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text("OK"),
-              ),
-            ],
-          );
-        },
-      );
-    }
   }
 
 
@@ -193,24 +169,28 @@ class _ProfileCardState extends ConsumerState<EditProfileInformation> {
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
         actions: [
-          TextButton(
-              onPressed: () async {
-                await _saveData();
-                //ref.watch(profileRepositoryProvider.notifier).getStateName("45110");
+          Consumer(
+              builder: (context, ref, child) =>
+                  ref.watch(saveUserDataProvider).maybeWhen(
+                    loading: () => Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    orElse: () => TextButton(
+                        onPressed: () async {
+                          _saveData();
 
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => ProfileScreen(),
-                ));
-              },
-              child: Text(
-                "Save",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: poppinsFont,
-                    color :Color(0xFF0CA9E6)
-                ),
-              )),
+                        },
+                        child: Text(
+                          "Save",
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: poppinsFont,
+                              color :Color(0xFF0CA9E6)
+                          ),
+                        )),
+                  )),
+
         ]);
   }
 
@@ -226,7 +206,8 @@ class _ProfileCardState extends ConsumerState<EditProfileInformation> {
   Widget leadingWidget(String fileName) {
     return GestureDetector(
       onTap: () async {
-        final pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+        final pickedImage =
+        await ImagePicker().pickImageFromGallery(context);
         if (pickedImage != null) {
           setState(() {
             selectedImage = File(pickedImage.path);
@@ -240,7 +221,7 @@ class _ProfileCardState extends ConsumerState<EditProfileInformation> {
             radius: 50,
             child: selectedImage != null
                 ? Image.file(
-              selectedImage!, // Use the selected image file if not null
+              selectedImage!,
               fit: BoxFit.cover,
               width: 100,
               height: 100,
