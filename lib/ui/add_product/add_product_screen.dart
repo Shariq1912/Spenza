@@ -46,6 +46,7 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
     super.dispose();
     ref.invalidate(selectedDepartmentsProvider);
     ref.invalidate(searchQueryProvider);
+    ref.invalidate(addProductProvider); // todo dispose the background fetching data when screen dispose.
     _searchController.dispose();
   }
 
@@ -87,8 +88,12 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                 child: Consumer(builder: (context, ref, child) {
                   final selectedDepartments =
                       ref.watch(selectedDepartmentsProvider);
-                  final List<Product> data =
-                      ref.watch(addProductProvider).requireValue;
+                  final result = ref.watch(addProductProvider);
+
+                  final List<Product> data = result.maybeWhen(
+                    data: (data) => data,
+                    orElse: () => [],
+                  );
 
                   final departments = [
                     "All",

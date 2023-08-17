@@ -14,7 +14,7 @@ class FetchMyList extends _$FetchMyList with FirestoreAndPrefsMixin {
 
   @override
   FutureOr<List<MyListModel>> build(){
-    return [];
+    return fetchMyListFun();
   }
 
   Future<List<MyListModel>> fetchMyListFun() async {

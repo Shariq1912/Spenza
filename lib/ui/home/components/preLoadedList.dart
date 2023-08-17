@@ -10,11 +10,14 @@ class PreLoadedList extends ConsumerWidget {
   final TextStyle poppinsFont;
   final VoidCallback onAllClicked;
 
+  final Function(String listId) onListTap;
+
   PreLoadedList({
     required this.data,
     required this.title,
     required this.poppinsFont,
     required this.onAllClicked,
+    required this.onListTap,
   });
 
   @override
@@ -62,11 +65,10 @@ class PreLoadedList extends ConsumerWidget {
               itemCount: data.length,
               itemBuilder: (context, index) {
                 PreloadedListModel store = data[index];
-                var fileName = store.preloaded_photo;
                 return ImageTextCard(
-                  imageUrl: fileName,
+                  imageUrl: store.preloadedPhoto,
                   title: store.name,
-                  onTap: () {},
+                  onTap: () => onListTap.call(store.id),
                 );
               },
             ):Center(

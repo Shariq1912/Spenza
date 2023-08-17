@@ -22,7 +22,7 @@ class PreloadedListWidget extends ConsumerWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Image.network(
-                    item.preloaded_photo,
+                    item.preloadedPhoto,
                     width: 100,
                     height: 100,
                     fit: BoxFit.cover,

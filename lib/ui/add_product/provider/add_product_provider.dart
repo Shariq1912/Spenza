@@ -49,7 +49,6 @@ class AddProduct extends _$AddProduct
 
       query = query.isEmpty ? "Tomate" : query.toLowerCase();
 
-      // todo query is case sensitive, regex not possible on fireStore field
       QuerySnapshot snapshot = await fireStore
           .collection('products_mvp')
           .where('storeRef', whereIn: nearbyStoreRefs)
@@ -57,33 +56,22 @@ class AddProduct extends _$AddProduct
           .get();
 
       for (var value in snapshot.docs) {
-        final genericNames = (value['genericNames'] as List<dynamic> ?? [])
-            .map((name) => name.toString().toLowerCase())
-            .toSet()
-            .toList();
+        DocumentSnapshot valueSnapshot = value;
+        try {
+          print("ADD PRODUCT DATA = ${value.data()}");
 
-        final Product product = Product(
-          productRef: value.id,
-          productId: value['product_id'],
-          isExist: value['is_exist'],
-          department: value['department_name'],
-          departments: [value['department_name']],
-          measure: value['measure'] == "kg" ? "1 kg" : value['measure'],
-          storeRef: value['storeRef'].id.toString(),
-          name: value['name'],
-          pImage: value['pImage'],
-          genericNames: genericNames,
-          minPrice: value['price'].toString(),
-          maxPrice:
-              "${value['storeRef'].id.toString()} - ${genericNames.toString()}",
-        );
+          final Product product = Product.fromDocument(value);
 
-        var hasGenericNameMatched = product.genericNames.any((genericName) =>
-            genericName.toLowerCase().contains(query.toLowerCase()));
+          var hasGenericNameMatched = product.genericNames.any((genericName) =>
+              genericName.toLowerCase().contains(query.toLowerCase()));
 
-        if (hasGenericNameMatched ||
-            product.name.toLowerCase().contains(query.toLowerCase())) {
-          searchResults.add(product);
+          if (hasGenericNameMatched ||
+              product.name.toLowerCase().contains(query.toLowerCase())) {
+            searchResults.add(product);
+          }
+        } catch (e) {
+          print('Error processing value: ${valueSnapshot.data()}');
+          print('Error details: $e');
         }
       }
 
@@ -145,7 +133,8 @@ class AddProduct extends _$AddProduct
       } else {
         print('Firestore exception: ${e.message}');
       }
-      state = AsyncValue.error('Error searching products: ${e.message}',StackTrace.current);
+      state = AsyncValue.error(
+          'Error searching products: ${e.message}', StackTrace.current);
     } catch (e) {
       print('Error searching products: $e');
       state =
@@ -188,7 +177,7 @@ class AddProduct extends _$AddProduct
       userProductList
           .add(userProduct.toJson())
           .then((value) => context.pop(true));
-    }  on FirebaseException catch (e) {
+    } on FirebaseException catch (e) {
       if (e.code == 'no-internet') {
         print('No internet connection. Please check your network.');
       } else {

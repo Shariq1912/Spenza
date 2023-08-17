@@ -15,18 +15,18 @@ part 'user_product_list_provider.g.dart';
 @riverpod
 class UserProductList extends _$UserProductList with FirestoreAndPrefsMixin {
   @override
-  Future<List<UserProduct>> build() async {
+  FutureOr<List<UserProduct>> build() async {
     return [];
   }
 
-  Future<void> fetchProductFromListId({bool isPreloadedList = false}) async {
+  Future<List<UserProduct>> fetchProductFromListId({bool isPreloadedList = false}) async {
     state = AsyncValue.loading();
 
     final listId = await prefs.then((prefs) => prefs.getUserListId());
     final listName = await prefs.then((prefs) => prefs.getUserListName());
     var subCollectionName;
     if (isPreloadedList) {
-      subCollectionName = PreloadedListCollection.collectionName;
+      subCollectionName = PreloadedListConstant.subCollectionName;
     } else {
       subCollectionName = UserProductListCollection.collectionName;
     }
@@ -73,8 +73,10 @@ class UserProductList extends _$UserProductList with FirestoreAndPrefsMixin {
 
       print(productList.toString());
       state = AsyncValue.data(productList);
+      return productList;
     } catch (e) {
       print('Error fetching Product List: $e');
+      return [];
     }
   }
 
