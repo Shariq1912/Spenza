@@ -37,6 +37,12 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
   }
 
   @override
+  void dispose() {
+    ref.invalidate(profileRepositoryProvider);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(

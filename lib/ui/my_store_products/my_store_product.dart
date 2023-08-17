@@ -96,7 +96,7 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
             return productProvider.when(
               loading: () => Center(child: CircularProgressIndicator()),
               error: (error, stackTrace) {
-                print("errorMrss $error");
+                print("errorMrsss $error");
                 return Center(child: Text(error.toString()));
               },
               data: (data) {
