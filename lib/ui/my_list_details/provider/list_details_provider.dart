@@ -23,7 +23,7 @@ class ListDetails extends _$ListDetails with FirestoreAndPrefsMixin {
     return MyListModel(description: "", name: "", uid: "", usersRef: "");
   }
 
-  Future<void> getSelectedListDetails() async {
+  Future<void> getSelectedListDetails({bool isPreloadedList = false}) async {
     final listId = await prefs.then((prefs) => prefs.getUserListId());
     final listName = await prefs.then((prefs) => prefs.getUserListName());
 
@@ -35,7 +35,9 @@ class ListDetails extends _$ListDetails with FirestoreAndPrefsMixin {
       name: storeSnapshot['name'],
       uid: "",
       usersRef: "",
-      myListPhoto: storeSnapshot['myListPhoto'],
+      myListPhoto: isPreloadedList
+          ? storeSnapshot['preloaded_photo']
+          : storeSnapshot['myListPhoto'],
     );
 
     state = AsyncValue.data(list);

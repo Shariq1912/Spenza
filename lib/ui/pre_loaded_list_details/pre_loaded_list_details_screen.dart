@@ -56,11 +56,14 @@ class _PreLoadedListDetailsScreenState
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(userProductListProvider.notifier).fetchProductFromListId(
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await ref.read(userProductListProvider.notifier).fetchProductFromListId(
             isPreloadedList: true,
           );
-      ref.read(listDetailsProvider.notifier).getSelectedListDetails();
+
+      await ref.read(listDetailsProvider.notifier).getSelectedListDetails(
+            isPreloadedList: true,
+          );
     });
   }
 
@@ -140,35 +143,54 @@ class _PreLoadedListDetailsScreenState
               Expanded(
                 // Use a single Expanded widget to wrap the ListView
                 child: Consumer(
-                  builder: (context, ref, child) =>
-                      ref.watch(userProductListProvider).when(
-                            data: (data) => ListView.builder(
-                              itemCount: data.length,
-                              itemBuilder: (context, index) {
-                                final UserProduct product = data[index];
-                                return PreloadedProductCard(
-                                  measure: product.measure,
-                                  listId: widget.listId,
-                                  department: product.department,
-                                  imageUrl: product.pImage,
-                                  title: product.name,
-                                  priceRange:
-                                      "\$${product.minPrice} - \$${product.maxPrice}",
-                                  product: product,
-                                );
-                              },
+                  builder: (context, ref, child) {
+                    final result = ref.watch(userProductListProvider);
+
+                    return result.when(
+                      data: (data) {
+                        /*if (data.isEmpty) {
+                          return Center(
+                            child: Text(
+                              "No products found.",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontFamily: poppinsFont,
+                              ),
                             ),
-                            error: (error, stackTrace) =>
-                                Center(child: Text("$error")),
-                            loading: () =>
-                                Center(child: CircularProgressIndicator()),
-                          ),
+                          );
+                        }*/
+
+                        return ListView.builder(
+                          itemCount: data.length,
+                          itemBuilder: (context, index) {
+                            final UserProduct product = data[index];
+                            return PreloadedProductCard(
+                              measure: product.measure,
+                              listId: widget.listId,
+                              department: product.department,
+                              imageUrl: product.pImage,
+                              title: product.name,
+                              priceRange:
+                                  "\$${product.minPrice} - \$${product.maxPrice}",
+                              product: product,
+                            );
+                          },
+                        );
+                      },
+                      error: (error, stackTrace) =>
+                          Center(child: Text("$error")),
+                      loading: () => Center(child: CircularProgressIndicator()),
+                    );
+                  },
                 ),
               ),
               Consumer(
                 builder: (context, ref, child) =>
                     ref.watch(userProductListProvider).maybeWhen(
                           orElse: () => buildMaterialButton(context),
+                          data: (data) => data.isEmpty
+                              ? Container()
+                              : buildMaterialButton(context),
                           loading: () => Container(),
                         ),
               ),

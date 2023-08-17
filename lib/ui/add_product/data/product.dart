@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -34,4 +35,25 @@ class Product with _$Product {
 
   factory Product.fromJson(Map<String, dynamic> json) =>
       _$ProductFromJson(json);
+
+  factory Product.fromDocument(DocumentSnapshot doc) {
+    final Map<String,dynamic> value = doc.data()! as Map<String,dynamic>;
+
+    final List<dynamic> genericNames = value['genericNames'] ?? [];
+
+    return Product(
+      productRef: doc.id,
+      productId: value['product_id'] ?? '',
+      isExist: value['is_exist'] ?? false,
+      department: value['department_name'] ?? '',
+      departments: [value['department_name']] ?? [],
+      measure: value['measure'] == "kg" ? "1 kg" : (value['measure'] ?? ''),
+      storeRef: (value['storeRef'] as DocumentReference?)?.id.toString() ?? '',
+      name: value['name'] ?? '',
+      pImage: value['pImage'] ?? '',
+      genericNames: List<String>.from(genericNames),
+      minPrice: value['price']?.toString() ?? '0',
+      maxPrice: "${(value['storeRef'] as DocumentReference?)?.id.toString() ?? ''} - ${genericNames.join(', ')}",
+    );
+  }
 }

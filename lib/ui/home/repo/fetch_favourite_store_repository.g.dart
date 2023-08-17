@@ -7,7 +7,7 @@ part of 'fetch_favourite_store_repository.dart';
 // **************************************************************************
 
 String _$fetchFavouriteStoreRepositoryHash() =>
-    r'db08ea9a8d2a4625bb3568cc5d7c4d773d62a074';
+    r'd7260dcff6a00f309ba480b1f8b7cc9bda38fad3';
 
 /// See also [FetchFavouriteStoreRepository].
 @ProviderFor(FetchFavouriteStoreRepository)
