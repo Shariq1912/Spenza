@@ -87,8 +87,6 @@ class _MyListDialogState extends ConsumerState<MyListDialog> {
                                     widget.productId,
                                     context,
                                   );
-                              _showSnackbar(
-                                  context, "Product added successfully");
                             },
                             icon: Icon(Icons.playlist_add_sharp)),
                       ),

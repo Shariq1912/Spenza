@@ -9,15 +9,17 @@ part of 'preloaded_list_model.dart';
 _$_PreloadedListModel _$$_PreloadedListModelFromJson(
         Map<String, dynamic> json) =>
     _$_PreloadedListModel(
+      id: json['id'] as String,
       name: json['name'] as String,
-      preloaded_photo: json['preloaded_photo'] as String,
+      preloadedPhoto: json['preloaded_photo'] as String,
       description: json['description'] as String,
     );
 
 Map<String, dynamic> _$$_PreloadedListModelToJson(
         _$_PreloadedListModel instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'name': instance.name,
-      'preloaded_photo': instance.preloaded_photo,
+      'preloaded_photo': instance.preloadedPhoto,
       'description': instance.description,
     };

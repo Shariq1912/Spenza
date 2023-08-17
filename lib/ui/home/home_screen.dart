@@ -103,20 +103,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ref.watch(homePreloadedListProvider);
                   return preloadedProvider.when(
                     data: (data) {
-                        return Padding(
-                          padding:
-                              EdgeInsets.only(left: 10, right: 10, top: 25),
-                          child: PreLoadedList(
-                            data: data,
-                            title: AppLocalizations.of(context)!
-                                .preloadedListTitle,
-                            poppinsFont: poppinsFont,
-                            onAllClicked: () {
-                              context
-                                  .pushNamed(RouteManager.preLoadedListScreen);
-                            },
-                          ),
-                        );
+                      return Padding(
+                        padding: EdgeInsets.only(left: 10, right: 10, top: 25),
+                        child: PreLoadedList(
+                          onListTap: (listId) {
+                            ref
+                                .read(homePreloadedListProvider.notifier)
+                                .redirectUserToListDetailsScreen(
+                                  context: context,
+                                  listId: listId,
+                                );
+                          },
+                          data: data,
+                          title:
+                              AppLocalizations.of(context)!.preloadedListTitle,
+                          poppinsFont: poppinsFont,
+                          onAllClicked: () {
+                            context.pushNamed(RouteManager.preLoadedListScreen);
+                          },
+                        ),
+                      );
                     },
                     loading: () => Center(child: CircularProgressIndicator()),
                     error: (error, stackTrace) =>
@@ -135,18 +141,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     loading: () => Center(child: CircularProgressIndicator()),
                     error: (message) => Center(child: Text(message)),
                     success: (data) {
-
-                        return Padding(
-                          padding: EdgeInsets.only(left: 10, right: 10),
-                          child: MyStores(
-                            data: data,
-                            title: AppLocalizations.of(context)!.myStoreTitle,
-                            poppinsFont: poppinsFont,
-                            onAllStoreClicked: () {
-                              context.pushNamed(RouteManager.stores);
-                            },
-                          ),
-                        );
+                      return Padding(
+                        padding: EdgeInsets.only(left: 10, right: 10),
+                        child: MyStores(
+                          data: data,
+                          title: AppLocalizations.of(context)!.myStoreTitle,
+                          poppinsFont: poppinsFont,
+                          onAllStoreClicked: () async{
+                            final bool? result = await context.pushNamed(RouteManager.stores);
+                            if(result?? false){
+                              ref.read(fetchFavouriteStoreRepositoryProvider.notifier).fetchFavStores();
+                            }
+                          },
+                        ),
+                      );
                     },
                     empty: (message) =>
                         Text(AppLocalizations.of(context)!.noStoresAvailable),

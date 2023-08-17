@@ -78,7 +78,7 @@ class _StoresState extends ConsumerState<Stores> {
           builder: (context, ref, child) {
             final storeProvider = ref.watch(allStoreProvider);
             return storeProvider.when(
-                  () => Container(),
+              () => Container(),
               loading: () => Center(child: CircularProgressIndicator()),
               error: (message) {
                 print("errorMrss $message");

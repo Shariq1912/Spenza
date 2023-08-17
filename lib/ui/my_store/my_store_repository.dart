@@ -21,13 +21,14 @@ class MyStoreRepository extends StateNotifier<ApiResponse> {
       final snapshot = await _fireStore
           .collection(FavoriteConstant.favoriteCollection)
           .where(FavoriteConstant.userIdField,
-          //    isEqualTo: 'users/rbUVwnV1rpcTAOGyTv0ZyMDANsM2')
-          isEqualTo: 'users/$userId')
+              //    isEqualTo: 'users/rbUVwnV1rpcTAOGyTv0ZyMDANsM2')
+              isEqualTo: 'users/$userId')
           .get();
 
       final List<FetchFavouriteStores> stores = snapshot.docs.map((doc) {
         final data = doc.data();
-        final store = FetchFavouriteStores.fromJson(data).copyWith(documentId: doc.id);
+        final store =
+            FetchFavouriteStores.fromJson(data).copyWith(documentId: doc.id);
         print("FVTT ${store.store_ids}");
         return store;
       }).toList();
@@ -45,9 +46,8 @@ class MyStoreRepository extends StateNotifier<ApiResponse> {
     }
   }
 
-
-
-  Future<List<AllStores>> fetchFavStore(List<FetchFavouriteStores> stores) async {
+  Future<List<AllStores>> fetchFavStore(
+      List<FetchFavouriteStores> stores) async {
     if (stores.isNotEmpty) {
       final List allStoreReferences = stores
           .expand((store) => store.store_ids.map((ref) => _fireStore.doc(ref)))
@@ -61,8 +61,8 @@ class MyStoreRepository extends StateNotifier<ApiResponse> {
         if (end > allStoreReferences.length) {
           end = allStoreReferences.length;
         }
-        batches.add(allStoreReferences.sublist(i, end).cast<DocumentReference>());
-
+        batches
+            .add(allStoreReferences.sublist(i, end).cast<DocumentReference>());
       }
 
       List<QuerySnapshot<Map<String, dynamic>>> snapshots = [];
@@ -70,14 +70,16 @@ class MyStoreRepository extends StateNotifier<ApiResponse> {
       for (var batch in batches) {
         final QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore
             .collection('stores')
-            .where(FieldPath.documentId, whereIn: batch.map((ref) => ref.id).toList())
+            .where(FieldPath.documentId,
+                whereIn: batch.map((ref) => ref.id).toList())
             .get();
         snapshots.add(snapshot);
       }
 
       final List<AllStores> favoriteStoreDetails = [];
       for (var snapshot in snapshots) {
-        favoriteStoreDetails.addAll(snapshot.docs.map((document) => AllStores.fromJson(document.data())));
+        favoriteStoreDetails.addAll(snapshot.docs
+            .map((document) => AllStores.fromJson(document.data())));
       }
 
       return favoriteStoreDetails;
@@ -108,7 +110,8 @@ class MyStoreRepository extends StateNotifier<ApiResponse> {
       QuerySnapshot<Map<String, dynamic>> snapshot =
           await _fireStore.collection('stores').get();
 
-      List<AllStores> favouriteAllStores = await fetchAndDisplayFavouriteStores();
+      List<AllStores> favouriteAllStores =
+          await fetchAndDisplayFavouriteStores();
       List<AllStores> allStores = snapshot.docs.map((doc) {
         final data = doc.data();
         final allStore = AllStores.fromJson(data).copyWith(documentId: doc.id);
@@ -119,34 +122,34 @@ class MyStoreRepository extends StateNotifier<ApiResponse> {
         List<AllStores> regularStores = allStores;
         state = ApiResponse.success(data: regularStores);
         return regularStores;
-      }
-      else{
+      } else {
         List<AllStores> storesWithSameName = [];
         List<AllStores> storesWithdifferentName = [];
-        Set<String> favouriteStoreNames = favouriteAllStores.map((store) => store.name).toSet();
+        Set<String> favouriteStoreNames =
+            favouriteAllStores.map((store) => store.name).toSet();
         for (var store in allStores) {
           if (favouriteStoreNames.contains(store.name)) {
             print("samme : ${store.name}");
             storesWithSameName.add(store);
-          }
-          else{
+          } else {
             storesWithdifferentName.add(store);
           }
         }
-        List<AllStores> favMarked = storesWithSameName.map((e)  {
-          return e.copyWith(isFavorite:true);
+        List<AllStores> favMarked = storesWithSameName.map((e) {
+          return e.copyWith(isFavorite: true);
         }).toList();
 
         favMarked.forEach((element) {
           print("samme :${element.documentId}");
         });
 
-
-        List<AllStores> allStoresInclFav = [...favMarked, ...storesWithdifferentName];
+        List<AllStores> allStoresInclFav = [
+          ...favMarked,
+          ...storesWithdifferentName
+        ];
         state = ApiResponse.success(data: allStoresInclFav);
         return allStoresInclFav;
       }
-
     } catch (error) {
       state = ApiResponse.error(
         errorMsg: 'Error occurred while fetching stores: $error',
@@ -168,7 +171,8 @@ class MyStoreRepository extends StateNotifier<ApiResponse> {
 
       if (snapshot.docs.isNotEmpty) {
         final docId = snapshot.docs.first.id;
-        final currentStores = snapshot.docs.first.data()[FavoriteConstant.storeIdsField] as List;
+        final currentStores =
+            snapshot.docs.first.data()[FavoriteConstant.storeIdsField] as List;
         final isFavorite = currentStores.contains(storeReference);
 
         if (isFavorite) {
@@ -177,7 +181,10 @@ class MyStoreRepository extends StateNotifier<ApiResponse> {
           currentStores.add(storeReference);
         }
 
-        await _fireStore.collection(FavoriteConstant.favoriteCollection).doc(docId).update({
+        await _fireStore
+            .collection(FavoriteConstant.favoriteCollection)
+            .doc(docId)
+            .update({
           FavoriteConstant.storeIdsField: currentStores,
         });
       } else {
@@ -193,7 +200,4 @@ class MyStoreRepository extends StateNotifier<ApiResponse> {
       print("Error toggling favorite store: $error");
     }
   }
-
-
-
 }

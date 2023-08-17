@@ -1,24 +1,24 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'list_details_provider.dart';
+part of 'save_zipcode.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$listDetailsHash() => r'08bfe646b7bf31dfe2f3a775e5fab9c81fac8592';
+String _$saveUserDataHash() => r'ac3650dacd2aec389098ae823f43fd1376da37e5';
 
-/// See also [ListDetails].
-@ProviderFor(ListDetails)
-final listDetailsProvider =
-    AutoDisposeAsyncNotifierProvider<ListDetails, MyListModel>.internal(
-  ListDetails.new,
-  name: r'listDetailsProvider',
+/// See also [SaveUserData].
+@ProviderFor(SaveUserData)
+final saveUserDataProvider =
+    AutoDisposeAsyncNotifierProvider<SaveUserData, void>.internal(
+  SaveUserData.new,
+  name: r'saveUserDataProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$listDetailsHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$saveUserDataHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ListDetails = AutoDisposeAsyncNotifier<MyListModel>;
+typedef _$SaveUserData = AutoDisposeAsyncNotifier<void>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
