@@ -84,10 +84,12 @@ class LoginRepository extends StateNotifier<ApiResponse>
     }
   }
 
-  Future<void> signOut() async {
+  Future<bool> signOut() async {
     await _auth.signOut();
     await SharedPreferences.getInstance()
       ..clear();
+
+    return true;
   }
 
   Future<void> signInWithGoogle() async {

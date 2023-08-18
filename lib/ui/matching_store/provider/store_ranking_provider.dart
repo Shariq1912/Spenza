@@ -52,7 +52,7 @@ class StoreRanking extends _$StoreRanking
       final QuerySnapshot storeProductsSnapshot = await fireStore
           .collection('products_mvp')
           .where('is_exist', isEqualTo: true)
-          .where('storeRef', whereIn: storeRefs)
+          .where('storeRef', arrayContains: storeRefs)
           .get();
 
       // Create a list of Product objects
@@ -208,21 +208,11 @@ class StoreRanking extends _$StoreRanking
       });
 
       state = AsyncValue.data(stores);
-    } on NearbyStoreException catch (e) {
-      print('Error Nearby stores: $e');
-      rankStoresByPriceTotal(
-          radius: radius -
-              1); // Recursion to avoid radius issues of geo flutter fire plus package.
     } catch (e) {
-      //todo Handle in filter exception separately to avoid conflict
       print('Error ranking stores: $e');
-      if (radius > 3) {
-        rankStoresByPriceTotal(
-            radius: radius -
-                1); // Recursion to avoid radius issues of geo flutter fire plus package.
-      } else
-        state =
-            AsyncValue.error('Error searching stores: $e', StackTrace.current);
+
+      state =
+          AsyncValue.error('Error searching stores: $e', StackTrace.current);
     }
   }
 

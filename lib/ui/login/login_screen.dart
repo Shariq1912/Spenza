@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/login/login_provider.dart';
+import 'package:spenza/utils/constants.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
 import 'data/login_request.dart';
@@ -82,22 +84,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     emailController.dispose();
     passwordController.dispose();
+
+    ref.invalidate(loginRepositoryProvider);
   }
 
   @override
   Widget build(BuildContext context) {
     final responseValue = ref.watch(loginRepositoryProvider);
 
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-              onPressed: () {
-                context.goNamed(RouteManager.splashScreen);
-              },
-              icon: const Icon(Icons.chevron_left_outlined)),
-        ),
-        body: SingleChildScrollView(
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              context.goNamed(RouteManager.splashScreen);
+            },
+            icon: const Icon(Icons.chevron_left_outlined)),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Center(
@@ -125,14 +129,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     const SizedBox(height: 20),
                     Container(
                       decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.3),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Column(
@@ -143,9 +139,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   AppLocalizations.of(context)!.enterEmailHint,
                               contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 16, vertical: 12),
-                              border: OutlineInputBorder(
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide.none,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue),
+                                borderRadius: BorderRadius.circular(12),
                               ),
                               filled: true,
                               fillColor: Colors.white,
@@ -160,9 +160,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   AppLocalizations.of(context)!.passwordHint,
                               contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 16, vertical: 12),
-                              border: OutlineInputBorder(
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide.none,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue),
+                                borderRadius: BorderRadius.circular(12),
                               ),
                               filled: true,
                               fillColor: Colors.white,
@@ -185,6 +189,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             controller: passwordController,
                           ),
                           const SizedBox(height: 8),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: RichText(
+                              text: _buildTermsAndPrivacyTextSpan(context),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -196,7 +206,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           loading: () => const CircularProgressIndicator(),
                           success: (data) {
                             debugPrint("$data");
-                            ref.read(loginRepositoryProvider.notifier).redirectUserToDestination(context: context);
+                            ref
+                                .read(loginRepositoryProvider.notifier)
+                                .redirectUserToDestination(context: context);
                             return Container();
                           },
                           orElse: () => _LoginButton(),
@@ -289,6 +301,38 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  TextSpan _buildTermsAndPrivacyTextSpan(BuildContext context) {
+    final termsOfService = AppLocalizations.of(context)!.terms_of_service;
+    final privacyPolicy = AppLocalizations.of(context)!.privacy_policy;
+
+    return TextSpan(
+      text: AppLocalizations.of(context)!.terms_of_service_intro,
+      style: TextStyle(
+        color: Colors.black,
+        fontFamily: poppinsFont,
+      ),
+      children: [
+        TextSpan(
+          text: " $termsOfService & $privacyPolicy",
+          style: TextStyle(
+            fontFamily: poppinsFont,
+            color: Colors.blue,
+            fontWeight: FontWeight.bold,
+          ),
+          recognizer: TapGestureRecognizer()
+            ..onTap = () {
+              // Handle the Terms of Service click action
+              // You can navigate to the terms page or perform any other action here
+              context.pushNamed(
+                RouteManager.webViewScreen,
+                queryParameters: {"url": Constants.privacyPolicyLink},
+              );
+            },
+        ),
+      ],
     );
   }
 

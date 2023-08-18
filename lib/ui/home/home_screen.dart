@@ -49,11 +49,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     final poppinsFont = ref.watch(poppinsFontProvider);
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: topAppBar(),
-        body: SingleChildScrollView(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: topAppBar(),
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Column(
             children: [
               /// My List
@@ -85,7 +85,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   }
                                 },
                                 onAllList: () {
-                                  context.push(RouteManager.myListScreen);
+                                  context.pushNamed(RouteManager.myListScreen);
                                 },
                               ),
                               error: (error, stackTrace) => Text('$error'),

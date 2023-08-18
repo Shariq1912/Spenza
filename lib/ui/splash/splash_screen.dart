@@ -27,6 +27,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+
+    ref.invalidate(splashProvider);
+  }
+
+  @override
   Widget build(BuildContext buildContext) {
     return Scaffold(
       body: SafeArea(

@@ -10,7 +10,6 @@ import 'package:spenza/ui/login/data/login_request.dart';
 import 'package:spenza/ui/sign_up/register_provider.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
-
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
 
@@ -29,7 +28,6 @@ class _SignUpScreenState extends ConsumerState<RegisterScreen> {
 
   /*late final MultiValidator passwordValidator;
   late final MultiValidator emailValidator;*/
-
 
   final emailValidator = MultiValidator([
     RequiredValidator(errorText: 'Email is required'),
@@ -62,6 +60,13 @@ class _SignUpScreenState extends ConsumerState<RegisterScreen> {
         errorText: AppLocalizations.of(context)!.emailInvalidError,
       ),
     ]);*/
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    ref.invalidate(registerRepositoryProvider);
   }
 
   @override
@@ -114,7 +119,9 @@ class _SignUpScreenState extends ConsumerState<RegisterScreen> {
                           loading: () => const CircularProgressIndicator(),
                           success: (data) {
                             debugPrint(data.toString());
-                            ref.read(registerRepositoryProvider.notifier).redirectUserToDestination(context: context);
+                            ref
+                                .read(registerRepositoryProvider.notifier)
+                                .redirectUserToDestination(context: context);
                             return Container();
                           },
                           error: (message) {
@@ -140,7 +147,8 @@ class _SignUpScreenState extends ConsumerState<RegisterScreen> {
                         const SizedBox(height: 8),
                         TextFormField(
                           decoration: InputDecoration(
-                            hintText: AppLocalizations.of(context)!.passwordHint,
+                            hintText:
+                                AppLocalizations.of(context)!.passwordHint,
                             contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 16, vertical: 12),
                             border: OutlineInputBorder(
@@ -170,7 +178,8 @@ class _SignUpScreenState extends ConsumerState<RegisterScreen> {
                         const SizedBox(height: 8),
                         TextFormField(
                           decoration: InputDecoration(
-                            hintText: AppLocalizations.of(context)!.passwordHint,
+                            hintText:
+                                AppLocalizations.of(context)!.passwordHint,
                             contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 16, vertical: 12),
                             border: OutlineInputBorder(
@@ -205,14 +214,15 @@ class _SignUpScreenState extends ConsumerState<RegisterScreen> {
                     padding: const EdgeInsets.all(8),
                     child: Text.rich(
                       TextSpan(
-                        text:
-                            AppLocalizations.of(context)!.terms_of_service_intro,
+                        text: AppLocalizations.of(context)!
+                            .terms_of_service_intro,
                         children: <TextSpan>[
                           TextSpan(
                             recognizer: TapGestureRecognizer()
                               ..onTap =
                                   () => /* context.goNamed("register"),*/ {},
-                            text: AppLocalizations.of(context)!.terms_of_service,
+                            text:
+                                AppLocalizations.of(context)!.terms_of_service,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontFamily: poppinsFont,
@@ -235,15 +245,16 @@ class _SignUpScreenState extends ConsumerState<RegisterScreen> {
                     ),
                   ),
                   const SizedBox(height: 40),
-
                   Consumer(
                     builder: (context, ref, child) {
                       return responseValue.maybeWhen(
-                            () => _RegisterButton(),
+                        () => _RegisterButton(),
                         loading: () => const CircularProgressIndicator(),
                         success: (data) {
                           debugPrint("$data");
-                          ref.read(registerRepositoryProvider.notifier).redirectUserToDestination(context: context);
+                          ref
+                              .read(registerRepositoryProvider.notifier)
+                              .redirectUserToDestination(context: context);
                           return Container();
                         },
                         orElse: () => _RegisterButton(),
@@ -254,7 +265,7 @@ class _SignUpScreenState extends ConsumerState<RegisterScreen> {
                   Consumer(
                     builder: (context, ref, child) {
                       return responseValue.maybeWhen(
-                            () => Container(),
+                        () => Container(),
                         error: (errorMsg) => Text(
                           errorMsg.toString(),
                           style: TextStyle(
@@ -264,7 +275,6 @@ class _SignUpScreenState extends ConsumerState<RegisterScreen> {
                       );
                     },
                   ),
-
                   const SizedBox(height: 25),
                   Row(
                     children: <Widget>[
@@ -330,54 +340,51 @@ class _SignUpScreenState extends ConsumerState<RegisterScreen> {
   }
 
   Widget _RegisterButton() => Center(
-    child: ElevatedButton(
-      onPressed: () {
-        // Handle login button press
-        if (_formKey.currentState!.validate()) {
-          // Form is valid, perform desired action
-          if (passwordController.text !=
-              confirmPasswordController.text) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Passwords do not match.'),
-              ),
-            );
-            return;
-          }
+        child: ElevatedButton(
+          onPressed: () {
+            // Handle login button press
+            if (_formKey.currentState!.validate()) {
+              // Form is valid, perform desired action
+              if (passwordController.text != confirmPasswordController.text) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Passwords do not match.'),
+                  ),
+                );
+                return;
+              }
 
-          final signUpData = LoginRequest(
-            email: emailController.text.toString(),
-            password: passwordController.text.toString(),
-          );
-          debugPrint("signUPDATA :$signUpData");
-          ref
-              .read(registerRepositoryProvider.notifier)
-              .registerWithEmailAndPassword(
-            credentials: signUpData,
-          );
-        } else {
-          // Form is invalid, display error message
-          context.showSnackBar(
-              message:
-              AppLocalizations.of(context)!.loginFormErrors);
-        }
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF0CA9E6),
-        foregroundColor: Colors.white,
-        textStyle: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          fontFamily: poppinsFont,
+              final signUpData = LoginRequest(
+                email: emailController.text.toString(),
+                password: passwordController.text.toString(),
+              );
+              debugPrint("signUPDATA :$signUpData");
+              ref
+                  .read(registerRepositoryProvider.notifier)
+                  .registerWithEmailAndPassword(
+                    credentials: signUpData,
+                  );
+            } else {
+              // Form is invalid, display error message
+              context.showSnackBar(
+                  message: AppLocalizations.of(context)!.loginFormErrors);
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF0CA9E6),
+            foregroundColor: Colors.white,
+            textStyle: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: poppinsFont,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+              side: const BorderSide(color: Color(0xFF99D6EF)),
+            ),
+            fixedSize: const Size(310, 40),
+          ),
+          child: Text(AppLocalizations.of(context)!.create_account),
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5),
-          side: const BorderSide(color: Color(0xFF99D6EF)),
-        ),
-        fixedSize: const Size(310, 40),
-      ),
-      child: Text(AppLocalizations.of(context)!.create_account),
-    ),
-  );
-
+      );
 }
