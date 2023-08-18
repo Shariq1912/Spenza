@@ -229,7 +229,7 @@ class MyStoreRepository extends StateNotifier<ApiResponse> {
       }
 
       await batch.commit();
-      //await fetchAllStores();
+      await fetchAllStores();
     } catch (error) {
       state = ApiResponse.error(errorMsg: error.toString());
       print("Error toggling favorite store: $error");

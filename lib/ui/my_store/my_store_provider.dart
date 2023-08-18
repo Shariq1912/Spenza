@@ -5,3 +5,5 @@ import 'package:spenza/ui/my_store/my_store_repository.dart';
 final allStoreProvider = StateNotifierProvider<MyStoreRepository,ApiResponse >((ref){
   return MyStoreRepository();
 } );
+
+final isfavouriteProvider = StateProvider<bool>((ref) => false);

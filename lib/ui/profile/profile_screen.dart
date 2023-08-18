@@ -40,6 +40,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
   void dispose() {
     ref.invalidate(profileRepositoryProvider);
+    ref.invalidate(loginRepositoryProvider);
     super.dispose();
   }
 
@@ -90,9 +91,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                              width: double.infinity,
                              padding: EdgeInsets.only(left: 10, right: 10),
                              child: ElevatedButton(
-                               onPressed: () {
-                                 //Add the logic to sign out here.
-                                 ref.read(loginRepositoryProvider.notifier).signOut();
+                               onPressed: () async {
+                                await ref.read(loginRepositoryProvider.notifier).signOut();
                                  Navigator.of(context).push(MaterialPageRoute(
                                    builder: (context) => LoginScreen(),
                                  ));
