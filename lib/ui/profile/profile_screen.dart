@@ -256,4 +256,5 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       fit: BoxFit.fill,
     );
   }
+
 }
