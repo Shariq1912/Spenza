@@ -21,6 +21,7 @@ import 'package:spenza/ui/selected_store/selected_store_screen.dart';
 import 'package:spenza/ui/settings/setting_Screen.dart';
 import 'package:spenza/ui/sign_up/register_screen.dart';
 import 'package:spenza/ui/splash/splash_screen.dart';
+import 'package:spenza/ui/webview_screen/webview_screen.dart';
 
 import '../ui/my_store/my_store.dart';
 
@@ -55,6 +56,7 @@ class RouteManager {
   static const String uploadReceiptScreen = '/uploadReceiptScreen';
   static const String displayReceiptScreen = '/displayReceiptScreen';
   static const String preLoadedListScreen = '/preLoadedListScreen';
+  static const String webViewScreen = '/webViewScreen';
 
   /// The route configuration.
   static final GoRouter router = GoRouter(
@@ -181,7 +183,7 @@ class RouteManager {
           final String logo = state.queryParameters['logo'] ?? "";
           final String? listId = state.queryParameters['list_id'];
 
-          return MyStoreProduct(storeId: storeId, logo: logo,listId:listId);
+          return MyStoreProduct(storeId: storeId, logo: logo, listId: listId);
         },
       ),
       GoRoute(
@@ -222,7 +224,6 @@ class RouteManager {
           return DisplayReceiptScreen();
         },
       ),
-
       GoRoute(
         name: preLoadedListScreen,
         path: preLoadedListScreen,
@@ -230,7 +231,6 @@ class RouteManager {
           return PreloadedListScreen();
         },
       ),
-
       GoRoute(
         name: editProfileScreen,
         path: editProfileScreen,
@@ -238,14 +238,21 @@ class RouteManager {
           return EditProfileInformation();
         },
       ),
-
       GoRoute(
         name: myListScreen,
         path: myListScreen,
         builder: (context, state) {
           return MyList();
         },
-      )
+      ),
+      GoRoute(
+        name: webViewScreen,
+        path: webViewScreen,
+        builder: (context, state) {
+          final String storeId = state.queryParameters['url'] ?? "";
+          return WebViewScreen(url: storeId);
+        },
+      ),
     ],
   );
 }

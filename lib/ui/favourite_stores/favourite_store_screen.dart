@@ -22,7 +22,6 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
   late CustomSearchDelegate _searchDelegate;
   String searchInput = "";
 
-
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -35,6 +34,13 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
 
   _loadStores() async {
     await ref.read(favoriteRepositoryProvider.notifier).getStores();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    ref.invalidate(favoriteRepositoryProvider);
   }
 
   @override
@@ -87,7 +93,7 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
                             .toggleFavorite(store);
                       },
                     );
-                        /*SearchableList<Stores>(
+                    /*SearchableList<Stores>(
                       displayClearIcon: true,
                       initialList: data,
                       builder: (filteredList) => ListTile(
@@ -129,11 +135,11 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
-                            *//*borderSide: const BorderSide(
+                            */ /*borderSide: const BorderSide(
                                 color: Colors.grey,
                                 width: 1.0,
                               ),
-                              borderRadius: BorderRadius.circular(10.0),*//*
+                              borderRadius: BorderRadius.circular(10.0),*/ /*
                             ),
                       ),
                     );*/
