@@ -25,6 +25,7 @@ class HomePreloadedList extends _$HomePreloadedList with FirestoreAndPrefsMixin 
       final List<PreloadedListModel> preloadedList = snapShot.docs.map((doc){
         final data = doc.data();
         data['id'] = doc.id;
+        data['path'] = doc.reference.path;
         final list = PreloadedListModel.fromJson(data);
         return list;
       }).toList();

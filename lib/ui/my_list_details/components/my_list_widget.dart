@@ -14,7 +14,7 @@ class MyListWidget extends StatelessWidget {
 
 
 
-  @override
+ /* @override
   Widget build(BuildContext context) {
     final poppinsFont = GoogleFonts.poppins().fontFamily;
     return ListView.builder(
@@ -23,35 +23,6 @@ class MyListWidget extends StatelessWidget {
         MyListModel store = stores[index];
 
         return Card(
-          color: Colors.white,
-          surfaceTintColor: Colors.white,
-          margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-          child: ListTile(
-            leading: store.myListPhoto!.isNotEmpty
-                ? CachedNetworkImage(
-              width: 60,
-              height: 80,
-              fit: BoxFit.fill,
-              imageUrl: store.myListPhoto!,
-            )
-                : Image.asset(
-              'favicon.png'.assetImageUrl,
-              fit: BoxFit.cover,
-            ),
-            title: Text(
-              store.name,
-              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16, fontFamily: poppinsFont),
-            ),
-            subtitle: Text(store.description, style: TextStyle(fontFamily: poppinsFont),),
-
-            onTap: (){
-              print(store.documentId);
-              onButtonClicked.call(store.documentId!);
-
-            },
-          ),
-        );
-         /* Card(
             color: Colors.white,
             child: Padding(
               padding: EdgeInsets.all(8.0),
@@ -60,12 +31,12 @@ class MyListWidget extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: item.myListPhoto!.isNotEmpty
+                    child: store.myListPhoto!.isNotEmpty
                         ? CachedNetworkImage(
-                      width: 50,
-                      height: 50,
+                      width: 80,
+                      height: 80,
                       fit: BoxFit.fill,
-                      imageUrl: item.myListPhoto!,
+                      imageUrl: store.myListPhoto!,
                     )
                         : Image.asset(
                       'favicon.png'.assetImageUrl,
@@ -78,28 +49,127 @@ class MyListWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          item.name,
+                          store.name,
                           style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),
                         ),
                         SizedBox(height: 3),
-                        Text(item.description.length > 50 ? '${item.description.substring(0, 50)}...' : item.description,
+                        Text(store.description.length > 50 ? '${store.description.substring(0, 50)}...' : store.description,
                           style: TextStyle(fontSize: 13, ),),
-
+                        SizedBox(height: 14),
+                        Text("8 receipt",style: TextStyle(fontSize: 13, )),
 
                       ],
                     ),
                   ),
-                  *//*IconButton(
+                  IconButton(
                     onPressed: () {
-                      // Do something when three dots are clicked
                     },
                     icon: Icon(Icons.more_vert),
-                  ),*//*
+                  ),
                 ],
               ),
             ),
-          );*/
+          );
+      },
+    );
+  }*/
+
+  @override
+  Widget build(BuildContext context) {
+    final poppinsFont = GoogleFonts.poppins().fontFamily;
+    return ListView.builder(
+      itemCount: stores.length,
+      itemBuilder: (context, index) {
+        MyListModel store = stores[index];
+
+        return Card(
+          color: Colors.white,
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: store.myListPhoto!.isNotEmpty
+                      ? CachedNetworkImage(
+                    width: 80,
+                    height: 80,
+                    fit: BoxFit.fill,
+                    imageUrl: store.myListPhoto!,
+                  )
+                      : Image.asset(
+                    'favicon.png'.assetImageUrl,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        store.name,
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      SizedBox(height: 3),
+                      Text(
+                        store.description.length > 50 ? '${store.description.substring(0, 50)}...' : store.description,
+                        style: TextStyle(fontSize: 13),
+                      ),
+                      SizedBox(height: 14),
+                      Text("8 receipt", style: TextStyle(fontSize: 13)),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    _showPopupMenu(context);
+                  },
+                  icon: Icon(Icons.more_vert),
+                ),
+              ],
+            ),
+          ),
+        );
       },
     );
   }
+
+  void _showPopupMenu(BuildContext context) async {
+    await showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(1000, 0, 0, 0), // Adjust position as needed
+      items: [
+        PopupMenuItem(
+          child: ListTile(
+            leading: Icon(Icons.copy),
+            title: Text('Copy'),
+            onTap: () {
+              // Handle copy action
+            },
+          ),
+        ),
+        PopupMenuItem(
+          child: ListTile(
+            leading: Icon(Icons.edit),
+            title: Text('Edit'),
+            onTap: () {
+              // Handle edit action
+            },
+          ),
+        ),
+        PopupMenuItem(
+          child: ListTile(
+            leading: Icon(Icons.upload),
+            title: Text('Upload'),
+            onTap: () {
+              // Handle upload action
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
 }

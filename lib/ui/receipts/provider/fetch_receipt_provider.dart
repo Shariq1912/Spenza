@@ -17,7 +17,7 @@ class FetchReciptProvider extends _$FetchReciptProvider with FirestoreAndPrefsMi
   Future<List<ReceiptModel>> fetchReceipt() async {
     try{
       state = AsyncValue.loading();
-      final userId = await prefs.then((prefs) => prefs.getUserId);
+      final userId = await prefs.then((prefs) => prefs.getUserId());
 
       final snapShot = await fireStore.collection(ReceiptConstant.collectionName).where('uid', isEqualTo: userId).get();
 
@@ -37,6 +37,7 @@ class FetchReciptProvider extends _$FetchReciptProvider with FirestoreAndPrefsMi
 
     }catch(error, stackTrace){
       state = AsyncValue.error(error, stackTrace);
+      print("error $error");
       return [];
     }
   }

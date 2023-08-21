@@ -9,6 +9,10 @@ import 'package:spenza/ui/receipts/repo/upload_receipt_repo.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
 class UploadReceipt extends ConsumerStatefulWidget {
+
+  const UploadReceipt({super.key, required this.path});
+
+  final String path;
 @override
 _UploadReceiptState createState() => _UploadReceiptState();
 }
@@ -84,7 +88,7 @@ class _UploadReceiptState extends ConsumerState<UploadReceipt> {
                                   context.showSnackBar(message: "Please choose receipt");
                                   return;
                                 }
-                                ref.read(uploadReceiptRepoProvider.notifier).uploadReceipt(SelectedImage, "receipt", context);
+                                ref.read(uploadReceiptRepoProvider.notifier).uploadReceipt(SelectedImage,  context, widget.path);
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Color(0xFF0CA9E6),
@@ -109,7 +113,7 @@ class _UploadReceiptState extends ConsumerState<UploadReceipt> {
                             context.showSnackBar(message: "Please choose receipt");
                             return;
                           }
-                          ref.read(uploadReceiptRepoProvider.notifier).uploadReceipt(SelectedImage, "receipt", context);
+                          ref.read(uploadReceiptRepoProvider.notifier).uploadReceipt(SelectedImage, context, widget.path);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xFF0CA9E6),

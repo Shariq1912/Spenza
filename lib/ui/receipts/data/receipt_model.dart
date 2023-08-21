@@ -9,6 +9,8 @@ class ReceiptModel with _$ReceiptModel{
     required String uid,
      String? name,
      String? receipt,
+     String? description,
+    String? date,
 })=_ReceiptModel;
 
   factory ReceiptModel.fromJson(Map<String, dynamic> json) => _$ReceiptModelFromJson(json);

@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/helpers/fireStore_pref_mixin.dart';
@@ -30,29 +31,55 @@ class UploadReceiptRepo extends _$UploadReceiptRepo with FirestoreAndPrefsMixin 
       state = ImagePickState.selected(File(pickedImage.path));
     }
   }
-
-  Future<void> uploadReceipt (File? image, String name, BuildContext context) async {
+  Future<void> uploadReceipt(File? image, BuildContext context, String path) async {
     try {
+      state = ImagePickState.loading();
 
-       state = ImagePickState.loading();
       final prefs = await SharedPreferences.getInstance();
       final userId = prefs.getUserId();
 
+      DateTime currentDate = DateTime.now();
+      String formattedDate = DateFormat('dd/MM/yyyy').format(currentDate);
+
+      DocumentReference documentReference = fireStore.doc(path);
+
       String? downloadURL;
       if (image != null) {
-        downloadURL = await image.uploadImageToFirebase( path: "receipts");
+        downloadURL = await image.uploadImageToFirebase(path: "receipts");
       }
-      final receiptModel = ReceiptModel(name: name, receipt: "", uid: userId);
 
-      final myListCollection = fireStore.collection("receipt");
-      final myListRequest = receiptModel.copyWith(receipt: downloadURL);
+      DocumentSnapshot docSnapshot;
+      try {
+        docSnapshot = await documentReference.get();
+      } catch (error) {
+        print("Error fetching document: $error");
+        return;
+      }
 
-      await myListCollection.add(myListRequest.toJson());
-      state = ImagePickState.uploaded(msg: "uploaded successfully");
-      context.pop(true);
+      if (docSnapshot.exists) {
+        Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
 
+        String name = data['name'] ?? "Name Not Available";
+        String description = data['description'] ?? "Description Not Available";
+
+        final myListCollection = fireStore.collection("receipt");
+        await myListCollection.add({
+          'uid': userId,
+          'list_ref': documentReference,
+          'name': name,
+          'receipt': downloadURL,
+          'date': formattedDate,
+          'description': description,
+        });
+
+        state = ImagePickState.uploaded(msg: "Uploaded successfully");
+        context.pop(true);
+      } else {
+        print("Document does not exist");
+      }
     } catch (error) {
-      state = ImagePickState.error(msg : error.toString());
+      state = ImagePickState.error(msg: error.toString());
     }
   }
+
 }

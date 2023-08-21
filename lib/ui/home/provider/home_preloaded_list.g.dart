@@ -6,7 +6,7 @@ part of 'home_preloaded_list.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$homePreloadedListHash() => r'8a59ffcdc6d6a051e115316404a0129a69753910';
+String _$homePreloadedListHash() => r'2725718244ed8e9a3a31a6310368ea3dfa4bcd1c';
 
 /// See also [HomePreloadedList].
 @ProviderFor(HomePreloadedList)

@@ -15,6 +15,7 @@ import 'package:spenza/ui/pre_loaded_list_details/pre_loaded_list_details_screen
 import 'package:spenza/ui/preloaded_list_screen/preloaded_list_screen.dart';
 import 'package:spenza/ui/profile/component/edit_profile_info.dart';
 import 'package:spenza/ui/profile/profile_screen.dart';
+import 'package:spenza/ui/receipts/display_receipt.dart';
 import 'package:spenza/ui/receipts/upload_receipt.dart';
 import 'package:spenza/ui/selected_store/selected_store_screen.dart';
 import 'package:spenza/ui/settings/setting_Screen.dart';
@@ -52,6 +53,7 @@ class RouteManager {
   static const String profileScreen = '/profileScreen';
   static const String editProfileScreen = '/editProfileScreen';
   static const String uploadReceiptScreen = '/uploadReceiptScreen';
+  static const String displayReceiptScreen = '/displayReceiptScreen';
   static const String preLoadedListScreen = '/preLoadedListScreen';
 
   /// The route configuration.
@@ -200,7 +202,24 @@ class RouteManager {
         name: uploadReceiptScreen,
         path: uploadReceiptScreen,
         builder: (context, state) {
-          return UploadReceipt();
+          final String path =
+              state.queryParameters['list_id'] ?? "4NlYnhmchdlu528Gw2yK";
+          //return MyListDetailsScreen(listId: listId);
+          if (path != "4NlYnhmchdlu528Gw2yK") {
+            print("Notequal $path");
+            return UploadReceipt(path: path);
+          } else {
+            print("equal $path");
+            return UploadReceipt(path: path); // For example
+          }
+        },
+      ),
+
+      GoRoute(
+        name: displayReceiptScreen,
+        path: displayReceiptScreen,
+        builder: (context, state) {
+          return DisplayReceiptScreen();
         },
       ),
 
