@@ -9,6 +9,7 @@ part 'image_pick_state.freezed.dart';
 class ImagePickState with _$ImagePickState {
   const factory ImagePickState() = _Initial;
   const factory ImagePickState.selected(File selectedImage) = _Selected;
+  const factory ImagePickState.loading() = _Loading;
   const factory ImagePickState.uploaded({required String msg}) = _Uploaded;
   const factory ImagePickState.error({required String msg}) = _Error;
 }
