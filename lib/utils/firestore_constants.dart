@@ -52,3 +52,7 @@ class PreloadedListConstant {
   static const String collectionName = 'preloaded_default';
   static const String subCollectionName = 'preloaded_product_list';
 }
+
+class ReceiptConstant {
+  static const String collectionName = 'receipt';
+}

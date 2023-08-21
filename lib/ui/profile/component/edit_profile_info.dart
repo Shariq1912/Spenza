@@ -60,6 +60,7 @@ class _ProfileCardState extends ConsumerState<EditProfileInformation> {
   }
 
 
+
   @override
   Widget build(BuildContext context) {
 
@@ -199,7 +200,7 @@ class _ProfileCardState extends ConsumerState<EditProfileInformation> {
     nameController.dispose();
     surnameController.dispose();
     mobileNumberController.dispose();
-
+    ref.invalidate(saveUserDataProvider);
     super.dispose();
   }
 

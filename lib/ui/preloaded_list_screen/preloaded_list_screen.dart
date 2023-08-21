@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:spenza/helpers/popup_menu_mixin.dart';
 import 'package:spenza/ui/preloaded_list_screen/component/preloaded_list_widget.dart';
-
 import '../../router/app_router.dart';
 import '../home/provider/home_preloaded_list.dart';
 
@@ -13,8 +13,33 @@ class PreloadedListScreen extends ConsumerStatefulWidget {
       _PreloadedListScreenState();
 }
 
-class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> {
+class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with PopupMenuMixin {
   final poppinsFont = GoogleFonts.poppins().fontFamily;
+
+  final List<PopupMenuItem<PopupMenuAction>> items = [
+    PopupMenuItem(
+      child: ListTile(
+        trailing: const Icon(Icons.edit),
+        title: Text(PopupMenuAction.edit.value),
+      ),
+      value: PopupMenuAction.edit,
+    ),
+    PopupMenuItem(
+      child: ListTile(
+        trailing: const Icon(Icons.copy),
+        title: Text(PopupMenuAction.copy.value),
+      ),
+      value: PopupMenuAction.copy,
+    ),
+    PopupMenuItem(
+      child: ListTile(
+        trailing: const Icon(Icons.delete),
+        title: Text(PopupMenuAction.delete.value),
+      ),
+      value: PopupMenuAction.delete,
+    ),
+  ];
+
 
   @override
   void initState() {
@@ -28,6 +53,34 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> {
     await ref.read(homePreloadedListProvider.notifier).fetchPreloadedList();
   }
 
+  void _onActionIconPressed() {
+    final RenderBox customAppBarRenderBox =
+    context.findRenderObject() as RenderBox;
+    final customAppBarPosition =
+    customAppBarRenderBox.localToGlobal(Offset.zero);
+
+    showPopupMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        customAppBarPosition.dx + customAppBarRenderBox.size.width - 40,
+        customAppBarPosition.dy + kToolbarHeight + 30,
+        0.0,
+        0.0,
+      ),
+      items: items,
+      onSelected: (PopupMenuAction value) async {
+        if (value == PopupMenuAction.copy) {
+          debugPrint("copy action");
+          context.push(RouteManager.uploadReceiptScreen);
+
+        } else if (value == PopupMenuAction.delete) {
+
+        } else if (value == PopupMenuAction.edit) {
+
+        }
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,9 +134,9 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> {
                 print("allStoredata $data");
                 return PreloadedListWidget(
                   data: data,
-                  /* onButtonClicked: (AllStores allstore) {
-                    _toggleFavorite(allstore);
-                  },*/
+                   onButtonClicked: () {
+                    _onActionIconPressed();
+                  },
                 );
               },
             );

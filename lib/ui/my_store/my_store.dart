@@ -32,10 +32,12 @@ class _StoresState extends ConsumerState<Stores> {
 
   Future<void> _toggleFavorite(AllStores store) async {
     await ref.read(allStoreProvider.notifier).toggleFavoriteStore(store);
+
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.white,
@@ -90,6 +92,7 @@ class _StoresState extends ConsumerState<Stores> {
                   stores: data,
                   onButtonClicked: (AllStores allstore) {
                     _toggleFavorite(allstore);
+
                   },
                 );
               },

@@ -4,11 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:spenza/ui/profile/component/edit_profile_info.dart';
 import 'package:spenza/ui/profile/profile_repository.dart';
-import 'package:spenza/ui/profile/provider/user_profile_data.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
-
 import '../../router/app_router.dart';
 import '../login/login_provider.dart';
 import '../login/login_screen.dart';
@@ -37,6 +34,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   _loadData() async {
     ref.read(profileRepositoryProvider.notifier).getUserProfileData();
     // ref.read(profileRepositoryProvider.notifier).rankStoresByPriceTotal();
+  }
+
+  @override
+  void dispose() {
+    ref.invalidate(profileRepositoryProvider);
+    ref.invalidate(loginRepositoryProvider);
+    super.dispose();
   }
 
   @override

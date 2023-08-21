@@ -27,6 +27,7 @@ class ProductForStore extends _$ProductForStore with FirestoreAndPrefsMixin {
           .get();
 
       final List<ProductModel> pro = productsSnapshot.docs.map((doc) {
+
         final data = doc.data();
         try{
           final pros = ProductModel.fromJson(data).copyWith(documentId: doc.id);
