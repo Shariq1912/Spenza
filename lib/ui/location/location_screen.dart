@@ -32,6 +32,8 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
   void dispose() {
     super.dispose();
     zipCodeController.dispose();
+
+    ref.invalidate(locationPermissionProvider);
   }
 
   @override

@@ -6,7 +6,7 @@ part of 'store_ranking_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$storeRankingHash() => r'3c2db181ec6205951cddf1ca1ed43d2c76f5efb9';
+String _$storeRankingHash() => r'6281c829f84215e00349f911296ad0fbf85525f2';
 
 /// See also [StoreRanking].
 @ProviderFor(StoreRanking)
