@@ -4,7 +4,8 @@ enum PopupMenuAction {
   copy,
   delete,
   edit,
-  upload
+  upload,
+  receipt
 }
 
 extension PopupMenuActionExtension on PopupMenuAction {
@@ -18,6 +19,8 @@ extension PopupMenuActionExtension on PopupMenuAction {
         return "Edit";
       case PopupMenuAction.upload:
         return "Upload Receipt";
+      case PopupMenuAction.receipt:
+        return "Receipts";
     }
   }
 }

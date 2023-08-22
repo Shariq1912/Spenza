@@ -37,7 +37,7 @@ class UserProductList extends _$UserProductList with FirestoreAndPrefsMixin {
           .collection(subCollectionName)
           .get();
 
-      // Create a list of Product Ref objects
+
       final productRefs = productListRef.docs
           .map((snapshot) => snapshot[ProductCollectionConstant.productRef]
               as DocumentReference)

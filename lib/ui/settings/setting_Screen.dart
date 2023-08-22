@@ -110,7 +110,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
               ),
               SizedBox(height: 30),
               CardItem(icon: Icons.list, title: "My Lists", onTap: () {context.push(RouteManager.myListScreen);}),
-              CardItem(icon: Icons.receipt, title: "My Receipts", onTap: () {context.push(RouteManager.displayReceiptScreen);}),
+              CardItem(icon: Icons.receipt, title: "My Receipts", onTap: () {context.pushNamed(RouteManager.displayReceiptScreen,queryParameters: {'list_ref': ''});}),
               CardItem(icon: Icons.store, title: "My Stores", onTap: () {
                 context.push(RouteManager.stores);
               }),

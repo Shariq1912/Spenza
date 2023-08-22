@@ -42,7 +42,7 @@ class PreloadedListWidget extends ConsumerWidget {
                       Text(item.description.length > 50 ? '${item.description.substring(0, 50)}...' : item.description,
                         style: TextStyle(fontSize: 13, ),),
                       SizedBox(height: 14),
-                      Text("8 receipt",style: TextStyle(fontSize: 13, )),
+                      Text("Recibos ${item.count!}",style: TextStyle(fontSize: 13, )),
                     ],
                   ),
                 ),

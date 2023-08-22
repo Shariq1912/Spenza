@@ -14,6 +14,7 @@ class MyListModel with _$MyListModel {
     String? myListPhoto,
     @Default(null) String? documentId,
      String? path,
+     String? count,
   }) = _MyListModel;
 
   factory MyListModel.fromJson(Map<String, dynamic> json) =>

@@ -104,7 +104,8 @@ class _PreLoadedListDetailsScreenState
                           color: ColorUtils.colorPrimary,
                         ),
                         onBackIconPressed: () {
-                          context.pushNamed(RouteManager.addProductScreen);
+                          ///context.pushNamed(RouteManager.addProductScreen);
+                          context.pop(hasValueChanged);
                         },
                         onActionIconPressed: _onActionIconPressed,
                       ),

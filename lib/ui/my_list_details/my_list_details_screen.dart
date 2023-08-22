@@ -64,7 +64,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await ref.read(userProductListProvider.notifier).fetchProductFromListId();
-      await ref.read(listDetailsProvider.notifier).getSelectedListDetails();
+    //  await ref.read(listDetailsProvider.notifier).getSelectedListDetails();
     });
   }
 
@@ -98,7 +98,8 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                           color: ColorUtils.colorPrimary,
                         ),
                         onBackIconPressed: () {
-                          context.pushNamed(RouteManager.addProductScreen);
+                         // context.pushNamed(RouteManager.addProductScreen);
+                          context.pop(hasValueChanged);
                         },
                         onActionIconPressed: _onActionIconPressed,
                       ),

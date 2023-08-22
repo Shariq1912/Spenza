@@ -12,6 +12,7 @@ import 'package:spenza/helpers/fireStore_pref_mixin.dart';
 import 'package:spenza/network/api_responses.dart';
 import 'package:spenza/ui/receipts/data/image_pick_state.dart';
 import 'package:spenza/ui/receipts/data/receipt_model.dart';
+import 'package:spenza/utils/fireStore_constants.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
 part 'upload_receipt_repo.g.dart';
@@ -62,7 +63,7 @@ class UploadReceiptRepo extends _$UploadReceiptRepo with FirestoreAndPrefsMixin 
         String name = data['name'] ?? "Name Not Available";
         String description = data['description'] ?? "Description Not Available";
 
-        final myListCollection = fireStore.collection("receipt");
+        final myListCollection = fireStore.collection(ReceiptConstant.collectionName);
         await myListCollection.add({
           'uid': userId,
           'list_ref': documentReference,

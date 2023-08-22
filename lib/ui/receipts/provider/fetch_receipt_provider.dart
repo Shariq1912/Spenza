@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:spenza/helpers/fireStore_pref_mixin.dart';
 import 'package:spenza/ui/receipts/data/receipt_model.dart';
@@ -14,25 +15,46 @@ class FetchReciptProvider extends _$FetchReciptProvider with FirestoreAndPrefsMi
     return [];
   }
 
-  Future<List<ReceiptModel>> fetchReceipt() async {
+  Future<List<ReceiptModel>> fetchReceipt(String path) async {
     try{
       state = AsyncValue.loading();
       final userId = await prefs.then((prefs) => prefs.getUserId());
+      if(path.isEmpty){
+        final snapShot = await fireStore.collection(ReceiptConstant.collectionName).where('uid', isEqualTo: userId).get();
 
-      final snapShot = await fireStore.collection(ReceiptConstant.collectionName).where('uid', isEqualTo: userId).get();
+        final List<ReceiptModel>  receipt = snapShot.docs.map((doc){
+          final list = doc.data();
+          final receiptList  = ReceiptModel.fromJson(list);
+          return receiptList;
+        }).toList();
 
-      final List<ReceiptModel>  receipt = snapShot.docs.map((doc){
-        final list = doc.data();
-        final receiptList  = ReceiptModel.fromJson(list);
-        return receiptList;
-      }).toList();
+        receipt.forEach((element) {
+          print("receipts: ${element.name}");
+        });
 
-      receipt.forEach((element) {
-        print("receipts: ${element.name}");
-      });
+        state = AsyncValue.data(receipt);
+        return receipt;
+      }
+      else{
+        DocumentReference documentReference = fireStore.doc(path);
+        final snapShot = await fireStore.collection(ReceiptConstant.collectionName).where('uid', isEqualTo: userId)
+            .where('list_ref', isEqualTo: documentReference).get();
 
-      state = AsyncValue.data(receipt);
-      return receipt;
+        final List<ReceiptModel>  receipt = snapShot.docs.map((doc){
+          final list = doc.data();
+          final receiptList  = ReceiptModel.fromJson(list);
+          return receiptList;
+        }).toList();
+
+        receipt.forEach((element) {
+          print("receipts: ${element.name}");
+        });
+
+        state = AsyncValue.data(receipt);
+        return receipt;
+      }
+
+
 
 
     }catch(error, stackTrace){

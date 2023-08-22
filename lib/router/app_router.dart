@@ -205,9 +205,9 @@ class RouteManager {
         path: uploadReceiptScreen,
         builder: (context, state) {
           final String path =
-              state.queryParameters['list_id'] ?? "4NlYnhmchdlu528Gw2yK";
+              state.queryParameters['list_id'] ?? "";
           //return MyListDetailsScreen(listId: listId);
-          if (path != "4NlYnhmchdlu528Gw2yK") {
+          if (path != "") {
             print("Notequal $path");
             return UploadReceipt(path: path);
           } else {
@@ -221,7 +221,9 @@ class RouteManager {
         name: displayReceiptScreen,
         path: displayReceiptScreen,
         builder: (context, state) {
-          return DisplayReceiptScreen();
+          final String path =
+              state.queryParameters['list_ref'] ?? "";
+            return DisplayReceiptScreen(path: path);
         },
       ),
       GoRoute(

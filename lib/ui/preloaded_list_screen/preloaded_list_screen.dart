@@ -4,8 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/helpers/popup_menu_mixin.dart';
 import 'package:spenza/ui/preloaded_list_screen/component/preloaded_list_widget.dart';
+import 'package:spenza/utils/spenza_extensions.dart';
 import '../../router/app_router.dart';
 import '../home/provider/home_preloaded_list.dart';
+import '../my_list_details/provider/user_product_list_provider.dart';
 
 class PreloadedListScreen extends ConsumerStatefulWidget {
   @override
@@ -15,14 +17,15 @@ class PreloadedListScreen extends ConsumerStatefulWidget {
 
 class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with PopupMenuMixin {
   final poppinsFont = GoogleFonts.poppins().fontFamily;
+  bool hasValueChanged = false;
 
   final List<PopupMenuItem<PopupMenuAction>> items = [
     PopupMenuItem(
       child: ListTile(
-        trailing: const Icon(Icons.edit),
-        title: Text(PopupMenuAction.edit.value),
+        trailing: const Icon(Icons.copy),
+        title: Text(PopupMenuAction.copy.value),
       ),
-      value: PopupMenuAction.edit,
+      value: PopupMenuAction.copy,
     ),
     PopupMenuItem(
       child: ListTile(
@@ -33,10 +36,10 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with 
     ),
     PopupMenuItem(
       child: ListTile(
-        trailing: const Icon(Icons.delete),
-        title: Text(PopupMenuAction.delete.value),
+        trailing: const Icon(Icons.receipt),
+        title: Text(PopupMenuAction.receipt.value),
       ),
-      value: PopupMenuAction.delete,
+      value: PopupMenuAction.receipt,
     ),
   ];
 
@@ -51,6 +54,12 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with 
 
   Future<void> _loadAllStore() async {
     await ref.read(homePreloadedListProvider.notifier).fetchPreloadedList();
+  }
+
+  @override
+  void dispose() {
+    ref.invalidate(homePreloadedListProvider);
+    super.dispose();
   }
 
   void _onActionIconPressed(String itemPath) {
@@ -73,12 +82,21 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with 
       items: items,
       onSelected: (PopupMenuAction value) async {
         if (value == PopupMenuAction.upload) {
-          debugPrint("copy action");
+
           context.pushNamed(RouteManager.uploadReceiptScreen,queryParameters: {'list_id': itemPath});
 
-        } else if (value == PopupMenuAction.delete) {
+        } else if (value == PopupMenuAction.receipt) {
+          context.pushNamed(RouteManager.displayReceiptScreen,queryParameters: {'list_ref': itemPath});
+        } else if (value == PopupMenuAction.copy) {
+          debugPrint("copy action");
+          final bool result = await ref
+              .read(userProductListProvider.notifier)
+              .copyTheList(context: context);
 
-        } else if (value == PopupMenuAction.edit) {
+          if (result) {
+            hasValueChanged = true;
+            context.showSnackBar(message: "List copied successfully!");
+          }
 
         }
       },

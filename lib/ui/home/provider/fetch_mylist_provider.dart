@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -22,24 +23,72 @@ class FetchMyList extends _$FetchMyList with FirestoreAndPrefsMixin {
       state = AsyncValue.loading();
 
       final userId = await prefs.then((prefs) => prefs.getUserId());
-      final snapShot = await fireStore
+      /*final snapShot = await fireStore
           .collection(MyListConstant.myListCollection)
           .where('uid', isEqualTo: userId)
           .get();
 
-      final List<MyListModel> mylists = snapShot.docs.map((doc) {
+      final List<MyListModel> mylists = await Future.wait(snapShot.docs.map((doc) async {
         final data = doc.reference;
-        /*final list = MyListModel.fromJson(data).copyWith(documentId: doc.id);
-        return list;*/
+        final snapShots = await fireStore
+            .collection(ReceiptConstant.collectionName).where("uid", isEqualTo: userId)
+            .where('list_ref', isEqualTo: fireStore.doc(doc.reference.path))
+            .count().get();
+        final count = snapShots.count;
+
         return MyListModel(
             description:doc['description'].toString(),
             name: doc['name'].toString(),
             uid: doc['uid'], usersRef: doc['usersRef'].toString(),
         myListPhoto: doc['myListPhoto'],
         path: doc.reference.path,
+        count: count.toString(),
         documentId: doc.id.toString());
 
-      }).toList();
+      }).toList());*/
+
+      final QuerySnapshot myListSnapshot = await fireStore
+          .collection(MyListConstant.myListCollection)
+          .where('uid', isEqualTo: userId)
+          .get();
+
+      final Map<String, MyListModel> myListMap = {};
+
+      myListSnapshot.docs.forEach((doc) {
+        final myList = MyListModel(
+          description: doc['description'].toString(),
+          name: doc['name'].toString(),
+          uid: doc['uid'],
+          usersRef: doc['usersRef'].toString(),
+          myListPhoto: doc['myListPhoto'],
+          path: doc.reference.path,
+          count: '0',
+          documentId: doc.id.toString(),
+        );
+
+          print("mylist: ${myList.name}");
+
+        myListMap[myList.path!] = myList;
+      });
+
+      final QuerySnapshot receiptSnapshot = await fireStore
+          .collection(ReceiptConstant.collectionName)
+          .where("uid", isEqualTo: userId)
+          .get();
+
+      receiptSnapshot.docs.forEach((doc) {
+        final listRef = doc['list_ref'] as DocumentReference ;
+        final listPath = listRef.path;
+
+        if (myListMap.containsKey(listPath)) {
+          myListMap[listPath] = myListMap[listPath]!.copyWith(
+            count: (int.parse(myListMap[listPath]!.count!) + 1).toString(),
+          );
+        }
+      });
+
+      final List<MyListModel> mylists = myListMap.values.toList();
+
 
 
       mylists.forEach((element) {

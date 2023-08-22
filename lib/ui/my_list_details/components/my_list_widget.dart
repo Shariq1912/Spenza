@@ -72,7 +72,7 @@ class MyListWidget extends StatelessWidget {
                         style: TextStyle(fontSize: 13, fontFamily: poppinsFont),
                       ),
                       SizedBox(height: 14),
-                      Text("8 receipt", style: TextStyle(fontSize: 13, fontFamily: poppinsFont)),
+                      Text("${store.count!} recibos", style: TextStyle(fontSize: 13, fontFamily: poppinsFont)),
                     ],
                   ),
                 ),

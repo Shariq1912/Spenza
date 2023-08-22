@@ -55,4 +55,6 @@ class PreloadedListConstant {
 
 class ReceiptConstant {
   static const String collectionName = 'receipt';
+  static const String userIdField = 'uid';
+  static const String receiptRef = 'list_ref';
 }

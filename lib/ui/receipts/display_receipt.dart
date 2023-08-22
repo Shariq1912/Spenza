@@ -8,6 +8,9 @@ import 'package:spenza/ui/receipts/provider/fetch_receipt_provider.dart';
 
 
 class DisplayReceiptScreen extends ConsumerStatefulWidget{
+  const DisplayReceiptScreen({super.key, required this.path});
+
+  final String path;
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _DisplayReceiptScreen();
 
@@ -25,7 +28,7 @@ class _DisplayReceiptScreen extends ConsumerState<DisplayReceiptScreen>{
   }
 
   Future<void> _loadAllMyList() async {
-    await ref.read(fetchReciptProviderProvider.notifier).fetchReceipt();
+    await ref.read(fetchReciptProviderProvider.notifier).fetchReceipt(widget.path);
   }
 
   @override
