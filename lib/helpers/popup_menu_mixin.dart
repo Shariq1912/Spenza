@@ -4,6 +4,7 @@ enum PopupMenuAction {
   copy,
   delete,
   edit,
+  upload
 }
 
 extension PopupMenuActionExtension on PopupMenuAction {
@@ -15,6 +16,8 @@ extension PopupMenuActionExtension on PopupMenuAction {
         return "Delete";
       case PopupMenuAction.edit:
         return "Edit";
+      case PopupMenuAction.upload:
+        return "Upload Receipt";
     }
   }
 }
@@ -34,6 +37,7 @@ mixin PopupMenuMixin<T extends StatefulWidget> on State<T> {
       items: items,
       elevation: 8.0,
       color: theme.popupMenuTheme.color,
+        surfaceTintColor: Colors.white,
     ).then<void>((PopupMenuAction? itemSelected) {
       if (itemSelected != null) {
         onSelected(itemSelected);

@@ -12,6 +12,7 @@ class PreloadedListModel with _$PreloadedListModel {
     @JsonKey(name: "preloaded_photo") required String preloadedPhoto,
     required String description,
     required String path,
+     String? receiptCount,
   }) = _PreloadedListModel;
 
   factory PreloadedListModel.fromJson(Map<String, dynamic> json) =>

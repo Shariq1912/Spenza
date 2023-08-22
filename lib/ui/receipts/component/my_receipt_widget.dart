@@ -18,6 +18,18 @@ class MyReceiptWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final poppinsFont = GoogleFonts.poppins().fontFamily;
+    if(receipt.isEmpty){
+      return Center(
+        child: Text(
+          "No receipt available",
+          style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+              fontFamily: poppinsFont),
+        ),
+      );
+    }else
     return ListView.builder(
       itemCount: receipt.length,
       itemBuilder: (context, index) {

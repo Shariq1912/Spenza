@@ -36,7 +36,9 @@ class FetchMyList extends _$FetchMyList with FirestoreAndPrefsMixin {
             name: doc['name'].toString(),
             uid: doc['uid'], usersRef: doc['usersRef'].toString(),
         myListPhoto: doc['myListPhoto'],
+        path: doc.reference.path,
         documentId: doc.id.toString());
+
       }).toList();
 
 

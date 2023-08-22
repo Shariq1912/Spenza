@@ -6,7 +6,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/ui/receipts/component/my_receipt_widget.dart';
 import 'package:spenza/ui/receipts/provider/fetch_receipt_provider.dart';
 
-import '../../router/app_router.dart';
 
 class DisplayReceiptScreen extends ConsumerStatefulWidget{
   @override
@@ -35,7 +34,7 @@ class _DisplayReceiptScreen extends ConsumerState<DisplayReceiptScreen>{
       appBar: AppBar(
         surfaceTintColor: Colors.white,
         title: Text(
-          "My Lists",
+          "Receipts",
           style: TextStyle(
             fontFamily: poppinsFont,
             fontWeight: FontWeight.bold,
@@ -80,7 +79,7 @@ class _DisplayReceiptScreen extends ConsumerState<DisplayReceiptScreen>{
                 return Center(child: Text(error.toString()));
               },
               data: (data) {
-                print("allStoredata $data");
+                print("receiptData $data");
                 return MyReceiptWidget(receipt: data,);
               },
             );
