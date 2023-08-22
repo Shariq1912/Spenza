@@ -13,6 +13,7 @@ class MyListModel with _$MyListModel {
     required String usersRef,
     String? myListPhoto,
     @Default(null) String? documentId,
+     String? path,
   }) = _MyListModel;
 
   factory MyListModel.fromJson(Map<String, dynamic> json) =>

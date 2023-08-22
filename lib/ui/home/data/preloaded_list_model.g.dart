@@ -13,6 +13,7 @@ _$_PreloadedListModel _$$_PreloadedListModelFromJson(
       name: json['name'] as String,
       preloadedPhoto: json['preloaded_photo'] as String,
       description: json['description'] as String,
+      path: json['path'] as String,
     );
 
 Map<String, dynamic> _$$_PreloadedListModelToJson(
@@ -22,4 +23,5 @@ Map<String, dynamic> _$$_PreloadedListModelToJson(
       'name': instance.name,
       'preloaded_photo': instance.preloadedPhoto,
       'description': instance.description,
+      'path': instance.path,
     };

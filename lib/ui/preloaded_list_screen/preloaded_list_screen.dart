@@ -26,10 +26,10 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with 
     ),
     PopupMenuItem(
       child: ListTile(
-        trailing: const Icon(Icons.copy),
-        title: Text(PopupMenuAction.copy.value),
+        trailing: const Icon(Icons.upload),
+        title: Text(PopupMenuAction.upload.value),
       ),
-      value: PopupMenuAction.copy,
+      value: PopupMenuAction.upload,
     ),
     PopupMenuItem(
       child: ListTile(
@@ -53,11 +53,14 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with 
     await ref.read(homePreloadedListProvider.notifier).fetchPreloadedList();
   }
 
-  void _onActionIconPressed() {
+  void _onActionIconPressed(String itemPath) {
+
+    print("clickedItemPath : $itemPath");
     final RenderBox customAppBarRenderBox =
     context.findRenderObject() as RenderBox;
     final customAppBarPosition =
     customAppBarRenderBox.localToGlobal(Offset.zero);
+
 
     showPopupMenu(
       context: context,
@@ -69,9 +72,9 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with 
       ),
       items: items,
       onSelected: (PopupMenuAction value) async {
-        if (value == PopupMenuAction.copy) {
+        if (value == PopupMenuAction.upload) {
           debugPrint("copy action");
-          context.push(RouteManager.uploadReceiptScreen);
+          context.pushNamed(RouteManager.uploadReceiptScreen,queryParameters: {'list_id': itemPath});
 
         } else if (value == PopupMenuAction.delete) {
 
@@ -131,11 +134,11 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with 
                 return Center(child: Text(error.toString()));
               },
               data: (data) {
-                print("allStoredata $data");
+                print("preloadedList $data");
                 return PreloadedListWidget(
                   data: data,
-                   onButtonClicked: () {
-                    _onActionIconPressed();
+                   onButtonClicked: (itemPath) {
+                    _onActionIconPressed(itemPath);
                   },
                 );
               },

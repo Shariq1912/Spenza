@@ -4,7 +4,7 @@ import 'package:spenza/ui/home/data/preloaded_list_model.dart';
 
 class PreloadedListWidget extends ConsumerWidget {
   final List<PreloadedListModel> data;
-  final Function() onButtonClicked;
+  final Function(String) onButtonClicked;
   PreloadedListWidget( {required this.data, required this.onButtonClicked,});
 
   @override
@@ -49,7 +49,7 @@ class PreloadedListWidget extends ConsumerWidget {
                 IconButton(
                   onPressed: () {
                     // Do something when three dots are clicked
-                    onButtonClicked();
+                    onButtonClicked(item.path);
                   },
                   icon: Icon(Icons.more_vert),
                 ),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../helpers/popup_menu_mixin.dart';
 import '../../router/app_router.dart';
 import '../home/provider/fetch_mylist_provider.dart';
 import '../my_store/widget/my_store_list_widget.dart';
@@ -15,7 +16,7 @@ class MyList extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _MyListState();
 }
 
-class _MyListState extends ConsumerState<MyList> {
+class _MyListState extends ConsumerState<MyList> with PopupMenuMixin {
   final poppinsFont = GoogleFonts.poppins().fontFamily;
 
   @override
@@ -30,6 +31,61 @@ class _MyListState extends ConsumerState<MyList> {
     await ref.read(fetchMyListProvider.notifier).fetchMyListFun();
   }
 
+  final List<PopupMenuItem<PopupMenuAction>> items = [
+    PopupMenuItem(
+      child: ListTile(
+        leading: const Icon(Icons.edit),
+        title: Text(PopupMenuAction.edit.value),
+      ),
+      value: PopupMenuAction.edit,
+    ),
+    PopupMenuItem(
+      child: ListTile(
+        leading: const Icon(Icons.upload),
+        title: Text(PopupMenuAction.upload.value),
+      ),
+      value: PopupMenuAction.upload,
+    ),
+    PopupMenuItem(
+      child: ListTile(
+        leading: const Icon(Icons.delete),
+        title: Text(PopupMenuAction.delete.value),
+      ),
+      value: PopupMenuAction.delete,
+    ),
+  ];
+  void _onActionIconPressed(String itemPath) {
+
+    print("clickedItemPath : $itemPath");
+    final RenderBox customAppBarRenderBox =
+    context.findRenderObject() as RenderBox;
+    final customAppBarPosition =
+    customAppBarRenderBox.localToGlobal(Offset.zero);
+
+
+    showPopupMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        customAppBarPosition.dx + customAppBarRenderBox.size.width - 40,
+        customAppBarPosition.dy + kToolbarHeight + 30,
+        0.0,
+        0.0,
+      ),
+      items: items,
+      onSelected: (PopupMenuAction value) async {
+        if (value == PopupMenuAction.upload) {
+          debugPrint("upload");
+          context.pushNamed(RouteManager.uploadReceiptScreen,queryParameters: {'list_id': itemPath});
+
+        } else if (value == PopupMenuAction.delete) {
+
+        } else if (value == PopupMenuAction.edit) {
+
+        }
+      },
+
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,13 +142,10 @@ class _MyListState extends ConsumerState<MyList> {
                 return MyListWidget(
                   stores: data,
                   onButtonClicked: (listId) {
-                    ref
-                        .read(fetchMyListProvider.notifier)
-                        .redirectUserToListDetailsScreen(
-                      context: context,
-                      listId: listId,
-                    );
-                  },
+                    ref.read(fetchMyListProvider.notifier).redirectUserToListDetailsScreen(context: context, listId: listId,);
+                  }, onPopUpClicked: (String path) {
+                    _onActionIconPressed(path);
+                },
                 );
               },
             );

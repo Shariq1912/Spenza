@@ -14,6 +14,7 @@ _$_MyListModel _$$_MyListModelFromJson(Map<String, dynamic> json) =>
       usersRef: json['usersRef'] as String,
       myListPhoto: json['myListPhoto'] as String?,
       documentId: json['documentId'] as String? ?? null,
+      path: json['path'] as String?,
     );
 
 Map<String, dynamic> _$$_MyListModelToJson(_$_MyListModel instance) =>
@@ -24,4 +25,5 @@ Map<String, dynamic> _$$_MyListModelToJson(_$_MyListModel instance) =>
       'usersRef': instance.usersRef,
       'myListPhoto': instance.myListPhoto,
       'documentId': instance.documentId,
+      'path': instance.path,
     };
