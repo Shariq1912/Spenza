@@ -20,6 +20,7 @@ mixin _$ImagePickState {
   TResult when<TResult extends Object?>(
     TResult Function() $default, {
     required TResult Function(File selectedImage) selected,
+    required TResult Function() loading,
     required TResult Function(String msg) uploaded,
     required TResult Function(String msg) error,
   }) =>
@@ -28,6 +29,7 @@ mixin _$ImagePickState {
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function()? $default, {
     TResult? Function(File selectedImage)? selected,
+    TResult? Function()? loading,
     TResult? Function(String msg)? uploaded,
     TResult? Function(String msg)? error,
   }) =>
@@ -36,6 +38,7 @@ mixin _$ImagePickState {
   TResult maybeWhen<TResult extends Object?>(
     TResult Function()? $default, {
     TResult Function(File selectedImage)? selected,
+    TResult Function()? loading,
     TResult Function(String msg)? uploaded,
     TResult Function(String msg)? error,
     required TResult orElse(),
@@ -45,6 +48,7 @@ mixin _$ImagePickState {
   TResult map<TResult extends Object?>(
     TResult Function(_Initial value) $default, {
     required TResult Function(_Selected value) selected,
+    required TResult Function(_Loading value) loading,
     required TResult Function(_Uploaded value) uploaded,
     required TResult Function(_Error value) error,
   }) =>
@@ -53,6 +57,7 @@ mixin _$ImagePickState {
   TResult? mapOrNull<TResult extends Object?>(
     TResult? Function(_Initial value)? $default, {
     TResult? Function(_Selected value)? selected,
+    TResult? Function(_Loading value)? loading,
     TResult? Function(_Uploaded value)? uploaded,
     TResult? Function(_Error value)? error,
   }) =>
@@ -61,6 +66,7 @@ mixin _$ImagePickState {
   TResult maybeMap<TResult extends Object?>(
     TResult Function(_Initial value)? $default, {
     TResult Function(_Selected value)? selected,
+    TResult Function(_Loading value)? loading,
     TResult Function(_Uploaded value)? uploaded,
     TResult Function(_Error value)? error,
     required TResult orElse(),
@@ -125,6 +131,7 @@ class _$_Initial implements _Initial {
   TResult when<TResult extends Object?>(
     TResult Function() $default, {
     required TResult Function(File selectedImage) selected,
+    required TResult Function() loading,
     required TResult Function(String msg) uploaded,
     required TResult Function(String msg) error,
   }) {
@@ -136,6 +143,7 @@ class _$_Initial implements _Initial {
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function()? $default, {
     TResult? Function(File selectedImage)? selected,
+    TResult? Function()? loading,
     TResult? Function(String msg)? uploaded,
     TResult? Function(String msg)? error,
   }) {
@@ -147,6 +155,7 @@ class _$_Initial implements _Initial {
   TResult maybeWhen<TResult extends Object?>(
     TResult Function()? $default, {
     TResult Function(File selectedImage)? selected,
+    TResult Function()? loading,
     TResult Function(String msg)? uploaded,
     TResult Function(String msg)? error,
     required TResult orElse(),
@@ -162,6 +171,7 @@ class _$_Initial implements _Initial {
   TResult map<TResult extends Object?>(
     TResult Function(_Initial value) $default, {
     required TResult Function(_Selected value) selected,
+    required TResult Function(_Loading value) loading,
     required TResult Function(_Uploaded value) uploaded,
     required TResult Function(_Error value) error,
   }) {
@@ -173,6 +183,7 @@ class _$_Initial implements _Initial {
   TResult? mapOrNull<TResult extends Object?>(
     TResult? Function(_Initial value)? $default, {
     TResult? Function(_Selected value)? selected,
+    TResult? Function(_Loading value)? loading,
     TResult? Function(_Uploaded value)? uploaded,
     TResult? Function(_Error value)? error,
   }) {
@@ -184,6 +195,7 @@ class _$_Initial implements _Initial {
   TResult maybeMap<TResult extends Object?>(
     TResult Function(_Initial value)? $default, {
     TResult Function(_Selected value)? selected,
+    TResult Function(_Loading value)? loading,
     TResult Function(_Uploaded value)? uploaded,
     TResult Function(_Error value)? error,
     required TResult orElse(),
@@ -266,6 +278,7 @@ class _$_Selected implements _Selected {
   TResult when<TResult extends Object?>(
     TResult Function() $default, {
     required TResult Function(File selectedImage) selected,
+    required TResult Function() loading,
     required TResult Function(String msg) uploaded,
     required TResult Function(String msg) error,
   }) {
@@ -277,6 +290,7 @@ class _$_Selected implements _Selected {
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function()? $default, {
     TResult? Function(File selectedImage)? selected,
+    TResult? Function()? loading,
     TResult? Function(String msg)? uploaded,
     TResult? Function(String msg)? error,
   }) {
@@ -288,6 +302,7 @@ class _$_Selected implements _Selected {
   TResult maybeWhen<TResult extends Object?>(
     TResult Function()? $default, {
     TResult Function(File selectedImage)? selected,
+    TResult Function()? loading,
     TResult Function(String msg)? uploaded,
     TResult Function(String msg)? error,
     required TResult orElse(),
@@ -303,6 +318,7 @@ class _$_Selected implements _Selected {
   TResult map<TResult extends Object?>(
     TResult Function(_Initial value) $default, {
     required TResult Function(_Selected value) selected,
+    required TResult Function(_Loading value) loading,
     required TResult Function(_Uploaded value) uploaded,
     required TResult Function(_Error value) error,
   }) {
@@ -314,6 +330,7 @@ class _$_Selected implements _Selected {
   TResult? mapOrNull<TResult extends Object?>(
     TResult? Function(_Initial value)? $default, {
     TResult? Function(_Selected value)? selected,
+    TResult? Function(_Loading value)? loading,
     TResult? Function(_Uploaded value)? uploaded,
     TResult? Function(_Error value)? error,
   }) {
@@ -325,6 +342,7 @@ class _$_Selected implements _Selected {
   TResult maybeMap<TResult extends Object?>(
     TResult Function(_Initial value)? $default, {
     TResult Function(_Selected value)? selected,
+    TResult Function(_Loading value)? loading,
     TResult Function(_Uploaded value)? uploaded,
     TResult Function(_Error value)? error,
     required TResult orElse(),
@@ -343,6 +361,125 @@ abstract class _Selected implements ImagePickState {
   @JsonKey(ignore: true)
   _$$_SelectedCopyWith<_$_Selected> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$_LoadingCopyWith<$Res> {
+  factory _$$_LoadingCopyWith(
+          _$_Loading value, $Res Function(_$_Loading) then) =
+      __$$_LoadingCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$_LoadingCopyWithImpl<$Res>
+    extends _$ImagePickStateCopyWithImpl<$Res, _$_Loading>
+    implements _$$_LoadingCopyWith<$Res> {
+  __$$_LoadingCopyWithImpl(_$_Loading _value, $Res Function(_$_Loading) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$_Loading implements _Loading {
+  const _$_Loading();
+
+  @override
+  String toString() {
+    return 'ImagePickState.loading()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$_Loading);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function() $default, {
+    required TResult Function(File selectedImage) selected,
+    required TResult Function() loading,
+    required TResult Function(String msg) uploaded,
+    required TResult Function(String msg) error,
+  }) {
+    return loading();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function()? $default, {
+    TResult? Function(File selectedImage)? selected,
+    TResult? Function()? loading,
+    TResult? Function(String msg)? uploaded,
+    TResult? Function(String msg)? error,
+  }) {
+    return loading?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function()? $default, {
+    TResult Function(File selectedImage)? selected,
+    TResult Function()? loading,
+    TResult Function(String msg)? uploaded,
+    TResult Function(String msg)? error,
+    required TResult orElse(),
+  }) {
+    if (loading != null) {
+      return loading();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_Initial value) $default, {
+    required TResult Function(_Selected value) selected,
+    required TResult Function(_Loading value) loading,
+    required TResult Function(_Uploaded value) uploaded,
+    required TResult Function(_Error value) error,
+  }) {
+    return loading(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_Initial value)? $default, {
+    TResult? Function(_Selected value)? selected,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_Uploaded value)? uploaded,
+    TResult? Function(_Error value)? error,
+  }) {
+    return loading?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_Initial value)? $default, {
+    TResult Function(_Selected value)? selected,
+    TResult Function(_Loading value)? loading,
+    TResult Function(_Uploaded value)? uploaded,
+    TResult Function(_Error value)? error,
+    required TResult orElse(),
+  }) {
+    if (loading != null) {
+      return loading(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _Loading implements ImagePickState {
+  const factory _Loading() = _$_Loading;
 }
 
 /// @nodoc
@@ -411,6 +548,7 @@ class _$_Uploaded implements _Uploaded {
   TResult when<TResult extends Object?>(
     TResult Function() $default, {
     required TResult Function(File selectedImage) selected,
+    required TResult Function() loading,
     required TResult Function(String msg) uploaded,
     required TResult Function(String msg) error,
   }) {
@@ -422,6 +560,7 @@ class _$_Uploaded implements _Uploaded {
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function()? $default, {
     TResult? Function(File selectedImage)? selected,
+    TResult? Function()? loading,
     TResult? Function(String msg)? uploaded,
     TResult? Function(String msg)? error,
   }) {
@@ -433,6 +572,7 @@ class _$_Uploaded implements _Uploaded {
   TResult maybeWhen<TResult extends Object?>(
     TResult Function()? $default, {
     TResult Function(File selectedImage)? selected,
+    TResult Function()? loading,
     TResult Function(String msg)? uploaded,
     TResult Function(String msg)? error,
     required TResult orElse(),
@@ -448,6 +588,7 @@ class _$_Uploaded implements _Uploaded {
   TResult map<TResult extends Object?>(
     TResult Function(_Initial value) $default, {
     required TResult Function(_Selected value) selected,
+    required TResult Function(_Loading value) loading,
     required TResult Function(_Uploaded value) uploaded,
     required TResult Function(_Error value) error,
   }) {
@@ -459,6 +600,7 @@ class _$_Uploaded implements _Uploaded {
   TResult? mapOrNull<TResult extends Object?>(
     TResult? Function(_Initial value)? $default, {
     TResult? Function(_Selected value)? selected,
+    TResult? Function(_Loading value)? loading,
     TResult? Function(_Uploaded value)? uploaded,
     TResult? Function(_Error value)? error,
   }) {
@@ -470,6 +612,7 @@ class _$_Uploaded implements _Uploaded {
   TResult maybeMap<TResult extends Object?>(
     TResult Function(_Initial value)? $default, {
     TResult Function(_Selected value)? selected,
+    TResult Function(_Loading value)? loading,
     TResult Function(_Uploaded value)? uploaded,
     TResult Function(_Error value)? error,
     required TResult orElse(),
@@ -554,6 +697,7 @@ class _$_Error implements _Error {
   TResult when<TResult extends Object?>(
     TResult Function() $default, {
     required TResult Function(File selectedImage) selected,
+    required TResult Function() loading,
     required TResult Function(String msg) uploaded,
     required TResult Function(String msg) error,
   }) {
@@ -565,6 +709,7 @@ class _$_Error implements _Error {
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function()? $default, {
     TResult? Function(File selectedImage)? selected,
+    TResult? Function()? loading,
     TResult? Function(String msg)? uploaded,
     TResult? Function(String msg)? error,
   }) {
@@ -576,6 +721,7 @@ class _$_Error implements _Error {
   TResult maybeWhen<TResult extends Object?>(
     TResult Function()? $default, {
     TResult Function(File selectedImage)? selected,
+    TResult Function()? loading,
     TResult Function(String msg)? uploaded,
     TResult Function(String msg)? error,
     required TResult orElse(),
@@ -591,6 +737,7 @@ class _$_Error implements _Error {
   TResult map<TResult extends Object?>(
     TResult Function(_Initial value) $default, {
     required TResult Function(_Selected value) selected,
+    required TResult Function(_Loading value) loading,
     required TResult Function(_Uploaded value) uploaded,
     required TResult Function(_Error value) error,
   }) {
@@ -602,6 +749,7 @@ class _$_Error implements _Error {
   TResult? mapOrNull<TResult extends Object?>(
     TResult? Function(_Initial value)? $default, {
     TResult? Function(_Selected value)? selected,
+    TResult? Function(_Loading value)? loading,
     TResult? Function(_Uploaded value)? uploaded,
     TResult? Function(_Error value)? error,
   }) {
@@ -613,6 +761,7 @@ class _$_Error implements _Error {
   TResult maybeMap<TResult extends Object?>(
     TResult Function(_Initial value)? $default, {
     TResult Function(_Selected value)? selected,
+    TResult Function(_Loading value)? loading,
     TResult Function(_Uploaded value)? uploaded,
     TResult Function(_Error value)? error,
     required TResult orElse(),

@@ -8,14 +8,14 @@ import 'package:spenza/ui/my_store/data/all_store.dart';
 import 'package:spenza/ui/my_store/my_store_provider.dart';
 import 'package:spenza/ui/my_store/widget/my_store_list_widget.dart';
 
-class Stores extends ConsumerStatefulWidget {
-  const Stores({Key? key}) : super(key: key);
+class AllStoresScreen extends ConsumerStatefulWidget {
+  const AllStoresScreen({Key? key}) : super(key: key);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _StoresState();
 }
 
-class _StoresState extends ConsumerState<Stores> {
+class _StoresState extends ConsumerState<AllStoresScreen> {
   final poppinsFont = GoogleFonts.poppins().fontFamily;
 
   @override

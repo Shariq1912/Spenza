@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/ui/add_product/add_product_screen.dart';
+import 'package:spenza/ui/dashboard/dashboard_screen.dart';
 import 'package:spenza/ui/favourite_stores/favourite_store_screen.dart';
 import 'package:spenza/ui/home/components/add_list.dart';
 import 'package:spenza/ui/home/edit_list_screen.dart';
@@ -48,7 +49,7 @@ class RouteManager {
   static const String addNewList = '/addNewList';
   static const String editListScreen = '/editListScreen';
   static const String addProductToNewList = '/addProductToNewList';
-  static const String stores = '/stores';
+  static const String storesScreen = '/storesScreen';
   static const String myStoreProductScreen = '/myStoreProductScreen';
   static const String settingScreen = '/settingScreen';
   static const String profileScreen = '/profileScreen';
@@ -58,11 +59,95 @@ class RouteManager {
   static const String preLoadedListScreen = '/preLoadedListScreen';
   static const String webViewScreen = '/webViewScreen';
 
+  static const bottomNavPath = 'bottom_navigation';
+  static const storeScreenBottomPath = '/storeScreenBottomPath';
+  static const profileScreenBottomPath = '/profileScreenBottomPath';
+  static const myListScreenBottomPath = '/myListScreenBottomPath';
+  static const preloadedListScreenBottomPath = '/preloadedListScreenBottomPath';
+
   /// The route configuration.
   static final GoRouter router = GoRouter(
+    debugLogDiagnostics: true,
     navigatorKey: _rootNavigator,
     routes: [
+      ShellRoute(
+        navigatorKey: _shellNavigator,
+        builder: (context, state, child) =>
+            DashboardScreen(key: state.pageKey, child: child),
+        routes: [
+          GoRoute(
+            name: homeScreen,
+            path: homeScreen,
+            parentNavigatorKey: _shellNavigator,
+            pageBuilder: (context, state) {
+              return NoTransitionPage(
+                child: HomeScreen(
+                  key: state.pageKey,
+                ),
+              );
+            },
+          ),
+          GoRoute(
+            name: profileScreenBottomPath,
+            path: "/profileScreenBottomPath",
+            parentNavigatorKey: _shellNavigator,
+            pageBuilder: (context, state) {
+              return NoTransitionPage(
+                child: ProfileScreen(
+                  key: state.pageKey,
+                ),
+              );
+            },
+          ),
+          GoRoute(
+            name: myListScreenBottomPath,
+            path: "/myListScreenBottomPath",
+            parentNavigatorKey: _shellNavigator,
+            pageBuilder: (context, state) {
+              return NoTransitionPage(
+                child: MyList(
+                  key: state.pageKey,
+                ),
+              );
+            },
+          ),
+          GoRoute(
+            name: preloadedListScreenBottomPath,
+            path: "/preloadedListScreenBottomPath",
+            parentNavigatorKey: _shellNavigator,
+            pageBuilder: (context, state) {
+              return NoTransitionPage(
+                child: PreloadedListScreen(
+                  key: state.pageKey,
+                ),
+              );
+            },
+          ),
+          GoRoute(
+            name: storeScreenBottomPath,
+            path: "/storeScreenBottomPath",
+            parentNavigatorKey: _shellNavigator,
+            pageBuilder: (context, state) {
+              return NoTransitionPage(
+                child: AllStoresScreen(
+                  key: state.pageKey,
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+
+      /*GoRoute(
+        name: homeScreen,
+        path: homeScreen,
+        builder: (context, state) {
+          return const HomeScreen();
+        },
+      ),*/
+
       GoRoute(
+        parentNavigatorKey: _rootNavigator,
         name: splashScreen,
         path: splashScreen,
         builder: (context, state) {
@@ -71,6 +156,7 @@ class RouteManager {
         },
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigator,
         name: registerScreen,
         path: registerScreen,
         builder: (context, state) {
@@ -78,6 +164,7 @@ class RouteManager {
         },
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigator,
         name: loginScreen,
         path: loginScreen,
         builder: (context, state) {
@@ -85,6 +172,7 @@ class RouteManager {
         },
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigator,
         name: locationScreen,
         path: locationScreen,
         builder: (context, state) {
@@ -93,6 +181,7 @@ class RouteManager {
         },
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigator,
         name: favouriteScreen,
         path: favouriteScreen,
         builder: (context, state) {
@@ -101,13 +190,7 @@ class RouteManager {
         },
       ),
       GoRoute(
-        name: homeScreen,
-        path: homeScreen,
-        builder: (context, state) {
-          return const HomeScreen();
-        },
-      ),
-      GoRoute(
+        parentNavigatorKey: _rootNavigator,
         name: myListDetailScreen,
         path: myListDetailScreen,
         builder: (context, state) {
@@ -124,6 +207,7 @@ class RouteManager {
         },
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigator,
         name: preLoadedListDetailScreen,
         path: preLoadedListDetailScreen,
         builder: (context, state) {
@@ -133,6 +217,7 @@ class RouteManager {
         },
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigator,
         name: addProductScreen,
         path: addProductScreen,
         builder: (context, state) {
@@ -141,6 +226,7 @@ class RouteManager {
         },
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigator,
         name: storeRankingScreen,
         path: storeRankingScreen,
         builder: (context, state) {
@@ -148,6 +234,7 @@ class RouteManager {
         },
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigator,
         name: selectedStoreScreen,
         path: selectedStoreScreen,
         builder: (context, state) {
@@ -155,6 +242,7 @@ class RouteManager {
         },
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigator,
         name: addNewList,
         path: addNewList,
         builder: (context, state) {
@@ -162,6 +250,7 @@ class RouteManager {
         },
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigator,
         name: editListScreen,
         path: editListScreen,
         builder: (context, state) {
@@ -169,13 +258,17 @@ class RouteManager {
         },
       ),
       GoRoute(
-        name: stores,
-        path: stores,
+        name: storesScreen,
+        path: storesScreen,
+        parentNavigatorKey: _rootNavigator,
         builder: (context, state) {
-          return Stores();
+          return AllStoresScreen(
+            key: state.pageKey,
+          );
         },
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigator,
         name: myStoreProductScreen,
         path: myStoreProductScreen,
         builder: (context, state) {
@@ -187,6 +280,7 @@ class RouteManager {
         },
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigator,
         name: settingScreen,
         path: settingScreen,
         builder: (context, state) {
@@ -194,13 +288,15 @@ class RouteManager {
         },
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigator,
         name: profileScreen,
         path: profileScreen,
         builder: (context, state) {
-          return ProfileScreen();
+          return ProfileScreen( key: state.pageKey,);
         },
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigator,
         name: uploadReceiptScreen,
         path: uploadReceiptScreen,
         builder: (context, state) {
@@ -216,8 +312,8 @@ class RouteManager {
           }
         },
       ),
-
       GoRoute(
+        parentNavigatorKey: _rootNavigator,
         name: displayReceiptScreen,
         path: displayReceiptScreen,
         builder: (context, state) {
@@ -225,6 +321,7 @@ class RouteManager {
         },
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigator,
         name: preLoadedListScreen,
         path: preLoadedListScreen,
         builder: (context, state) {
@@ -232,6 +329,7 @@ class RouteManager {
         },
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigator,
         name: editProfileScreen,
         path: editProfileScreen,
         builder: (context, state) {
@@ -239,13 +337,15 @@ class RouteManager {
         },
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigator,
         name: myListScreen,
         path: myListScreen,
         builder: (context, state) {
-          return MyList();
+          return MyList( key: state.pageKey,);
         },
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigator,
         name: webViewScreen,
         path: webViewScreen,
         builder: (context, state) {
