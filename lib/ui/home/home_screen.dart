@@ -148,7 +148,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           title: AppLocalizations.of(context)!.myStoreTitle,
                           poppinsFont: poppinsFont,
                           onAllStoreClicked: () async{
-                            final bool? result = await context.pushNamed(RouteManager.stores);
+                            final bool? result = await context.pushNamed(RouteManager.storesScreen);
                             if(result?? false){
                               ref.read(fetchFavouriteStoreRepositoryProvider.notifier).fetchFavStores();
                             }

@@ -15,6 +15,8 @@ import 'data/user_profile_data.dart';
 const poppinsFont = 'Poppins';
 
 class ProfileScreen extends ConsumerStatefulWidget {
+  const ProfileScreen({Key? key}) : super(key: key);
+
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }

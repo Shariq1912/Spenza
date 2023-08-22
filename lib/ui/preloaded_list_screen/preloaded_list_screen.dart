@@ -8,12 +8,15 @@ import '../../router/app_router.dart';
 import '../home/provider/home_preloaded_list.dart';
 
 class PreloadedListScreen extends ConsumerStatefulWidget {
+
+  const PreloadedListScreen({Key? key}) : super(key: key);
+
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
       _PreloadedListScreenState();
 }
 
-class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with PopupMenuMixin {
+class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with PopupMenuMixin,AutomaticKeepAliveClientMixin  {
   final poppinsFont = GoogleFonts.poppins().fontFamily;
 
   final List<PopupMenuItem<PopupMenuAction>> items = [
@@ -48,6 +51,9 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with 
       _loadAllStore();
     });
   }
+  
+  @override
+  bool get wantKeepAlive => true;
 
   Future<void> _loadAllStore() async {
     await ref.read(homePreloadedListProvider.notifier).fetchPreloadedList();
@@ -86,6 +92,9 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with 
   }
   @override
   Widget build(BuildContext context) {
+
+    super.build(context);
+
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.white,

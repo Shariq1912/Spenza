@@ -39,9 +39,6 @@ class ProductForStore extends _$ProductForStore with FirestoreAndPrefsMixin {
         }
       }).toList();
 
-      pro.forEach((element) {
-        print("products : ${element.name}");
-      });
       state = AsyncValue.data(pro);
       return pro;
     } catch (error, stackTrace) {

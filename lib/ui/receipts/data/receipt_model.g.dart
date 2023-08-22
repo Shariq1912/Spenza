@@ -11,6 +11,8 @@ _$_ReceiptModel _$$_ReceiptModelFromJson(Map<String, dynamic> json) =>
       uid: json['uid'] as String,
       name: json['name'] as String?,
       receipt: json['receipt'] as String?,
+      description: json['description'] as String?,
+      date: json['date'] as String?,
     );
 
 Map<String, dynamic> _$$_ReceiptModelToJson(_$_ReceiptModel instance) =>
@@ -18,4 +20,6 @@ Map<String, dynamic> _$$_ReceiptModelToJson(_$_ReceiptModel instance) =>
       'uid': instance.uid,
       'name': instance.name,
       'receipt': instance.receipt,
+      'description': instance.description,
+      'date': instance.date,
     };
