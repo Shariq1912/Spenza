@@ -29,7 +29,7 @@ class StoreRanking extends _$StoreRanking
     return [];
   }
 
-  Future<void> rankStoresByPriceTotal({double radius = 6}) async {
+  Future<void> rankStoresByPriceTotal({double radius = 3}) async {
     state = AsyncValue.loading();
 
     final listId = await prefs.then((prefs) => prefs.getUserListId());
@@ -52,8 +52,8 @@ class StoreRanking extends _$StoreRanking
       final QuerySnapshot storeProductsSnapshot = await fireStore
           .collection('products_mvp')
           .where('is_exist', isEqualTo: true)
-          .where('storeRef', arrayContains: storeRefs)
-          .get();
+          .where('storeRef', whereIn: storeRefs)
+          .get(GetOptions(source: Source.server));
 
       // Create a list of Product objects
       final storeProducts = storeProductsSnapshot.docs.map((productSnapshot) {

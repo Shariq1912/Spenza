@@ -23,6 +23,8 @@ mixin _$ReceiptModel {
   String get uid => throw _privateConstructorUsedError;
   String? get name => throw _privateConstructorUsedError;
   String? get receipt => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
+  String? get date => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -36,7 +38,12 @@ abstract class $ReceiptModelCopyWith<$Res> {
           ReceiptModel value, $Res Function(ReceiptModel) then) =
       _$ReceiptModelCopyWithImpl<$Res, ReceiptModel>;
   @useResult
-  $Res call({String uid, String? name, String? receipt});
+  $Res call(
+      {String uid,
+      String? name,
+      String? receipt,
+      String? description,
+      String? date});
 }
 
 /// @nodoc
@@ -55,6 +62,8 @@ class _$ReceiptModelCopyWithImpl<$Res, $Val extends ReceiptModel>
     Object? uid = null,
     Object? name = freezed,
     Object? receipt = freezed,
+    Object? description = freezed,
+    Object? date = freezed,
   }) {
     return _then(_value.copyWith(
       uid: null == uid
@@ -69,6 +78,14 @@ class _$ReceiptModelCopyWithImpl<$Res, $Val extends ReceiptModel>
           ? _value.receipt
           : receipt // ignore: cast_nullable_to_non_nullable
               as String?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
+      date: freezed == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -81,7 +98,12 @@ abstract class _$$_ReceiptModelCopyWith<$Res>
       __$$_ReceiptModelCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String uid, String? name, String? receipt});
+  $Res call(
+      {String uid,
+      String? name,
+      String? receipt,
+      String? description,
+      String? date});
 }
 
 /// @nodoc
@@ -98,6 +120,8 @@ class __$$_ReceiptModelCopyWithImpl<$Res>
     Object? uid = null,
     Object? name = freezed,
     Object? receipt = freezed,
+    Object? description = freezed,
+    Object? date = freezed,
   }) {
     return _then(_$_ReceiptModel(
       uid: null == uid
@@ -112,6 +136,14 @@ class __$$_ReceiptModelCopyWithImpl<$Res>
           ? _value.receipt
           : receipt // ignore: cast_nullable_to_non_nullable
               as String?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
+      date: freezed == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -119,7 +151,12 @@ class __$$_ReceiptModelCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_ReceiptModel implements _ReceiptModel {
-  const _$_ReceiptModel({required this.uid, this.name, this.receipt});
+  const _$_ReceiptModel(
+      {required this.uid,
+      this.name,
+      this.receipt,
+      this.description,
+      this.date});
 
   factory _$_ReceiptModel.fromJson(Map<String, dynamic> json) =>
       _$$_ReceiptModelFromJson(json);
@@ -130,10 +167,14 @@ class _$_ReceiptModel implements _ReceiptModel {
   final String? name;
   @override
   final String? receipt;
+  @override
+  final String? description;
+  @override
+  final String? date;
 
   @override
   String toString() {
-    return 'ReceiptModel(uid: $uid, name: $name, receipt: $receipt)';
+    return 'ReceiptModel(uid: $uid, name: $name, receipt: $receipt, description: $description, date: $date)';
   }
 
   @override
@@ -143,12 +184,16 @@ class _$_ReceiptModel implements _ReceiptModel {
             other is _$_ReceiptModel &&
             (identical(other.uid, uid) || other.uid == uid) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.receipt, receipt) || other.receipt == receipt));
+            (identical(other.receipt, receipt) || other.receipt == receipt) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
+            (identical(other.date, date) || other.date == date));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, uid, name, receipt);
+  int get hashCode =>
+      Object.hash(runtimeType, uid, name, receipt, description, date);
 
   @JsonKey(ignore: true)
   @override
@@ -168,7 +213,9 @@ abstract class _ReceiptModel implements ReceiptModel {
   const factory _ReceiptModel(
       {required final String uid,
       final String? name,
-      final String? receipt}) = _$_ReceiptModel;
+      final String? receipt,
+      final String? description,
+      final String? date}) = _$_ReceiptModel;
 
   factory _ReceiptModel.fromJson(Map<String, dynamic> json) =
       _$_ReceiptModel.fromJson;
@@ -179,6 +226,10 @@ abstract class _ReceiptModel implements ReceiptModel {
   String? get name;
   @override
   String? get receipt;
+  @override
+  String? get description;
+  @override
+  String? get date;
   @override
   @JsonKey(ignore: true)
   _$$_ReceiptModelCopyWith<_$_ReceiptModel> get copyWith =>

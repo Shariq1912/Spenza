@@ -86,10 +86,9 @@ class LoginRepository extends StateNotifier<ApiResponse>
 
   Future<bool> signOut() async {
     await _auth.signOut();
-    await SharedPreferences.getInstance()
-      ..clear();
+    final pref = await SharedPreferences.getInstance();
 
-    return true;
+    return pref.clear().then((value) => true);
   }
 
   Future<void> signInWithGoogle() async {

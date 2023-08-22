@@ -14,6 +14,7 @@ _$_PreloadedListModel _$$_PreloadedListModelFromJson(
       preloadedPhoto: json['preloaded_photo'] as String,
       description: json['description'] as String,
       path: json['path'] as String,
+      receiptCount: json['receiptCount'] as String?,
     );
 
 Map<String, dynamic> _$$_PreloadedListModelToJson(
@@ -24,4 +25,5 @@ Map<String, dynamic> _$$_PreloadedListModelToJson(
       'preloaded_photo': instance.preloadedPhoto,
       'description': instance.description,
       'path': instance.path,
+      'receiptCount': instance.receiptCount,
     };
