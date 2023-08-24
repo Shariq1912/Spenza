@@ -64,6 +64,7 @@ class RouteManager {
   static const profileScreenBottomPath = '/profileScreenBottomPath';
   static const myListScreenBottomPath = '/myListScreenBottomPath';
   static const preloadedListScreenBottomPath = '/preloadedListScreenBottomPath';
+  static const receiptListScreenBottomPath = '/receiptListScreenBottomPath';
 
   /// The route configuration.
   static final GoRouter router = GoRouter(
@@ -75,6 +76,20 @@ class RouteManager {
         builder: (context, state, child) =>
             DashboardScreen(key: state.pageKey, child: child),
         routes: [
+          GoRoute(
+            name: receiptListScreenBottomPath,
+            path: "/receiptListScreenBottomPath",
+            parentNavigatorKey: _shellNavigator,
+            pageBuilder: (context, state) {
+              final String path =
+                  state.queryParameters['list_ref'] ?? "";
+              return NoTransitionPage(
+                child: DisplayReceiptScreen(
+                    key: state.pageKey,path: path
+                ),
+              );
+            },
+          ),
           GoRoute(
             name: homeScreen,
             path: homeScreen,
@@ -196,14 +211,13 @@ class RouteManager {
         builder: (context, state) {
           final String listId =
               state.queryParameters['list_id'] ?? "4NlYnhmchdlu528Gw2yK";
+          final String name = state.queryParameters['name'] ?? "preloaded";
+          final String photo = state.queryParameters['photo'] ?? "";
+          final String path = state.queryParameters['path'] ?? "";
           //return MyListDetailsScreen(listId: listId);
-          if (listId != "4NlYnhmchdlu528Gw2yK") {
-            print("Notequal $listId");
-            return MyListDetailsScreen(listId: listId);
-          } else {
-            print("equal $listId");
-            return MyListDetailsScreen(listId: listId); // For example
-          }
+
+            return MyListDetailsScreen(listId: listId, name:name, photo:photo, path: path);
+
         },
       ),
       GoRoute(
@@ -211,9 +225,10 @@ class RouteManager {
         name: preLoadedListDetailScreen,
         path: preLoadedListDetailScreen,
         builder: (context, state) {
-          final String listId =
-              state.queryParameters['list_id'] ?? "4NlYnhmchdlu528Gw2yK";
-          return PreLoadedListDetailsScreen(listId: listId);
+          final String listId = state.queryParameters['list_id'] ?? "4NlYnhmchdlu528Gw2yK";
+          final String name = state.queryParameters['name'] ?? "preloaded";
+          final String photo = state.queryParameters['photo'] ?? "";
+          return PreLoadedListDetailsScreen(listId: listId,name:name,photo:photo);
         },
       ),
       GoRoute(
@@ -319,7 +334,7 @@ class RouteManager {
         builder: (context, state) {
           final String path =
               state.queryParameters['list_ref'] ?? "";
-            return DisplayReceiptScreen(path: path);
+            return DisplayReceiptScreen(key: state.pageKey,path: path,);
         },
       ),
       GoRoute(

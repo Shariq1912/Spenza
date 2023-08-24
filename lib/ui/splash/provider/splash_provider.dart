@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
+import '../../profile/profile_repository.dart';
+
 part 'splash_provider.g.dart';
 
 @riverpod

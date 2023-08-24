@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -7,6 +8,8 @@ import 'package:spenza/ui/home/home_screen.dart';
 import 'package:spenza/ui/my_store/data/all_store.dart';
 import 'package:spenza/ui/my_store/my_store_provider.dart';
 import 'package:spenza/ui/my_store/widget/my_store_list_widget.dart';
+
+import '../profile/profile_repository.dart';
 
 class AllStoresScreen extends ConsumerStatefulWidget {
   const AllStoresScreen({Key? key}) : super(key: key);
@@ -27,6 +30,7 @@ class _StoresState extends ConsumerState<AllStoresScreen> {
   }
 
   Future<void> _loadAllStore() async {
+     ref.read(profileRepositoryProvider.notifier).getUserProfileData();
     await ref.read(allStoreProvider.notifier).fetchAllStores();
   }
 
@@ -64,12 +68,43 @@ class _StoresState extends ConsumerState<AllStoresScreen> {
               onTap: () {
                 //Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SettingScreen()));
               },
-              child: CircleAvatar(
-                radius: 40,
-                child: ClipOval(
-                  child: Image.network('https://picsum.photos/250?image=9'),
-                ),
-              ),
+              child: Consumer(
+                builder: (context, ref, child) {
+                  final profilePro = ref.watch(profileRepositoryProvider);
+                  return profilePro.when(
+                        () => Container(),
+                    loading: () => Center(child: CircularProgressIndicator()),
+                    error: (message) => ClipOval(
+                      child: Image.asset('assets/images/user.png'),
+                    ),
+                    success: (data) {
+                      if (data.profilePhoto != null && data.profilePhoto!.isNotEmpty) {
+                        return CircleAvatar(
+                          radius: MediaQuery.of(context).size.width * 0.08,
+                          backgroundColor: Colors.white,
+                          child: ClipOval(
+                            child: CachedNetworkImage(
+                              imageUrl: data.profilePhoto!,
+                              width: double.infinity,
+                              height: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        );
+
+                      } else {
+                        return CircleAvatar(
+                          radius: MediaQuery.of(context).size.width * 0.08, // Adjust the multiplier as needed
+                          backgroundColor: Colors.white,
+                          child: ClipOval(
+                              child: Image.asset('assets/images/user.png')
+                          ),
+                        );
+                      }
+                    },
+                  );
+                },
+              )
             ),
           ),
         ],

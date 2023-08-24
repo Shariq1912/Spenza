@@ -12,7 +12,7 @@ class MyListWidget extends StatelessWidget {
       {super.key, required this.stores, required this.onButtonClicked,required this.onPopUpClicked});
 
   final List<MyListModel> stores;
-  final Function(String store) onButtonClicked;
+  final Function(String store, String name, String photo, String? path) onButtonClicked;
   final Function(String store) onPopUpClicked;
 
 
@@ -36,53 +36,58 @@ class MyListWidget extends StatelessWidget {
       itemBuilder: (context, index) {
         MyListModel store = stores[index];
 
-        return Card(
-          color: Colors.white,
-          child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: store.myListPhoto!.isNotEmpty
-                      ? CachedNetworkImage(
-                    width: 80,
-                    height: 80,
-                    fit: BoxFit.fill,
-                    imageUrl: store.myListPhoto!,
-                  )
-                      : Image.asset(
-                    'favicon.png'.assetImageUrl,
-                    fit: BoxFit.cover,
+        return GestureDetector(
+          onTap: (){
+            onButtonClicked(store.documentId!, store.name, store.myListPhoto!, store.path!);
+          },
+          child: Card(
+            color: Colors.white,
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: store.myListPhoto!.isNotEmpty
+                        ? CachedNetworkImage(
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.fill,
+                      imageUrl: store.myListPhoto!,
+                    )
+                        : Image.asset(
+                      'favicon.png'.assetImageUrl,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        store.name,
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, fontFamily: poppinsFont),
-                      ),
-                      SizedBox(height: 3),
-                      Text(
-                        store.description.length > 50 ? '${store.description.substring(0, 50)}...' : store.description,
-                        style: TextStyle(fontSize: 13, fontFamily: poppinsFont),
-                      ),
-                      SizedBox(height: 14),
-                      Text("${store.count!} recibos", style: TextStyle(fontSize: 13, fontFamily: poppinsFont)),
-                    ],
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          store.name,
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, fontFamily: poppinsFont),
+                        ),
+                        SizedBox(height: 3),
+                        Text(
+                          store.description.length > 50 ? '${store.description.substring(0, 50)}...' : store.description,
+                          style: TextStyle(fontSize: 13, fontFamily: poppinsFont),
+                        ),
+                        SizedBox(height: 14),
+                        Text("${store.count!} recibos", style: TextStyle(fontSize: 13, fontFamily: poppinsFont)),
+                      ],
+                    ),
                   ),
-                ),
-                IconButton(
-                  onPressed: () {
-                   onPopUpClicked(store.path!);
-                  },
-                  icon: Icon(Icons.more_vert),
-                ),
-              ],
+                  IconButton(
+                    onPressed: () {
+                     onPopUpClicked(store.path!);
+                    },
+                    icon: Icon(Icons.more_vert),
+                  ),
+                ],
+              ),
             ),
           ),
         );

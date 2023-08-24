@@ -15,9 +15,11 @@ import 'package:spenza/utils/color_utils.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
 class PreLoadedListDetailsScreen extends ConsumerStatefulWidget {
-  const PreLoadedListDetailsScreen({super.key, required this.listId});
+  const PreLoadedListDetailsScreen({super.key, required this.listId, required  this.name, required this.photo});
 
   final String listId;
+  final String name;
+  final String photo;
 
   @override
   ConsumerState createState() => _PreLoadedListDetailsScreenState();
@@ -90,13 +92,13 @@ class _PreLoadedListDetailsScreenState
         child: Scaffold(
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight),
-            child: Consumer(
+            child: /*Consumer(
               builder: (context, ref, child) {
                 return ref.watch(listDetailsProvider).maybeWhen(
-                      data: (data) => CustomAppBar(
+                      data: (data) => */CustomAppBar(
                         displayActionIcon: true,
-                        title: data.name,
-                        logo: data.myListPhoto ?? "",
+                        title: widget.name,
+                        logo: widget.photo ?? "",
                         textStyle: TextStyle(
                           fontFamily: poppinsFont,
                           fontWeight: FontWeight.bold,
@@ -109,7 +111,7 @@ class _PreLoadedListDetailsScreenState
                         },
                         onActionIconPressed: _onActionIconPressed,
                       ),
-                      orElse: () => CustomAppBar(
+                      /*orElse: () => CustomAppBar(
                         displayActionIcon: true,
                         title: "",
                         textStyle: TextStyle(
@@ -122,10 +124,10 @@ class _PreLoadedListDetailsScreenState
                           context.pushNamed(RouteManager.addProductScreen);
                         },
                         onActionIconPressed: _onActionIconPressed,
-                      ),
-                    );
+                      ),*/
+              /*      );
               },
-            ),
+            ),*/
           ),
           body: Column(
             children: [
@@ -142,7 +144,6 @@ class _PreLoadedListDetailsScreenState
               ),
               const SizedBox(height: 10),*/
               Expanded(
-                // Use a single Expanded widget to wrap the ListView
                 child: Consumer(
                   builder: (context, ref, child) {
                     final result = ref.watch(userProductListProvider);

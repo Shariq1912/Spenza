@@ -114,12 +114,13 @@ class _SignUpScreenState extends ConsumerState<RegisterScreen> {
                     ),
                     child: Column(
                       children: [
-                        responseValue.when(
+                        /*responseValue.when(
                           () => Container(),
                           loading: () => const CircularProgressIndicator(),
                           success: (data) {
                             debugPrint(data.toString());
                             ref
+
                                 .read(registerRepositoryProvider.notifier)
                                 .redirectUserToDestination(context: context);
                             return Container();
@@ -128,7 +129,7 @@ class _SignUpScreenState extends ConsumerState<RegisterScreen> {
                             debugPrint(message.toString());
                             return Container();
                           },
-                        ),
+                        ),*/
                         TextFormField(
                             decoration: InputDecoration(
                               hintText:

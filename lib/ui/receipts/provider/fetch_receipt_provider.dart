@@ -29,7 +29,7 @@ class FetchReciptProvider extends _$FetchReciptProvider with FirestoreAndPrefsMi
         }).toList();
 
         receipt.forEach((element) {
-          print("receipts: ${element.name}");
+          print("Allreceipts: ${element.name},  path $path");
         });
 
         state = AsyncValue.data(receipt);
@@ -47,7 +47,7 @@ class FetchReciptProvider extends _$FetchReciptProvider with FirestoreAndPrefsMi
         }).toList();
 
         receipt.forEach((element) {
-          print("receipts: ${element.name}");
+          print("receipts: ${element.name} path $path");
         });
 
         state = AsyncValue.data(receipt);

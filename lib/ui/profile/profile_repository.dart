@@ -26,11 +26,22 @@ class ProfileRepository extends _$ProfileRepository {
     try {
       state = ApiResponse.loading();
       final DocumentSnapshot<Map<String, dynamic>> snapshot =
-          await _fireStore.collection('users').doc(userId).get();
+      await _fireStore.collection('users').doc(userId).get();
       if (snapshot.exists) {
-        state = ApiResponse.success(data: UserProfileData.fromJson(snapshot.data()!));
-        print("resss ${snapshot.data()}");
-        return UserProfileData.fromJson(snapshot.data()!);
+        final userData = UserProfileData.fromJson(snapshot.data()!);
+
+        state = ApiResponse.success(data: userData);
+        print("Profile Photo: ${userData.profilePhoto}");
+        if(userData.profilePhoto != null){
+          await prefs.setString('profilePhoto', userData.profilePhoto!);
+        }
+        else{
+          await prefs.setString('profilePhoto', "");
+        }
+
+
+
+        return userData;
       } else {
         return null;
       }

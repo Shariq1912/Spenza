@@ -46,22 +46,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   void initState() {
     super.initState();
 
-    /*passwordValidator = MultiValidator([
-      RequiredValidator(
-        errorText: AppLocalizations.of(context)!.passwordRequiredError,
-      ),
-    ]);
 
-    emailValidator = MultiValidator([
-      RequiredValidator(
-        errorText: AppLocalizations.of(context)!.emailRequiredError,
-      ),
-      EmailValidator(
-        errorText: AppLocalizations.of(context)!.emailInvalidError,
-      ),
-    ]);*/
-
-    // getPostalCode();
   }
 
   getPostalCode() async {
@@ -209,6 +194,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             ref
                                 .read(loginRepositoryProvider.notifier)
                                 .redirectUserToDestination(context: context);
+
                             return Container();
                           },
                           orElse: () => _LoginButton(),
@@ -263,9 +249,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             padding: const EdgeInsets.all(16),
                             child: InkWell(
                               onTap: () {
-                                context.showSnackBar(
+                                /*context.showSnackBar(
                                   message: 'clicked on google',
-                                );
+                                );*/
                                 ref
                                     .read(loginRepositoryProvider.notifier)
                                     .signInWithGoogle();
@@ -277,7 +263,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             ),
                           ),
                         ),
-                        Padding(
+                        /*Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: InkWell(
                             onTap: () {
@@ -291,7 +277,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               height: 43,
                             ),
                           ),
-                        )
+                        )*/
                       ],
                     )
                   ],

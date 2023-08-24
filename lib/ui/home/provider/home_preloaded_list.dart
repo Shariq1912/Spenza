@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:spenza/helpers/fireStore_pref_mixin.dart';
 import 'package:spenza/router/app_router.dart';
@@ -53,16 +55,49 @@ class HomePreloadedList extends _$HomePreloadedList with FirestoreAndPrefsMixin 
   }
 
 
-  Future<void> redirectUserToListDetailsScreen({required BuildContext context, required String listId}) async {
+  Future<void> redirectUserToListDetailsScreen({required BuildContext context, required String listId, required String name, required String photo}) async {
     await prefs.then((prefs){
       prefs.setString("user_list_name", PreloadedListConstant.collectionName);
       prefs.setString("user_list_id", listId);
     });
 
     final bool? result = await context.pushNamed(RouteManager.preLoadedListDetailScreen,
-        queryParameters: {'list_id': listId});
-
-
+        queryParameters: {'list_id': listId,
+        'name':name, 'photo': photo});
 
   }
+
+  Future<bool> copyDocument(String itemPath) async {
+    try {
+      final userId = await prefs.then((prefs) => prefs.getUserId());
+      final sourceDocument = fireStore.doc(itemPath);
+      final sourceDocSnapshot = await sourceDocument.get();
+      final sourceData = sourceDocSnapshot.data();
+
+      final currentDate = DateTime.now();
+      final formattedDate = DateFormat('yyyy-MM-dd_HH:mm:ss').format(currentDate);
+      final newName = 'Copied_${sourceDocument.id}_$formattedDate';
+
+      final targetCollection = fireStore.collection(MyListConstant.myListCollection);
+      final newDocumentRef = targetCollection.doc();
+
+
+      final copiedData = Map<String, dynamic>.from(sourceData!);
+      if (copiedData.containsKey('preloaded_photo')) {
+        copiedData['myListPhoto'] = copiedData['preloaded_photo'];
+        copiedData.remove('preloaded_photo');
+      }
+      copiedData['uid'] = userId;
+      //copiedData['name'] = newName;
+      copiedData['usersRef'] = sourceDocument;
+
+      await newDocumentRef.set(copiedData);
+
+      return true;
+    } catch (e) {
+      debugPrint('Error copying document: $e');
+      return false;
+    }
+  }
+
 }

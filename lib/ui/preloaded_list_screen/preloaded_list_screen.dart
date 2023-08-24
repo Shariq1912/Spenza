@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -7,7 +8,7 @@ import 'package:spenza/ui/preloaded_list_screen/component/preloaded_list_widget.
 import 'package:spenza/utils/spenza_extensions.dart';
 import '../../router/app_router.dart';
 import '../home/provider/home_preloaded_list.dart';
-import '../my_list_details/provider/user_product_list_provider.dart';
+import '../profile/profile_repository.dart';
 
 class PreloadedListScreen extends ConsumerStatefulWidget {
 
@@ -59,7 +60,9 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with 
   bool get wantKeepAlive => true;
 
   Future<void> _loadAllStore() async {
+     ref.read(profileRepositoryProvider.notifier).getUserProfileData();
     await ref.read(homePreloadedListProvider.notifier).fetchPreloadedList();
+
   }
 
   @override
@@ -96,8 +99,8 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with 
         } else if (value == PopupMenuAction.copy) {
           debugPrint("copy action");
           final bool result = await ref
-              .read(userProductListProvider.notifier)
-              .copyTheList(context: context);
+              .read(homePreloadedListProvider.notifier)
+              .copyDocument(itemPath);
 
           if (result) {
             hasValueChanged = true;
@@ -139,12 +142,43 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with 
               onTap: () {
                 //Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SettingScreen()));
               },
-              child: CircleAvatar(
-                radius: 40,
-                child: ClipOval(
-                  child: Image.network('https://picsum.photos/250?image=9'),
-                ),
-              ),
+              child: Consumer(
+                builder: (context, ref, child) {
+                  final profilePro = ref.watch(profileRepositoryProvider);
+                  return profilePro.when(
+                        () => Container(),
+                    loading: () => Center(child: CircularProgressIndicator()),
+                    error: (message) => ClipOval(
+                      child: Image.asset('assets/images/user.png'),
+                    ),
+                    success: (data) {
+                      if (data.profilePhoto != null && data.profilePhoto!.isNotEmpty) {
+                        return CircleAvatar(
+                          radius: MediaQuery.of(context).size.width * 0.08,
+                          backgroundColor: Colors.white,
+                          child: ClipOval(
+                            child: CachedNetworkImage(
+                              imageUrl: data.profilePhoto!,
+                              width: double.infinity,
+                              height: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        );
+
+                      } else {
+                        return CircleAvatar(
+                          radius: MediaQuery.of(context).size.width * 0.08, // Adjust the multiplier as needed
+                          backgroundColor: Colors.white,
+                          child: ClipOval(
+                              child: Image.asset('assets/images/user.png')
+                          ),
+                        );
+                      }
+                    },
+                  );
+                },
+              )
             ),
           ),
         ],
@@ -166,7 +200,16 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with 
                   data: data,
                    onButtonClicked: (itemPath) {
                     _onActionIconPressed(itemPath);
-                  },
+                  }, onCardClicked: (listId, name, photo ) {
+                  ref
+                      .read(homePreloadedListProvider.notifier)
+                      .redirectUserToListDetailsScreen(
+                      context: context,
+                      listId: listId,
+                      name : name,
+                      photo: photo
+                  );
+                },
                 );
               },
             );

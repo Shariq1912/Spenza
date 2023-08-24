@@ -14,9 +14,12 @@ import 'package:spenza/utils/color_utils.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
 class MyListDetailsScreen extends ConsumerStatefulWidget {
-  const MyListDetailsScreen({super.key, required this.listId});
+  const MyListDetailsScreen({super.key, required this.listId, required this.name, required this.photo, required this.path});
 
   final String listId;
+  final String name;
+  final String photo;
+  final String path;
 
   @override
   ConsumerState createState() => _MyListDetailsScreenState();
@@ -27,24 +30,32 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
   final TextEditingController _searchController = TextEditingController();
   bool hasValueChanged = false;
 
+
   final List<PopupMenuItem<PopupMenuAction>> items = [
     PopupMenuItem(
       child: ListTile(
-        trailing: const Icon(Icons.edit),
+        leading: const Icon(Icons.edit),
         title: Text(PopupMenuAction.edit.value),
       ),
       value: PopupMenuAction.edit,
     ),
     PopupMenuItem(
       child: ListTile(
-        trailing: const Icon(Icons.copy),
-        title: Text(PopupMenuAction.copy.value),
+        leading: const Icon(Icons.upload),
+        title: Text(PopupMenuAction.upload.value),
       ),
-      value: PopupMenuAction.copy,
+      value: PopupMenuAction.upload,
     ),
     PopupMenuItem(
       child: ListTile(
-        trailing: const Icon(Icons.delete),
+        leading: const Icon(Icons.receipt),
+        title: Text(PopupMenuAction.receipt.value),
+      ),
+      value: PopupMenuAction.receipt,
+    ),
+    PopupMenuItem(
+      child: ListTile(
+        leading: const Icon(Icons.delete),
         title: Text(PopupMenuAction.delete.value),
       ),
       value: PopupMenuAction.delete,
@@ -84,13 +95,13 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
         child: Scaffold(
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight),
-            child: Consumer(
+            child:/* Consumer(
               builder: (context, ref, child) {
                 return ref.watch(listDetailsProvider).maybeWhen(
-                      data: (data) => CustomAppBar(
+                      data: (data) =>*/ CustomAppBar(
                         displayActionIcon: true,
-                        title: data.name,
-                        logo: data.myListPhoto ?? "",
+                        title: widget.name,
+                        logo: widget.photo ?? "",
                         textStyle: TextStyle(
                           fontFamily: poppinsFont,
                           fontWeight: FontWeight.bold,
@@ -101,9 +112,9 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                          // context.pushNamed(RouteManager.addProductScreen);
                           context.pop(hasValueChanged);
                         },
-                        onActionIconPressed: _onActionIconPressed,
+                        onActionIconPressed: _onActionIconPressed
                       ),
-                      orElse: () => CustomAppBar(
+                      /*orElse: () => CustomAppBar(
                         displayActionIcon: true,
                         title: "",
                         textStyle: TextStyle(
@@ -119,7 +130,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                       ),
                     );
               },
-            ),
+            ),*/
           ),
           body: Column(
             children: [
@@ -219,17 +230,16 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
       ),
       items: items,
       onSelected: (PopupMenuAction value) async {
-        if (value == PopupMenuAction.copy) {
-          debugPrint("copy action");
-          final bool result = await ref
-              .read(userProductListProvider.notifier)
-              .copyTheList(context: context);
+        if (value == PopupMenuAction.upload) {
+          debugPrint("upload");
+          context.pushNamed(RouteManager.uploadReceiptScreen,queryParameters: {'list_id': widget.path});
 
-          if (result) {
-            hasValueChanged = true;
-            context.showSnackBar(message: "List copied successfully!");
-          }
-        } else if (value == PopupMenuAction.delete) {
+        } else if (value == PopupMenuAction.receipt) {
+          debugPrint("receipt action, ${widget.path}");
+          context.pushNamed(RouteManager.displayReceiptScreen,queryParameters: {'list_ref': widget.path});
+
+        }
+        else if (value == PopupMenuAction.delete) {
           debugPrint("delete action");
           final bool result = await ref
               .read(userProductListProvider.notifier)
@@ -239,10 +249,11 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
             hasValueChanged = true;
             context.showSnackBar(message: "List deleted successfully!");
           }
+
         } else if (value == PopupMenuAction.edit) {
           debugPrint("edit action");
           final bool? result =
-              await context.pushNamed(RouteManager.editListScreen);
+          await context.pushNamed(RouteManager.editListScreen);
           if (result ?? false) {
             context.showSnackBar(message: "List Edited Successfully!");
             ref.read(listDetailsProvider.notifier).getSelectedListDetails();

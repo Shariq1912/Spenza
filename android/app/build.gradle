@@ -38,10 +38,10 @@ android {
 
     signingConfigs {
         release {
-            storeFile file("D:\\spenza_jks\\upload-keystore.jks")
+          /*  storeFile file("D:\\spenza_jks\\upload-keystore.jks")
             storePassword "Spenza@tft."
             keyAlias "upload"
-            keyPassword "Spenza@tft."
+            keyPassword "Spenza@tft."*/
         }
     }
 

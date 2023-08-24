@@ -8,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/location/state/location_state.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
-
 import '../../../utils/fireStore_constants.dart';
 
 class LocationRepository extends StateNotifier<LocationState> {
@@ -118,10 +117,10 @@ class LocationRepository extends StateNotifier<LocationState> {
     /// Due to State notifier not accepting Future temporary solution
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await _fireStore.collection('users').doc(prefs.getUserId()).update(
+    await _fireStore.collection('users').doc(prefs.getUserId()).set(
       {
         'location': GeoPoint(latitude, longitude),
-      },
+      },SetOptions(merge: true)
     );
   }
 
@@ -135,7 +134,6 @@ class LocationRepository extends StateNotifier<LocationState> {
       context.goNamed(RouteManager.homeScreen);
       return;
     }
-
     context.goNamed(RouteManager.favouriteScreen);
   }
 
@@ -143,10 +141,10 @@ class LocationRepository extends StateNotifier<LocationState> {
     /// Due to State notifier not accepting Future temporary solution
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(UserConstant.zipCodeField, postalCode);
-    await _fireStore.collection('users').doc(prefs.getUserId()).update(
+    await _fireStore.collection('users').doc(prefs.getUserId()).set(
       {
         'zipCode': postalCode,
-      },
+      },SetOptions(merge: true)
     );
   }
 }

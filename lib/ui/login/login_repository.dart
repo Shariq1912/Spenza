@@ -86,6 +86,7 @@ class LoginRepository extends StateNotifier<ApiResponse>
 
   Future<bool> signOut() async {
     await _auth.signOut();
+    await GoogleSignIn().signOut();
     final pref = await SharedPreferences.getInstance();
 
     return pref.clear().then((value) => true);
@@ -105,10 +106,10 @@ class LoginRepository extends StateNotifier<ApiResponse>
 
       final authResult =
           await FirebaseAuth.instance.signInWithCredential(credential);
-      //final userCredential = authResult.user;  if get error try to uncomment this line
       final userCredential = authResult;
 
       if (userCredential != null) {
+        await _storeData(userCredential);
         state = ApiResponse.success(data: userCredential);
       } else {
         state = ApiResponse.error(errorMsg: 'Failed to sign in with Google.');
@@ -117,6 +118,8 @@ class LoginRepository extends StateNotifier<ApiResponse>
       state = ApiResponse.error(errorMsg: e.toString());
     }
   }
+
+
 
   Future<void> redirectUserToDestination({
     required BuildContext context,

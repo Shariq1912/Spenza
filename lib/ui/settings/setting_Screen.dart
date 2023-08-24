@@ -171,11 +171,27 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
 
   Widget _buildImageWidget(String? image) {
     return image != null
-        ? CachedNetworkImage(fit: BoxFit.cover, imageUrl: image,)
-        : Image.asset(
-      'assets/images/avatar.gif'.assetImageUrl,
-      fit: BoxFit.cover,
+        ? CircleAvatar(
+      radius: MediaQuery.of(context).size.width * 0.08,
+      backgroundColor: Colors.white,
+      child: ClipOval(
+        child: CachedNetworkImage(
+          imageUrl: image!,
+          width: double.infinity,
+          height: double.infinity,
+          fit: BoxFit.cover,
+        ),
+      ),
+    )
+        : CircleAvatar(
+      radius: MediaQuery.of(context).size.width * 0.08,
+      backgroundColor: Colors.white,
+      child: ClipOval(
+          child: Image.asset('assets/images/user.png')
+      ),
     );
+
+
   }
 
 }

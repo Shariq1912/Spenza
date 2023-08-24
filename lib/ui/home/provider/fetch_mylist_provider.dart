@@ -23,29 +23,6 @@ class FetchMyList extends _$FetchMyList with FirestoreAndPrefsMixin {
       state = AsyncValue.loading();
 
       final userId = await prefs.then((prefs) => prefs.getUserId());
-      /*final snapShot = await fireStore
-          .collection(MyListConstant.myListCollection)
-          .where('uid', isEqualTo: userId)
-          .get();
-
-      final List<MyListModel> mylists = await Future.wait(snapShot.docs.map((doc) async {
-        final data = doc.reference;
-        final snapShots = await fireStore
-            .collection(ReceiptConstant.collectionName).where("uid", isEqualTo: userId)
-            .where('list_ref', isEqualTo: fireStore.doc(doc.reference.path))
-            .count().get();
-        final count = snapShots.count;
-
-        return MyListModel(
-            description:doc['description'].toString(),
-            name: doc['name'].toString(),
-            uid: doc['uid'], usersRef: doc['usersRef'].toString(),
-        myListPhoto: doc['myListPhoto'],
-        path: doc.reference.path,
-        count: count.toString(),
-        documentId: doc.id.toString());
-
-      }).toList());*/
 
       final QuerySnapshot myListSnapshot = await fireStore
           .collection(MyListConstant.myListCollection)
@@ -103,14 +80,17 @@ class FetchMyList extends _$FetchMyList with FirestoreAndPrefsMixin {
       return [];
     }
   }
-  Future<void> redirectUserToListDetailsScreen({required BuildContext context, required String listId}) async {
+  Future<void> redirectUserToListDetailsScreen({required BuildContext context, required String listId, required String name, required String photo, required String path}) async {
      await prefs.then((prefs){
        prefs.setString("user_list_name", MyListConstant.myListCollection);
        prefs.setString("user_list_id", listId);
      });
 
      final bool? result = await context.pushNamed(RouteManager.myListDetailScreen,
-         queryParameters: {'list_id': listId});
+         queryParameters: {'list_id': listId,
+         'name':name,
+         'photo': photo,
+         'path':path});
 
      if(result ?? false){
        fetchMyListFun();

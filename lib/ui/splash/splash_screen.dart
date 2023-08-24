@@ -7,6 +7,8 @@ import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/splash/provider/splash_provider.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
+import '../profile/profile_repository.dart';
+
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
@@ -22,14 +24,18 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(splashProvider.notifier).isLoggedIn();
+      _loadData();
     });
+  }
+
+  _loadData() async {
+    ref.read(splashProvider.notifier).isLoggedIn();
+
   }
 
   @override
   void dispose() {
     super.dispose();
-
     ref.invalidate(splashProvider);
   }
 

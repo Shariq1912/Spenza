@@ -39,7 +39,7 @@ class _BottomNavigationWidgetState
         BottomNavigationBarItem(icon: Icon(Icons.store), label: 'Stores'),
         BottomNavigationBarItem(icon: Icon(Icons.list), label: 'My List'),
         BottomNavigationBarItem(icon: Icon(Icons.lock_reset_outlined), label: 'Preloaded'),
-        BottomNavigationBarItem(icon: Icon(Icons.receipt_long), label: 'Receipts'),
+        //BottomNavigationBarItem(icon: Icon(Icons.receipt_long), label: 'Receipts'),
         BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Account'),
       ],
     );
@@ -69,8 +69,11 @@ class _BottomNavigationWidgetState
       case 3:
         context.goNamed(RouteManager.preloadedListScreenBottomPath);
         break;
+      /*case 4:
+        context.goNamed(RouteManager.displayReceiptScreen);
+        break;*/
 
-      case 5:
+      case 4:
         context.goNamed(RouteManager.profileScreenBottomPath);
         break;
       default:

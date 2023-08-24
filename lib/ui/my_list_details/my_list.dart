@@ -1,12 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:spenza/ui/my_list_details/provider/list_details_provider.dart';
+import 'package:spenza/ui/my_list_details/provider/user_product_list_provider.dart';
+import 'package:spenza/utils/spenza_extensions.dart';
 
 import '../../helpers/popup_menu_mixin.dart';
 import '../../router/app_router.dart';
 import '../home/provider/fetch_mylist_provider.dart';
-import '../my_store/widget/my_store_list_widget.dart';
+import '../profile/profile_repository.dart';
 import 'components/my_list_widget.dart';
 
 class MyList extends ConsumerStatefulWidget {
@@ -18,7 +22,7 @@ class MyList extends ConsumerStatefulWidget {
 
 class _MyListState extends ConsumerState<MyList> with PopupMenuMixin {
   final poppinsFont = GoogleFonts.poppins().fontFamily;
-
+  bool hasValueChanged = false;
   @override
   void initState() {
     super.initState();
@@ -28,6 +32,7 @@ class _MyListState extends ConsumerState<MyList> with PopupMenuMixin {
   }
 
   Future<void> _loadAllMyList() async {
+     ref.read(profileRepositoryProvider.notifier).getUserProfileData();
     await ref.read(fetchMyListProvider.notifier).fetchMyListFun();
   }
 
@@ -45,6 +50,13 @@ class _MyListState extends ConsumerState<MyList> with PopupMenuMixin {
         title: Text(PopupMenuAction.upload.value),
       ),
       value: PopupMenuAction.upload,
+    ),
+    PopupMenuItem(
+      child: ListTile(
+        leading: const Icon(Icons.receipt),
+        title: Text(PopupMenuAction.receipt.value),
+      ),
+      value: PopupMenuAction.receipt,
     ),
     PopupMenuItem(
       child: ListTile(
@@ -77,10 +89,31 @@ class _MyListState extends ConsumerState<MyList> with PopupMenuMixin {
           debugPrint("upload");
           context.pushNamed(RouteManager.uploadReceiptScreen,queryParameters: {'list_id': itemPath});
 
-        } else if (value == PopupMenuAction.delete) {
+        } else if (value == PopupMenuAction.receipt) {
+          debugPrint("receipt action, $itemPath");
+          context.pushNamed(RouteManager.displayReceiptScreen,queryParameters: {'list_ref': itemPath});
+
+        }
+        else if (value == PopupMenuAction.delete) {
+          debugPrint("delete action");
+          final bool result = await ref
+              .read(userProductListProvider.notifier)
+              .deleteTheList(context: context);
+
+          if (result) {
+            hasValueChanged = true;
+            context.showSnackBar(message: "List deleted successfully!");
+          }
 
         } else if (value == PopupMenuAction.edit) {
-
+          debugPrint("edit action");
+          final bool? result =
+          await context.pushNamed(RouteManager.editListScreen);
+          if (result ?? false) {
+            context.showSnackBar(message: "List Edited Successfully!");
+            ref.read(listDetailsProvider.notifier).getSelectedListDetails();
+            hasValueChanged = true;
+          }
         }
       },
 
@@ -115,12 +148,43 @@ class _MyListState extends ConsumerState<MyList> with PopupMenuMixin {
               onTap: () {
                 //Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SettingScreen()));
               },
-              child: CircleAvatar(
-                radius: 40,
-                child: ClipOval(
-                  child: Image.network('https://picsum.photos/250?image=9'),
-                ),
-              ),
+              child: Consumer(
+                builder: (context, ref, child) {
+                  final profilePro = ref.watch(profileRepositoryProvider);
+                  return profilePro.when(
+                        () => Container(),
+                    loading: () => Center(child: CircularProgressIndicator()),
+                    error: (message) => ClipOval(
+                      child: Image.asset('assets/images/user.png'),
+                    ),
+                    success: (data) {
+                      if (data.profilePhoto != null && data.profilePhoto!.isNotEmpty) {
+                        return CircleAvatar(
+                          radius: MediaQuery.of(context).size.width * 0.08,
+                          backgroundColor: Colors.white,
+                          child: ClipOval(
+                            child: CachedNetworkImage(
+                              imageUrl: data.profilePhoto!,
+                              width: double.infinity,
+                              height: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        );
+
+                      } else {
+                        return CircleAvatar(
+                          radius: MediaQuery.of(context).size.width * 0.08, // Adjust the multiplier as needed
+                          backgroundColor: Colors.white,
+                          child: ClipOval(
+                              child: Image.asset('assets/images/user.png')
+                          ),
+                        );
+                      }
+                    },
+                  );
+                },
+              )
             ),
           ),
         ],
@@ -141,8 +205,8 @@ class _MyListState extends ConsumerState<MyList> with PopupMenuMixin {
                 print("allStoredata $data");
                 return MyListWidget(
                   stores: data,
-                  onButtonClicked: (listId) {
-                    ref.read(fetchMyListProvider.notifier).redirectUserToListDetailsScreen(context: context, listId: listId,);
+                  onButtonClicked: (listId, name, photo, path) {
+                    ref.read(fetchMyListProvider.notifier).redirectUserToListDetailsScreen(context: context, listId: listId,name: name, photo: photo, path:path!);
                   }, onPopUpClicked: (String path) {
                     _onActionIconPressed(path);
                 },
