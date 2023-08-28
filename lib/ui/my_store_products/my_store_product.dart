@@ -8,6 +8,7 @@ import 'package:spenza/ui/my_store_products/provider/product_for_store_provider.
 import 'package:spenza/ui/my_store_products/repo/department_repository.dart';
 
 import '../../router/app_router.dart';
+import '../profile/profile_repository.dart';
 import 'component/dialog_list.dart';
 import 'component/my_product_list_widget.dart';
 import 'provider/add_product_to_my_list_provider.dart';

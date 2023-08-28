@@ -1,12 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/di/app_providers.dart';
+import 'package:spenza/helpers/fireStore_pref_mixin.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/home/provider/fetch_mylist_provider.dart';
 import 'package:spenza/ui/home/provider/home_preloaded_list.dart';
 import 'package:spenza/ui/home/repo/fetch_favourite_store_repository.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
+import '../profile/profile_repository.dart';
 import 'components/myStore.dart';
 import 'components/preLoadedList.dart';
 import 'components/topStrip2.dart';
@@ -19,7 +22,7 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsMixin {
   @override
   void initState() {
     super.initState();
@@ -28,12 +31,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     });
   }
 
+
   _loadStores() async {
     await ref.read(fetchMyListProvider.notifier).fetchMyListFun();
-    await ref
-        .read(fetchFavouriteStoreRepositoryProvider.notifier)
-        .fetchFavStores();
+     ref.read(profileRepositoryProvider.notifier).getUserProfileData();
     await ref.read(homePreloadedListProvider.notifier).fetchPreloadedList();
+    await ref.read(fetchFavouriteStoreRepositoryProvider.notifier).fetchFavStores();
+
   }
 
   @override
@@ -44,6 +48,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     ref.invalidate(fetchFavouriteStoreRepositoryProvider);
     ref.invalidate(homePreloadedListProvider);
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -60,18 +66,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Container(
-                  constraints: BoxConstraints(minHeight: 190),
+                  //constraints: BoxConstraints(minHeight: 100),
                   color: Colors.blue,
                   child: Consumer(
                     builder: (context, ref, child) =>
                         ref.watch(fetchMyListProvider).when(
                               data: (data) => TopStrip(
-                                onListClick: (listId) {
+                                onListClick: (listId, name, photo, path) {
                                   ref
                                       .read(fetchMyListProvider.notifier)
                                       .redirectUserToListDetailsScreen(
-                                        context: context,
-                                        listId: listId,
+                                      context: context, listId: listId,name: name, photo: photo, path:path!
                                       );
                                 },
                                 data: data,
@@ -106,12 +111,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       return Padding(
                         padding: EdgeInsets.only(left: 10, right: 10, top: 25),
                         child: PreLoadedList(
-                          onListTap: (listId) {
+                          onListTap: (listId, name, photo) {
                             ref
                                 .read(homePreloadedListProvider.notifier)
                                 .redirectUserToListDetailsScreen(
                                   context: context,
                                   listId: listId,
+                                  name : name,
+                                  photo: photo,
+                                  ref :ref
                                 );
                           },
                           data: data,
@@ -188,9 +196,44 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             },
             child: CircleAvatar(
               radius: 40,
-              child: ClipOval(
-                child: Image.network('https://picsum.photos/250?image=9'),
-              ),
+              child: Consumer(
+                builder: (context, ref, child) {
+                  final profilePro = ref.watch(profileRepositoryProvider);
+                  return profilePro.when(
+                        () => Container(),
+                    loading: () => Center(child: CircularProgressIndicator()),
+                    error: (message) => CircleAvatar(
+                      child: Image.asset('assets/images/user.png'),
+                    ),
+                    success: (data) {
+                      if (data.profilePhoto != null && data.profilePhoto!.isNotEmpty) {
+                        return CircleAvatar(
+                          radius: MediaQuery.of(context).size.width * 0.05,
+                          child: ClipOval(
+                            child: Material(
+                              surfaceTintColor: Colors.white,
+                              child: CachedNetworkImage(
+                                imageUrl: data.profilePhoto!,
+                                width: double.infinity,
+                                height: double.infinity,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return CircleAvatar(
+                          radius: MediaQuery.of(context).size.width * 0.05, // Adjust the multiplier as needed
+                          backgroundColor: Colors.white,
+                          child: ClipOval(
+                            child: Image.asset('assets/images/user.png')
+                          ),
+                        );
+                      }
+                    },
+                  );
+                },
+              )
             ),
           ),
         )

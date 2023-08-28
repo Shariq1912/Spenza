@@ -18,8 +18,8 @@ part 'add_product_provider.g.dart';
 class AddProduct extends _$AddProduct
     with NearbyStoreMixin, FirestoreAndPrefsMixin {
   @override
-  Future<List<Product>> build() async {
-    return [];
+  Future<List<Product>?> build() async {
+    return null;
   }
 
   /// Main searching Algorithm

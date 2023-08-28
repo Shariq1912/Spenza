@@ -43,6 +43,19 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+
+    <key>CFBundleURLTypes</key>
+    <array>
+    	<dict>
+    		<key>CFBundleTypeRole</key>
+    		<string>Editor</string>
+    		<key>CFBundleURLSchemes</key>
+    		<array>
+    			<string>com.googleusercontent.apps.928248104131-mdt9sa1potq015hd57vve334p6vus94p</string>
+    		</array>
+    	</dict>
+    </array>
+
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
@@ -56,5 +69,9 @@
       <string>Upload image from camera for screen background</string>
       <key>NSMicrophoneUsageDescription</key>
       <string>Post videos to profile</string>
+
+      <key>NSLocationWhenInUseUsageDescription</key>
+      <string>This app needs access to location when open.</string>
+
 </dict>
 </plist>

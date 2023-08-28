@@ -67,13 +67,13 @@ class PreloadedProductCard extends ConsumerWidget {
                             color: Colors.black,
                           ),
                         ),
-                        Text(
+                        /*Text(
                           priceRange,
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.black,
                           ),
-                        ),
+                        ),*/
                         const SizedBox(height: 4),
                         Text(
                           measure,

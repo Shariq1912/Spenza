@@ -11,7 +11,7 @@
   "compare_prices": "Compare prices",
   "compare_prices_description": "Compare the price of your entire shopping list and find the best bargain",
   "shop_in_store_or_online": "Shop in store or online",
-  "shop_in_store_or_online_description": "Select the best option for you and cut your grocery bill up to 30% every week",
+  "shop_in_store_or_online_description": "Choose the best option for you and save up to 30% on your weekly grocery bill.",
   "sign_up": "Sign Up",
   "login": "Login",
   "loginTitle": "Login",
@@ -22,7 +22,7 @@
   "@loginSubtitle": {
     "description": "Subtitle for the login screen"
   },
-  "enterEmailHint": "Enter Email",
+  "enterEmailHint": "Email/Phone number",
   "@enterEmailHint": {
     "description": "Hint text for the email input field"
   },
@@ -30,6 +30,14 @@
   "@passwordHint": {
     "description": "Hint text for the password input field"
   },
+  "forgetPassword": "forget password?",
+      "@forgetPassword": {
+        "description": "forget password"
+      },
+  "confirmPasswordHint": " Confirm password",
+    "@confirmPasswordHint": {
+      "description": "Hint text for the password input field"
+    },
   "loginButton": "Login",
   "@loginButton": {
     "description": "Label for the login button"
@@ -38,7 +46,7 @@
   "@loginFormErrors": {
     "description": "Error message for invalid form submission"
   },
-  "orLoginWith": "or login with",
+  "orLoginWith": "Continue with",
   "@orLoginWith": {
     "description": "Label for alternative login methods"
   },
@@ -66,7 +74,7 @@
   "@emailInvalidError": {
     "description": "Error message for invalid email"
   },
-  "terms_of_service_intro": "By Using this application, you agree to our",
+  "terms_of_service_intro": "By Using this application, you agree to our ",
   "terms_of_service": "Terms of Service",
   "privacy_policy": "Privacy Policy",
   "create_account": "Create Account",
@@ -100,7 +108,7 @@
     "@preloadedListTitle": {
       "description": "Title for the 'Preloaded List' section"
     },
-    "myStoreTitle": "My Store",
+    "myStoreTitle": "My Stores",
     "@myStoreTitle": {
       "description": "Title for the 'My Store' section"
     }

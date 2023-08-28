@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -22,24 +23,49 @@ class FetchMyList extends _$FetchMyList with FirestoreAndPrefsMixin {
       state = AsyncValue.loading();
 
       final userId = await prefs.then((prefs) => prefs.getUserId());
-      final snapShot = await fireStore
+
+      final QuerySnapshot myListSnapshot = await fireStore
           .collection(MyListConstant.myListCollection)
           .where('uid', isEqualTo: userId)
           .get();
 
-      final List<MyListModel> mylists = snapShot.docs.map((doc) {
-        final data = doc.reference;
-        /*final list = MyListModel.fromJson(data).copyWith(documentId: doc.id);
-        return list;*/
-        return MyListModel(
-            description:doc['description'].toString(),
-            name: doc['name'].toString(),
-            uid: doc['uid'], usersRef: doc['usersRef'].toString(),
-        myListPhoto: doc['myListPhoto'],
-        path: doc.reference.path,
-        documentId: doc.id.toString());
+      final Map<String, MyListModel> myListMap = {};
 
-      }).toList();
+      myListSnapshot.docs.forEach((doc) {
+        final myList = MyListModel(
+          description: doc['description'].toString(),
+          name: doc['name'].toString(),
+          uid: doc['uid'],
+          usersRef: doc['usersRef'].toString(),
+          myListPhoto: doc['myListPhoto'],
+          path: doc.reference.path,
+          count: '0',
+          documentId: doc.id.toString(),
+        );
+
+          print("mylist: ${myList.name}");
+
+        myListMap[myList.path!] = myList;
+      });
+
+      final QuerySnapshot receiptSnapshot = await fireStore
+          .collection(ReceiptConstant.collectionName)
+          .where("uid", isEqualTo: userId)
+          .get();
+
+      receiptSnapshot.docs.forEach((doc) {
+        final listRef = doc['list_ref'] as DocumentReference ;
+        final listPath = listRef.path;
+
+        if (myListMap.containsKey(listPath)) {
+          myListMap[listPath] = myListMap[listPath]!.copyWith(
+            count: (int.parse(myListMap[listPath]!.count!) + 1).toString(),
+          );
+        }
+      });
+
+      final List<MyListModel> mylists = myListMap.values.toList();
+
 
 
       mylists.forEach((element) {
@@ -54,19 +80,24 @@ class FetchMyList extends _$FetchMyList with FirestoreAndPrefsMixin {
       return [];
     }
   }
-  Future<void> redirectUserToListDetailsScreen({required BuildContext context, required String listId}) async {
+  Future<void> redirectUserToListDetailsScreen({required BuildContext context, required String listId, required String name, required String photo, required String path}) async {
      await prefs.then((prefs){
        prefs.setString("user_list_name", MyListConstant.myListCollection);
        prefs.setString("user_list_id", listId);
      });
 
      final bool? result = await context.pushNamed(RouteManager.myListDetailScreen,
-         queryParameters: {'list_id': listId});
-
+         queryParameters: {'list_id': listId,
+         'name':name,
+         'photo': photo,
+         'path':path});
+     print("resultValue $result");
      if(result ?? false){
+
        fetchMyListFun();
      }
 
   }
+  
 
 }

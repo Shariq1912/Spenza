@@ -8,7 +8,6 @@ import 'package:spenza/ui/profile/profile_repository.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 import '../../router/app_router.dart';
 import '../login/login_provider.dart';
-import '../login/login_screen.dart';
 import 'component/profile_info.dart';
 import 'data/user_profile_data.dart';
 
@@ -76,15 +75,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         style: TextStyle(fontSize: 16, fontFamily: poppinsFont),
                       ),
                       SizedBox(height: 10),
-                      Text(
-                        "Select language",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: poppinsFont,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
+
                       SizedBox(height: 10),
                       Container(
                         width: double.infinity,

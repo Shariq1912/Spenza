@@ -10,7 +10,7 @@ class PreLoadedList extends ConsumerWidget {
   final TextStyle poppinsFont;
   final VoidCallback onAllClicked;
 
-  final Function(String listId) onListTap;
+  final Function(String listId, String name, String photo) onListTap;
 
   PreLoadedList({
     required this.data,
@@ -56,7 +56,7 @@ class PreLoadedList extends ConsumerWidget {
           ],
         ),
         SizedBox(
-          height: 180,
+          height: 200,
           child: Padding(
             padding: const EdgeInsets.only(top: 10),
             child: data.isNotEmpty
@@ -68,7 +68,7 @@ class PreLoadedList extends ConsumerWidget {
                 return ImageTextCard(
                   imageUrl: store.preloadedPhoto,
                   title: store.name,
-                  onTap: () => onListTap.call(store.id),
+                  onTap: () => onListTap.call(store.id, store.name, store.preloadedPhoto),
                 );
               },
             ):Center(

@@ -57,7 +57,7 @@ class MyStores extends StatelessWidget {
           padding: const EdgeInsets.only(top: 2),
           child: data.isNotEmpty
               ? Container(
-            height: 150, // Adjust the height as needed
+            height: 200, // Adjust the height as needed
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: data.length,

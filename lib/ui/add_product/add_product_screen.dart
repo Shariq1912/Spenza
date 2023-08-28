@@ -3,9 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/ui/add_product/components/product_card_widget.dart';
-import 'package:spenza/ui/add_product/components/product_card_widget.dart';
-import 'package:spenza/ui/add_product/components/selectable_chip.dart';
-import 'package:spenza/ui/add_product/components/selectable_chip.dart';
 import 'package:spenza/ui/add_product/components/selectable_chip.dart';
 import 'package:spenza/ui/add_product/data/product.dart';
 import 'package:spenza/ui/add_product/provider/add_product_provider.dart';
@@ -46,7 +43,8 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
     super.dispose();
     ref.invalidate(selectedDepartmentsProvider);
     ref.invalidate(searchQueryProvider);
-    ref.invalidate(addProductProvider); // todo dispose the background fetching data when screen dispose.
+    ref.invalidate(
+        addProductProvider); // todo dispose the background fetching data when screen dispose.
     _searchController.dispose();
   }
 
@@ -91,10 +89,9 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                   final result = ref.watch(addProductProvider);
 
                   final List<Product> data = result.maybeWhen(
-                    data: (data) => data,
+                    data: (data) => data== null ? [] : data,
                     orElse: () => [],
                   );
-
                   final departments = [
                     "All",
                     ...data.expand((e) => e.departments).toSet().toList()
@@ -152,6 +149,14 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
 
                 return data.when(
                   data: (data) {
+                    if (data == null) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    if (data.isEmpty) {
+                      return Center(
+                        child: Text("No Product found"),
+                      );
+                    }
                     final filteredProducts = data.where((product) {
                       if (searchQuery.isNotEmpty &&
                           !product.name.toLowerCase().contains(searchQuery)) {
@@ -177,8 +182,7 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                                 product: product,
                               ),
                           measure: product.measure,
-                          imageUrl: product.pImage ??
-                              'https://picsum.photos/250?image=9',
+                          imageUrl: product.pImage,
                           title: product.name,
                           priceRange:
                               "\$${product.minPrice} - \$${product.maxPrice}",

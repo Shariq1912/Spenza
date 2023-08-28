@@ -7,6 +7,8 @@ import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/splash/provider/splash_provider.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
+import '../profile/profile_repository.dart';
+
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
@@ -22,20 +24,25 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(splashProvider.notifier).isLoggedIn();
+      _loadData();
     });
+  }
+
+  _loadData() async {
+    ref.read(splashProvider.notifier).isLoggedIn();
+
   }
 
   @override
   void dispose() {
     super.dispose();
-
     ref.invalidate(splashProvider);
   }
 
   @override
   Widget build(BuildContext buildContext) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -166,28 +173,28 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                                                       RouteManager.loginScreen);
                                                 },
                                                 style: ElevatedButton.styleFrom(
-                                                  backgroundColor: Colors.white,
+                                                  backgroundColor: Color(0xFFE5E7E8),
                                                   foregroundColor:
                                                       const Color(0xFF0CA9E6),
                                                   textStyle: TextStyle(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.bold,
                                                     fontFamily: poppinsFont,
+                                                    color: Colors.lightGreen,
                                                   ),
                                                   shape: RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             5),
-                                                    side: const BorderSide(
-                                                        color:
-                                                            Color(0xFF99D6EF)),
+                                                    side:  BorderSide.none,
                                                   ),
                                                   fixedSize:
                                                       const Size(310, 40),
+                                                  surfaceTintColor: Colors.white
                                                 ),
                                                 child: Text(AppLocalizations.of(
                                                         context)!
-                                                    .login),
+                                                    .login,style: TextStyle(color: Color(0xFF7b868C)),),
                                               ),
                                             ),
                                           ],

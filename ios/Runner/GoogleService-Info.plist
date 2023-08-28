@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>928248104131-mdt9sa1potq015hd57vve334p6vus94p.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.928248104131-mdt9sa1potq015hd57vve334p6vus94p</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>928248104131-jmhvv70tcem8eqp3e5ca0e6ltr6hs5cb.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCzpvvcMFKr01S0KtIuq-h1YzW5Ogth3o4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>928248104131</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.mycompany.spenza</string>
+	<key>PROJECT_ID</key>
+	<string>spenzabeta-74e04</string>
+	<key>STORAGE_BUCKET</key>
+	<string>spenzabeta-74e04.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:928248104131:ios:5023ec9bcc0518fd950e76</string>
+	<key>DATABASE_URL</key>
+	<string>https://spenzabeta-74e04-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>

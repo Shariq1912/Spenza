@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -36,7 +37,9 @@ class SpenzaApp extends ConsumerWidget {
         return l10n!.appTitle;
       },
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+        brightness: Brightness.light,
+        canvasColor: Colors.white,
         useMaterial3: true,
       ),
       localizationsDelegates: [

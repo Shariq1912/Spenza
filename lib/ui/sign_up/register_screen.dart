@@ -74,12 +74,14 @@ class _SignUpScreenState extends ConsumerState<RegisterScreen> {
     final responseValue = ref.watch(registerRepositoryProvider);
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         leading: IconButton(
             onPressed: () {
               context.goNamed(RouteManager.splashScreen);
             },
-            icon: const Icon(Icons.chevron_left_outlined)),
+            icon: const Icon(Icons.chevron_left_outlined, size: 35,color: const Color(0xFF0CA9E6),)),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -94,7 +96,7 @@ class _SignUpScreenState extends ConsumerState<RegisterScreen> {
                     AppLocalizations.of(context)!.sign_up,
                     style: TextStyle(
                       fontFamily: poppinsFont,
-                      fontSize: 40,
+                      fontSize: 25,
                       fontWeight: FontWeight.bold,
                       color: const Color(0xFF0CA9E6),
                     ),
@@ -102,24 +104,25 @@ class _SignUpScreenState extends ConsumerState<RegisterScreen> {
                   const SizedBox(height: 20),
                   Container(
                     decoration: BoxDecoration(
-                      boxShadow: [
+                     /* boxShadow: [
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.3),
                           spreadRadius: 2,
                           blurRadius: 5,
                           offset: const Offset(0, 2),
                         ),
-                      ],
+                      ],*/
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Column(
                       children: [
-                        responseValue.when(
+                        /*responseValue.when(
                           () => Container(),
                           loading: () => const CircularProgressIndicator(),
                           success: (data) {
                             debugPrint(data.toString());
                             ref
+
                                 .read(registerRepositoryProvider.notifier)
                                 .redirectUserToDestination(context: context);
                             return Container();
@@ -128,7 +131,7 @@ class _SignUpScreenState extends ConsumerState<RegisterScreen> {
                             debugPrint(message.toString());
                             return Container();
                           },
-                        ),
+                        ),*/
                         TextFormField(
                             decoration: InputDecoration(
                               hintText:
@@ -136,11 +139,11 @@ class _SignUpScreenState extends ConsumerState<RegisterScreen> {
                               contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 16, vertical: 12),
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(5),
                                 borderSide: BorderSide.none,
                               ),
                               filled: true,
-                              fillColor: Colors.white,
+                              fillColor: Color(0xFFE5E7E8),
                             ),
                             controller: emailController,
                             validator: emailValidator),
@@ -152,11 +155,11 @@ class _SignUpScreenState extends ConsumerState<RegisterScreen> {
                             contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 16, vertical: 12),
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(5),
                               borderSide: BorderSide.none,
                             ),
                             filled: true,
-                            fillColor: Colors.white,
+                            fillColor: Color(0xFFE5E7E8),
                             suffixIcon: IconButton(
                               onPressed: () {
                                 setState(() {
@@ -179,15 +182,15 @@ class _SignUpScreenState extends ConsumerState<RegisterScreen> {
                         TextFormField(
                           decoration: InputDecoration(
                             hintText:
-                                AppLocalizations.of(context)!.passwordHint,
+                                AppLocalizations.of(context)!.confirmPasswordHint,
                             contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 16, vertical: 12),
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(5),
                               borderSide: BorderSide.none,
                             ),
                             filled: true,
-                            fillColor: Colors.white,
+                            fillColor: Color(0xFFE5E7E8),
                             suffixIcon: IconButton(
                               onPressed: () {
                                 setState(() {
@@ -215,7 +218,7 @@ class _SignUpScreenState extends ConsumerState<RegisterScreen> {
                     child: Text.rich(
                       TextSpan(
                         text: AppLocalizations.of(context)!
-                            .terms_of_service_intro,
+                            .terms_of_service_intro,style: TextStyle(color: Color(0xFF323e48)),
                         children: <TextSpan>[
                           TextSpan(
                             recognizer: TapGestureRecognizer()
@@ -226,6 +229,7 @@ class _SignUpScreenState extends ConsumerState<RegisterScreen> {
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontFamily: poppinsFont,
+                                color: Color(0xFF323e48),
                             ),
                           ),
                           const TextSpan(text: " and "),
@@ -237,6 +241,7 @@ class _SignUpScreenState extends ConsumerState<RegisterScreen> {
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontFamily: poppinsFont,
+                                color: Color(0xFF323e48),
                             ),
                           ),
                         ],
@@ -282,17 +287,17 @@ class _SignUpScreenState extends ConsumerState<RegisterScreen> {
                         child: Container(
                           margin: const EdgeInsets.only(left: 35.0, right: 5.0),
                           child: const Divider(
-                            color: Colors.black,
+                            color: Color(0xFF323e48),
                             height: 30,
                           ),
                         ),
                       ),
-                      Text(AppLocalizations.of(context)!.orLoginWith),
+                      Text(AppLocalizations.of(context)!.orLoginWith, style: TextStyle(color: Color(0xFF323e48)),),
                       Expanded(
                         child: Container(
                           margin: const EdgeInsets.only(left: 5.0, right: 35.0),
                           child: const Divider(
-                            color: Colors.black,
+                            color: Color(0xFF323e48),
                             height: 30,
                           ),
                         ),
@@ -316,7 +321,7 @@ class _SignUpScreenState extends ConsumerState<RegisterScreen> {
                           ),
                         ),
                       ),
-                      Padding(
+                     /* Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: InkWell(
                           onTap: () {
@@ -327,9 +332,29 @@ class _SignUpScreenState extends ConsumerState<RegisterScreen> {
                             height: 43,
                           ),
                         ),
-                      ),
+                      ),*/
+
+
                     ],
                   ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(top: 80),
+                    child: Row(
+                        children: [
+                          Expanded(
+                            child: TextButton(
+                              onPressed: () {
+                                context.goNamed(RouteManager.loginScreen);
+                              },
+                              child: Text('Already have an account',style: TextStyle( fontFamily: poppinsFont, color: Color(0xFF323E48))),
+                            ),
+                          ),
+                        ],
+                      ),
+                  ),
+
+
                 ],
               ),
             ),
@@ -339,52 +364,56 @@ class _SignUpScreenState extends ConsumerState<RegisterScreen> {
     );
   }
 
-  Widget _RegisterButton() => Center(
-        child: ElevatedButton(
-          onPressed: () {
-            // Handle login button press
-            if (_formKey.currentState!.validate()) {
-              // Form is valid, perform desired action
-              if (passwordController.text != confirmPasswordController.text) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Passwords do not match.'),
-                  ),
-                );
-                return;
-              }
+  Widget _RegisterButton() => Row(
+    children: [
+      Expanded(
+            child: ElevatedButton(
+              onPressed: () {
+                // Handle login button press
+                if (_formKey.currentState!.validate()) {
+                  // Form is valid, perform desired action
+                  if (passwordController.text != confirmPasswordController.text) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Passwords do not match.'),
+                      ),
+                    );
+                    return;
+                  }
 
-              final signUpData = LoginRequest(
-                email: emailController.text.toString(),
-                password: passwordController.text.toString(),
-              );
-              debugPrint("signUPDATA :$signUpData");
-              ref
-                  .read(registerRepositoryProvider.notifier)
-                  .registerWithEmailAndPassword(
-                    credentials: signUpData,
+                  final signUpData = LoginRequest(
+                    email: emailController.text.toString(),
+                    password: passwordController.text.toString(),
                   );
-            } else {
-              // Form is invalid, display error message
-              context.showSnackBar(
-                  message: AppLocalizations.of(context)!.loginFormErrors);
-            }
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF0CA9E6),
-            foregroundColor: Colors.white,
-            textStyle: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: poppinsFont,
+                  debugPrint("signUPDATA :$signUpData");
+                  ref
+                      .read(registerRepositoryProvider.notifier)
+                      .registerWithEmailAndPassword(
+                        credentials: signUpData,
+                      );
+                } else {
+                  // Form is invalid, display error message
+                  context.showSnackBar(
+                      message: AppLocalizations.of(context)!.loginFormErrors);
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF0CA9E6),
+                foregroundColor: Colors.white,
+                textStyle: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: poppinsFont,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                  side: const BorderSide(color: Color(0xFF99D6EF)),
+                ),
+                //fixedSize: const Size(310, 40),
+              ),
+              child: Text(AppLocalizations.of(context)!.create_account),
             ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
-              side: const BorderSide(color: Color(0xFF99D6EF)),
-            ),
-            fixedSize: const Size(310, 40),
           ),
-          child: Text(AppLocalizations.of(context)!.create_account),
-        ),
-      );
+    ],
+  );
 }

@@ -15,8 +15,8 @@ part 'user_product_list_provider.g.dart';
 @riverpod
 class UserProductList extends _$UserProductList with FirestoreAndPrefsMixin {
   @override
-  FutureOr<List<UserProduct>> build() async {
-    return [];
+  FutureOr<List<UserProduct>?> build() async {
+    return null;
   }
 
   Future<List<UserProduct>> fetchProductFromListId({bool isPreloadedList = false}) async {
@@ -37,7 +37,7 @@ class UserProductList extends _$UserProductList with FirestoreAndPrefsMixin {
           .collection(subCollectionName)
           .get();
 
-      // Create a list of Product Ref objects
+
       final productRefs = productListRef.docs
           .map((snapshot) => snapshot[ProductCollectionConstant.productRef]
               as DocumentReference)
@@ -86,7 +86,7 @@ class UserProductList extends _$UserProductList with FirestoreAndPrefsMixin {
 
   Future<void> updateUserProductList(
       {required UserProduct product, required int quantity}) async {
-    final List<UserProduct> data = state.requireValue;
+    final List<UserProduct> data = state.requireValue!;
     final index = data.indexOf(product);
     if (index != -1) {
       data[index] = product.copyWith(quantity: quantity);
@@ -117,7 +117,7 @@ class UserProductList extends _$UserProductList with FirestoreAndPrefsMixin {
       ..delete(doc.reference)
       ..commit();
 
-    final data = state.requireValue;
+    final data = state.requireValue!;
     data.remove(
         data.firstWhere((element) => element.productId == product.productId));
 
@@ -126,7 +126,7 @@ class UserProductList extends _$UserProductList with FirestoreAndPrefsMixin {
 
   Future<void> saveUserProductListToServer(
       {required BuildContext context}) async {
-    final List<UserProduct> data = state.requireValue;
+    final List<UserProduct> data = state.requireValue!;
 
     final listId = await prefs.then((prefs) => prefs.getUserListId());
 
@@ -221,6 +221,7 @@ class UserProductList extends _$UserProductList with FirestoreAndPrefsMixin {
         ..delete(userList)
         ..commit();
 
+      debugPrint("listId $listId, collectionName :$collectionName");
       context.pop(true);
 
       return true;

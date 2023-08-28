@@ -51,6 +51,11 @@ extension SharedPreferencesExtension on SharedPreferences {
   String getPostalCode() {
     return getString('zipCode') ?? "44110";
   }
+
+  String getProfilePhoto() {
+    String? result = getString('profilePhoto');
+    return result!.isNotEmpty ? result : 'assets/images/user.png';
+  }
 }
 
 extension NumberFormat on double {

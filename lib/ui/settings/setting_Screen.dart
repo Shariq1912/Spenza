@@ -110,7 +110,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
               ),
               SizedBox(height: 30),
               CardItem(icon: Icons.list, title: "My Lists", onTap: () {context.push(RouteManager.myListScreen);}),
-              CardItem(icon: Icons.receipt, title: "My Receipts", onTap: () {context.push(RouteManager.displayReceiptScreen);}),
+              CardItem(icon: Icons.receipt, title: "My Receipts", onTap: () {context.pushNamed(RouteManager.displayReceiptScreen,queryParameters: {'list_ref': ''});}),
               CardItem(icon: Icons.store, title: "My Stores", onTap: () {
                 context.pushNamed(RouteManager.storesScreen);
               }),
@@ -171,11 +171,27 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
 
   Widget _buildImageWidget(String? image) {
     return image != null
-        ? CachedNetworkImage(fit: BoxFit.cover, imageUrl: image,)
-        : Image.asset(
-      'assets/images/avatar.gif'.assetImageUrl,
-      fit: BoxFit.cover,
+        ? CircleAvatar(
+      radius: MediaQuery.of(context).size.width * 0.08,
+      backgroundColor: Colors.white,
+      child: ClipOval(
+        child: CachedNetworkImage(
+          imageUrl: image!,
+          width: double.infinity,
+          height: double.infinity,
+          fit: BoxFit.cover,
+        ),
+      ),
+    )
+        : CircleAvatar(
+      radius: MediaQuery.of(context).size.width * 0.08,
+      backgroundColor: Colors.white,
+      child: ClipOval(
+          child: Image.asset('assets/images/user.png')
+      ),
     );
+
+
   }
 
 }

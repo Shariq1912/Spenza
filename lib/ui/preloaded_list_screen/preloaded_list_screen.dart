@@ -1,11 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/helpers/popup_menu_mixin.dart';
 import 'package:spenza/ui/preloaded_list_screen/component/preloaded_list_widget.dart';
+import 'package:spenza/utils/spenza_extensions.dart';
 import '../../router/app_router.dart';
 import '../home/provider/home_preloaded_list.dart';
+import '../profile/profile_repository.dart';
 
 class PreloadedListScreen extends ConsumerStatefulWidget {
 
@@ -18,14 +21,15 @@ class PreloadedListScreen extends ConsumerStatefulWidget {
 
 class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with PopupMenuMixin,AutomaticKeepAliveClientMixin  {
   final poppinsFont = GoogleFonts.poppins().fontFamily;
+  bool hasValueChanged = false;
 
   final List<PopupMenuItem<PopupMenuAction>> items = [
     PopupMenuItem(
       child: ListTile(
-        trailing: const Icon(Icons.edit),
-        title: Text(PopupMenuAction.edit.value),
+        trailing: const Icon(Icons.copy),
+        title: Text(PopupMenuAction.copy.value),
       ),
-      value: PopupMenuAction.edit,
+      value: PopupMenuAction.copy,
     ),
     PopupMenuItem(
       child: ListTile(
@@ -36,10 +40,10 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with 
     ),
     PopupMenuItem(
       child: ListTile(
-        trailing: const Icon(Icons.delete),
-        title: Text(PopupMenuAction.delete.value),
+        trailing: const Icon(Icons.receipt),
+        title: Text(PopupMenuAction.receipt.value),
       ),
-      value: PopupMenuAction.delete,
+      value: PopupMenuAction.receipt,
     ),
   ];
 
@@ -56,7 +60,15 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with 
   bool get wantKeepAlive => true;
 
   Future<void> _loadAllStore() async {
+     ref.read(profileRepositoryProvider.notifier).getUserProfileData();
     await ref.read(homePreloadedListProvider.notifier).fetchPreloadedList();
+
+  }
+
+  @override
+  void dispose() {
+    ref.invalidate(homePreloadedListProvider);
+    super.dispose();
   }
 
   void _onActionIconPressed(String itemPath) {
@@ -79,12 +91,21 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with 
       items: items,
       onSelected: (PopupMenuAction value) async {
         if (value == PopupMenuAction.upload) {
-          debugPrint("copy action");
+
           context.pushNamed(RouteManager.uploadReceiptScreen,queryParameters: {'list_id': itemPath});
 
-        } else if (value == PopupMenuAction.delete) {
+        } else if (value == PopupMenuAction.receipt) {
+          context.pushNamed(RouteManager.displayReceiptScreen,queryParameters: {'list_ref': itemPath});
+        } else if (value == PopupMenuAction.copy) {
+          debugPrint("copy action");
+          final bool result = await ref
+              .read(homePreloadedListProvider.notifier)
+              .copyDocument(itemPath);
 
-        } else if (value == PopupMenuAction.edit) {
+          if (result) {
+            hasValueChanged = true;
+            context.showSnackBar(message: "List copied successfully!");
+          }
 
         }
       },
@@ -121,12 +142,43 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with 
               onTap: () {
                 //Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SettingScreen()));
               },
-              child: CircleAvatar(
-                radius: 40,
-                child: ClipOval(
-                  child: Image.network('https://picsum.photos/250?image=9'),
-                ),
-              ),
+              child: Consumer(
+                builder: (context, ref, child) {
+                  final profilePro = ref.watch(profileRepositoryProvider);
+                  return profilePro.when(
+                        () => Container(),
+                    loading: () => Center(child: CircularProgressIndicator()),
+                    error: (message) => ClipOval(
+                      child: Image.asset('assets/images/user.png'),
+                    ),
+                    success: (data) {
+                      if (data.profilePhoto != null && data.profilePhoto!.isNotEmpty) {
+                        return CircleAvatar(
+                          radius: MediaQuery.of(context).size.width * 0.08,
+                          backgroundColor: Colors.white,
+                          child: ClipOval(
+                            child: CachedNetworkImage(
+                              imageUrl: data.profilePhoto!,
+                              width: double.infinity,
+                              height: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        );
+
+                      } else {
+                        return CircleAvatar(
+                          radius: MediaQuery.of(context).size.width * 0.08, // Adjust the multiplier as needed
+                          backgroundColor: Colors.white,
+                          child: ClipOval(
+                              child: Image.asset('assets/images/user.png')
+                          ),
+                        );
+                      }
+                    },
+                  );
+                },
+              )
             ),
           ),
         ],
@@ -148,7 +200,17 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with 
                   data: data,
                    onButtonClicked: (itemPath) {
                     _onActionIconPressed(itemPath);
-                  },
+                  }, onCardClicked: (listId, name, photo ) {
+                  ref
+                      .read(homePreloadedListProvider.notifier)
+                      .redirectUserToListDetailsScreen(
+                      context: context,
+                      listId: listId,
+                      name : name,
+                      photo: photo,
+                      ref: ref
+                  );
+                },
                 );
               },
             );

@@ -10,7 +10,7 @@ class TopStrip extends ConsumerWidget {
   final List<MyListModel> data;
   final VoidCallback onCreateList;
   final VoidCallback onAllList;
-  final Function(String listId) onListClick;
+  final Function(String listId, String name, String photo, String path) onListClick;
 
   TopStrip({
     Key? key,
@@ -64,7 +64,7 @@ class TopStrip extends ConsumerWidget {
             _noItemInTheList(context)
           else
             Container(
-              height: 180,
+              height: 140,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: data.length,
@@ -74,7 +74,7 @@ class TopStrip extends ConsumerWidget {
                     imageUrl: list.myListPhoto ?? "",
                     name: list.name ?? "",
                     description: list.description ?? "",
-                    onTap: () => onListClick.call(list.documentId!),
+                    onTap: () => onListClick.call(list.documentId!, list.name, list.myListPhoto!, list.path!),
                   );
                 },
               ),
