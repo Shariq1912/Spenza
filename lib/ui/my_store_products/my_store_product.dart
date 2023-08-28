@@ -92,8 +92,7 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
         child: Consumer(
           builder: (context, ref, child) {
             final productProvider = ref.watch(productForStoreProvider);
-            final departmentProvider =
-                ref.watch(departmentRepositoryProvider);
+            final departmentProvider = ref.watch(departmentRepositoryProvider);
             return productProvider.when(
               loading: () => Center(child: CircularProgressIndicator()),
               error: (error, stackTrace) {
@@ -119,9 +118,10 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
                           ref
                               .read(addProductToMyListProvider.notifier)
                               .addProductToMyList(
-                                widget.listId!,
-                                product.productId,
-                                context,
+                                listId: widget.listId!,
+                                productRef: product.documentId!,
+                                productId: product.productId,
+                                context: context,
                               );
                           return;
                         }
