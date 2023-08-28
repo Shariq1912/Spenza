@@ -17,15 +17,16 @@ class AddProductToMyList extends _$AddProductToMyList
   @override
   FutureOr<void> build() {}
 
-  Future<void> addProductToMyList(
-    String listId,
-    String productId,
-    BuildContext context,
-  ) async {
+  Future<void> addProductToMyList({
+    required String listId,
+    required String productId,
+    required String productRef,
+    required BuildContext context,
+  }) async {
     try {
       state = AsyncValue.loading();
       DocumentReference productReference =
-          fireStore.collection('products_mvp').doc(productId);
+          fireStore.collection('products_mvp').doc(productRef);
 
       CollectionReference userProductList =
           fireStore.collection(MyList.collectionName).doc(listId).collection(

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
@@ -245,7 +247,7 @@ class StoreRanking extends _$StoreRanking
       print('Found exact product match:');
       print('Product ID: $productId');
       matchingProductCounts[actualStoreRef] =
-          (matchingProductCounts[storeRef] ?? 0) + 1;
+          (matchingProductCounts[actualStoreRef] ?? 0) + 1;
       return exactProduct;
     }
 
@@ -307,73 +309,9 @@ class StoreRanking extends _$StoreRanking
     final mainLength = mainGenericNames.length;
     final otherLength = otherGenericNames.length;
 
-    final relationPercentage =
-        (matches / (mainLength > otherLength ? mainLength : otherLength));
+    final relationPercentage = (matches / (max(mainLength, otherLength)));
 
     return relationPercentage.toPrecision(2);
-  }
-
-  Future<QueryDocumentSnapshot<Map<String, dynamic>>?> _getSimilarProduct({
-    required DocumentSnapshot<Object?> product,
-    required DocumentReference storeRef,
-    required bool isExist,
-  }) async {
-    final productId = product['product_id'];
-    final genericNames = List<String>.from(product['genericNames']);
-    final measure = product['measure'];
-    final department = product['department_name'];
-
-    // print('Searching for similar product:');
-    // print('Product ID: $productId');
-    // print('Generic Names: $genericNames');
-    // print('Measure: $measure');
-    // print('Department: $department');
-
-    final exactProduct = await fireStore
-        .collection('products_mvp')
-        .where('is_exist', isEqualTo: true)
-        .where('storeRef', isEqualTo: storeRef)
-        .where('product_id', isEqualTo: productId)
-        .limit(1)
-        .get();
-
-    if (exactProduct.docs.isNotEmpty) {
-      // print('Found exact product match:');
-      // print('Product ID: $productId');
-      return exactProduct.docs.first;
-    }
-
-    final similarProducts = await fireStore
-        .collection('products_mvp')
-        .where('is_exist', isEqualTo: true)
-        .where('storeRef', isEqualTo: storeRef)
-        .where('measure', isEqualTo: measure)
-        .where('department_name', isEqualTo: department)
-        .get();
-
-    QueryDocumentSnapshot<Map<String, dynamic>>? bestMatch;
-
-    for (final similarProduct in similarProducts.docs) {
-      final productGenericNames =
-          List<String>.from(similarProduct['genericNames']);
-
-      if (productGenericNames.every((name) => genericNames.contains(name))) {
-        if (bestMatch == null || similarProduct['price'] < bestMatch['price']) {
-          bestMatch = similarProduct;
-        }
-      }
-    }
-
-    /*if (bestMatch != null) {
-      print('Found similar product:');
-      print('Product ID: ${bestMatch['product_id']}');
-      print('Generic Names: ${bestMatch['genericNames']}');
-      print('Price: ${bestMatch['price']}');
-    } else {
-      print('No similar product found.');
-    }*/
-
-    return bestMatch;
   }
 
   Future<MatchingStores> _getStoreFromPath(

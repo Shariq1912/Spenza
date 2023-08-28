@@ -115,13 +115,15 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                                 Set<String>.from(selectedDepartments);
 
                             if (selected) {
-                              if (department == "All") {
+                              /*if (department == "All") {
                                 // Unselect all other filters
                                 updatedDepartments.clear();
                               } else {
                                 // Unselect "All" if another filter is selected
                                 updatedDepartments.remove("All");
-                              }
+                              }*/
+
+                              updatedDepartments.clear();
                               updatedDepartments.add(department);
                             } else {
                               updatedDepartments.remove(department);
