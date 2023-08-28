@@ -11,7 +11,7 @@
   "compare_prices": "Compara precios",
   "compare_prices_description": "Obtén el precio total de tu lista de compras y compara en todas las tiendas cerca de ti",
   "shop_in_store_or_online": "Elige tu mejor opción",
-  "shop_in_store_or_online_description": "Selecciona la tienda que te ofrece el mejor precio y ahorra hasta un 30% cada semana",
+  "shop_in_store_or_online_description": "Elija la mejor opción para usted y ahorre hasta un 30% en su factura semanal de comestibles.",
   "sign_up": "Registrarse",
   "login": "Iniciar sesión",
   "loginTitle": "Iniciar sesión",
@@ -22,7 +22,7 @@
   "@loginSubtitle": {
     "description": "Ingresa tus datos para acceder a tu cuenta"
   },
-  "enterEmailHint": "Correo electrónico o teléfono",
+  "enterEmailHint": "Correo/Teléfono Number",
   "@enterEmailHint": {
     "description": "Correo electrónico o teléfono"
   },
@@ -30,6 +30,10 @@
   "@passwordHint": {
     "description": "Contraseña"
   },
+  "forgetPassword": "¿Olvidaste tu contraseña?",
+    "@forgetPassword": {
+      "description": "¿Olvidaste tu contraseña?"
+    },
   "loginButton": "Iniciar sesión",
   "@loginButton": {
     "description": "Iniciar sesión"

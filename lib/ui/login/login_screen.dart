@@ -78,12 +78,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final responseValue = ref.watch(loginRepositoryProvider);
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         leading: IconButton(
             onPressed: () {
               context.goNamed(RouteManager.splashScreen);
             },
-            icon: const Icon(Icons.chevron_left_outlined)),
+            icon: const Icon(Icons.chevron_left_outlined,size: 35,color: Color(0xFF0CA9E6),)
+        ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -99,7 +102,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       AppLocalizations.of(context)!.loginTitle,
                       style: TextStyle(
                         fontFamily: poppinsFont,
-                        fontSize: 40,
+                        fontSize: 25,
                         fontWeight: FontWeight.bold,
                         color: const Color(0xFF0CA9E6),
                       ),
@@ -125,15 +128,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 16, vertical: 12),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(5),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.blue),
-                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(5),
                               ),
                               filled: true,
-                              fillColor: Colors.white,
+                              fillColor: Color(0xFFE5E7E8),
                             ),
                             validator: emailValidator,
                             controller: emailController,
@@ -146,15 +149,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 16, vertical: 12),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(5),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.blue),
-                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(5),
                               ),
                               filled: true,
-                              fillColor: Colors.white,
+                              fillColor: Color(0xFFE5E7E8),
                               suffixIcon: IconButton(
                                 onPressed: () {
                                   setState(() {
@@ -175,9 +178,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                           const SizedBox(height: 8),
                           Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: RichText(
-                              text: _buildTermsAndPrivacyTextSpan(context),
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: _buildTermsAndPrivacyTextSpan(context),
+
                             ),
                           ),
                         ],
@@ -215,13 +219,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         );
                       },
                     ),
+                    Row(
+                        children: [
+                          Expanded(
+                            child: TextButton(
+                              onPressed: () {
+                                context.goNamed(RouteManager.registerScreen);
+                              },
+                              child: Text(AppLocalizations.of(context)!.forgetPassword,style: TextStyle( fontFamily: poppinsFont, color: Color(0xFF323E48))),
+                            ),
+                          ),
+                        ],
+                      ),
+
                     const SizedBox(height: 25),
                     Row(
                       children: <Widget>[
                         Expanded(
                           child: Container(
                             margin:
-                                const EdgeInsets.only(left: 35.0, right: 5.0),
+                                const EdgeInsets.only(left: 30.0, right: 5.0),
                             child: const Divider(
                               color: Colors.black,
                               height: 30,
@@ -232,7 +249,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         Expanded(
                           child: Container(
                             margin:
-                                const EdgeInsets.only(left: 5.0, right: 35.0),
+                                const EdgeInsets.only(left: 5.0, right: 30.0),
                             child: const Divider(
                               color: Colors.black,
                               height: 30,
@@ -279,7 +296,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                         )*/
                       ],
-                    )
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 100),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextButton(
+                              onPressed: () {
+                                context.goNamed(RouteManager.registerScreen);
+                              },
+                              child: Text('Create an account',style: TextStyle( fontFamily: poppinsFont, color: Color(0xFF323E48))),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -290,11 +322,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  TextSpan _buildTermsAndPrivacyTextSpan(BuildContext context) {
+  Text _buildTermsAndPrivacyTextSpan(BuildContext context) {
     final termsOfService = AppLocalizations.of(context)!.terms_of_service;
     final privacyPolicy = AppLocalizations.of(context)!.privacy_policy;
 
-    return TextSpan(
+    return Text.rich(
+      TextSpan(
       text: AppLocalizations.of(context)!.terms_of_service_intro,
       style: TextStyle(
         color: Colors.black,
@@ -305,8 +338,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           text: " $termsOfService & $privacyPolicy",
           style: TextStyle(
             fontFamily: poppinsFont,
-            color: Colors.blue,
-            fontWeight: FontWeight.bold,
+            color: Color(0xFF323e48),
+            fontWeight: FontWeight.bold
           ),
           recognizer: TapGestureRecognizer()
             ..onTap = () {
@@ -319,43 +352,50 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             },
         ),
       ],
-    );
+    ),
+      textAlign: TextAlign.center,
+);
   }
 
-  Widget _LoginButton() => Center(
-        child: ElevatedButton(
-          onPressed: () {
-            // Handle login button press
-            if (!_formKey.currentState!.validate()) {
-              context.showSnackBar(
-                message: AppLocalizations.of(context)!.loginFormErrors,
-              );
-            }
+  Widget _LoginButton() => Row(
+    children: [
+      Expanded(
+            child: ElevatedButton(
+              onPressed: () {
+                // Handle login button press
+                if (!_formKey.currentState!.validate()) {
+                  context.showSnackBar(
+                    message: AppLocalizations.of(context)!.loginFormErrors,
+                  );
+                }
 
-            final loginData = LoginRequest(
-              email: emailController.text.toString(),
-              password: passwordController.text.toString(),
-            );
+                final loginData = LoginRequest(
+                  email: emailController.text.toString(),
+                  password: passwordController.text.toString(),
+                );
 
-            ref
-                .read(loginRepositoryProvider.notifier)
-                .loginWithEmailAndPassword(credentials: loginData);
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF0CA9E6),
-            foregroundColor: Colors.white,
-            textStyle: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: poppinsFont,
+                ref
+                    .read(loginRepositoryProvider.notifier)
+                    .loginWithEmailAndPassword(credentials: loginData);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF0CA9E6),
+                foregroundColor: Colors.white,
+                surfaceTintColor: Colors.white,
+                textStyle: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: poppinsFont,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                  side: const BorderSide(color: Color(0xFF99D6EF)),
+                ),
+                fixedSize: const Size(310, 40),
+              ),
+              child: Text(AppLocalizations.of(context)!.loginButton),
             ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
-              side: const BorderSide(color: Color(0xFF99D6EF)),
-            ),
-            fixedSize: const Size(310, 40),
           ),
-          child: Text(AppLocalizations.of(context)!.loginButton),
-        ),
-      );
+    ],
+  );
 }

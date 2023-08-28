@@ -17,19 +17,33 @@ class ImageTextCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: SizedBox(
-        width: 100,
+        width: 150,
         child: Card(
           elevation: 0,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CachedNetworkImage(
-                imageUrl: imageUrl,
-                fit: BoxFit.cover,
-                width: 100,
-                height: 100,
+              Column(
+                children: [
+                  CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    fit: BoxFit.cover,
+                    width: 150,
+                    height: 150,
+                  ),
+                ],
               ),
-              Text(title),
+              Text(
+                title,
+                style: const TextStyle(
+                  decoration: TextDecoration.none,
+                  color: Color(0xFF0CA9EA),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+                textAlign: TextAlign.center,
+              ),
+
             ],
           ),
         ),

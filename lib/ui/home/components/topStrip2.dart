@@ -64,7 +64,7 @@ class TopStrip extends ConsumerWidget {
             _noItemInTheList(context)
           else
             Container(
-              height: 180,
+              height: 140,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: data.length,

@@ -8,7 +8,6 @@ import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/home/provider/fetch_mylist_provider.dart';
 import 'package:spenza/ui/home/provider/home_preloaded_list.dart';
 import 'package:spenza/ui/home/repo/fetch_favourite_store_repository.dart';
-import 'package:spenza/ui/profile/data/user_profile_data.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 import '../profile/profile_repository.dart';
 import 'components/myStore.dart';
@@ -36,8 +35,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
   _loadStores() async {
     await ref.read(fetchMyListProvider.notifier).fetchMyListFun();
      ref.read(profileRepositoryProvider.notifier).getUserProfileData();
-    await ref.read(fetchFavouriteStoreRepositoryProvider.notifier).fetchFavStores();
     await ref.read(homePreloadedListProvider.notifier).fetchPreloadedList();
+    await ref.read(fetchFavouriteStoreRepositoryProvider.notifier).fetchFavStores();
+
   }
 
   @override
@@ -66,7 +66,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Container(
-                  constraints: BoxConstraints(minHeight: 190),
+                  //constraints: BoxConstraints(minHeight: 100),
                   color: Colors.blue,
                   child: Consumer(
                     builder: (context, ref, child) =>
@@ -118,8 +118,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
                                   context: context,
                                   listId: listId,
                                   name : name,
-                                  photo: photo
-
+                                  photo: photo,
+                                  ref :ref
                                 );
                           },
                           data: data,
@@ -208,21 +208,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
                     success: (data) {
                       if (data.profilePhoto != null && data.profilePhoto!.isNotEmpty) {
                         return CircleAvatar(
-                          radius: MediaQuery.of(context).size.width * 0.08,
-                          backgroundColor: Colors.white,
+                          radius: MediaQuery.of(context).size.width * 0.05,
                           child: ClipOval(
-                            child: CachedNetworkImage(
-                              imageUrl: data.profilePhoto!,
-                              width: double.infinity,
-                              height: double.infinity,
-                              fit: BoxFit.cover,
+                            child: Material(
+                              surfaceTintColor: Colors.white,
+                              child: CachedNetworkImage(
+                                imageUrl: data.profilePhoto!,
+                                width: double.infinity,
+                                height: double.infinity,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                         );
-
                       } else {
                         return CircleAvatar(
-                          radius: MediaQuery.of(context).size.width * 0.08, // Adjust the multiplier as needed
+                          radius: MediaQuery.of(context).size.width * 0.05, // Adjust the multiplier as needed
                           backgroundColor: Colors.white,
                           child: ClipOval(
                             child: Image.asset('assets/images/user.png')
@@ -233,7 +234,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
                   );
                 },
               )
-
             ),
           ),
         )

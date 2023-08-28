@@ -91,11 +91,13 @@ class FetchMyList extends _$FetchMyList with FirestoreAndPrefsMixin {
          'name':name,
          'photo': photo,
          'path':path});
-
+     print("resultValue $result");
      if(result ?? false){
+
        fetchMyListFun();
      }
 
   }
+  
 
 }

@@ -60,6 +60,13 @@ class _MyListState extends ConsumerState<MyList> with PopupMenuMixin {
     ),
     PopupMenuItem(
       child: ListTile(
+        leading: const Icon(Icons.copy),
+        title: Text(PopupMenuAction.copy.value),
+      ),
+      value: PopupMenuAction.copy,
+    ),
+    PopupMenuItem(
+      child: ListTile(
         leading: const Icon(Icons.delete),
         title: Text(PopupMenuAction.delete.value),
       ),
@@ -113,6 +120,17 @@ class _MyListState extends ConsumerState<MyList> with PopupMenuMixin {
             context.showSnackBar(message: "List Edited Successfully!");
             ref.read(listDetailsProvider.notifier).getSelectedListDetails();
             hasValueChanged = true;
+          }
+        }
+        else if (value == PopupMenuAction.copy) {
+          debugPrint("copy action");
+          final bool result = await ref
+              .read(userProductListProvider.notifier)
+              .copyTheList(context: context);
+
+          if (result) {
+            hasValueChanged = true;
+            context.showSnackBar(message: "List deleted successfully!");
           }
         }
       },

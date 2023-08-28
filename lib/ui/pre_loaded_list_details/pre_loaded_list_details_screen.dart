@@ -14,6 +14,8 @@ import 'package:spenza/ui/pre_loaded_list_details/components/pre_loaded_product_
 import 'package:spenza/utils/color_utils.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
+import '../home/provider/home_preloaded_list.dart';
+
 class PreLoadedListDetailsScreen extends ConsumerStatefulWidget {
   const PreLoadedListDetailsScreen({super.key, required this.listId, required  this.name, required this.photo});
 
@@ -33,13 +35,6 @@ class _PreLoadedListDetailsScreenState
   final List<PopupMenuItem<PopupMenuAction>> items = [
     PopupMenuItem(
       child: ListTile(
-        trailing: const Icon(Icons.edit),
-        title: Text(PopupMenuAction.edit.value),
-      ),
-      value: PopupMenuAction.edit,
-    ),
-    PopupMenuItem(
-      child: ListTile(
         trailing: const Icon(Icons.copy),
         title: Text(PopupMenuAction.copy.value),
       ),
@@ -47,10 +42,17 @@ class _PreLoadedListDetailsScreenState
     ),
     PopupMenuItem(
       child: ListTile(
-        trailing: const Icon(Icons.delete),
-        title: Text(PopupMenuAction.delete.value),
+        trailing: const Icon(Icons.upload),
+        title: Text(PopupMenuAction.upload.value),
       ),
-      value: PopupMenuAction.delete,
+      value: PopupMenuAction.upload,
+    ),
+    PopupMenuItem(
+      child: ListTile(
+        trailing: const Icon(Icons.receipt),
+        title: Text(PopupMenuAction.receipt.value),
+      ),
+      value: PopupMenuAction.receipt,
     ),
   ];
 
@@ -72,14 +74,12 @@ class _PreLoadedListDetailsScreenState
   @override
   void dispose() {
     super.dispose();
-
     _searchController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final poppinsFont = ref.watch(poppinsFontProvider).fontFamily;
-
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -87,15 +87,16 @@ class _PreLoadedListDetailsScreenState
       child: WillPopScope(
         onWillPop: () async {
           context.pop(hasValueChanged);
-          return true;
+          debugPrint("hasvalue $hasValueChanged");
+          return false;
         },
         child: Scaffold(
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight),
-            child: /*Consumer(
+            child: Consumer(
               builder: (context, ref, child) {
                 return ref.watch(listDetailsProvider).maybeWhen(
-                      data: (data) => */CustomAppBar(
+                      data: (data) => CustomAppBar(
                         displayActionIcon: true,
                         title: widget.name,
                         logo: widget.photo ?? "",
@@ -109,9 +110,12 @@ class _PreLoadedListDetailsScreenState
                           ///context.pushNamed(RouteManager.addProductScreen);
                           context.pop(hasValueChanged);
                         },
-                        onActionIconPressed: _onActionIconPressed,
+                        onActionIconPressed: () {
+                         // _onActionIconPressed("preloaded_default/${widget.listId}");
+                          _onActionIconPressed("postloaded_default/${widget.listId}");
+                        }
                       ),
-                      /*orElse: () => CustomAppBar(
+                      orElse: () => CustomAppBar(
                         displayActionIcon: true,
                         title: "",
                         textStyle: TextStyle(
@@ -123,78 +127,70 @@ class _PreLoadedListDetailsScreenState
                         onBackIconPressed: () {
                           context.pushNamed(RouteManager.addProductScreen);
                         },
-                        onActionIconPressed: _onActionIconPressed,
-                      ),*/
-              /*      );
+                        onActionIconPressed:() {
+                          _onActionIconPressed("postloaded_default/${widget.listId}");
+                        },
+                      ),
+                    );
               },
-            ),*/
+            ),
           ),
           body: Column(
             children: [
-              /*SearchBox(
-                hint: "Add products",
-                controller: _searchController,
-                onSearch: (value) {
-                  context.pushNamed(
-                    RouteManager.addProductScreen,
-                    queryParameters: {'query': value},
-                  );
-                  _searchController.clear();
-                },
-              ),
-              const SizedBox(height: 10),*/
               Expanded(
                 child: Consumer(
                   builder: (context, ref, child) {
                     final result = ref.watch(userProductListProvider);
 
                     return result.when(
+                      loading: () => Center(child: CircularProgressIndicator()),
+
                       data: (data) {
-                        /*if (data.isEmpty) {
+                        if (data == null) {
+                          return Center(
+                              child: CircularProgressIndicator()
+                          );
+                        }else if(data.isEmpty){
                           return Center(
                             child: Text(
-                              "No products found.",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontFamily: poppinsFont,
-                              ),
+                                "No Product found"
                             ),
                           );
-                        }*/
+                        }
+                          return ListView.builder(
+                            itemCount: data.length,
+                            itemBuilder: (context, index) {
+                              final UserProduct product = data[index];
+                              return PreloadedProductCard(
+                                measure: product.measure,
+                                listId: widget.listId,
+                                department: product.department,
+                                imageUrl: product.pImage,
+                                title: product.name,
+                                priceRange: "\$${product.minPrice} - \$${product.maxPrice}",
+                                product: product,
+                              );
+                            },
+                          );
+                        },
 
-                        return ListView.builder(
-                          itemCount: data.length,
-                          itemBuilder: (context, index) {
-                            final UserProduct product = data[index];
-                            return PreloadedProductCard(
-                              measure: product.measure,
-                              listId: widget.listId,
-                              department: product.department,
-                              imageUrl: product.pImage,
-                              title: product.name,
-                              priceRange:
-                                  "\$${product.minPrice} - \$${product.maxPrice}",
-                              product: product,
-                            );
-                          },
-                        );
-                      },
+
                       error: (error, stackTrace) =>
                           Center(child: Text("$error")),
-                      loading: () => Center(child: CircularProgressIndicator()),
                     );
                   },
                 ),
+
               ),
               Consumer(
                 builder: (context, ref, child) =>
                     ref.watch(userProductListProvider).maybeWhen(
-                          orElse: () => buildMaterialButton(context),
-                          data: (data) => data.isEmpty
-                              ? Container()
-                              : buildMaterialButton(context),
-                          loading: () => Container(),
-                        ),
+                      orElse: () => buildMaterialButton(context),
+                      data: (data) =>data== null?Container():  data.isEmpty
+                          ? Container()
+                          : buildMaterialButton(context),
+                      loading: () => Container(),
+                    ),
               ),
             ],
           ),
@@ -203,11 +199,14 @@ class _PreLoadedListDetailsScreenState
     );
   }
 
-  void _onActionIconPressed() {
+  void _onActionIconPressed(String itemPath) {
+
+    print("clickedItemPath : $itemPath");
     final RenderBox customAppBarRenderBox =
-        context.findRenderObject() as RenderBox;
+    context.findRenderObject() as RenderBox;
     final customAppBarPosition =
-        customAppBarRenderBox.localToGlobal(Offset.zero);
+    customAppBarRenderBox.localToGlobal(Offset.zero);
+
 
     showPopupMenu(
       context: context,
@@ -219,35 +218,23 @@ class _PreLoadedListDetailsScreenState
       ),
       items: items,
       onSelected: (PopupMenuAction value) async {
-        if (value == PopupMenuAction.copy) {
+        if (value == PopupMenuAction.upload) {
+
+          context.pushNamed(RouteManager.uploadReceiptScreen,queryParameters: {'list_id': itemPath});
+
+        } else if (value == PopupMenuAction.receipt) {
+          context.pushNamed(RouteManager.displayReceiptScreen,queryParameters: {'list_ref': itemPath});
+        } else if (value == PopupMenuAction.copy) {
           debugPrint("copy action");
           final bool result = await ref
-              .read(userProductListProvider.notifier)
-              .copyTheList(context: context);
+              .read(homePreloadedListProvider.notifier)
+              .copyDocument(itemPath);
 
           if (result) {
             hasValueChanged = true;
-            context.showSnackBar(message: "List copied successfully!");
+            //context.showSnackBar(message: "List copied successfully!");
           }
-        } else if (value == PopupMenuAction.delete) {
-          debugPrint("delete action");
-          final bool result = await ref
-              .read(userProductListProvider.notifier)
-              .deleteTheList(context: context);
 
-          if (result) {
-            hasValueChanged = true;
-            context.showSnackBar(message: "List deleted successfully!");
-          }
-        } else if (value == PopupMenuAction.edit) {
-          debugPrint("edit action");
-          final bool? result =
-              await context.pushNamed(RouteManager.editListScreen);
-          if (result ?? false) {
-            context.showSnackBar(message: "List Edited Successfully!");
-            ref.read(listDetailsProvider.notifier).getSelectedListDetails();
-            hasValueChanged = true;
-          }
         }
       },
     );

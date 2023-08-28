@@ -30,7 +30,6 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
   final TextEditingController _searchController = TextEditingController();
   bool hasValueChanged = false;
 
-
   final List<PopupMenuItem<PopupMenuAction>> items = [
     PopupMenuItem(
       child: ListTile(
@@ -52,6 +51,13 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
         title: Text(PopupMenuAction.receipt.value),
       ),
       value: PopupMenuAction.receipt,
+    ),
+    PopupMenuItem(
+      child: ListTile(
+        leading: const Icon(Icons.copy),
+        title: Text(PopupMenuAction.copy.value),
+      ),
+      value: PopupMenuAction.copy,
     ),
     PopupMenuItem(
       child: ListTile(
@@ -161,17 +167,17 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
 
                     return result.when(
                       data: (data) {
-                        /*if (data.isEmpty) {
+                        if (data == null) {
+                          return Center(
+                            child: CircularProgressIndicator()
+                          );
+                        }else if(data.isEmpty){
                           return Center(
                             child: Text(
-                              "No products found.",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontFamily: poppinsFont,
-                              ),
+                                "No Product found"
                             ),
                           );
-                        }*/
+                        }
 
                         return ListView.builder(
                           itemCount: data.length,
@@ -201,7 +207,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                 builder: (context, ref, child) =>
                     ref.watch(userProductListProvider).maybeWhen(
                       orElse: () => buildMaterialButton(context),
-                      data: (data) => data.isEmpty
+                      data: (data) =>data== null?Container():  data.isEmpty
                           ? Container()
                           : buildMaterialButton(context),
                       loading: () => Container(),
@@ -258,6 +264,18 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
             context.showSnackBar(message: "List Edited Successfully!");
             ref.read(listDetailsProvider.notifier).getSelectedListDetails();
             hasValueChanged = true;
+          }
+        }
+
+        else if (value == PopupMenuAction.copy) {
+          debugPrint("copy action");
+          final bool result = await ref
+              .read(userProductListProvider.notifier)
+              .copyTheList(context: context);
+
+          if (result) {
+            hasValueChanged = true;
+            context.showSnackBar(message: "List deleted successfully!");
           }
         }
       },

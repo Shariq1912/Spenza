@@ -1,5 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -9,6 +10,8 @@ import 'package:spenza/ui/home/data/preloaded_list_model.dart';
 import 'package:spenza/utils/firestore_constants.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
+import 'fetch_mylist_provider.dart';
+
 part 'home_preloaded_list.g.dart';
 
 @riverpod
@@ -16,7 +19,7 @@ class HomePreloadedList extends _$HomePreloadedList with FirestoreAndPrefsMixin 
 
   @override
   FutureOr<List<PreloadedListModel>> build(){
-    return fetchPreloadedList();
+    return [];
   }
   Future<List<PreloadedListModel>> fetchPreloadedList() async {
     try {
@@ -55,7 +58,7 @@ class HomePreloadedList extends _$HomePreloadedList with FirestoreAndPrefsMixin 
   }
 
 
-  Future<void> redirectUserToListDetailsScreen({required BuildContext context, required String listId, required String name, required String photo}) async {
+  Future<void> redirectUserToListDetailsScreen({required BuildContext context, required String listId, required String name, required String photo, required WidgetRef ref}) async {
     await prefs.then((prefs){
       prefs.setString("user_list_name", PreloadedListConstant.collectionName);
       prefs.setString("user_list_id", listId);
@@ -64,6 +67,9 @@ class HomePreloadedList extends _$HomePreloadedList with FirestoreAndPrefsMixin 
     final bool? result = await context.pushNamed(RouteManager.preLoadedListDetailScreen,
         queryParameters: {'list_id': listId,
         'name':name, 'photo': photo});
+    if(result ?? false){
+      ref.read(fetchMyListProvider.notifier).fetchMyListFun();
+    }
 
   }
 
@@ -81,23 +87,39 @@ class HomePreloadedList extends _$HomePreloadedList with FirestoreAndPrefsMixin 
       final targetCollection = fireStore.collection(MyListConstant.myListCollection);
       final newDocumentRef = targetCollection.doc();
 
-
       final copiedData = Map<String, dynamic>.from(sourceData!);
       if (copiedData.containsKey('preloaded_photo')) {
         copiedData['myListPhoto'] = copiedData['preloaded_photo'];
         copiedData.remove('preloaded_photo');
       }
       copiedData['uid'] = userId;
-      //copiedData['name'] = newName;
       copiedData['usersRef'] = sourceDocument;
 
       await newDocumentRef.set(copiedData);
 
-      return true;
+
+     // final sourceSubCollection = sourceDocument.collection('preloaded_product_list');
+      final sourceSubCollection = sourceDocument.collection('postloaded_product_list');
+      final targetSubCollection = newDocumentRef.collection('user_product_list');
+
+      final subCollectionSnapshot = await sourceSubCollection.get();
+      final subCollectionDocs = subCollectionSnapshot.docs;
+
+      final batch = fireStore.batch();
+
+      for (final subDoc in subCollectionDocs) {
+        final subData = subDoc.data();
+        final targetDocRef = targetSubCollection.doc(subDoc.id);
+        batch.set(targetDocRef, subData);
+      }
+
+      return await batch.commit().then((value) => true);
+
     } catch (e) {
       debugPrint('Error copying document: $e');
       return false;
     }
   }
+
 
 }

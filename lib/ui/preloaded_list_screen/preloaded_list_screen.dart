@@ -207,7 +207,8 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with 
                       context: context,
                       listId: listId,
                       name : name,
-                      photo: photo
+                      photo: photo,
+                      ref: ref
                   );
                 },
                 );

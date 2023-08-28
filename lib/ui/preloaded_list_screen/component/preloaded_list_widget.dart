@@ -53,6 +53,7 @@ class PreloadedListWidget extends ConsumerWidget {
                   ),
                   IconButton(
                     onPressed: () {
+                      print("three ${item.path}");
                       // Do something when three dots are clicked
                       onButtonClicked(item.path);
                     },

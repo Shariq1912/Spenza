@@ -27,6 +27,7 @@ mixin _$MyListModel {
   String? get myListPhoto => throw _privateConstructorUsedError;
   String? get documentId => throw _privateConstructorUsedError;
   String? get path => throw _privateConstructorUsedError;
+  String? get count => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -47,7 +48,8 @@ abstract class $MyListModelCopyWith<$Res> {
       String usersRef,
       String? myListPhoto,
       String? documentId,
-      String? path});
+      String? path,
+      String? count});
 }
 
 /// @nodoc
@@ -70,6 +72,7 @@ class _$MyListModelCopyWithImpl<$Res, $Val extends MyListModel>
     Object? myListPhoto = freezed,
     Object? documentId = freezed,
     Object? path = freezed,
+    Object? count = freezed,
   }) {
     return _then(_value.copyWith(
       description: null == description
@@ -100,6 +103,10 @@ class _$MyListModelCopyWithImpl<$Res, $Val extends MyListModel>
           ? _value.path
           : path // ignore: cast_nullable_to_non_nullable
               as String?,
+      count: freezed == count
+          ? _value.count
+          : count // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -119,7 +126,8 @@ abstract class _$$_MyListModelCopyWith<$Res>
       String usersRef,
       String? myListPhoto,
       String? documentId,
-      String? path});
+      String? path,
+      String? count});
 }
 
 /// @nodoc
@@ -140,6 +148,7 @@ class __$$_MyListModelCopyWithImpl<$Res>
     Object? myListPhoto = freezed,
     Object? documentId = freezed,
     Object? path = freezed,
+    Object? count = freezed,
   }) {
     return _then(_$_MyListModel(
       description: null == description
@@ -170,6 +179,10 @@ class __$$_MyListModelCopyWithImpl<$Res>
           ? _value.path
           : path // ignore: cast_nullable_to_non_nullable
               as String?,
+      count: freezed == count
+          ? _value.count
+          : count // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -184,7 +197,8 @@ class _$_MyListModel implements _MyListModel {
       required this.usersRef,
       this.myListPhoto,
       this.documentId = null,
-      this.path});
+      this.path,
+      this.count});
 
   factory _$_MyListModel.fromJson(Map<String, dynamic> json) =>
       _$$_MyListModelFromJson(json);
@@ -204,10 +218,12 @@ class _$_MyListModel implements _MyListModel {
   final String? documentId;
   @override
   final String? path;
+  @override
+  final String? count;
 
   @override
   String toString() {
-    return 'MyListModel(description: $description, name: $name, uid: $uid, usersRef: $usersRef, myListPhoto: $myListPhoto, documentId: $documentId, path: $path)';
+    return 'MyListModel(description: $description, name: $name, uid: $uid, usersRef: $usersRef, myListPhoto: $myListPhoto, documentId: $documentId, path: $path, count: $count)';
   }
 
   @override
@@ -225,13 +241,14 @@ class _$_MyListModel implements _MyListModel {
                 other.myListPhoto == myListPhoto) &&
             (identical(other.documentId, documentId) ||
                 other.documentId == documentId) &&
-            (identical(other.path, path) || other.path == path));
+            (identical(other.path, path) || other.path == path) &&
+            (identical(other.count, count) || other.count == count));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, description, name, uid, usersRef,
-      myListPhoto, documentId, path);
+      myListPhoto, documentId, path, count);
 
   @JsonKey(ignore: true)
   @override
@@ -255,7 +272,8 @@ abstract class _MyListModel implements MyListModel {
       required final String usersRef,
       final String? myListPhoto,
       final String? documentId,
-      final String? path}) = _$_MyListModel;
+      final String? path,
+      final String? count}) = _$_MyListModel;
 
   factory _MyListModel.fromJson(Map<String, dynamic> json) =
       _$_MyListModel.fromJson;
@@ -274,6 +292,8 @@ abstract class _MyListModel implements MyListModel {
   String? get documentId;
   @override
   String? get path;
+  @override
+  String? get count;
   @override
   @JsonKey(ignore: true)
   _$$_MyListModelCopyWith<_$_MyListModel> get copyWith =>
