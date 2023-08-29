@@ -58,12 +58,14 @@ class AddProduct extends _$AddProduct
       for (var value in snapshot.docs) {
         DocumentSnapshot valueSnapshot = value;
         try {
-          print("ADD PRODUCT DATA = ${value.data()}");
+          // print("ADD PRODUCT DATA = ${value.data()}");
 
           final Product product = Product.fromDocument(value);
 
-          var hasGenericNameMatched = product.genericNames.any((genericName) =>
-              genericName.toLowerCase().contains(query.toLowerCase()));
+          final hasGenericNameMatched = product.genericNames.any((genericName) {
+            final words = query.toLowerCase().split(" ");
+            return words.any((word) => word == genericName.toLowerCase());
+          });
 
           if (hasGenericNameMatched ||
               product.name.toLowerCase().contains(query.toLowerCase())) {

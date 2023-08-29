@@ -9,7 +9,7 @@ import 'package:spenza/ui/home/home_screen.dart';
 import 'package:spenza/ui/location/location_screen.dart';
 import 'package:spenza/ui/login/login_screen.dart';
 import 'package:spenza/ui/matching_store/matching_store_screen.dart';
-import 'package:spenza/ui/my_list_details/my_list.dart';
+import 'package:spenza/ui/my_list_details/my_list_screen.dart';
 import 'package:spenza/ui/my_list_details/my_list_details_screen.dart';
 import 'package:spenza/ui/my_store_products/my_store_product.dart';
 import 'package:spenza/ui/pre_loaded_list_details/pre_loaded_list_details_screen.dart';
@@ -120,7 +120,7 @@ class RouteManager {
             parentNavigatorKey: _shellNavigator,
             pageBuilder: (context, state) {
               return NoTransitionPage(
-                child: MyList(
+                child: MyListScreen(
                   key: state.pageKey,
                 ),
               );
@@ -358,7 +358,7 @@ class RouteManager {
         name: myListScreen,
         path: myListScreen,
         builder: (context, state) {
-          return MyList( key: state.pageKey,);
+          return MyListScreen( key: state.pageKey,);
         },
       ),
       GoRoute(

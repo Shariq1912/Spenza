@@ -83,9 +83,10 @@ class _MyListDialogState extends ConsumerState<MyListDialog> {
                               await ref
                                   .read(addProductToMyListProvider.notifier)
                                   .addProductToMyList(
-                                    item.documentId!,
-                                    widget.productId,
-                                    context,
+                                    listId: item.documentId!,
+                                    productRef: widget.productRef,
+                                    productId: widget.productId,
+                                    context: context,
                                   );
                             },
                             icon: Icon(Icons.playlist_add_sharp)),
@@ -101,11 +102,12 @@ class _MyListDialogState extends ConsumerState<MyListDialog> {
           onPressed: () {
             // todo change to go router
             Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => AddProductToNewList(
-                        productId: widget.productId,
-                        productRef: widget.productRef)));
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddProductToNewList(
+                    productId: widget.productId, productRef: widget.productRef),
+              ),
+            );
           },
           child: Text(
             "Create new list",

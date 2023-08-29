@@ -13,17 +13,16 @@ import '../home/provider/fetch_mylist_provider.dart';
 import '../profile/profile_repository.dart';
 import 'components/my_list_widget.dart';
 
-class MyList extends ConsumerStatefulWidget {
-  const MyList({Key? key}) : super(key: key);
+class MyListScreen extends ConsumerStatefulWidget {
+  const MyListScreen({Key? key}) : super(key: key);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _MyListState();
 }
 
-class _MyListState extends ConsumerState<MyList> with PopupMenuMixin {
+class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
   final poppinsFont = GoogleFonts.poppins().fontFamily;
   bool hasValueChanged = false;
-
   @override
   void initState() {
     super.initState();
@@ -34,7 +33,7 @@ class _MyListState extends ConsumerState<MyList> with PopupMenuMixin {
 
   Future<void> _loadAllMyList() async {
     ref.read(profileRepositoryProvider.notifier).getUserProfileData();
-    await ref.read(fetchMyListProvider.notifier).fetchMyListFun();
+    ref.read(fetchMyListProvider.notifier).fetchMyListFun();
   }
 
   final List<PopupMenuItem<PopupMenuAction>> items = [
@@ -103,11 +102,12 @@ class _MyListState extends ConsumerState<MyList> with PopupMenuMixin {
         } else if (value == PopupMenuAction.delete) {
           debugPrint("delete action");
           final bool result = await ref
-              .read(userProductListProvider.notifier)
-              .deleteTheList(context: context);
+              .read(fetchMyListProvider.notifier)
+              .deleteTheList(path: itemPath);
 
           if (result) {
             hasValueChanged = true;
+            ref.read(fetchMyListProvider.notifier).fetchMyListFun();
             context.showSnackBar(message: "List deleted successfully!");
           }
         } else if (value == PopupMenuAction.edit) {
@@ -122,8 +122,8 @@ class _MyListState extends ConsumerState<MyList> with PopupMenuMixin {
         } else if (value == PopupMenuAction.copy) {
           debugPrint("copy action");
           final bool result = await ref
-              .read(userProductListProvider.notifier)
-              .copyTheList(context: context);
+              .read(fetchMyListProvider.notifier)
+              .copyTheList(path: itemPath);
 
           if (result) {
             hasValueChanged = true;
@@ -132,6 +132,7 @@ class _MyListState extends ConsumerState<MyList> with PopupMenuMixin {
           }
         }
       },
+
     );
   }
 
@@ -225,6 +226,7 @@ class _MyListState extends ConsumerState<MyList> with PopupMenuMixin {
           builder: (context, ref, child) {
             final storeProvider = ref.watch(fetchMyListProvider);
             return storeProvider.when(
+
               loading: () => Center(child: CircularProgressIndicator()),
               error: (error, stackTrace) {
                 print("errorMrss $error");

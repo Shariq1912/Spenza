@@ -1,22 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/helpers/fireStore_pref_mixin.dart';
 import 'package:spenza/router/app_router.dart';
-import 'package:spenza/ui/home/components/custom_dialog.dart';
 import 'package:spenza/ui/home/provider/fetch_mylist_provider.dart';
 import 'package:spenza/ui/home/provider/home_preloaded_list.dart';
 import 'package:spenza/ui/home/repo/fetch_favourite_store_repository.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
-
 import '../profile/profile_repository.dart';
 import 'components/myStore.dart';
-import 'components/new_list_dialog.dart';
 import 'components/preLoadedList.dart';
 import 'components/topStrip2.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -25,7 +22,8 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsMixin {
+class _HomeScreenState extends ConsumerState<HomeScreen>
+    with FirestoreAndPrefsMixin {
   @override
   void initState() {
     super.initState();
@@ -37,10 +35,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
 
   _loadStores() async {
     await ref.read(fetchMyListProvider.notifier).fetchMyListFun();
-     ref.read(profileRepositoryProvider.notifier).getUserProfileData();
+    ref.read(profileRepositoryProvider.notifier).getUserProfileData();
     await ref.read(homePreloadedListProvider.notifier).fetchPreloadedList();
-    await ref.read(fetchFavouriteStoreRepositoryProvider.notifier).fetchFavStores();
-
+    await ref
+        .read(fetchFavouriteStoreRepositoryProvider.notifier)
+        .fetchFavStores();
   }
 
   @override
@@ -79,20 +78,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
                                   ref
                                       .read(fetchMyListProvider.notifier)
                                       .redirectUserToListDetailsScreen(
-                                      context: context, listId: listId,name: name, photo: photo, path:path!
-                                      );
+                                          context: context,
+                                          listId: listId,
+                                          name: name,
+                                          photo: photo,
+                                          path: path!);
                                 },
                                 data: data,
                                 onCreateList: () async {
                                   final bool? result = await context
                                       .pushNamed(RouteManager.addNewList);
-
                                   if (result ?? false) {
                                     ref
                                         .read(fetchMyListProvider.notifier)
                                         .fetchMyListFun();
                                   }
-                                  //showDialog(context: context, builder: (builder)=> NewMyList());
                                 },
                                 onAllList: () {
                                   context.pushNamed(RouteManager.myListScreen);
@@ -120,19 +120,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
                             ref
                                 .read(homePreloadedListProvider.notifier)
                                 .redirectUserToListDetailsScreen(
-                                  context: context,
-                                  listId: listId,
-                                  name : name,
-                                  photo: photo,
-                                  ref :ref
-                                );
+                                    context: context,
+                                    listId: listId,
+                                    name: name,
+                                    photo: photo,
+                                    ref: ref);
                           },
                           data: data,
                           title:
                               AppLocalizations.of(context)!.preloadedListTitle,
                           poppinsFont: poppinsFont,
-                          onAllClicked: () {
-                            context.pushNamed(RouteManager.preLoadedListScreen);
+                          onAllClicked: () async {
+                            final bool? result = await context
+                                .pushNamed(RouteManager.preLoadedListScreen);
+
+                            if (result ?? false) {
+                              ref
+                                  .read(fetchMyListProvider.notifier)
+                                  .fetchMyListFun();
+                            }
                           },
                         ),
                       );
@@ -160,10 +166,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
                           data: data,
                           title: AppLocalizations.of(context)!.myStoreTitle,
                           poppinsFont: poppinsFont,
-                          onAllStoreClicked: () async{
-                            final bool? result = await context.pushNamed(RouteManager.storesScreen);
-                            if(result?? false){
-                              ref.read(fetchFavouriteStoreRepositoryProvider.notifier).fetchFavStores();
+                          onAllStoreClicked: () async {
+                            final bool? result = await context
+                                .pushNamed(RouteManager.storesScreen);
+                            if (result ?? false) {
+                              ref
+                                  .read(fetchFavouriteStoreRepositoryProvider
+                                      .notifier)
+                                  .fetchFavStores();
                             }
                           },
                         ),
@@ -193,12 +203,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
       actions: [
         Padding(
           padding: const EdgeInsets.only(
-            //top: 5,
+            top: 5,
           ),
           child: InkWell(
             onTap: () {
               context.pushNamed(RouteManager.settingScreen);
-
             },
             child:  Consumer(
                 builder: (context, ref, child) {

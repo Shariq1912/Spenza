@@ -11,7 +11,6 @@ import 'package:spenza/utils/color_utils.dart';
 class MatchingStoreScreen extends ConsumerStatefulWidget {
   const MatchingStoreScreen({super.key});
 
-
   @override
   ConsumerState createState() => _MatchingStoreScreenState();
 }
@@ -24,7 +23,6 @@ class _MatchingStoreScreenState extends ConsumerState<MatchingStoreScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(storeRankingProvider.notifier).rankStoresByPriceTotal();
     });
-
   }
 
   @override
@@ -49,36 +47,48 @@ class _MatchingStoreScreenState extends ConsumerState<MatchingStoreScreen> {
             context.pop();
           },
         ),
-        body: Consumer(
-          builder: (context, ref, child) =>
-              ref.watch(storeRankingProvider).when(
-                    data: (data) => ListView.builder(
-                      itemCount: data.length,
-                      itemBuilder: (context, index) {
-                        final MatchingStores store = data[index];
-                        return MatchingStoreCard(
-                          matchingPercentage: store.matchingPercentage,
-                          address: store.address,
-                          imageUrl: store.logo,
-                          title: store.name,
-                          totalPrice: store.totalPrice.toString(),
-                          distance: store.distance,
-                          onClick: () {
-                            ref
-                                .read(storeRankingProvider.notifier)
-                                .redirectUserToStoreDetails(
-                                  storeRef: store.storeRef!,
-                                  context: context,
-                                  total: store.totalPrice,
-                                );
-                          },
-                        );
-                      },
-                    ),
-                    error: (error, stackTrace) => Center(child: Text("$error")),
-                    loading: () => Center(child: CircularProgressIndicator()),
-                  ),
-        ),
+        body: Consumer(builder: (context, ref, child) {
+          final result = ref.watch(storeRankingProvider);
+
+          return result.when(
+            data: (data) {
+              if (data == null) {
+                return Center(child: CircularProgressIndicator());
+              }
+              if (data.isEmpty) {
+                return Center(
+                  child: Text("No stores found!"),
+                );
+              }
+
+              return ListView.builder(
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  final MatchingStores store = data[index];
+                  return MatchingStoreCard(
+                    matchingPercentage: store.matchingPercentage,
+                    address: store.address,
+                    imageUrl: store.logo,
+                    title: store.name,
+                    totalPrice: store.totalPrice.toString(),
+                    distance: store.distance,
+                    onClick: () {
+                      ref
+                          .read(storeRankingProvider.notifier)
+                          .redirectUserToStoreDetails(
+                            storeRef: store.storeRef!,
+                            context: context,
+                            total: store.totalPrice,
+                          );
+                    },
+                  );
+                },
+              );
+            },
+            error: (error, stackTrace) => Center(child: Text("$error")),
+            loading: () => Center(child: CircularProgressIndicator()),
+          );
+        }),
       ),
     );
   }
