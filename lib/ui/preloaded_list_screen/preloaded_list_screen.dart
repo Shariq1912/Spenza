@@ -154,25 +154,26 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with 
                     success: (data) {
                       if (data.profilePhoto != null && data.profilePhoto!.isNotEmpty) {
                         return CircleAvatar(
-                          radius: MediaQuery.of(context).size.width * 0.08,
-                          backgroundColor: Colors.white,
+                          radius: 40,
                           child: ClipOval(
-                            child: CachedNetworkImage(
-                              imageUrl: data.profilePhoto!,
-                              width: double.infinity,
-                              height: double.infinity,
-                              fit: BoxFit.cover,
+                            child: AspectRatio(
+                              aspectRatio: 1.0,
+                              child: CachedNetworkImage(
+                                fit: BoxFit.cover,
+                                imageUrl: data.profilePhoto,
+                                placeholder: (context, url) =>  Image.asset('placeholder_myList.png'.assetImageUrl),
+                                errorWidget: (context, url, error) => Image.asset('placeholder_myList.png'.assetImageUrl),
+                              ),
                             ),
                           ),
                         );
 
                       } else {
-                        return CircleAvatar(
-                          radius: MediaQuery.of(context).size.width * 0.08, // Adjust the multiplier as needed
-                          backgroundColor: Colors.white,
-                          child: ClipOval(
-                              child: Image.asset('assets/images/user.png')
-                          ),
+                        return ClipOval(
+                            child: AspectRatio(
+                              aspectRatio: 1.0,
+                              child:  Image.asset('user_placeholder.png'.assetImageUrl,fit: BoxFit.cover,),
+                            )
                         );
                       }
                     },

@@ -23,6 +23,7 @@ class MyList extends ConsumerStatefulWidget {
 class _MyListState extends ConsumerState<MyList> with PopupMenuMixin {
   final poppinsFont = GoogleFonts.poppins().fontFamily;
   bool hasValueChanged = false;
+
   @override
   void initState() {
     super.initState();
@@ -32,7 +33,7 @@ class _MyListState extends ConsumerState<MyList> with PopupMenuMixin {
   }
 
   Future<void> _loadAllMyList() async {
-     ref.read(profileRepositoryProvider.notifier).getUserProfileData();
+    ref.read(profileRepositoryProvider.notifier).getUserProfileData();
     await ref.read(fetchMyListProvider.notifier).fetchMyListFun();
   }
 
@@ -73,14 +74,13 @@ class _MyListState extends ConsumerState<MyList> with PopupMenuMixin {
       value: PopupMenuAction.delete,
     ),
   ];
-  void _onActionIconPressed(String itemPath) {
 
+  void _onActionIconPressed(String itemPath) {
     print("clickedItemPath : $itemPath");
     final RenderBox customAppBarRenderBox =
-    context.findRenderObject() as RenderBox;
+        context.findRenderObject() as RenderBox;
     final customAppBarPosition =
-    customAppBarRenderBox.localToGlobal(Offset.zero);
-
+        customAppBarRenderBox.localToGlobal(Offset.zero);
 
     showPopupMenu(
       context: context,
@@ -94,14 +94,13 @@ class _MyListState extends ConsumerState<MyList> with PopupMenuMixin {
       onSelected: (PopupMenuAction value) async {
         if (value == PopupMenuAction.upload) {
           debugPrint("upload");
-          context.pushNamed(RouteManager.uploadReceiptScreen,queryParameters: {'list_id': itemPath});
-
+          context.pushNamed(RouteManager.uploadReceiptScreen,
+              queryParameters: {'list_id': itemPath});
         } else if (value == PopupMenuAction.receipt) {
           debugPrint("receipt action, $itemPath");
-          context.pushNamed(RouteManager.displayReceiptScreen,queryParameters: {'list_ref': itemPath});
-
-        }
-        else if (value == PopupMenuAction.delete) {
+          context.pushNamed(RouteManager.displayReceiptScreen,
+              queryParameters: {'list_ref': itemPath});
+        } else if (value == PopupMenuAction.delete) {
           debugPrint("delete action");
           final bool result = await ref
               .read(userProductListProvider.notifier)
@@ -111,18 +110,16 @@ class _MyListState extends ConsumerState<MyList> with PopupMenuMixin {
             hasValueChanged = true;
             context.showSnackBar(message: "List deleted successfully!");
           }
-
         } else if (value == PopupMenuAction.edit) {
           debugPrint("edit action");
           final bool? result =
-          await context.pushNamed(RouteManager.editListScreen);
+              await context.pushNamed(RouteManager.editListScreen);
           if (result ?? false) {
             context.showSnackBar(message: "List Edited Successfully!");
             ref.read(listDetailsProvider.notifier).getSelectedListDetails();
             hasValueChanged = true;
           }
-        }
-        else if (value == PopupMenuAction.copy) {
+        } else if (value == PopupMenuAction.copy) {
           debugPrint("copy action");
           final bool result = await ref
               .read(userProductListProvider.notifier)
@@ -130,11 +127,11 @@ class _MyListState extends ConsumerState<MyList> with PopupMenuMixin {
 
           if (result) {
             hasValueChanged = true;
-            context.showSnackBar(message: "List deleted successfully!");
+            ref.read(fetchMyListProvider.notifier).fetchMyListFun();
+            context.showSnackBar(message: "List copied successfully!");
           }
         }
       },
-
     );
   }
 
@@ -162,48 +159,63 @@ class _MyListState extends ConsumerState<MyList> with PopupMenuMixin {
         actions: [
           Padding(
             padding: const EdgeInsets.only(top: 5),
-            child: InkWell(
-              onTap: () {
-                //Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SettingScreen()));
-              },
-              child: Consumer(
-                builder: (context, ref, child) {
-                  final profilePro = ref.watch(profileRepositoryProvider);
-                  return profilePro.when(
-                        () => Container(),
-                    loading: () => Center(child: CircularProgressIndicator()),
-                    error: (message) => ClipOval(
-                      child: Image.asset('assets/images/user.png'),
+            child: InkWell(onTap: () {
+              //Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SettingScreen()));
+            }, child: Consumer(
+              builder: (context, ref, child) {
+                final profilePro = ref.watch(profileRepositoryProvider);
+                return profilePro.when(
+                  () => Container(),
+                  loading: () => Center(child: CircularProgressIndicator()),
+                  error: (message) => CircleAvatar(
+                    radius: 40,
+                    child: ClipOval(
+                      child: AspectRatio(
+                        aspectRatio: 1.0,
+                        child: Image.asset(
+                          'user_placeholder.png'.assetImageUrl,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
-                    success: (data) {
-                      if (data.profilePhoto != null && data.profilePhoto!.isNotEmpty) {
-                        return CircleAvatar(
-                          radius: MediaQuery.of(context).size.width * 0.08,
-                          backgroundColor: Colors.white,
-                          child: ClipOval(
+                  ),
+                  success: (data) {
+                    if (data.profilePhoto != null &&
+                        data.profilePhoto!.isNotEmpty) {
+                      return CircleAvatar(
+                        radius: 40,
+                        child: ClipOval(
+                          child: AspectRatio(
+                            aspectRatio: 1.0,
                             child: CachedNetworkImage(
+                              fit: BoxFit.cover,
                               imageUrl: data.profilePhoto!,
-                              width: double.infinity,
-                              height: double.infinity,
+                              placeholder: (context, url) => Image.asset(
+                                  'app_icon_spenza.png'.assetImageUrl),
+                              errorWidget: (context, url, error) => Image.asset(
+                                  'user_placeholder.png'.assetImageUrl),
+                            ),
+                          ),
+                        ),
+                      );
+                    } else {
+                      return CircleAvatar(
+                        radius: 40,
+                        child: ClipOval(
+                          child: AspectRatio(
+                            aspectRatio: 1.0,
+                            child: Image.asset(
+                              'user_placeholder.png'.assetImageUrl,
                               fit: BoxFit.cover,
                             ),
                           ),
-                        );
-
-                      } else {
-                        return CircleAvatar(
-                          radius: MediaQuery.of(context).size.width * 0.08, // Adjust the multiplier as needed
-                          backgroundColor: Colors.white,
-                          child: ClipOval(
-                              child: Image.asset('assets/images/user.png')
-                          ),
-                        );
-                      }
-                    },
-                  );
-                },
-              )
-            ),
+                        ),
+                      );
+                    }
+                  },
+                );
+              },
+            )),
           ),
         ],
       ),
@@ -213,9 +225,8 @@ class _MyListState extends ConsumerState<MyList> with PopupMenuMixin {
           builder: (context, ref, child) {
             final storeProvider = ref.watch(fetchMyListProvider);
             return storeProvider.when(
-
               loading: () => Center(child: CircularProgressIndicator()),
-              error: (error,stackTrace) {
+              error: (error, stackTrace) {
                 print("errorMrss $error");
                 return Center(child: Text(error.toString()));
               },
@@ -224,10 +235,18 @@ class _MyListState extends ConsumerState<MyList> with PopupMenuMixin {
                 return MyListWidget(
                   stores: data,
                   onButtonClicked: (listId, name, photo, path) {
-                    ref.read(fetchMyListProvider.notifier).redirectUserToListDetailsScreen(context: context, listId: listId,name: name, photo: photo, path:path!);
-                  }, onPopUpClicked: (String path) {
+                    ref
+                        .read(fetchMyListProvider.notifier)
+                        .redirectUserToListDetailsScreen(
+                            context: context,
+                            listId: listId,
+                            name: name,
+                            photo: photo,
+                            path: path!);
+                  },
+                  onPopUpClicked: (String path) {
                     _onActionIconPressed(path);
-                },
+                  },
                 );
               },
             );

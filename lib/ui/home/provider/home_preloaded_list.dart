@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -15,28 +14,34 @@ import 'fetch_mylist_provider.dart';
 part 'home_preloaded_list.g.dart';
 
 @riverpod
-class HomePreloadedList extends _$HomePreloadedList with FirestoreAndPrefsMixin {
-
+class HomePreloadedList extends _$HomePreloadedList
+    with FirestoreAndPrefsMixin {
   @override
-  FutureOr<List<PreloadedListModel>> build(){
+  FutureOr<List<PreloadedListModel>> build() {
     return [];
   }
+
   Future<List<PreloadedListModel>> fetchPreloadedList() async {
     try {
       state = AsyncValue.loading();
       final userId = await prefs.then((prefs) => prefs.getUserId());
-      final snapShot = await fireStore.collection(PreloadedListConstant.collectionName).get();
+      final snapShot = await fireStore
+          .collection(PreloadedListConstant.collectionName)
+          .get();
 
-
-      final List<PreloadedListModel> preloadedList = await Future.wait(snapShot.docs.map((doc) async {
+      final List<PreloadedListModel> preloadedList =
+          await Future.wait(snapShot.docs.map((doc) async {
         final data = doc.data();
         data['id'] = doc.id;
         data['path'] = doc.reference.path;
 
         final snapShots = await fireStore
-            .collection(ReceiptConstant.collectionName).where(ReceiptConstant.userIdField, isEqualTo: userId)
-            .where(ReceiptConstant.receiptRef, isEqualTo: fireStore.doc(doc.reference.path))
-            .count().get();
+            .collection(ReceiptConstant.collectionName)
+            .where(ReceiptConstant.userIdField, isEqualTo: userId)
+            .where(ReceiptConstant.receiptRef,
+                isEqualTo: fireStore.doc(doc.reference.path))
+            .count()
+            .get();
 
         final count = snapShots.count;
         data['count'] = count.toString();
@@ -57,20 +62,31 @@ class HomePreloadedList extends _$HomePreloadedList with FirestoreAndPrefsMixin 
     }
   }
 
-
-  Future<void> redirectUserToListDetailsScreen({required BuildContext context, required String listId, required String name, required String photo, required WidgetRef ref}) async {
-    await prefs.then((prefs){
+  Future<void> redirectUserToListDetailsScreen(
+      {required BuildContext context,
+      required String listId,
+      required String name,
+      required String photo,
+      required WidgetRef ref}) async {
+    await prefs.then((prefs) {
       prefs.setString("user_list_name", PreloadedListConstant.collectionName);
       prefs.setString("user_list_id", listId);
     });
 
-    final bool? result = await context.pushNamed(RouteManager.preLoadedListDetailScreen,
-        queryParameters: {'list_id': listId,
-        'name':name, 'photo': photo});
-    if(result ?? false){
+    final bool? result = await context.pushNamed(
+      RouteManager.preLoadedListDetailScreen,
+      queryParameters: {
+        'list_id': listId,
+        'name': name,
+        'photo': photo,
+      },
+    );
+
+    debugPrint("From Next Screen Result is $result");
+
+    if (result ?? false) {
       ref.read(fetchMyListProvider.notifier).fetchMyListFun();
     }
-
   }
 
   Future<bool> copyDocument(String itemPath) async {
@@ -81,10 +97,12 @@ class HomePreloadedList extends _$HomePreloadedList with FirestoreAndPrefsMixin 
       final sourceData = sourceDocSnapshot.data();
 
       final currentDate = DateTime.now();
-      final formattedDate = DateFormat('yyyy-MM-dd_HH:mm:ss').format(currentDate);
+      final formattedDate =
+          DateFormat('yyyy-MM-dd_HH:mm:ss').format(currentDate);
       final newName = 'Copied_${sourceDocument.id}_$formattedDate';
 
-      final targetCollection = fireStore.collection(MyListConstant.myListCollection);
+      final targetCollection =
+          fireStore.collection(MyListConstant.myListCollection);
       final newDocumentRef = targetCollection.doc();
 
       final copiedData = Map<String, dynamic>.from(sourceData!);
@@ -97,10 +115,11 @@ class HomePreloadedList extends _$HomePreloadedList with FirestoreAndPrefsMixin 
 
       await newDocumentRef.set(copiedData);
 
-
-     // final sourceSubCollection = sourceDocument.collection('preloaded_product_list');
-      final sourceSubCollection = sourceDocument.collection('postloaded_product_list');
-      final targetSubCollection = newDocumentRef.collection('user_product_list');
+      // final sourceSubCollection = sourceDocument.collection('preloaded_product_list');
+      final sourceSubCollection =
+          sourceDocument.collection('preloaded_product_list');
+      final targetSubCollection =
+          newDocumentRef.collection('user_product_list');
 
       final subCollectionSnapshot = await sourceSubCollection.get();
       final subCollectionDocs = subCollectionSnapshot.docs;
@@ -114,12 +133,9 @@ class HomePreloadedList extends _$HomePreloadedList with FirestoreAndPrefsMixin 
       }
 
       return await batch.commit().then((value) => true);
-
     } catch (e) {
       debugPrint('Error copying document: $e');
       return false;
     }
   }
-
-
 }

@@ -1,19 +1,22 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/helpers/fireStore_pref_mixin.dart';
 import 'package:spenza/router/app_router.dart';
+import 'package:spenza/ui/home/components/custom_dialog.dart';
 import 'package:spenza/ui/home/provider/fetch_mylist_provider.dart';
 import 'package:spenza/ui/home/provider/home_preloaded_list.dart';
 import 'package:spenza/ui/home/repo/fetch_favourite_store_repository.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
+
 import '../profile/profile_repository.dart';
 import 'components/myStore.dart';
+import 'components/new_list_dialog.dart';
 import 'components/preLoadedList.dart';
 import 'components/topStrip2.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -67,7 +70,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Container(
                   //constraints: BoxConstraints(minHeight: 100),
-                  color: Colors.blue,
+                  color: Color(0xFF0DA9E6),
                   child: Consumer(
                     builder: (context, ref, child) =>
                         ref.watch(fetchMyListProvider).when(
@@ -83,11 +86,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
                                 onCreateList: () async {
                                   final bool? result = await context
                                       .pushNamed(RouteManager.addNewList);
+
                                   if (result ?? false) {
                                     ref
                                         .read(fetchMyListProvider.notifier)
                                         .fetchMyListFun();
                                   }
+                                  //showDialog(context: context, builder: (builder)=> NewMyList());
                                 },
                                 onAllList: () {
                                   context.pushNamed(RouteManager.myListScreen);
@@ -188,15 +193,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
       actions: [
         Padding(
           padding: const EdgeInsets.only(
-            top: 5,
+            //top: 5,
           ),
           child: InkWell(
             onTap: () {
               context.pushNamed(RouteManager.settingScreen);
+
             },
-            child: CircleAvatar(
-              radius: 40,
-              child: Consumer(
+            child:  Consumer(
                 builder: (context, ref, child) {
                   final profilePro = ref.watch(profileRepositoryProvider);
                   return profilePro.when(
@@ -208,33 +212,32 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
                     success: (data) {
                       if (data.profilePhoto != null && data.profilePhoto!.isNotEmpty) {
                         return CircleAvatar(
-                          radius: MediaQuery.of(context).size.width * 0.05,
+                          radius: 40,
                           child: ClipOval(
-                            child: Material(
-                              surfaceTintColor: Colors.white,
-                              child: CachedNetworkImage(
-                                imageUrl: data.profilePhoto!,
-                                width: double.infinity,
-                                height: double.infinity,
-                                fit: BoxFit.cover,
+                              child: AspectRatio(
+                                aspectRatio: 1.0,
+                                child: CachedNetworkImage(
+                                  fit: BoxFit.cover,
+                                  imageUrl: data.profilePhoto!,
+                                  placeholder: (context, url) =>  Image.asset('app_icon_spenza.png'.assetImageUrl),
+                                  errorWidget: (context, url, error) => Image.asset('user_placeholder.png'.assetImageUrl),
+                                ),
                               ),
                             ),
-                          ),
                         );
                       } else {
-                        return CircleAvatar(
-                          radius: MediaQuery.of(context).size.width * 0.05, // Adjust the multiplier as needed
-                          backgroundColor: Colors.white,
-                          child: ClipOval(
-                            child: Image.asset('assets/images/user.png')
-                          ),
-                        );
+                        return ClipOval(
+                          child: AspectRatio(
+                            aspectRatio: 1.0,
+                            child:  Image.asset('user_placeholder.png'.assetImageUrl,fit: BoxFit.cover,),
+                            )
+                          );
                       }
                     },
                   );
                 },
               )
-            ),
+            //),
           ),
         )
       ],

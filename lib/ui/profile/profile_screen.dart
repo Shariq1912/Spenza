@@ -75,7 +75,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         style: TextStyle(fontSize: 16, fontFamily: poppinsFont),
                       ),
                       SizedBox(height: 10),
-
                       SizedBox(height: 10),
                       Container(
                         width: double.infinity,
@@ -235,14 +234,27 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   Widget _buildImageWidget(String? image) {
     return image != null
-        ? CachedNetworkImage(
-            fit: BoxFit.fill,
-            imageUrl: image,
+        ? ClipOval(
+            child: AspectRatio(
+              aspectRatio: 1.0,
+              child: CachedNetworkImage(
+                fit: BoxFit.cover,
+                imageUrl: image,
+                placeholder: (context, url) =>
+                    Image.asset('app_icon_spenza.png'.assetImageUrl),
+                errorWidget: (context, url, error) =>
+                    Image.asset('user_placeholder.png'.assetImageUrl),
+              ),
+            ),
           )
-        : Image.asset(
-            'list_image.png'.assetImageUrl,
-            fit: BoxFit.fill,
+        : ClipOval(
+            child: AspectRatio(
+              aspectRatio: 1.0,
+              child: Image.asset(
+                'user_placeholder.png'.assetImageUrl,
+                fit: BoxFit.cover,
+              ),
+            ),
           );
   }
-
 }
