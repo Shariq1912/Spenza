@@ -27,8 +27,8 @@ class StoreRanking extends _$StoreRanking
       {};
 
   @override
-  Future<List<MatchingStores>> build() async {
-    return [];
+  Future<List<MatchingStores>?> build() async {
+    return null;
   }
 
   Future<void> rankStoresByPriceTotal({double radius = 3}) async {
@@ -43,6 +43,10 @@ class StoreRanking extends _$StoreRanking
         firestore: fireStore,
         userLocation: GeoPoint(20.68016662, -103.3822084),
       );
+
+      /*nearbyStores.forEach((element) {
+        print("Store IDs = ${element.id} and ${element.name}");
+      });*/
 
       // Fetch the products in a batched read
       final List<DocumentReference> storeRefs = nearbyStores
@@ -409,3 +413,19 @@ class StoreRanking extends _$StoreRanking
     }
   }
 }
+
+// sorianasupercitytower and City Tower
+// sorianasuperterranova and Terranova
+// freskosania and Sania
+// sorianasuperbosquegdl and Bosque GDL
+// walmartexpressmanuelacuna and Manuel Acuña
+// walmartexpressrubendario and Ruben Darío
+// sorianahiperamericasgdl and Americas GDL
+// sorianasupersanjorge and San Jorge
+// freskomidtown and Midtown
+// chedrauiplazamexico and Plaza Mexico
+// sorianasuperplazaguadalupe and Plaza Guadalupe
+// sorianasuperpabloneruda and Pablo Neruda
+// sorianasuperchapalita and Chapalita
+// sorianasupertolsa and Tolsa
+// sorianasuperrosasgdl and Rosas GDL

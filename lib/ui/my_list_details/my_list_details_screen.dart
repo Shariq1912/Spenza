@@ -14,7 +14,12 @@ import 'package:spenza/utils/color_utils.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
 class MyListDetailsScreen extends ConsumerStatefulWidget {
-  const MyListDetailsScreen({super.key, required this.listId, required this.name, required this.photo, required this.path});
+  const MyListDetailsScreen(
+      {super.key,
+      required this.listId,
+      required this.name,
+      required this.photo,
+      required this.path});
 
   final String listId;
   final String name;
@@ -81,7 +86,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await ref.read(userProductListProvider.notifier).fetchProductFromListId();
-    //  await ref.read(listDetailsProvider.notifier).getSelectedListDetails();
+      //  await ref.read(listDetailsProvider.notifier).getSelectedListDetails();
     });
   }
 
@@ -101,26 +106,26 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
         child: Scaffold(
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight),
-            child:/* Consumer(
+            child: /* Consumer(
               builder: (context, ref, child) {
                 return ref.watch(listDetailsProvider).maybeWhen(
-                      data: (data) =>*/ CustomAppBar(
-                        displayActionIcon: true,
-                        title: widget.name,
-                        logo: widget.photo ?? "",
-                        textStyle: TextStyle(
-                          fontFamily: poppinsFont,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: ColorUtils.colorPrimary,
-                        ),
-                        onBackIconPressed: () {
-                         // context.pushNamed(RouteManager.addProductScreen);
-                          context.pop(hasValueChanged);
-                        },
-                        onActionIconPressed: _onActionIconPressed
-                      ),
-                      /*orElse: () => CustomAppBar(
+                      data: (data) =>*/
+                CustomAppBar(
+                    displayActionIcon: true,
+                    title: widget.name,
+                    logo: widget.photo ?? "",
+                    textStyle: TextStyle(
+                      fontFamily: poppinsFont,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: ColorUtils.colorPrimary,
+                    ),
+                    onBackIconPressed: () {
+                      // context.pushNamed(RouteManager.addProductScreen);
+                      context.pop(hasValueChanged);
+                    },
+                    onActionIconPressed: _onActionIconPressed),
+            /*orElse: () => CustomAppBar(
                         displayActionIcon: true,
                         title: "",
                         textStyle: TextStyle(
@@ -168,14 +173,10 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                     return result.when(
                       data: (data) {
                         if (data == null) {
+                          return Center(child: CircularProgressIndicator());
+                        } else if (data.isEmpty) {
                           return Center(
-                            child: CircularProgressIndicator()
-                          );
-                        }else if(data.isEmpty){
-                          return Center(
-                            child: Text(
-                                "No Product found"
-                            ),
+                            child: Text("No Product found"),
                           );
                         }
 
@@ -190,7 +191,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                               imageUrl: product.pImage,
                               title: product.name,
                               priceRange:
-                              "\$${product.minPrice} - \$${product.maxPrice}",
+                                  "\$${product.minPrice} - \$${product.maxPrice}",
                               product: product,
                             );
                           },
@@ -206,12 +207,14 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
               Consumer(
                 builder: (context, ref, child) =>
                     ref.watch(userProductListProvider).maybeWhen(
-                      orElse: () => buildMaterialButton(context),
-                      data: (data) =>data== null?Container():  data.isEmpty
-                          ? Container()
-                          : buildMaterialButton(context),
-                      loading: () => Container(),
-                    ),
+                          orElse: () => buildMaterialButton(context),
+                          data: (data) => data == null
+                              ? Container()
+                              : data.isEmpty
+                                  ? Container()
+                                  : buildMaterialButton(context),
+                          loading: () => Container(),
+                        ),
               ),
             ],
           ),
@@ -238,14 +241,13 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
       onSelected: (PopupMenuAction value) async {
         if (value == PopupMenuAction.upload) {
           debugPrint("upload");
-          context.pushNamed(RouteManager.uploadReceiptScreen,queryParameters: {'list_id': widget.path});
-
+          context.pushNamed(RouteManager.uploadReceiptScreen,
+              queryParameters: {'list_id': widget.path});
         } else if (value == PopupMenuAction.receipt) {
           debugPrint("receipt action, ${widget.path}");
-          context.pushNamed(RouteManager.displayReceiptScreen,queryParameters: {'list_ref': widget.path});
-
-        }
-        else if (value == PopupMenuAction.delete) {
+          context.pushNamed(RouteManager.displayReceiptScreen,
+              queryParameters: {'list_ref': widget.path});
+        } else if (value == PopupMenuAction.delete) {
           debugPrint("delete action");
           final bool result = await ref
               .read(userProductListProvider.notifier)
@@ -255,19 +257,16 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
             hasValueChanged = true;
             context.showSnackBar(message: "List deleted successfully!");
           }
-
         } else if (value == PopupMenuAction.edit) {
           debugPrint("edit action");
           final bool? result =
-          await context.pushNamed(RouteManager.editListScreen);
+              await context.pushNamed(RouteManager.editListScreen);
           if (result ?? false) {
             context.showSnackBar(message: "List Edited Successfully!");
             ref.read(listDetailsProvider.notifier).getSelectedListDetails();
             hasValueChanged = true;
           }
-        }
-
-        else if (value == PopupMenuAction.copy) {
+        } else if (value == PopupMenuAction.copy) {
           debugPrint("copy action");
           final bool result = await ref
               .read(userProductListProvider.notifier)

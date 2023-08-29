@@ -11,7 +11,6 @@ import '../home/provider/home_preloaded_list.dart';
 import '../profile/profile_repository.dart';
 
 class PreloadedListScreen extends ConsumerStatefulWidget {
-
   const PreloadedListScreen({Key? key}) : super(key: key);
 
   @override
@@ -19,7 +18,8 @@ class PreloadedListScreen extends ConsumerStatefulWidget {
       _PreloadedListScreenState();
 }
 
-class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with PopupMenuMixin,AutomaticKeepAliveClientMixin  {
+class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen>
+    with PopupMenuMixin {
   final poppinsFont = GoogleFonts.poppins().fontFamily;
   bool hasValueChanged = false;
 
@@ -47,22 +47,17 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with 
     ),
   ];
 
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadAllStore();
+      _loadAllList();
     });
   }
-  
-  @override
-  bool get wantKeepAlive => true;
 
-  Future<void> _loadAllStore() async {
-     ref.read(profileRepositoryProvider.notifier).getUserProfileData();
-    await ref.read(homePreloadedListProvider.notifier).fetchPreloadedList();
-
+  Future<void> _loadAllList() async {
+    ref.read(profileRepositoryProvider.notifier).getUserProfileData();
+    ref.read(homePreloadedListProvider.notifier).fetchPreloadedList();
   }
 
   @override
@@ -72,13 +67,11 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with 
   }
 
   void _onActionIconPressed(String itemPath) {
-
     print("clickedItemPath : $itemPath");
     final RenderBox customAppBarRenderBox =
-    context.findRenderObject() as RenderBox;
+        context.findRenderObject() as RenderBox;
     final customAppBarPosition =
-    customAppBarRenderBox.localToGlobal(Offset.zero);
-
+        customAppBarRenderBox.localToGlobal(Offset.zero);
 
     showPopupMenu(
       context: context,
@@ -91,11 +84,11 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with 
       items: items,
       onSelected: (PopupMenuAction value) async {
         if (value == PopupMenuAction.upload) {
-
-          context.pushNamed(RouteManager.uploadReceiptScreen,queryParameters: {'list_id': itemPath});
-
+          context.pushNamed(RouteManager.uploadReceiptScreen,
+              queryParameters: {'list_id': itemPath});
         } else if (value == PopupMenuAction.receipt) {
-          context.pushNamed(RouteManager.displayReceiptScreen,queryParameters: {'list_ref': itemPath});
+          context.pushNamed(RouteManager.displayReceiptScreen,
+              queryParameters: {'list_ref': itemPath});
         } else if (value == PopupMenuAction.copy) {
           debugPrint("copy action");
           final bool result = await ref
@@ -106,53 +99,55 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with 
             hasValueChanged = true;
             context.showSnackBar(message: "List copied successfully!");
           }
-
         }
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
-
-    super.build(context);
-
-    return Scaffold(
-      appBar: AppBar(
-        surfaceTintColor: Colors.white,
-        title: Text(
-          "Preloaded Lists",
-          style: TextStyle(
-            fontFamily: poppinsFont,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-            color: Color(0xFF0CA9E6),
+    return WillPopScope(
+      onWillPop: () async {
+        debugPrint("Will Pop Scope == $hasValueChanged");
+        context.pop(hasValueChanged);
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          surfaceTintColor: Colors.white,
+          title: Text(
+            "Preloaded Lists",
+            style: TextStyle(
+              fontFamily: poppinsFont,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              color: Color(0xFF0CA9E6),
+            ),
           ),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          onPressed: () {
-            context.pushReplacement(RouteManager.homeScreen);
-          },
-          icon: Icon(Icons.arrow_back_ios, color: Color(0xFF0CA9E6)),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(top: 5),
-            child: InkWell(
-              onTap: () {
+          centerTitle: true,
+          leading: IconButton(
+            onPressed: () {
+              context.pushReplacement(RouteManager.homeScreen);
+            },
+            icon: Icon(Icons.arrow_back_ios, color: Color(0xFF0CA9E6)),
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(top: 5),
+              child: InkWell(onTap: () {
                 //Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SettingScreen()));
-              },
-              child: Consumer(
+              }, child: Consumer(
                 builder: (context, ref, child) {
                   final profilePro = ref.watch(profileRepositoryProvider);
                   return profilePro.when(
-                        () => Container(),
+                    () => Container(),
                     loading: () => Center(child: CircularProgressIndicator()),
                     error: (message) => ClipOval(
                       child: Image.asset('assets/images/user.png'),
                     ),
                     success: (data) {
-                      if (data.profilePhoto != null && data.profilePhoto!.isNotEmpty) {
+                      if (data.profilePhoto != null &&
+                          data.profilePhoto!.isNotEmpty) {
                         return CircleAvatar(
                           radius: MediaQuery.of(context).size.width * 0.08,
                           backgroundColor: Colors.white,
@@ -165,56 +160,57 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen> with 
                             ),
                           ),
                         );
-
                       } else {
                         return CircleAvatar(
-                          radius: MediaQuery.of(context).size.width * 0.08, // Adjust the multiplier as needed
+                          radius: MediaQuery.of(context).size.width * 0.08,
+                          // Adjust the multiplier as needed
                           backgroundColor: Colors.white,
                           child: ClipOval(
-                              child: Image.asset('assets/images/user.png')
-                          ),
+                              child: Image.asset('assets/images/user.png')),
                         );
                       }
                     },
                   );
                 },
-              )
+              )),
             ),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Consumer(
-          builder: (context, ref, child) {
-            final preloadedListProvider = ref.watch(homePreloadedListProvider);
-            return preloadedListProvider.when(
-              loading: () => Center(child: CircularProgressIndicator()),
-              error: (error, stackTrace) {
-                print("errorMrss $error");
-                return Center(child: Text(error.toString()));
-              },
-              data: (data) {
-                print("preloadedList $data");
-                return PreloadedListWidget(
-                  data: data,
-                   onButtonClicked: (itemPath) {
-                    _onActionIconPressed(itemPath);
-                  }, onCardClicked: (listId, name, photo ) {
-                  ref
-                      .read(homePreloadedListProvider.notifier)
-                      .redirectUserToListDetailsScreen(
-                      context: context,
-                      listId: listId,
-                      name : name,
-                      photo: photo,
-                      ref: ref
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Consumer(
+            builder: (context, ref, child) {
+              final preloadedListProvider =
+                  ref.watch(homePreloadedListProvider);
+              return preloadedListProvider.when(
+                loading: () => Center(child: CircularProgressIndicator()),
+                error: (error, stackTrace) {
+                  print("errorMrss $error");
+                  return Center(child: Text(error.toString()));
+                },
+                data: (data) {
+                  print("preloadedList $data");
+                  return PreloadedListWidget(
+                    data: data,
+                    onButtonClicked: (itemPath) {
+                      _onActionIconPressed(itemPath);
+                    },
+                    onCardClicked: (listId, name, photo) {
+                      ref
+                          .read(homePreloadedListProvider.notifier)
+                          .redirectUserToListDetailsScreen(
+                            context: context,
+                            listId: listId,
+                            name: name,
+                            photo: photo,
+                            ref: ref,
+                          );
+                    },
                   );
                 },
-                );
-              },
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );

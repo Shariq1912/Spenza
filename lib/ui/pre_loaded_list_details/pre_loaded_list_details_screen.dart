@@ -111,8 +111,8 @@ class _PreLoadedListDetailsScreenState
                           context.pop(hasValueChanged);
                         },
                         onActionIconPressed: () {
-                         // _onActionIconPressed("preloaded_default/${widget.listId}");
-                          _onActionIconPressed("postloaded_default/${widget.listId}");
+                         _onActionIconPressed("preloaded_default/${widget.listId}");
+                          // _onActionIconPressed("postloaded_default/${widget.listId}");
                         }
                       ),
                       orElse: () => CustomAppBar(
@@ -128,7 +128,8 @@ class _PreLoadedListDetailsScreenState
                           context.pushNamed(RouteManager.addProductScreen);
                         },
                         onActionIconPressed:() {
-                          _onActionIconPressed("postloaded_default/${widget.listId}");
+                          _onActionIconPressed("preloaded_default/${widget.listId}");
+                          // _onActionIconPressed("postloaded_default/${widget.listId}");
                         },
                       ),
                     );
@@ -232,7 +233,7 @@ class _PreLoadedListDetailsScreenState
 
           if (result) {
             hasValueChanged = true;
-            //context.showSnackBar(message: "List copied successfully!");
+            context.showSnackBar(message: "List copied successfully!");
           }
 
         }

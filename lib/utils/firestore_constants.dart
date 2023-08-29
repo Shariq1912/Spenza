@@ -49,7 +49,7 @@ class Department {
 }
 
 class PreloadedListConstant {
-  //static const String collectionName = 'preloaded_default';
+  // static const String collectionName = 'preloaded_default';
   static const String collectionName = 'postloaded_default';
   //static const String subCollectionName = 'preloaded_product_list';
   static const String subCollectionName = 'postloaded_product_list';

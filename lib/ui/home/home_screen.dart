@@ -22,7 +22,8 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsMixin {
+class _HomeScreenState extends ConsumerState<HomeScreen>
+    with FirestoreAndPrefsMixin {
   @override
   void initState() {
     super.initState();
@@ -31,13 +32,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
     });
   }
 
-
   _loadStores() async {
     await ref.read(fetchMyListProvider.notifier).fetchMyListFun();
-     ref.read(profileRepositoryProvider.notifier).getUserProfileData();
+    ref.read(profileRepositoryProvider.notifier).getUserProfileData();
     await ref.read(homePreloadedListProvider.notifier).fetchPreloadedList();
-    await ref.read(fetchFavouriteStoreRepositoryProvider.notifier).fetchFavStores();
-
+    await ref
+        .read(fetchFavouriteStoreRepositoryProvider.notifier)
+        .fetchFavStores();
   }
 
   @override
@@ -48,8 +49,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
     ref.invalidate(fetchFavouriteStoreRepositoryProvider);
     ref.invalidate(homePreloadedListProvider);
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -76,8 +75,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
                                   ref
                                       .read(fetchMyListProvider.notifier)
                                       .redirectUserToListDetailsScreen(
-                                      context: context, listId: listId,name: name, photo: photo, path:path!
-                                      );
+                                          context: context,
+                                          listId: listId,
+                                          name: name,
+                                          photo: photo,
+                                          path: path!);
                                 },
                                 data: data,
                                 onCreateList: () async {
@@ -115,19 +117,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
                             ref
                                 .read(homePreloadedListProvider.notifier)
                                 .redirectUserToListDetailsScreen(
-                                  context: context,
-                                  listId: listId,
-                                  name : name,
-                                  photo: photo,
-                                  ref :ref
-                                );
+                                    context: context,
+                                    listId: listId,
+                                    name: name,
+                                    photo: photo,
+                                    ref: ref);
                           },
                           data: data,
                           title:
                               AppLocalizations.of(context)!.preloadedListTitle,
                           poppinsFont: poppinsFont,
-                          onAllClicked: () {
-                            context.pushNamed(RouteManager.preLoadedListScreen);
+                          onAllClicked: () async {
+                            final bool? result = await context
+                                .pushNamed(RouteManager.preLoadedListScreen);
+
+                            if (result ?? false) {
+                              ref
+                                  .read(fetchMyListProvider.notifier)
+                                  .fetchMyListFun();
+                            }
                           },
                         ),
                       );
@@ -155,10 +163,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
                           data: data,
                           title: AppLocalizations.of(context)!.myStoreTitle,
                           poppinsFont: poppinsFont,
-                          onAllStoreClicked: () async{
-                            final bool? result = await context.pushNamed(RouteManager.storesScreen);
-                            if(result?? false){
-                              ref.read(fetchFavouriteStoreRepositoryProvider.notifier).fetchFavStores();
+                          onAllStoreClicked: () async {
+                            final bool? result = await context
+                                .pushNamed(RouteManager.storesScreen);
+                            if (result ?? false) {
+                              ref
+                                  .read(fetchFavouriteStoreRepositoryProvider
+                                      .notifier)
+                                  .fetchFavStores();
                             }
                           },
                         ),
@@ -195,46 +207,46 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
               context.pushNamed(RouteManager.settingScreen);
             },
             child: CircleAvatar(
-              radius: 40,
-              child: Consumer(
-                builder: (context, ref, child) {
-                  final profilePro = ref.watch(profileRepositoryProvider);
-                  return profilePro.when(
-                        () => Container(),
-                    loading: () => Center(child: CircularProgressIndicator()),
-                    error: (message) => CircleAvatar(
-                      child: Image.asset('assets/images/user.png'),
-                    ),
-                    success: (data) {
-                      if (data.profilePhoto != null && data.profilePhoto!.isNotEmpty) {
-                        return CircleAvatar(
-                          radius: MediaQuery.of(context).size.width * 0.05,
-                          child: ClipOval(
-                            child: Material(
-                              surfaceTintColor: Colors.white,
-                              child: CachedNetworkImage(
-                                imageUrl: data.profilePhoto!,
-                                width: double.infinity,
-                                height: double.infinity,
-                                fit: BoxFit.cover,
+                radius: 40,
+                child: Consumer(
+                  builder: (context, ref, child) {
+                    final profilePro = ref.watch(profileRepositoryProvider);
+                    return profilePro.when(
+                      () => Container(),
+                      loading: () => Center(child: CircularProgressIndicator()),
+                      error: (message) => CircleAvatar(
+                        child: Image.asset('assets/images/user.png'),
+                      ),
+                      success: (data) {
+                        if (data.profilePhoto != null &&
+                            data.profilePhoto!.isNotEmpty) {
+                          return CircleAvatar(
+                            radius: MediaQuery.of(context).size.width * 0.05,
+                            child: ClipOval(
+                              child: Material(
+                                surfaceTintColor: Colors.white,
+                                child: CachedNetworkImage(
+                                  imageUrl: data.profilePhoto!,
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      } else {
-                        return CircleAvatar(
-                          radius: MediaQuery.of(context).size.width * 0.05, // Adjust the multiplier as needed
-                          backgroundColor: Colors.white,
-                          child: ClipOval(
-                            child: Image.asset('assets/images/user.png')
-                          ),
-                        );
-                      }
-                    },
-                  );
-                },
-              )
-            ),
+                          );
+                        } else {
+                          return CircleAvatar(
+                            radius: MediaQuery.of(context).size.width * 0.05,
+                            // Adjust the multiplier as needed
+                            backgroundColor: Colors.white,
+                            child: ClipOval(
+                                child: Image.asset('assets/images/user.png')),
+                          );
+                        }
+                      },
+                    );
+                  },
+                )),
           ),
         )
       ],
