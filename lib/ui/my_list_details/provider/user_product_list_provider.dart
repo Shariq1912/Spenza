@@ -19,7 +19,8 @@ class UserProductList extends _$UserProductList with FirestoreAndPrefsMixin {
     return null;
   }
 
-  Future<List<UserProduct>> fetchProductFromListId({bool isPreloadedList = false}) async {
+  Future<List<UserProduct>> fetchProductFromListId(
+      {bool isPreloadedList = false}) async {
     state = AsyncValue.loading();
 
     final listId = await prefs.then((prefs) => prefs.getUserListId());
@@ -36,7 +37,6 @@ class UserProductList extends _$UserProductList with FirestoreAndPrefsMixin {
           .doc(listId)
           .collection(subCollectionName)
           .get();
-
 
       final productRefs = productListRef.docs
           .map((snapshot) => snapshot[ProductCollectionConstant.productRef]
@@ -222,8 +222,8 @@ class UserProductList extends _$UserProductList with FirestoreAndPrefsMixin {
         ..commit();
 
       debugPrint("listId $listId, collectionName :$collectionName");
-      context.pop(true);
 
+      context.pop(true);
       return true;
     } on FirebaseException catch (e) {
       if (e.code == 'no-internet') {
