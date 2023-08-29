@@ -88,11 +88,6 @@ class HomePreloadedList extends _$HomePreloadedList
       final sourceDocSnapshot = await sourceDocument.get();
       final sourceData = sourceDocSnapshot.data();
 
-      final currentDate = DateTime.now();
-      final formattedDate =
-          DateFormat('yyyy-MM-dd_HH:mm:ss').format(currentDate);
-      final newName = 'Copied_${sourceDocument.id}_$formattedDate';
-
       final targetCollection =
           fireStore.collection(MyListConstant.myListCollection);
       final newDocumentRef = targetCollection.doc();
@@ -103,20 +98,20 @@ class HomePreloadedList extends _$HomePreloadedList
         copiedData.remove('preloaded_photo');
       }
       copiedData['uid'] = userId;
-      copiedData['usersRef'] = sourceDocument;
+      copiedData['usersRef'] =
+          fireStore.collection(UserConstant.userCollection).doc(userId);
+
+      final batch = fireStore.batch();
 
       await newDocumentRef.set(copiedData);
 
-      // final sourceSubCollection = sourceDocument.collection('preloaded_product_list');
       final sourceSubCollection =
-          sourceDocument.collection('postloaded_product_list');
+          sourceDocument.collection(PreloadedListConstant.collectionName);
       final targetSubCollection =
-          newDocumentRef.collection('user_product_list');
+          newDocumentRef.collection(MyListConstant.userProductList);
 
       final subCollectionSnapshot = await sourceSubCollection.get();
       final subCollectionDocs = subCollectionSnapshot.docs;
-
-      final batch = fireStore.batch();
 
       for (final subDoc in subCollectionDocs) {
         final subData = subDoc.data();
@@ -125,6 +120,7 @@ class HomePreloadedList extends _$HomePreloadedList
       }
 
       return await batch.commit().then((value) => true);
+
     } catch (e) {
       debugPrint('Error copying document: $e');
       return false;

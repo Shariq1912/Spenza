@@ -127,8 +127,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           title:
                               AppLocalizations.of(context)!.preloadedListTitle,
                           poppinsFont: poppinsFont,
-                          onAllClicked: () {
-                            context.pushNamed(RouteManager.preLoadedListScreen);
+                          onAllClicked: () async {
+                            final bool? result = await context
+                                .pushNamed(RouteManager.preLoadedListScreen);
+
+                            if (result ?? false) {
+                              ref
+                                  .read(fetchMyListProvider.notifier)
+                                  .fetchMyListFun();
+                            }
                           },
                         ),
                       );
