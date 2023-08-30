@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -12,7 +13,6 @@ import 'package:spenza/ui/favourite_stores/data/favourite_stores.dart';
 import 'package:spenza/ui/my_list_details/data/matching_store.dart';
 import 'package:spenza/utils/fireStore_constants.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
-import 'package:collection/collection.dart';
 
 part 'store_ranking_provider.g.dart';
 
@@ -31,10 +31,13 @@ class StoreRanking extends _$StoreRanking
     return null;
   }
 
-  Future<void> rankStoresByPriceTotal({double radius = 3}) async {
+  Future<void> rankStoresByPriceTotal({
+    double radius = 3,
+  }) async {
     state = AsyncValue.loading();
 
     final listId = await prefs.then((prefs) => prefs.getUserListId());
+    final userListName = await prefs.then((prefs) => prefs.getUserListName());
 
     try {
       // Soriana City Center = 20.68016662, -103.3822084
@@ -84,10 +87,12 @@ class StoreRanking extends _$StoreRanking
       final Map<DocumentReference, double> matchingProductCounts = {};
 
       // Fetch the user's product list from the user_product_list subcollection
+      final isPreloadedList = userListName != MyListConstant.myListCollection;
       QuerySnapshot productListSnapshot = await fireStore
-          .collection('mylist')
+          .collection(isPreloadedList ? 'preloded_default' : 'mylist')
           .doc(listId)
-          .collection('user_product_list')
+          .collection(
+              isPreloadedList ? 'preloaded_product_list' : 'user_product_list')
           .get();
 
       // Build a list of product references to fetch in a batched read

@@ -34,6 +34,8 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
     with PopupMenuMixin {
   final TextEditingController _searchController = TextEditingController();
   bool hasValueChanged = false;
+  final _focusNode = FocusNode();
+
 
   final List<PopupMenuItem<PopupMenuAction>> items = [
     PopupMenuItem(
@@ -78,6 +80,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
     super.dispose();
 
     _searchController.dispose();
+    _focusNode.dispose();
   }
 
   @override
@@ -88,6 +91,15 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
       await ref.read(userProductListProvider.notifier).fetchProductFromListId();
       //  await ref.read(listDetailsProvider.notifier).getSelectedListDetails();
     });
+
+    _focusNode.addListener(() {
+      print("Has focus: ${_focusNode.hasFocus}");
+
+      if (_focusNode.hasFocus) {
+
+      }
+    });
+
   }
 
   @override
@@ -146,10 +158,15 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
           body: Column(
             children: [
               SearchBox(
+                focusNode: _focusNode,
                 hint: "Add products",
                 controller: _searchController,
                 onSearch: (value) async {
                   _searchController.clear();
+
+                  final bool? isSuccess = await ref
+                      .read(userProductListProvider.notifier)
+                      .saveUserProductListToServer(context: context);
 
                   final bool? result = await context.pushNamed(
                     RouteManager.addProductScreen,
@@ -180,6 +197,8 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                           );
                         }
 
+                        // todo call show button provider
+
                         return ListView.builder(
                           itemCount: data.length,
                           itemBuilder: (context, index) {
@@ -204,6 +223,8 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                   },
                 ),
               ),
+
+              // todo watch  show button provider
               Consumer(
                 builder: (context, ref, child) =>
                     ref.watch(userProductListProvider).maybeWhen(
@@ -283,10 +304,13 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
 
   MaterialButton buildMaterialButton(BuildContext context) {
     return MaterialButton(
-      onPressed: () {
-        ref
+      onPressed: () async {
+        final bool? isSuccess = await ref
             .read(userProductListProvider.notifier)
             .saveUserProductListToServer(context: context);
+
+        if (isSuccess ?? false)
+          context.pushNamed(RouteManager.storeRankingScreen);
       },
       color: Colors.blue,
       // Change the button color to your desired color
