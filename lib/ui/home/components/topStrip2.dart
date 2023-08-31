@@ -63,42 +63,47 @@ class TopStrip extends ConsumerWidget {
           if (data.isEmpty)
             _noItemInTheList(context)
           else
-            Container(
-              height: 140,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: data.length,
-                itemBuilder: (context, index) {
-                  MyListModel list = data[index];
-                  return MyListItem(
-                    imageUrl: list.myListPhoto ?? "",
-                    name: list.name ?? "",
-                    description: list.description ?? "",
-                    onTap: () => onListClick.call(list.documentId!, list.name, list.myListPhoto!, list.path!),
-                  );
-                },
-              ),
-            ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: CircleAvatar(
-                backgroundColor: Colors.greenAccent,
-                radius: 20,
-                child: ClipOval(
-                  child: IconButton(
-                    onPressed: onCreateList,
-                    icon: Icon(
-                      Icons.add,
-                      color: Colors.white,
-                      size: 25,
-                    ),
+            Stack(
+              children: [
+                Container(
+                  height: 160,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: data.length,
+                    itemBuilder: (context, index) {
+                      MyListModel list = data[index];
+                      return MyListItem(
+                        imageUrl: list.myListPhoto ?? "",
+                        name: list.name ?? "",
+                        description: list.description ?? "",
+                        onTap: () => onListClick.call(list.documentId!, list.name, list.myListPhoto!, list.path!),
+                      );
+                    },
                   ),
                 ),
-              ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                    child:  CircleAvatar(
+                        backgroundColor: Colors.greenAccent,
+                        radius: 20,
+                        child: ClipOval(
+                          child: IconButton(
+                            onPressed: onCreateList,
+                            icon: Icon(
+                              Icons.add,
+                              color: Colors.white,
+                              size: 25,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ),
+                ),
+              ],
             ),
-          ),
         ],
       ),
     );

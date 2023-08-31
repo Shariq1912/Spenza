@@ -48,7 +48,7 @@ class _ProfileCardState extends ConsumerState<EditProfileInformation> {
       streetNumber: streetNumberController.text,
       district: districtController.text,
       state: stateController.text,
-      zipCode: zipCodeController.text,
+      zipCode: zipCodeController.text ,
       profilePhoto: selectedImage?.path ?? ""
     );
 

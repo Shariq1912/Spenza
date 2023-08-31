@@ -27,6 +27,7 @@ class SaveUserData extends _$SaveUserData with FirestoreAndPrefsMixin{
     try{
       state = AsyncValue.loading();
 
+      final SharedPreferences pref = await SharedPreferences.getInstance();
       final userId = await prefs.then((prefs) => prefs.getUserId());
       final postalCode = await prefs.then((prefs) => prefs.getPostalCode());
       print("postal codes : $postalCode");
@@ -44,13 +45,21 @@ class SaveUserData extends _$SaveUserData with FirestoreAndPrefsMixin{
         }*/
         print("postal codes : empty");
         userData['zipCode'] = postalCode;
+        print("postal codes :  ${userData['zipCode']}");
+      }
+      try {
+        String districtName = '';
+        DistrictData stateData = DistrictData(name: '');
+      if (userProfileData.zipCode.isNotEmpty) {
+        await pref.setString(UserConstant.zipCodeField, postalCode);
+         districtName = await fetchDistrictNameFromZipcode(int.parse(userProfileData.zipCode));
+          stateData = await fetchStateNameFromZipcode(int.parse(userProfileData.zipCode));
+      } else {
+         districtName = await fetchDistrictNameFromZipcode(int.parse(postalCode));
+          stateData = await fetchStateNameFromZipcode(int.parse(postalCode));
       }
 
-      try {
-        String districtName = await fetchDistrictNameFromZipcode(int.parse(userProfileData.zipCode));
         userData['district'] = districtName;
-
-        DistrictData stateData = await fetchStateNameFromZipcode(int.parse(userProfileData.zipCode));
         userData['state'] = stateData.name;
         userData.entries.forEach((element) {
           print("userDaaIn ${element.value}");

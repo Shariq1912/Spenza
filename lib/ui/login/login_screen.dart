@@ -10,7 +10,6 @@ import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/login/login_provider.dart';
 import 'package:spenza/utils/constants.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
-
 import 'data/login_request.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {

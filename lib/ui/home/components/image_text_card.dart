@@ -28,8 +28,8 @@ class ImageTextCard extends StatelessWidget {
                   CachedNetworkImage(
                     imageUrl: imageUrl,
                     fit: BoxFit.cover,
-                    width: 150,
-                    height: 150,
+                    width: 130,
+                    height: 130,
                   ),
                 ],
               ),
