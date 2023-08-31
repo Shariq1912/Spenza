@@ -179,3 +179,5 @@ app.*.symbols
 *.lock
 pubspec.lock
 *.lock
+*.g.dart
+*.freezed.dart

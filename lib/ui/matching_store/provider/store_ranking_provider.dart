@@ -62,7 +62,7 @@ class StoreRanking extends _$StoreRanking
           .collection('products_mvp')
           .where('is_exist', isEqualTo: true)
           .where('storeRef', whereIn: storeRefs)
-          .get(GetOptions(source: Source.server));
+          .get();
 
       // Create a list of Product objects
       final storeProducts = storeProductsSnapshot.docs.map((productSnapshot) {
@@ -86,13 +86,17 @@ class StoreRanking extends _$StoreRanking
       final Map<DocumentReference, double> storeTotal = {};
       final Map<DocumentReference, double> matchingProductCounts = {};
 
+
+
       // Fetch the user's product list from the user_product_list subcollection
       final isPreloadedList = userListName != MyListConstant.myListCollection;
+      print("List Name == $userListName and isPreloadedList = $isPreloadedList");
+
       QuerySnapshot productListSnapshot = await fireStore
-          .collection(isPreloadedList ? 'preloded_default' : 'mylist')
+          .collection(isPreloadedList ? PreloadedListConstant.collectionName : MyListConstant.myListCollection)
           .doc(listId)
           .collection(
-              isPreloadedList ? 'preloaded_product_list' : 'user_product_list')
+              isPreloadedList ? PreloadedListConstant.subCollectionName  : MyListConstant.userProductList)
           .get();
 
       // Build a list of product references to fetch in a batched read

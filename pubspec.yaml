@@ -119,7 +119,7 @@ dependencies:
   image_picker: ^1.0.1
   permission_handler: ^10.4.3
   firebase_storage: ^11.2.4
-  path_provider: ^2.0.15
+  path_provider: ^2.1.1
   intl: ^0.18.0
   flutter_inappwebview: ^5.7.2+3
 
