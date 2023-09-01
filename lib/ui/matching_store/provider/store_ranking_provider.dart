@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:spenza/helpers/fireStore_pref_mixin.dart';
+import 'package:spenza/helpers/location_helper.dart';
 import 'package:spenza/helpers/nearby_store_helper.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/add_product/data/product.dart';
@@ -18,7 +19,7 @@ part 'store_ranking_provider.g.dart';
 
 @riverpod
 class StoreRanking extends _$StoreRanking
-    with NearbyStoreMixin, FirestoreAndPrefsMixin {
+    with LocationHelper, NearbyStoreMixin, FirestoreAndPrefsMixin {
   final Map<DocumentReference, List<Map<String, dynamic>>> missingProductMap =
       {};
   final Map<DocumentReference, List<Map<String, dynamic>>> similarProductMap =
@@ -39,12 +40,19 @@ class StoreRanking extends _$StoreRanking
     final listId = await prefs.then((prefs) => prefs.getUserListId());
     final userListName = await prefs.then((prefs) => prefs.getUserListName());
 
+    GeoPoint? location = await getCurrentLocation();
+
+    if (location == null) {
+      location = await getLocationByZipCode("45116");
+    }
+
     try {
       // Soriana City Center = 20.68016662, -103.3822084
+      // GeoPoint(20.68016662, -103.3822084)
       final List<Stores> nearbyStores = await getNearbyStores(
         radius: radius,
         firestore: fireStore,
-        userLocation: GeoPoint(20.68016662, -103.3822084),
+        userLocation: location,
       );
 
       /*nearbyStores.forEach((element) {
@@ -86,17 +94,19 @@ class StoreRanking extends _$StoreRanking
       final Map<DocumentReference, double> storeTotal = {};
       final Map<DocumentReference, double> matchingProductCounts = {};
 
-
-
       // Fetch the user's product list from the user_product_list subcollection
       final isPreloadedList = userListName != MyListConstant.myListCollection;
-      print("List Name == $userListName and isPreloadedList = $isPreloadedList");
+      print(
+          "List Name == $userListName and isPreloadedList = $isPreloadedList");
 
       QuerySnapshot productListSnapshot = await fireStore
-          .collection(isPreloadedList ? PreloadedListConstant.collectionName : MyListConstant.myListCollection)
+          .collection(isPreloadedList
+              ? PreloadedListConstant.collectionName
+              : MyListConstant.myListCollection)
           .doc(listId)
-          .collection(
-              isPreloadedList ? PreloadedListConstant.subCollectionName  : MyListConstant.userProductList)
+          .collection(isPreloadedList
+              ? PreloadedListConstant.subCollectionName
+              : MyListConstant.userProductList)
           .get();
 
       // Build a list of product references to fetch in a batched read
@@ -347,7 +357,7 @@ class StoreRanking extends _$StoreRanking
       matchingPercentage: matchingPercentage.toInt(),
       distance: distance.formatDistance(),
       address: storeSnapshot[
-          'adress'], //todo change the typo address once field changed in db
+          'address'], //todo change the typo address once field changed in db
     );
   }
 

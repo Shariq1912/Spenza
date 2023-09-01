@@ -14,8 +14,8 @@ part 'selected_store_provider.g.dart';
 @riverpod
 class SelectedStore extends _$SelectedStore with FirestoreAndPrefsMixin {
   @override
-  Future<SelectedProduct> build() async {
-    return SelectedProduct();
+  Future<SelectedProduct?> build() async {
+    return null;
   }
 
   Future<void> getSelectedStoreProducts() async {

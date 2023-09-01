@@ -69,6 +69,15 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
   Widget build(BuildContext context) {
     final poppinsFont = ref.watch(poppinsFontProvider).fontFamily;
 
+    /*ref.listen(selectedStoreProvider, (previous, next) {
+      next.maybeWhen(
+        orElse: () {},
+        data: (data) => ref
+            .read(storeDetailsProvider.notifier)
+            .getSelectedStore(storeRef: data!.storeRef!),
+      );
+    });*/
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -123,6 +132,10 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
                     .watch(selectedStoreProvider)
                     .when(
                       data: (data) {
+                        if (data == null) {
+                            return Center(child: CircularProgressIndicator());
+                        }
+
                         if (data.storeRef != null) {
                           ref
                               .read(storeDetailsProvider.notifier)
