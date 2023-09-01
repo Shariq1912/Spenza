@@ -88,7 +88,7 @@ class _PreLoadedListDetailsScreenState
         onWillPop: () async {
           context.pop(hasValueChanged);
           debugPrint("hasvalue $hasValueChanged");
-          return false;
+          return true;
         },
         child: Scaffold(
           appBar: PreferredSize(
@@ -99,7 +99,7 @@ class _PreLoadedListDetailsScreenState
                       data: (data) => CustomAppBar(
                         displayActionIcon: true,
                         title: widget.name,
-                        logo: widget.photo ?? "",
+                        logo: "app_icon_spenza.png" ?? "",
                         textStyle: TextStyle(
                           fontFamily: poppinsFont,
                           fontWeight: FontWeight.bold,
@@ -111,8 +111,8 @@ class _PreLoadedListDetailsScreenState
                           context.pop(hasValueChanged);
                         },
                         onActionIconPressed: () {
-                         _onActionIconPressed("preloaded_default/${widget.listId}");
-                          // _onActionIconPressed("postloaded_default/${widget.listId}");
+                         // _onActionIconPressed("preloaded_default/${widget.listId}");
+                          _onActionIconPressed("preloaded_default/${widget.listId}");
                         }
                       ),
                       orElse: () => CustomAppBar(
@@ -129,7 +129,6 @@ class _PreLoadedListDetailsScreenState
                         },
                         onActionIconPressed:() {
                           _onActionIconPressed("preloaded_default/${widget.listId}");
-                          // _onActionIconPressed("postloaded_default/${widget.listId}");
                         },
                       ),
                     );

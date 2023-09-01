@@ -14,6 +14,7 @@ class PreloadedListModel with _$PreloadedListModel {
     required String path,
      String? receiptCount,
     String? count,
+
   }) = _PreloadedListModel;
 
   factory PreloadedListModel.fromJson(Map<String, dynamic> json) =>

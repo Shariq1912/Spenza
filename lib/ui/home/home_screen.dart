@@ -32,6 +32,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     });
   }
 
+
   _loadStores() async {
     await ref.read(fetchMyListProvider.notifier).fetchMyListFun();
     ref.read(profileRepositoryProvider.notifier).getUserProfileData();
@@ -50,6 +51,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     ref.invalidate(homePreloadedListProvider);
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     final poppinsFont = ref.watch(poppinsFontProvider);
@@ -66,7 +69,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Container(
                   //constraints: BoxConstraints(minHeight: 100),
-                  color: Colors.blue,
+                  color: Color(0xFF0DA9E6),
                   child: Consumer(
                     builder: (context, ref, child) =>
                         ref.watch(fetchMyListProvider).when(
@@ -206,47 +209,44 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             onTap: () {
               context.pushNamed(RouteManager.settingScreen);
             },
-            child: CircleAvatar(
-                radius: 40,
-                child: Consumer(
-                  builder: (context, ref, child) {
-                    final profilePro = ref.watch(profileRepositoryProvider);
-                    return profilePro.when(
-                      () => Container(),
-                      loading: () => Center(child: CircularProgressIndicator()),
-                      error: (message) => CircleAvatar(
-                        child: Image.asset('assets/images/user.png'),
-                      ),
-                      success: (data) {
-                        if (data.profilePhoto != null &&
-                            data.profilePhoto!.isNotEmpty) {
-                          return CircleAvatar(
-                            radius: MediaQuery.of(context).size.width * 0.05,
-                            child: ClipOval(
-                              child: Material(
-                                surfaceTintColor: Colors.white,
+            child:  Consumer(
+                builder: (context, ref, child) {
+                  final profilePro = ref.watch(profileRepositoryProvider);
+                  return profilePro.when(
+                        () => Container(),
+                    loading: () => Center(child: CircularProgressIndicator()),
+                    error: (message) => CircleAvatar(
+                      child: Image.asset('assets/images/user.png'),
+                    ),
+                    success: (data) {
+                      if (data.profilePhoto != null && data.profilePhoto!.isNotEmpty) {
+                        return CircleAvatar(
+                          radius: 40,
+                          child: ClipOval(
+                              child: AspectRatio(
+                                aspectRatio: 1.0,
                                 child: CachedNetworkImage(
-                                  imageUrl: data.profilePhoto!,
-                                  width: double.infinity,
-                                  height: double.infinity,
                                   fit: BoxFit.cover,
+                                  imageUrl: data.profilePhoto!,
+                                  placeholder: (context, url) =>  Image.asset('app_icon_spenza.png'.assetImageUrl),
+                                  errorWidget: (context, url, error) => Image.asset('user_placeholder.png'.assetImageUrl),
                                 ),
                               ),
                             ),
+                        );
+                      } else {
+                        return ClipOval(
+                          child: AspectRatio(
+                            aspectRatio: 1.0,
+                            child:  Image.asset('user_placeholder.png'.assetImageUrl,fit: BoxFit.cover,),
+                            )
                           );
-                        } else {
-                          return CircleAvatar(
-                            radius: MediaQuery.of(context).size.width * 0.05,
-                            // Adjust the multiplier as needed
-                            backgroundColor: Colors.white,
-                            child: ClipOval(
-                                child: Image.asset('assets/images/user.png')),
-                          );
-                        }
-                      },
-                    );
-                  },
-                )),
+                      }
+                    },
+                  );
+                },
+              )
+            //),
           ),
         )
       ],

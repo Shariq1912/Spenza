@@ -46,18 +46,20 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
         displayActionIcon
             ? InkWell(
                 onTap: onActionIconPressed,
-                child: CircleAvatar(
-                  radius: 40,
-                  child: ClipOval(
-                    child: CachedNetworkImage(
-                      errorWidget: (context, url, error) =>
-                          Image.asset('list_image.png'.assetImageUrl),
-                      placeholder: (context, url) =>
-                          Image.asset('list_image.png'.assetImageUrl),
-                      imageUrl: logo,
+               child: CircleAvatar(
+                 radius: 40,
+                 child: ClipOval(
+                    child: AspectRatio(
+                      aspectRatio: 1.0,
+                      child: CachedNetworkImage(
+                        fit: BoxFit.cover,
+                        imageUrl: logo,
+                        placeholder: (context, url) =>  Image.asset('placeholder_myList.png'.assetImageUrl),
+                        errorWidget: (context, url, error) => Image.asset('placeholder_myList.png'.assetImageUrl),
+                      ),
                     ),
                   ),
-                ),
+               ),
               )
             : Container()
       ],

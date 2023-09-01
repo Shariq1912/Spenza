@@ -23,7 +23,6 @@ class MyListScreen extends ConsumerStatefulWidget {
 class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
   final poppinsFont = GoogleFonts.poppins().fontFamily;
   bool hasValueChanged = false;
-
   @override
   void initState() {
     super.initState();
@@ -133,6 +132,7 @@ class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
           }
         }
       },
+
     );
   }
 
@@ -168,31 +168,49 @@ class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
                 return profilePro.when(
                   () => Container(),
                   loading: () => Center(child: CircularProgressIndicator()),
-                  error: (message) => ClipOval(
-                    child: Image.asset('assets/images/user.png'),
+                  error: (message) => CircleAvatar(
+                    radius: 40,
+                    child: ClipOval(
+                      child: AspectRatio(
+                        aspectRatio: 1.0,
+                        child: Image.asset(
+                          'user_placeholder.png'.assetImageUrl,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
                   ),
                   success: (data) {
                     if (data.profilePhoto != null &&
                         data.profilePhoto!.isNotEmpty) {
                       return CircleAvatar(
-                        radius: MediaQuery.of(context).size.width * 0.08,
-                        backgroundColor: Colors.white,
+                        radius: 40,
                         child: ClipOval(
-                          child: CachedNetworkImage(
-                            imageUrl: data.profilePhoto!,
-                            width: double.infinity,
-                            height: double.infinity,
-                            fit: BoxFit.cover,
+                          child: AspectRatio(
+                            aspectRatio: 1.0,
+                            child: CachedNetworkImage(
+                              fit: BoxFit.cover,
+                              imageUrl: data.profilePhoto!,
+                              placeholder: (context, url) => Image.asset(
+                                  'app_icon_spenza.png'.assetImageUrl),
+                              errorWidget: (context, url, error) => Image.asset(
+                                  'user_placeholder.png'.assetImageUrl),
+                            ),
                           ),
                         ),
                       );
                     } else {
                       return CircleAvatar(
-                        radius: MediaQuery.of(context).size.width * 0.08,
-                        // Adjust the multiplier as needed
-                        backgroundColor: Colors.white,
+                        radius: 40,
                         child: ClipOval(
-                            child: Image.asset('assets/images/user.png')),
+                          child: AspectRatio(
+                            aspectRatio: 1.0,
+                            child: Image.asset(
+                              'user_placeholder.png'.assetImageUrl,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
                       );
                     }
                   },
@@ -208,6 +226,7 @@ class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
           builder: (context, ref, child) {
             final storeProvider = ref.watch(fetchMyListProvider);
             return storeProvider.when(
+
               loading: () => Center(child: CircularProgressIndicator()),
               error: (error, stackTrace) {
                 print("errorMrss $error");
