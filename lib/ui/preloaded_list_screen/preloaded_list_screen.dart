@@ -11,6 +11,7 @@ import '../home/provider/home_preloaded_list.dart';
 import '../profile/profile_repository.dart';
 
 class PreloadedListScreen extends ConsumerStatefulWidget {
+
   const PreloadedListScreen({Key? key}) : super(key: key);
 
   @override
@@ -73,6 +74,7 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen>
     final customAppBarPosition =
         customAppBarRenderBox.localToGlobal(Offset.zero);
 
+
     showPopupMenu(
       context: context,
       position: RelativeRect.fromLTRB(
@@ -99,11 +101,11 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen>
             hasValueChanged = true;
             context.showSnackBar(message: "List copied successfully!");
           }
+
         }
       },
     );
   }
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -149,24 +151,26 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen>
                       if (data.profilePhoto != null &&
                           data.profilePhoto!.isNotEmpty) {
                         return CircleAvatar(
-                          radius: MediaQuery.of(context).size.width * 0.08,
-                          backgroundColor: Colors.white,
+                          radius: 40,
                           child: ClipOval(
-                            child: CachedNetworkImage(
-                              imageUrl: data.profilePhoto!,
-                              width: double.infinity,
-                              height: double.infinity,
-                              fit: BoxFit.cover,
+                            child: AspectRatio(
+                              aspectRatio: 1.0,
+                              child: CachedNetworkImage(
+                                fit: BoxFit.cover,
+                                imageUrl: data.profilePhoto,
+                                placeholder: (context, url) =>  Image.asset('placeholder_myList.png'.assetImageUrl),
+                                errorWidget: (context, url, error) => Image.asset('placeholder_myList.png'.assetImageUrl),
+                              ),
                             ),
                           ),
                         );
+
                       } else {
-                        return CircleAvatar(
-                          radius: MediaQuery.of(context).size.width * 0.08,
-                          // Adjust the multiplier as needed
-                          backgroundColor: Colors.white,
-                          child: ClipOval(
-                              child: Image.asset('assets/images/user.png')),
+                        return ClipOval(
+                            child: AspectRatio(
+                              aspectRatio: 1.0,
+                              child:  Image.asset('user_placeholder.png'.assetImageUrl,fit: BoxFit.cover,),
+                            )
                         );
                       }
                     },

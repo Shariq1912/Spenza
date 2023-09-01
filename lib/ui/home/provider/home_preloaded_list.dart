@@ -106,7 +106,7 @@ class HomePreloadedList extends _$HomePreloadedList
       await newDocumentRef.set(copiedData);
 
       final sourceSubCollection =
-          sourceDocument.collection(PreloadedListConstant.collectionName);
+          sourceDocument.collection(PreloadedListConstant.subCollectionName);
       final targetSubCollection =
           newDocumentRef.collection(MyListConstant.userProductList);
 

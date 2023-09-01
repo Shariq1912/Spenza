@@ -10,7 +10,6 @@ import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/login/login_provider.dart';
 import 'package:spenza/utils/constants.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
-
 import 'data/login_request.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -45,8 +44,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   void initState() {
     super.initState();
-
-
   }
 
   getPostalCode() async {
@@ -71,6 +68,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     passwordController.dispose();
 
     ref.invalidate(loginRepositoryProvider);
+
+
+
   }
 
   @override
@@ -85,8 +85,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             onPressed: () {
               context.goNamed(RouteManager.splashScreen);
             },
-            icon: const Icon(Icons.chevron_left_outlined,size: 35,color: Color(0xFF0CA9E6),)
-        ),
+            icon: const Icon(Icons.arrow_back_ios_rounded,
+                size: 35, color: Color(0xFF0CA9E6), grade: 50)),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -181,7 +181,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             padding: const EdgeInsets.all(8.0),
                             child: Center(
                               child: _buildTermsAndPrivacyTextSpan(context),
-
                             ),
                           ),
                         ],
@@ -220,18 +219,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       },
                     ),
                     Row(
-                        children: [
-                          Expanded(
-                            child: TextButton(
-                              onPressed: () {
-                                context.goNamed(RouteManager.registerScreen);
-                              },
-                              child: Text(AppLocalizations.of(context)!.forgetPassword,style: TextStyle( fontFamily: poppinsFont, color: Color(0xFF323E48))),
-                            ),
+                      children: [
+                        Expanded(
+                          child: TextButton(
+                            onPressed: () {
+                              context.goNamed(RouteManager.registerScreen);
+                            },
+                            child: Text(
+                                AppLocalizations.of(context)!.forgetPassword,
+                                style: TextStyle(
+                                    fontFamily: poppinsFont,
+                                    color: Color(0xFF323E48))),
                           ),
-                        ],
-                      ),
-
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: 25),
                     Row(
                       children: <Widget>[
@@ -306,7 +308,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               onPressed: () {
                                 context.goNamed(RouteManager.registerScreen);
                               },
-                              child: Text('Create an account',style: TextStyle( fontFamily: poppinsFont, color: Color(0xFF323E48))),
+                              child: Text('Create an account',
+                                  style: TextStyle(
+                                      fontFamily: poppinsFont,
+                                      color: Color(0xFF323E48))),
                             ),
                           ),
                         ],
@@ -328,38 +333,37 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     return Text.rich(
       TextSpan(
-      text: AppLocalizations.of(context)!.terms_of_service_intro,
-      style: TextStyle(
-        color: Colors.black,
-        fontFamily: poppinsFont,
-      ),
-      children: [
-        TextSpan(
-          text: " $termsOfService & $privacyPolicy",
-          style: TextStyle(
-            fontFamily: poppinsFont,
-            color: Color(0xFF323e48),
-            fontWeight: FontWeight.bold
-          ),
-          recognizer: TapGestureRecognizer()
-            ..onTap = () {
-              // Handle the Terms of Service click action
-              // You can navigate to the terms page or perform any other action here
-              context.pushNamed(
-                RouteManager.webViewScreen,
-                queryParameters: {"url": Constants.privacyPolicyLink},
-              );
-            },
+        text: AppLocalizations.of(context)!.terms_of_service_intro,
+        style: TextStyle(
+          color: Colors.black,
+          fontFamily: poppinsFont,
         ),
-      ],
-    ),
+        children: [
+          TextSpan(
+            text: " $termsOfService & $privacyPolicy",
+            style: TextStyle(
+                fontFamily: poppinsFont,
+                color: Color(0xFF323e48),
+                fontWeight: FontWeight.bold),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                // Handle the Terms of Service click action
+                // You can navigate to the terms page or perform any other action here
+                context.pushNamed(
+                  RouteManager.webViewScreen,
+                  queryParameters: {"url": Constants.privacyPolicyLink},
+                );
+              },
+          ),
+        ],
+      ),
       textAlign: TextAlign.center,
-);
+    );
   }
 
   Widget _LoginButton() => Row(
-    children: [
-      Expanded(
+        children: [
+          Expanded(
             child: ElevatedButton(
               onPressed: () {
                 // Handle login button press
@@ -396,6 +400,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               child: Text(AppLocalizations.of(context)!.loginButton),
             ),
           ),
-    ],
-  );
+        ],
+      );
 }

@@ -25,7 +25,6 @@ class MyListItem extends StatelessWidget {
           leadingWidget(imageUrl),
           SizedBox(height: 6),
           Text(
-            // Use the '...' property to handle long text
             name.length > 20 ? '${name.substring(0, 20)}...' : name,
             style: const TextStyle(
               decoration: TextDecoration.none,
@@ -35,7 +34,7 @@ class MyListItem extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 4),
+          /*SizedBox(height: 4),
           Text(
             // Use the '...' property to handle long text
             description.length > 20 ? '${description.substring(0, 20)}...' : description,
@@ -45,7 +44,7 @@ class MyListItem extends StatelessWidget {
               fontSize: 14,
             ),
             textAlign: TextAlign.center,
-          ),
+          ),*/
         ],
       ),
     );

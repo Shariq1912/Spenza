@@ -7,6 +7,7 @@ import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/my_store/data/all_store.dart';
 import 'package:spenza/ui/my_store/my_store_provider.dart';
 import 'package:spenza/ui/my_store/widget/my_store_list_widget.dart';
+import 'package:spenza/utils/spenza_extensions.dart';
 
 import '../profile/profile_repository.dart';
 
@@ -73,30 +74,46 @@ class _StoresState extends ConsumerState<AllStoresScreen> {
                   return profilePro.when(
                         () => Container(),
                     loading: () => Center(child: CircularProgressIndicator()),
-                    error: (message) => ClipOval(
-                      child: Image.asset('assets/images/user.png'),
+                    error: (message) => CircleAvatar(
+                      radius: 40,
+                      child: ClipOval(
+                        child: AspectRatio(
+                          aspectRatio: 1.0,
+                          child: Image.asset(
+                            'user_placeholder.png'.assetImageUrl,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
                     ),
                     success: (data) {
                       if (data.profilePhoto != null && data.profilePhoto!.isNotEmpty) {
                         return CircleAvatar(
-                          radius: MediaQuery.of(context).size.width * 0.08,
-                          backgroundColor: Colors.white,
+                          radius: 40,
                           child: ClipOval(
-                            child: CachedNetworkImage(
-                              imageUrl: data.profilePhoto!,
-                              width: double.infinity,
-                              height: double.infinity,
-                              fit: BoxFit.cover,
+                            child: AspectRatio(
+                              aspectRatio: 1.0,
+                              child: CachedNetworkImage(
+                                fit: BoxFit.cover,
+                                imageUrl: data.profilePhoto!,
+                                placeholder: (context, url) =>  Image.asset('app_icon_spenza.png'.assetImageUrl),
+                                errorWidget: (context, url, error) => Image.asset('user_placeholder.png'.assetImageUrl),
+                              ),
                             ),
                           ),
                         );
 
                       } else {
                         return CircleAvatar(
-                          radius: MediaQuery.of(context).size.width * 0.08, // Adjust the multiplier as needed
-                          backgroundColor: Colors.white,
+                          radius: 40,
                           child: ClipOval(
-                              child: Image.asset('assets/images/user.png')
+                            child: AspectRatio(
+                              aspectRatio: 1.0,
+                              child: Image.asset(
+                                'user_placeholder.png'.assetImageUrl,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                           ),
                         );
                       }

@@ -8,6 +8,7 @@ import 'package:spenza/ui/home/components/add_list.dart';
 import 'package:spenza/ui/home/data/my_list_model.dart';
 
 import '../provider/fetch_mylist_provider.dart';
+import 'new_list_dialog.dart';
 
 class TopStrip extends ConsumerStatefulWidget {
   const TopStrip({Key? key}) : super(key: key);
@@ -167,12 +168,13 @@ class _TopStripState extends ConsumerState<TopStrip> {
                 child: ClipOval(
                   child: IconButton(
                       onPressed: () async {
-                        Navigator.of(context)
+                        /*Navigator.of(context)
                             .push(
                               MaterialPageRoute(
                                   builder: (context) => AddItemToList()),
                             )
-                            .then((value) => _loadMyList());
+                            .then((value) => _loadMyList());*/
+
                       },
                       icon: Icon(
                         Icons.add,
