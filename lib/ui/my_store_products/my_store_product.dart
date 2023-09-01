@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:spenza/ui/my_list_details/provider/user_product_list_provider.dart';
 import 'package:spenza/ui/my_store_products/data/products.dart';
 import 'package:spenza/ui/my_store_products/provider/product_for_store_provider.dart';
 import 'package:spenza/ui/my_store_products/repo/department_repository.dart';
@@ -31,6 +32,7 @@ class MyStoreProduct extends ConsumerStatefulWidget {
 
 class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
   final poppinsFont = GoogleFonts.poppins().fontFamily;
+  bool hasValueChanged = false;
 
   @override
   void initState() {
@@ -113,9 +115,9 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
                     return MyProductListWidget(
                       stores: data,
                       department: departments,
-                      onButtonClicked: (ProductModel product) {
+                      onButtonClicked: (ProductModel product) async {
                         if (widget.listId != null) {
-                          ref
+                          final bool hasReload = await ref
                               .read(addProductToMyListProvider.notifier)
                               .addProductToMyList(
                                 listId: widget.listId!,
@@ -123,6 +125,15 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
                                 productId: product.productId,
                                 context: context,
                               );
+
+                          if (hasReload) {
+                            ref
+                                .read(userProductListProvider.notifier)
+                                .fetchProductFromListId();
+
+                            hasValueChanged = true;
+                          }
+
                           return;
                         }
 

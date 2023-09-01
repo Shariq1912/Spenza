@@ -17,7 +17,7 @@ class AddProductToMyList extends _$AddProductToMyList
   @override
   FutureOr<void> build() {}
 
-  Future<void> addProductToMyList({
+  Future<bool> addProductToMyList({
     required String listId,
     required String productId,
     required String productRef,
@@ -45,7 +45,7 @@ class AddProductToMyList extends _$AddProductToMyList
 
       if (isProductExist) {
         context.showSnackBar(message: "Product Already Exist in the List");
-        return;
+        return false;
       }
 
 //    final userProductRequest = userProductData.copyWith(productId: 'products/$productId');
@@ -60,9 +60,11 @@ class AddProductToMyList extends _$AddProductToMyList
 
       print("productId : $productId");
       state = AsyncValue.data(null);
-      context.pop(true);
+      return true;
+      // context.pop(true);
     } catch (error) {
       print("Error adding product to user's list: $error");
+      return false;
     }
   }
 }
