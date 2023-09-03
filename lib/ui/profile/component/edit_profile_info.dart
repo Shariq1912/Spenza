@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -33,9 +34,15 @@ class _ProfileCardState extends ConsumerState<EditProfileInformation> {
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadData();
+    });
     super.initState();
   }
 
+  _loadData() async {
+    ref.read(profileRepositoryProvider.notifier).getUserProfileData();
+  }
 
 
   Future<void> _saveData() async {
@@ -71,13 +78,24 @@ class _ProfileCardState extends ConsumerState<EditProfileInformation> {
           child: Consumer(
             builder: (context, ref, child) {
               final userProvider = ref.watch(profileRepositoryProvider);
-              return userProvider.maybeWhen(() => Container(),
+              return userProvider.when(() => Container(),
                   loading: () => Center(heightFactor : 400,child: CircularProgressIndicator()),
                   error: (message) {
                     print("errorMsg $message");
                     return Center(child: Text(message));
                   },
-                  orElse: () {
+                  success: (data) {
+                    final UserProfileData userProfileData = data;
+
+                    nameController.text = userProfileData.name ?? '';
+                    surnameController.text = userProfileData.surName ?? '';
+                    mobileNumberController.text = userProfileData.mobileNo ?? '';
+                    streetController.text = userProfileData.street ?? '';
+                    streetNumberController.text = userProfileData.streetNumber ?? '';
+                    districtController.text = userProfileData.district ?? '';
+                    stateController.text = userProfileData.state ?? '';
+                    zipCodeController.text = userProfileData.zipCode ?? '';
+
                     return Padding(
                         padding: EdgeInsets.all(5),
                         child: Column(
@@ -85,7 +103,7 @@ class _ProfileCardState extends ConsumerState<EditProfileInformation> {
                             children: [
                               SizedBox(height: 10),
                               
-                              Center(child: leadingWidget("")),
+                              Center(child: leadingWidget(userProfileData.profilePhoto ?? "")),
                               buildCard(
                                 "Profile Information",
                                 [
@@ -213,6 +231,15 @@ class _ProfileCardState extends ConsumerState<EditProfileInformation> {
           setState(() {
             selectedImage = File(pickedImage.path);
           });
+          print("pick  $pickedImage");
+        } else {
+          setState(() async {
+            selectedImage =  await downloadImage(fileName);
+          });
+
+
+
+
         }
       },
       child: Stack(
@@ -242,6 +269,13 @@ class _ProfileCardState extends ConsumerState<EditProfileInformation> {
         ],
       ),
     );
+  }
+
+
+  Future<File> downloadImage(String url) async {
+    final file = await DefaultCacheManager().getSingleFile(url);
+    print("filee  $file");
+    return file;
   }
 
 

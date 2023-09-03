@@ -10,7 +10,7 @@ class Stores with _$Stores {
   const factory Stores({
     @Default("") String id,
     required String name,
-    required String adress,
+    required String address,
     required List<String> zipCodesList,
     required String logo,
     @Default(false) bool isFavorite,

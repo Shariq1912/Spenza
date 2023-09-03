@@ -38,7 +38,7 @@ mixin NearbyStoreMixin {
         stores.add(Stores(
           id: value.id,
           name: value['name'],
-          adress: value['adress'],
+          address: value['address'],
           zipCodesList: [],
           logo: value['logo'],
         ));

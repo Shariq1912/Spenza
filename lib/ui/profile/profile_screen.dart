@@ -39,7 +39,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   @override
   void dispose() {
-    ref.invalidate(profileRepositoryProvider);
+    ref. invalidate(profileRepositoryProvider);
     ref.invalidate(loginRepositoryProvider);
     super.dispose();
   }

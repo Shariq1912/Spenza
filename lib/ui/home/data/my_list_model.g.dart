@@ -15,6 +15,7 @@ _$_MyListModel _$$_MyListModelFromJson(Map<String, dynamic> json) =>
       myListPhoto: json['myListPhoto'] as String?,
       documentId: json['documentId'] as String? ?? null,
       path: json['path'] as String?,
+      count: json['count'] as String?,
     );
 
 Map<String, dynamic> _$$_MyListModelToJson(_$_MyListModel instance) =>
@@ -26,4 +27,5 @@ Map<String, dynamic> _$$_MyListModelToJson(_$_MyListModel instance) =>
       'myListPhoto': instance.myListPhoto,
       'documentId': instance.documentId,
       'path': instance.path,
+      'count': instance.count,
     };

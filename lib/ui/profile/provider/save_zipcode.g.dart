@@ -6,7 +6,7 @@ part of 'save_zipcode.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$saveUserDataHash() => r'1bf8aa66d407d1883ff693ba9b7523884d2e927f';
+String _$saveUserDataHash() => r'5f33dfc94d10fd15782ec137142f282c1a347220';
 
 /// See also [SaveUserData].
 @ProviderFor(SaveUserData)

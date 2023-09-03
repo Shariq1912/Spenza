@@ -21,7 +21,7 @@ AllStores _$AllStoresFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$AllStores {
   String get name => throw _privateConstructorUsedError;
-  String get adress => throw _privateConstructorUsedError;
+  String get address => throw _privateConstructorUsedError;
   List<String> get zipCodesList => throw _privateConstructorUsedError;
   String get logo => throw _privateConstructorUsedError;
   bool get isFavorite => throw _privateConstructorUsedError;
@@ -41,7 +41,7 @@ abstract class $AllStoresCopyWith<$Res> {
   @useResult
   $Res call(
       {String name,
-      String adress,
+      String address,
       List<String> zipCodesList,
       String logo,
       bool isFavorite,
@@ -63,7 +63,7 @@ class _$AllStoresCopyWithImpl<$Res, $Val extends AllStores>
   @override
   $Res call({
     Object? name = null,
-    Object? adress = null,
+    Object? address = null,
     Object? zipCodesList = null,
     Object? logo = null,
     Object? isFavorite = null,
@@ -75,9 +75,9 @@ class _$AllStoresCopyWithImpl<$Res, $Val extends AllStores>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      adress: null == adress
-          ? _value.adress
-          : adress // ignore: cast_nullable_to_non_nullable
+      address: null == address
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
               as String,
       zipCodesList: null == zipCodesList
           ? _value.zipCodesList
@@ -112,7 +112,7 @@ abstract class _$$_AllStoresCopyWith<$Res> implements $AllStoresCopyWith<$Res> {
   @useResult
   $Res call(
       {String name,
-      String adress,
+      String address,
       List<String> zipCodesList,
       String logo,
       bool isFavorite,
@@ -132,7 +132,7 @@ class __$$_AllStoresCopyWithImpl<$Res>
   @override
   $Res call({
     Object? name = null,
-    Object? adress = null,
+    Object? address = null,
     Object? zipCodesList = null,
     Object? logo = null,
     Object? isFavorite = null,
@@ -144,9 +144,9 @@ class __$$_AllStoresCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      adress: null == adress
-          ? _value.adress
-          : adress // ignore: cast_nullable_to_non_nullable
+      address: null == address
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
               as String,
       zipCodesList: null == zipCodesList
           ? _value._zipCodesList
@@ -177,7 +177,7 @@ class __$$_AllStoresCopyWithImpl<$Res>
 class _$_AllStores with DiagnosticableTreeMixin implements _AllStores {
   const _$_AllStores(
       {required this.name,
-      required this.adress,
+      required this.address,
       required final List<String> zipCodesList,
       required this.logo,
       this.isFavorite = false,
@@ -191,7 +191,7 @@ class _$_AllStores with DiagnosticableTreeMixin implements _AllStores {
   @override
   final String name;
   @override
-  final String adress;
+  final String address;
   final List<String> _zipCodesList;
   @override
   List<String> get zipCodesList {
@@ -212,7 +212,7 @@ class _$_AllStores with DiagnosticableTreeMixin implements _AllStores {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'AllStores(name: $name, adress: $adress, zipCodesList: $zipCodesList, logo: $logo, isFavorite: $isFavorite, documentId: $documentId, groupName: $groupName)';
+    return 'AllStores(name: $name, address: $address, zipCodesList: $zipCodesList, logo: $logo, isFavorite: $isFavorite, documentId: $documentId, groupName: $groupName)';
   }
 
   @override
@@ -221,7 +221,7 @@ class _$_AllStores with DiagnosticableTreeMixin implements _AllStores {
     properties
       ..add(DiagnosticsProperty('type', 'AllStores'))
       ..add(DiagnosticsProperty('name', name))
-      ..add(DiagnosticsProperty('adress', adress))
+      ..add(DiagnosticsProperty('address', address))
       ..add(DiagnosticsProperty('zipCodesList', zipCodesList))
       ..add(DiagnosticsProperty('logo', logo))
       ..add(DiagnosticsProperty('isFavorite', isFavorite))
@@ -235,7 +235,7 @@ class _$_AllStores with DiagnosticableTreeMixin implements _AllStores {
         (other.runtimeType == runtimeType &&
             other is _$_AllStores &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.adress, adress) || other.adress == adress) &&
+            (identical(other.address, address) || other.address == address) &&
             const DeepCollectionEquality()
                 .equals(other._zipCodesList, _zipCodesList) &&
             (identical(other.logo, logo) || other.logo == logo) &&
@@ -252,7 +252,7 @@ class _$_AllStores with DiagnosticableTreeMixin implements _AllStores {
   int get hashCode => Object.hash(
       runtimeType,
       name,
-      adress,
+      address,
       const DeepCollectionEquality().hash(_zipCodesList),
       logo,
       isFavorite,
@@ -276,7 +276,7 @@ class _$_AllStores with DiagnosticableTreeMixin implements _AllStores {
 abstract class _AllStores implements AllStores {
   const factory _AllStores(
       {required final String name,
-      required final String adress,
+      required final String address,
       required final List<String> zipCodesList,
       required final String logo,
       final bool isFavorite,
@@ -289,7 +289,7 @@ abstract class _AllStores implements AllStores {
   @override
   String get name;
   @override
-  String get adress;
+  String get address;
   @override
   List<String> get zipCodesList;
   @override

@@ -122,6 +122,7 @@ dependencies:
   path_provider: ^2.0.15
   intl: ^0.18.0
   flutter_inappwebview: ^5.7.2+3
+  flutter_cache_manager: ^3.3.1
 
 dev_dependencies:
 

@@ -338,7 +338,7 @@ class StoreRanking extends _$StoreRanking
       matchingPercentage: matchingPercentage.toInt(),
       distance: distance.formatDistance(),
       address: storeSnapshot[
-          'adress'], //todo change the typo address once field changed in db
+          'address'], //todo change the typo address once field changed in db
     );
   }
 

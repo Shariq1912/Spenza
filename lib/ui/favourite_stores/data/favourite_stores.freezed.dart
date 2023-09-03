@@ -22,7 +22,7 @@ Stores _$StoresFromJson(Map<String, dynamic> json) {
 mixin _$Stores {
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  String get adress => throw _privateConstructorUsedError;
+  String get address => throw _privateConstructorUsedError;
   List<String> get zipCodesList => throw _privateConstructorUsedError;
   String get logo => throw _privateConstructorUsedError;
   bool get isFavorite => throw _privateConstructorUsedError;
@@ -40,7 +40,7 @@ abstract class $StoresCopyWith<$Res> {
   $Res call(
       {String id,
       String name,
-      String adress,
+      String address,
       List<String> zipCodesList,
       String logo,
       bool isFavorite});
@@ -61,7 +61,7 @@ class _$StoresCopyWithImpl<$Res, $Val extends Stores>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? adress = null,
+    Object? address = null,
     Object? zipCodesList = null,
     Object? logo = null,
     Object? isFavorite = null,
@@ -75,9 +75,9 @@ class _$StoresCopyWithImpl<$Res, $Val extends Stores>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      adress: null == adress
-          ? _value.adress
-          : adress // ignore: cast_nullable_to_non_nullable
+      address: null == address
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
               as String,
       zipCodesList: null == zipCodesList
           ? _value.zipCodesList
@@ -104,7 +104,7 @@ abstract class _$$_StoresCopyWith<$Res> implements $StoresCopyWith<$Res> {
   $Res call(
       {String id,
       String name,
-      String adress,
+      String address,
       List<String> zipCodesList,
       String logo,
       bool isFavorite});
@@ -122,7 +122,7 @@ class __$$_StoresCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? adress = null,
+    Object? address = null,
     Object? zipCodesList = null,
     Object? logo = null,
     Object? isFavorite = null,
@@ -136,9 +136,9 @@ class __$$_StoresCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      adress: null == adress
-          ? _value.adress
-          : adress // ignore: cast_nullable_to_non_nullable
+      address: null == address
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
               as String,
       zipCodesList: null == zipCodesList
           ? _value._zipCodesList
@@ -162,7 +162,7 @@ class _$_Stores with DiagnosticableTreeMixin implements _Stores {
   const _$_Stores(
       {this.id = "",
       required this.name,
-      required this.adress,
+      required this.address,
       required final List<String> zipCodesList,
       required this.logo,
       this.isFavorite = false})
@@ -177,7 +177,7 @@ class _$_Stores with DiagnosticableTreeMixin implements _Stores {
   @override
   final String name;
   @override
-  final String adress;
+  final String address;
   final List<String> _zipCodesList;
   @override
   List<String> get zipCodesList {
@@ -194,7 +194,7 @@ class _$_Stores with DiagnosticableTreeMixin implements _Stores {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Stores(id: $id, name: $name, adress: $adress, zipCodesList: $zipCodesList, logo: $logo, isFavorite: $isFavorite)';
+    return 'Stores(id: $id, name: $name, address: $address, zipCodesList: $zipCodesList, logo: $logo, isFavorite: $isFavorite)';
   }
 
   @override
@@ -204,7 +204,7 @@ class _$_Stores with DiagnosticableTreeMixin implements _Stores {
       ..add(DiagnosticsProperty('type', 'Stores'))
       ..add(DiagnosticsProperty('id', id))
       ..add(DiagnosticsProperty('name', name))
-      ..add(DiagnosticsProperty('adress', adress))
+      ..add(DiagnosticsProperty('address', address))
       ..add(DiagnosticsProperty('zipCodesList', zipCodesList))
       ..add(DiagnosticsProperty('logo', logo))
       ..add(DiagnosticsProperty('isFavorite', isFavorite));
@@ -217,7 +217,7 @@ class _$_Stores with DiagnosticableTreeMixin implements _Stores {
             other is _$_Stores &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.adress, adress) || other.adress == adress) &&
+            (identical(other.address, address) || other.address == address) &&
             const DeepCollectionEquality()
                 .equals(other._zipCodesList, _zipCodesList) &&
             (identical(other.logo, logo) || other.logo == logo) &&
@@ -227,7 +227,7 @@ class _$_Stores with DiagnosticableTreeMixin implements _Stores {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, adress,
+  int get hashCode => Object.hash(runtimeType, id, name, address,
       const DeepCollectionEquality().hash(_zipCodesList), logo, isFavorite);
 
   @JsonKey(ignore: true)
@@ -248,7 +248,7 @@ abstract class _Stores implements Stores {
   const factory _Stores(
       {final String id,
       required final String name,
-      required final String adress,
+      required final String address,
       required final List<String> zipCodesList,
       required final String logo,
       final bool isFavorite}) = _$_Stores;
@@ -260,7 +260,7 @@ abstract class _Stores implements Stores {
   @override
   String get name;
   @override
-  String get adress;
+  String get address;
   @override
   List<String> get zipCodesList;
   @override
