@@ -27,7 +27,9 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
   @override
   void initState() {
     super.initState();
-    print("Query is ${widget.query}");
+
+    debugPrint("Init Called on Add Product Screen");
+    debugPrint("Query is ${widget.query}");
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(addProductProvider.notifier).searchProducts(query: widget.query);
@@ -40,6 +42,8 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
 
   @override
   void dispose() {
+    debugPrint("Dispose Called on Add Product Screen");
+
     super.dispose();
     ref.invalidate(selectedDepartmentsProvider);
     ref.invalidate(searchQueryProvider);
@@ -89,7 +93,7 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                   final result = ref.watch(addProductProvider);
 
                   final List<Product> data = result.maybeWhen(
-                    data: (data) => data== null ? [] : data,
+                    data: (data) => data == null ? [] : data,
                     orElse: () => [],
                   );
                   final departments = [

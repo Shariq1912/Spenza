@@ -13,6 +13,8 @@ import 'package:spenza/ui/my_list_details/provider/user_product_list_provider.da
 import 'package:spenza/utils/color_utils.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
+import 'provider/display_spenza_button_provider.dart';
+
 class MyListDetailsScreen extends ConsumerStatefulWidget {
   const MyListDetailsScreen(
       {super.key,
@@ -31,9 +33,10 @@ class MyListDetailsScreen extends ConsumerStatefulWidget {
 }
 
 class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
-    with PopupMenuMixin {
+    with PopupMenuMixin, WidgetsBindingObserver {
   final TextEditingController _searchController = TextEditingController();
   bool hasValueChanged = false;
+  final _focusNode = FocusNode();
 
   final List<PopupMenuItem<PopupMenuAction>> items = [
     PopupMenuItem(
@@ -75,18 +78,50 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
 
   @override
   void dispose() {
-    super.dispose();
-
+    print("Dispose Called on My List Details Screen");
     _searchController.dispose();
+    _focusNode.dispose();
+
+    ref.read(displaySpenzaButtonProvider.notifier).dispose();
+    ref.invalidate(userProductListProvider);
+
+    WidgetsBinding.instance.removeObserver(this);
+
+    super.dispose();
+  }
+
+
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+
+    // todo change with package since deprecated.
+    final bottomInset = WidgetsBinding.instance.window.viewInsets.bottom;
+    if (bottomInset == 0) {
+      // Soft keyboard closed
+      debugPrint('Soft keyboard closed');
+     _focusNode.unfocus();
+    }
   }
 
   @override
   void initState() {
     super.initState();
 
+    print("Init Called on My List Details Screen");
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await ref.read(userProductListProvider.notifier).fetchProductFromListId();
       //  await ref.read(listDetailsProvider.notifier).getSelectedListDetails();
+    });
+
+    WidgetsBinding.instance.addObserver(this);
+
+    _focusNode.addListener(() {
+      print("Has focus: ${_focusNode.hasFocus}");
+
+      ref.read(displaySpenzaButtonProvider.notifier).state =
+          !_focusNode.hasFocus;
     });
   }
 
@@ -94,9 +129,23 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
   Widget build(BuildContext context) {
     final poppinsFont = ref.watch(poppinsFontProvider).fontFamily;
 
+    ref.listen(userProductListProvider, (previous, next) {
+      next.maybeWhen(
+        orElse: () {},
+        data: (data) {
+          ref.read(displaySpenzaButtonProvider.notifier).state =
+              data != null && data.isNotEmpty;
+        },
+      );
+    });
+
     return GestureDetector(
       onTap: () {
-        FocusScope.of(context).unfocus();
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus &&
+            currentFocus.focusedChild != null) {
+          FocusManager.instance.primaryFocus?.unfocus();
+        }
       },
       child: WillPopScope(
         onWillPop: () async {
@@ -146,9 +195,16 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
           body: Column(
             children: [
               SearchBox(
+                focusNode: _focusNode,
                 hint: "Add products",
                 controller: _searchController,
                 onSearch: (value) async {
+                  Future.microtask(
+                    () => ref
+                        .read(userProductListProvider.notifier)
+                        .saveUserProductListToServer(context: context),
+                  );
+
                   _searchController.clear();
 
                   final bool? result = await context.pushNamed(
@@ -204,18 +260,13 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                   },
                 ),
               ),
-              Consumer(
-                builder: (context, ref, child) =>
-                    ref.watch(userProductListProvider).maybeWhen(
-                          orElse: () => buildMaterialButton(context),
-                          data: (data) => data == null
-                              ? Container()
-                              : data.isEmpty
-                                  ? Container()
-                                  : buildMaterialButton(context),
-                          loading: () => Container(),
-                        ),
-              ),
+              Consumer(builder: (context, ref, child) {
+                final bool displayButton =
+                    ref.watch(displaySpenzaButtonProvider);
+                return displayButton
+                    ? buildMaterialButton(context)
+                    : Container();
+              }),
             ],
           ),
         ),
@@ -283,10 +334,13 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
 
   MaterialButton buildMaterialButton(BuildContext context) {
     return MaterialButton(
-      onPressed: () {
-        ref
+      onPressed: () async {
+        final bool? isSuccess = await ref
             .read(userProductListProvider.notifier)
             .saveUserProductListToServer(context: context);
+
+        if (isSuccess ?? false)
+          context.pushNamed(RouteManager.storeRankingScreen);
       },
       color: Colors.blue,
       // Change the button color to your desired color

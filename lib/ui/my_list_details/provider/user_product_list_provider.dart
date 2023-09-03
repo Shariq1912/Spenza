@@ -124,7 +124,7 @@ class UserProductList extends _$UserProductList with FirestoreAndPrefsMixin {
     state = AsyncValue.data(data);
   }
 
-  Future<void> saveUserProductListToServer(
+  Future<bool> saveUserProductListToServer(
       {required BuildContext context}) async {
     final List<UserProduct> data = state.requireValue!;
 
@@ -145,11 +145,10 @@ class UserProductList extends _$UserProductList with FirestoreAndPrefsMixin {
       batch.update(doc.reference, {'quantity': matchingElement.quantity});
     });
 
-    await batch.commit();
-
     print("Data Updated Successfully");
 
-    context.pushNamed(RouteManager.storeRankingScreen);
+    return await batch.commit().then((value) => true);
+
   }
 
   Future<bool> copyTheList({required BuildContext context}) async {
