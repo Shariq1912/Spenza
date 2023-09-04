@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/dashboard/provider/dashboard_controller_provider.dart';
+import 'package:spenza/ui/dashboard/widgets/bottom_nav_model.dart';
 import 'package:spenza/utils/color_utils.dart';
+import 'package:spenza/utils/spenza_extensions.dart';
 
 class BottomNavigationWidget extends ConsumerStatefulWidget {
   const BottomNavigationWidget({Key? key}) : super(key: key);
@@ -15,33 +18,70 @@ class BottomNavigationWidget extends ConsumerStatefulWidget {
 
 class _BottomNavigationWidgetState
     extends ConsumerState<BottomNavigationWidget> {
+  final List<CustomBottomNavItem> customBottomNavItems = [
+    CustomBottomNavItem.fromSvgAsset(iconAsset: 'home_icon.svg', label: 'Home'),
+    CustomBottomNavItem.fromSvgAsset(
+        iconAsset: 'store_icon.svg', label: 'Stores'),
+    CustomBottomNavItem.fromSvgAsset(
+        iconAsset: 'my_list_icon.svg', label: 'My List'),
+    CustomBottomNavItem.fromSvgAsset(
+      iconAsset: 'preloaded_list_icon.svg',
+      label: 'Preloaded',
+    ),
+    CustomBottomNavItem(
+      iconAsset: Icons.account_circle,
+      label: 'Account',
+    ),
+    // Add more items as needed
+  ];
+
   @override
   Widget build(BuildContext context) {
     final position = ref.watch(selectedIndexProvider);
 
-    return BottomNavigationBar(
-      currentIndex: position,
-      onTap: (value) => _onTap(value),
-      selectedItemColor: ColorUtils.colorPrimary,
-      unselectedItemColor: Colors.grey,
-      selectedLabelStyle: const TextStyle(
-        color: ColorUtils.colorPrimary,
-        fontSize: 14,
-        fontWeight: FontWeight.w700,
-      ),
-      unselectedLabelStyle: const TextStyle(
-        color: Colors.grey,
-        fontSize: 12,
-        fontWeight: FontWeight.w500,
-      ),
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.house), label: 'Home'),
-        BottomNavigationBarItem(icon: Icon(Icons.store), label: 'Stores'),
-        BottomNavigationBarItem(icon: Icon(Icons.list), label: 'My List'),
-        BottomNavigationBarItem(icon: Icon(Icons.lock_reset_outlined), label: 'Preloaded'),
-        //BottomNavigationBarItem(icon: Icon(Icons.receipt_long), label: 'Receipts'),
-        BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Account'),
-      ],
+    return NavigationBar(
+      selectedIndex: position,
+      onDestinationSelected: (value) => _onTap(value),
+      destinations: customBottomNavItems.asMap().entries.map((entry) {
+        final index = entry.key;
+        final item = entry.value;
+
+        Color color = Colors.grey;
+        if (index == position) {
+          color = ColorUtils.colorPrimary;
+        }
+        if (item.iconAsset is String) {
+          // If iconAsset is a String, assume it's an SVG asset
+
+          return NavigationDestination(
+            icon: Container(
+              height: 22,
+              width: 22,
+              child: SvgPicture.asset(
+                item.iconAsset
+                    .toString()
+                    .assetSvgIconUrl, // Use the SVG asset path
+                colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+              ),
+            ),
+            label: item.label,
+          );
+        } else if (item.iconAsset is IconData) {
+          // If iconAsset is IconData, use it as-is
+          return NavigationDestination(
+            icon: Icon(
+              item.iconAsset, // Use the IconData
+            ),
+            label: item.label,
+          );
+        } else {
+          // Handle other cases if needed
+          return NavigationDestination(
+            icon: Icon(Icons.error), // Placeholder icon for unknown cases
+            label: 'Unknown',
+          );
+        }
+      }).toList(),
     );
   }
 
