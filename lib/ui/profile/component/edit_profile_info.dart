@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:spenza/ui/profile/component/profile_fields_row.dart';
@@ -11,6 +12,7 @@ import 'package:spenza/ui/profile/profile_screen.dart';
 import 'package:spenza/ui/profile/provider/save_zipcode.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
+import '../../../router/app_router.dart';
 import '../data/user_profile_data.dart';
 import '../profile_repository.dart';
 
@@ -187,6 +189,12 @@ class _ProfileCardState extends ConsumerState<EditProfileInformation> {
         surfaceTintColor: Colors.white,
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
+        leading: IconButton(
+          onPressed: () {
+            context.pop();
+          },
+          icon: Icon(Icons.arrow_back_ios, color: Color(0xFF0CA9E6)),
+        ),
         actions: [
           Consumer(
               builder: (context, ref, child) =>
@@ -223,6 +231,12 @@ class _ProfileCardState extends ConsumerState<EditProfileInformation> {
   }
 
   Widget leadingWidget(String fileName) {
+    if (selectedImage == null && fileName.isNotEmpty) {
+      setState(() async {
+        selectedImage = await downloadImage(fileName);
+      });
+    }
+
     return GestureDetector(
       onTap: () async {
         final pickedImage =
@@ -236,10 +250,6 @@ class _ProfileCardState extends ConsumerState<EditProfileInformation> {
           setState(() async {
             selectedImage =  await downloadImage(fileName);
           });
-
-
-
-
         }
       },
       child: Stack(

@@ -197,6 +197,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       surfaceTintColor: Colors.white,
       backgroundColor: Colors.white,
       automaticallyImplyLeading: false,
+      leading: IconButton(
+        onPressed: () {
+          context.pop();
+        },
+        icon: Icon(Icons.arrow_back_ios, color: Color(0xFF0CA9E6)),
+      ),
       actions: [
         if (isEditing)
           TextButton(

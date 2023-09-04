@@ -45,69 +45,11 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
     return Scaffold(
       appBar: topAppBar(),
       body: Padding(
-        padding: EdgeInsets.only(top: 40.0, left: 10, right: 10),
+        padding: EdgeInsets.only(top: 10.0, left: 10, right: 10),
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              /*Consumer(
-                builder: (context, ref, child) {
-                  final userProvider = ref.watch(profileRepositoryProvider);
-                  return userProvider.when(
-                          () => Container(),
-                      loading: () => Center(child: CircularProgressIndicator()),
-                      error: (message) {
-                        print("errorMrss $message");
-                        return Center(child: Text(message));
-                      },
-                      success: (data){
-                            UserProfileData userData = data;
-                       return Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 35,
-                              child: _buildImageWidget(userData.profilePhoto),
-                            ),
-                            SizedBox(width: 10),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    userData.name ?? "User",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      color: Color(0xFF0CA9E6),
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: poppinsFont,
-                                    ),
-                                  ),
-                                  Text(
-                                    "Account Information",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontFamily: poppinsFont,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                context.push(RouteManager.profileScreen);
-                              },
-                              icon: Icon(
-                                Icons.arrow_forward_ios,
-                                color: Color(0xFF0CA9E6),
-                                size: 32,
-                              ),
-                            ),
-                          ],
-                        );
-                      });
-                },
-              ),*/
-              SizedBox(height: 30),
               CardItem(icon: Icons.list, title: "My Lists", onTap: () {context.push(RouteManager.myListScreen);}),
               CardItem(icon: Icons.receipt, title: "My Receipts", onTap: () {context.pushNamed(RouteManager.displayReceiptScreen,queryParameters: {'list_ref': ''});}),
               CardItem(icon: Icons.store, title: "My Stores", onTap: () {

@@ -19,49 +19,52 @@ class ProfileFieldRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-              flex: 1,
-              child: Text(
-                name1,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontFamily: poppinsFont,
-                ),
-              ),
-            ),
-            SizedBox(width: 30),
-            Expanded(
-              flex: 2,
-              child: /* TextField(
-                controller: controller,
-                decoration: InputDecoration(
-                  hintText: name1,
-                ),
-              )*/
-              TextFormField(
-                controller: controller,
-                keyboardType: isNumericField ? TextInputType.number : TextInputType.text,
-                inputFormatters: isNumericField ? [FilteringTextInputFormatter.digitsOnly] : [],
-                style: TextStyle(fontSize: 16),
-                decoration: InputDecoration(
-                  isDense: true,
-                  contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF0CA9E6)),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Text(
+                  name1,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: poppinsFont,
                   ),
-                  border: OutlineInputBorder(),
                 ),
               ),
+              SizedBox(width: 30),
+              Expanded(
+                flex: 2,
+                child: /* TextField(
+                  controller: controller,
+                  decoration: InputDecoration(
+                    hintText: name1,
+                  ),
+                )*/
+                TextFormField(
+                  controller: controller,
+                  keyboardType: isNumericField ? TextInputType.number : TextInputType.text,
+                  inputFormatters: isNumericField ? [FilteringTextInputFormatter.digitsOnly] : [],
+                  style: TextStyle(fontSize: 16),
+                  decoration: InputDecoration(
+                    isDense: true,
+                    contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFF0CA9E6)),
+                    ),
+                    border: OutlineInputBorder(),
+                  ),
+                ),
 
-            ),
-          ],
-        ),
-        SizedBox(height: 10),
-      ],
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
+        ],
+      ),
     );
   }
 }
