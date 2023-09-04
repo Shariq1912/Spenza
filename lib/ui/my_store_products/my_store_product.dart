@@ -3,10 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:spenza/ui/add_product/components/product_card_widget.dart';
+import 'package:spenza/ui/add_product/components/selectable_chip.dart';
+import 'package:spenza/ui/add_product/provider/selected_department_provider.dart';
+import 'package:spenza/ui/my_list_details/components/searchbox_widget.dart';
 import 'package:spenza/ui/my_list_details/provider/user_product_list_provider.dart';
 import 'package:spenza/ui/my_store_products/data/products.dart';
 import 'package:spenza/ui/my_store_products/provider/product_for_store_provider.dart';
 import 'package:spenza/ui/my_store_products/repo/department_repository.dart';
+import 'package:spenza/utils/color_utils.dart';
 
 import '../../router/app_router.dart';
 import '../profile/profile_repository.dart';
@@ -33,6 +38,7 @@ class MyStoreProduct extends ConsumerStatefulWidget {
 class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
   final poppinsFont = GoogleFonts.poppins().fontFamily;
   bool hasValueChanged = false;
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -46,21 +52,34 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
     await ref
         .read(productForStoreProvider.notifier)
         .getProductsForStore(widget.storeId);
-    await ref.read(departmentRepositoryProvider.notifier).getDepartments();
+    // await ref.read(departmentRepositoryProvider.notifier).getDepartments();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    ref.invalidate(productForStoreProvider);
+    _searchController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    _searchController.addListener(() {
+      ref.read(searchQueryProvider.notifier).state =
+          _searchController.text.trim().toLowerCase();
+    });
+
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.white,
         title: Text(
-          "Stores",
+          "Stores", // todo change it to localized string
           style: TextStyle(
             fontFamily: poppinsFont,
             fontWeight: FontWeight.bold,
             fontSize: 20,
-            color: Color(0xFF0CA9E6),
+            color: ColorUtils.colorPrimary,
           ),
         ),
         centerTitle: true,
@@ -68,7 +87,7 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
           onPressed: () {
             context.pop();
           },
-          icon: Icon(Icons.arrow_back_ios, color: Color(0xFF0CA9E6)),
+          icon: Icon(Icons.arrow_back_ios, color: ColorUtils.colorPrimary),
         ),
         actions: [
           Padding(
@@ -89,7 +108,148 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
           )
         ],
       ),
-      body: Padding(
+      body: Column(
+        children: [
+          SearchBox(controller: _searchController, hint: "Search Product"),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+            child: SizedBox(
+              height: 40,
+              child: Consumer(builder: (context, ref, child) {
+                final selectedDepartments =
+                    ref.watch(selectedDepartmentsProvider);
+                final result = ref.watch(productForStoreProvider);
+
+                final List<ProductModel> data = result.maybeWhen(
+                  data: (data) => data == null ? [] : data,
+                  orElse: () => [],
+                );
+                final departments = [
+                  "All",
+                  ...data.map((e) => e.departmentName).toSet().toList()
+                ];
+
+                return ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: departments.length,
+                  itemBuilder: (context, index) {
+                    final department = departments[index];
+                    final isSelected = selectedDepartments.contains(department);
+
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: SelectableChip(
+                        label: departments[index],
+                        isSelected: isSelected,
+                        onSelected: (selected) {
+                          final updatedDepartments =
+                              Set<String>.from(selectedDepartments);
+
+                          if (selected) {
+                            updatedDepartments.clear();
+                            updatedDepartments.add(department);
+                          } else {
+                            updatedDepartments.remove(department);
+                            if (updatedDepartments.isEmpty)
+                              updatedDepartments.add("All");
+                          }
+
+                          ref.read(selectedDepartmentsProvider.notifier).state =
+                              updatedDepartments;
+                        },
+                      ),
+                    );
+                  },
+                );
+              }),
+            ),
+          ),
+          Expanded(
+            child: Consumer(builder: (context, ref, child) {
+              final data = ref.watch(productForStoreProvider);
+              final selectedDepartments =
+                  ref.watch(selectedDepartmentsProvider);
+              final searchQuery = ref.watch(searchQueryProvider);
+
+              return data.when(
+                data: (data) {
+                  if (data == null) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  if (data.isEmpty) {
+                    return Center(
+                      child: Text("No Product found"),
+                    );
+                  }
+                  final filteredProducts = data.where((product) {
+                    if (searchQuery.isNotEmpty &&
+                        !product.name.toLowerCase().contains(searchQuery)) {
+                      return false; // Skip products that don't match the search query
+                    }
+
+                    if (selectedDepartments.contains("All")) {
+                      return true;
+                    }
+                    return selectedDepartments.contains(product.departmentName);
+                  }).toList();
+
+                  return ListView.builder(
+                    itemCount: filteredProducts.length,
+                    itemBuilder: (context, index) {
+                      final ProductModel product = filteredProducts[index];
+                      return ProductCard(
+                        onClick: () async {
+                          if (widget.listId != null) {
+                            final bool hasReload = await ref
+                                .read(addProductToMyListProvider.notifier)
+                                .addProductToMyList(
+                                  listId: widget.listId!,
+                                  productRef: product.documentId!,
+                                  productId: product.productId,
+                                  context: context,
+                                );
+
+                            if (hasReload) {
+                              ref
+                                  .read(userProductListProvider.notifier)
+                                  .fetchProductFromListId();
+
+                              hasValueChanged = true;
+                            }
+
+                            return;
+                          }
+
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return MyListDialog(
+                                productRef: product.documentId!,
+                                productId: product.productId,
+                              );
+                            },
+                          );
+                        },
+                        measure: product.measure,
+                        imageUrl: product.pImage,
+                        title: product.name,
+                        priceRange: "",
+                      );
+                    },
+                  );
+                },
+                error: (error, stackTrace) => Center(child: Text("$error")),
+                loading: () => Center(child: CircularProgressIndicator()),
+              );
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/* body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Consumer(
           builder: (context, ref, child) {
@@ -102,8 +262,8 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
                 return Center(child: Text(error.toString()));
               },
               data: (data) {
-                /*print("productData $data");
-              return MyProductListWidget(stores: data, onButtonClicked: (Product product) {});*/
+                */ /*print("productData $data");
+              return MyProductListWidget(stores: data, onButtonClicked: (Product product) {});
                 return departmentProvider.when(
                   () => Container(),
                   loading: () => Center(child: CircularProgressIndicator()),
@@ -154,7 +314,4 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
             );
           },
         ),
-      ),
-    );
-  }
-}
+      ),*/

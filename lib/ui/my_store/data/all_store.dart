@@ -8,7 +8,7 @@ part 'all_store.g.dart';
 class AllStores with _$AllStores {
   const factory AllStores(
       {required String name,
-      required String adress,
+      required String address,
       required List<String> zipCodesList,
       required String logo,
         @Default(false) bool isFavorite,

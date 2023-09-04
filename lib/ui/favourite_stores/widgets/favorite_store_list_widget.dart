@@ -32,7 +32,7 @@ class FavoriteStoreListWidget extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
             title: Text(store.name),
-            subtitle: Text(store.adress),
+            subtitle: Text(store.address),
             trailing: IconButton(
               onPressed: () => onButtonClicked(store),
               icon: store.isFavorite

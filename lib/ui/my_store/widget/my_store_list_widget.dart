@@ -36,7 +36,7 @@ class MyStoreListWidget extends StatelessWidget {
               fit: BoxFit.cover,
             ),
             title: Text(store.name),
-            subtitle: Text(store.adress),
+            subtitle: Text(store.address),
             trailing: IconButton(
               onPressed: () => onButtonClicked(store),
               icon: store.isFavorite ? Icon(Icons.favorite_outlined, color: Colors.red) :Icon(Icons.favorite_border_outlined, color: Colors.red)
