@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:spenza/ui/login/data/user.dart';
+import 'package:spenza/utils/fireStore_constants.dart';
 
 mixin LocationHelper {
   Future<GeoPoint?> getCurrentLocation() async {
@@ -37,6 +39,35 @@ mixin LocationHelper {
       /// Soriana City Center = 20.68016662, -103.3822084
       debugPrint("Location by Zip code error == $error");
       return GeoPoint(20.68016662, -103.3822084);
+    }
+  }
+
+  Future<String> getUserZipCodeFromDB(
+      FirebaseFirestore fireStore, String userId) async {
+    try {
+      final Users? user = await _getUser(fireStore, userId);
+      return user?.zipCode ?? "45116";
+    } catch (error) {
+      debugPrint("$error");
+      return "45116";
+    }
+  }
+
+  Future<Users?> _getUser(FirebaseFirestore fireStore, String userId) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot = await fireStore
+          .collection(UserConstant.userCollection)
+          .where(UserConstant.userIdField, isEqualTo: userId)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        final userData = snapshot.docs.first.data();
+        return Users.fromJson(userData);
+      }
+
+      return null;
+    } catch (error) {
+      return null;
     }
   }
 
