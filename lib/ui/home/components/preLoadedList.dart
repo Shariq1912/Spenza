@@ -24,36 +24,38 @@ class PreLoadedList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
-        Row(
-          children: [
-            Expanded(
-              flex: 1,
-              child: Text(
-                title,
-                style: TextStyle(
-                  fontFamily: poppinsFont.fontFamily,
-                  decoration: TextDecoration.none,
-                  color: Color(0xFF0CA9E6),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Align(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                  onPressed: onAllClicked,
-                  icon: Icon(
-                    Icons.arrow_forward_ios,
+        GestureDetector(
+          onTap: (){
+            onAllClicked();
+          },
+          child: Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontFamily: poppinsFont.fontFamily,
+                    decoration: TextDecoration.none,
                     color: Color(0xFF0CA9E6),
-                    size: 32,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
                   ),
                 ),
               ),
-            ),
-          ],
+              Expanded(
+                flex: 1,
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Color(0xFF0CA9E6),
+                      size: 32,
+                    ),
+                ),
+              ),
+            ],
+          ),
         ),
         SizedBox(
           height: 200,

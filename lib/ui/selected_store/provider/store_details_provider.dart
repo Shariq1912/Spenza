@@ -18,7 +18,7 @@ part 'store_details_provider.g.dart';
 class StoreDetails extends _$StoreDetails {
   @override
   Future<Stores> build() async {
-    return Stores(name: "", adress: "address", zipCodesList: [], logo: "");
+    return Stores(name: "", address: "address", zipCodesList: [], logo: "");
   }
 
   Future<void> getSelectedStore({required DocumentReference storeRef}) async {
@@ -27,7 +27,7 @@ class StoreDetails extends _$StoreDetails {
     final store = Stores(
         id: storeSnapshot.id,
         name: storeSnapshot['name'],
-        adress: "",
+        address: "",
         zipCodesList: [],
         logo: storeSnapshot['logo']);
 

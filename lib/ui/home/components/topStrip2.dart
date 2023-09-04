@@ -28,36 +28,38 @@ class TopStrip extends ConsumerWidget {
       padding: EdgeInsets.only(left: 10, right: 10),
       child: Column(
         children: [
-          Row(
-            children: [
-              Expanded(
-                flex: 1,
-                child: Text(
-                  AppLocalizations.of(context)!.myListsTitle, // Updated
-                  style: TextStyle(
-                    fontFamily: poppinsFont,
-                    decoration: TextDecoration.none,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                    onPressed: onAllList,
-                    icon: Icon(
-                      Icons.arrow_forward_ios,
+          GestureDetector(
+            onTap: () {
+              onAllList();
+            },
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Text(
+                    AppLocalizations.of(context)!.myListsTitle, // Updated
+                    style: TextStyle(
+                      fontFamily: poppinsFont,
+                      decoration: TextDecoration.none,
                       color: Colors.white,
-                      size: 32,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
                     ),
                   ),
                 ),
-              )
-            ],
+                Expanded(
+                  flex: 1,
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child:  Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.white,
+                        size: 32,
+                      ),
+                  ),
+                )
+              ],
+            ),
           ),
           SizedBox(height: 10),
           if (data.isEmpty)

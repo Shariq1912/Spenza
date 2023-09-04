@@ -22,36 +22,38 @@ class MyStores extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          children: [
-            Expanded(
-              flex: 1,
-              child: Text(
-                title,
-                style: TextStyle(
-                  decoration: TextDecoration.none,
-                  color: Color(0xFF0CA9E6),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  fontFamily: poppinsFont.fontFamily,
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Align(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                  onPressed: onAllStoreClicked,
-                  icon: Icon(
-                    Icons.arrow_forward_ios,
+        GestureDetector(
+          onTap: (){
+            onAllStoreClicked();
+          },
+          child: Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    decoration: TextDecoration.none,
                     color: Color(0xFF0CA9E6),
-                    size: 32,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    fontFamily: poppinsFont.fontFamily,
                   ),
                 ),
               ),
-            ),
-          ],
+              Expanded(
+                flex: 1,
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Color(0xFF0CA9E6),
+                      size: 32,
+                    ),
+                ),
+              ),
+            ],
+          ),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 2),
