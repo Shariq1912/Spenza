@@ -24,7 +24,6 @@ class AddProductToMyList extends _$AddProductToMyList
     required BuildContext context,
   }) async {
     try {
-      state = AsyncValue.loading();
       DocumentReference productReference =
           fireStore.collection('products_mvp').doc(productRef);
 
@@ -48,8 +47,6 @@ class AddProductToMyList extends _$AddProductToMyList
         return false;
       }
 
-//    final userProductRequest = userProductData.copyWith(productId: 'products/$productId');
-
       final userProduct = UserProductInsert(
         productRef: productReference,
         productId: productId,
@@ -59,7 +56,6 @@ class AddProductToMyList extends _$AddProductToMyList
       context.showSnackBar(message: "Product successfully added in the List");
 
       print("productId : $productId");
-      state = AsyncValue.data(null);
       return true;
       // context.pop(true);
     } catch (error) {

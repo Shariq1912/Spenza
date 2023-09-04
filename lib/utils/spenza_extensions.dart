@@ -15,6 +15,9 @@ extension ImageExtension on String {
   String get assetImageUrl {
     return 'assets/images/$this';
   }
+  String get assetSvgIconUrl {
+    return 'assets/bottom_nav_icons/$this';
+  }
 }
 
 extension SnackbarExtension on BuildContext {
