@@ -108,7 +108,7 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
                                 fit: BoxFit.cover,
                               ),
                         title: Text(filteredList.name),
-                        subtitle: Text(filteredList.adress.substring(0, 40)),
+                        subtitle: Text(filteredList.address.substring(0, 40)),
                         trailing: IconButton(
                           onPressed: () {
                             ref

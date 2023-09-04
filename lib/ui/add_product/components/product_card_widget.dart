@@ -7,12 +7,15 @@ class ProductCard extends StatelessWidget {
   final String priceRange;
   final String measure;
   final VoidCallback onClick;
+  bool isPriceRangeVisible;
 
-  const ProductCard({
+  ProductCard({
     required this.imageUrl,
     required this.title,
     required this.priceRange,
-    required this.measure, required this.onClick,
+    required this.measure,
+    required this.onClick,
+    this.isPriceRangeVisible = true,
   });
 
   @override
@@ -54,12 +57,19 @@ class ProductCard extends StatelessWidget {
                           color: Colors.grey,
                         ),
                       ),
-                      SizedBox(height: 4),
-                      Text(
-                        priceRange,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black,
+                      Visibility(
+                        visible: isPriceRangeVisible,
+                        child: Column(
+                          children: [
+                            SizedBox(height: 4),
+                            Text(
+                              priceRange,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
