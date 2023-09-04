@@ -35,10 +35,12 @@ class MyStoreProduct extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _MyStoreProductState();
 }
 
-class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
+class _MyStoreProductState extends ConsumerState<MyStoreProduct>
+    with WidgetsBindingObserver {
   final poppinsFont = GoogleFonts.poppins().fontFamily;
   bool hasValueChanged = false;
   final TextEditingController _searchController = TextEditingController();
+  final _focusNode = FocusNode();
 
   @override
   void initState() {
@@ -46,6 +48,8 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadProducts();
     });
+
+    WidgetsBinding.instance.addObserver(this);
   }
 
   _loadProducts() async {
@@ -61,6 +65,21 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
 
     ref.invalidate(productForStoreProvider);
     _searchController.dispose();
+    _focusNode.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+
+    // todo change with package since deprecated.
+    final bottomInset = WidgetsBinding.instance.window.viewInsets.bottom;
+    if (bottomInset == 0) {
+      // Soft keyboard closed
+      debugPrint('Soft keyboard closed');
+      _focusNode.unfocus();
+    }
   }
 
   @override
@@ -70,180 +89,204 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
           _searchController.text.trim().toLowerCase();
     });
 
-    return Scaffold(
-      appBar: AppBar(
-        surfaceTintColor: Colors.white,
-        title: Text(
-          "Stores", // todo change it to localized string
-          style: TextStyle(
-            fontFamily: poppinsFont,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-            color: ColorUtils.colorPrimary,
-          ),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          onPressed: () {
-            context.pop();
-          },
-          icon: Icon(Icons.arrow_back_ios, color: ColorUtils.colorPrimary),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 5,
+    return WillPopScope(
+      onWillPop: () async {
+        if (hasValueChanged) {
+          print("WIll POP Scope === $hasValueChanged");
+          Future.microtask(
+            () => ref
+                .read(userProductListProvider.notifier)
+                .fetchProductFromListId(),
+          );
+        }
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          surfaceTintColor: Colors.white,
+          title: Text(
+            "Stores", // todo change it to localized string
+            style: TextStyle(
+              fontFamily: poppinsFont,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              color: ColorUtils.colorPrimary,
             ),
-            child: InkWell(
-              onTap: () {
-                //Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SettingScreen()));
-              },
-              child: CircleAvatar(
-                radius: 40,
-                child: ClipOval(
-                  child: CachedNetworkImage(imageUrl: widget.logo),
+          ),
+          centerTitle: true,
+          leading: IconButton(
+            onPressed: () {
+              context.pop();
+            },
+            icon: Icon(Icons.arrow_back_ios, color: ColorUtils.colorPrimary),
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 5,
+              ),
+              child: InkWell(
+                onTap: () {
+                  //Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SettingScreen()));
+                },
+                child: CircleAvatar(
+                  radius: 40,
+                  child: ClipOval(
+                    child: CachedNetworkImage(imageUrl: widget.logo),
+                  ),
                 ),
               ),
+            )
+          ],
+        ),
+        body: Column(
+          children: [
+            SearchBox(
+              controller: _searchController,
+              hint: "Search Product",
+              focusNode: _focusNode,
             ),
-          )
-        ],
-      ),
-      body: Column(
-        children: [
-          SearchBox(controller: _searchController, hint: "Search Product"),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-            child: SizedBox(
-              height: 40,
-              child: Consumer(builder: (context, ref, child) {
-                final selectedDepartments =
-                    ref.watch(selectedDepartmentsProvider);
-                final result = ref.watch(productForStoreProvider);
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+              child: SizedBox(
+                height: 40,
+                child: Consumer(builder: (context, ref, child) {
+                  final selectedDepartments =
+                      ref.watch(selectedDepartmentsProvider);
+                  final result = ref.watch(productForStoreProvider);
 
-                final List<ProductModel> data = result.maybeWhen(
-                  data: (data) => data == null ? [] : data,
-                  orElse: () => [],
-                );
-                final departments = [
-                  "All",
-                  ...data.map((e) => e.departmentName).toSet().toList()
-                ];
-
-                return ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: departments.length,
-                  itemBuilder: (context, index) {
-                    final department = departments[index];
-                    final isSelected = selectedDepartments.contains(department);
-
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: SelectableChip(
-                        label: departments[index],
-                        isSelected: isSelected,
-                        onSelected: (selected) {
-                          final updatedDepartments =
-                              Set<String>.from(selectedDepartments);
-
-                          if (selected) {
-                            updatedDepartments.clear();
-                            updatedDepartments.add(department);
-                          } else {
-                            updatedDepartments.remove(department);
-                            if (updatedDepartments.isEmpty)
-                              updatedDepartments.add("All");
-                          }
-
-                          ref.read(selectedDepartmentsProvider.notifier).state =
-                              updatedDepartments;
-                        },
-                      ),
-                    );
-                  },
-                );
-              }),
-            ),
-          ),
-          Expanded(
-            child: Consumer(builder: (context, ref, child) {
-              final data = ref.watch(productForStoreProvider);
-              final selectedDepartments =
-                  ref.watch(selectedDepartmentsProvider);
-              final searchQuery = ref.watch(searchQueryProvider);
-
-              return data.when(
-                data: (data) {
-                  if (data == null) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  if (data.isEmpty) {
-                    return Center(
-                      child: Text("No Product found"),
-                    );
-                  }
-                  final filteredProducts = data.where((product) {
-                    if (searchQuery.isNotEmpty &&
-                        !product.name.toLowerCase().contains(searchQuery)) {
-                      return false; // Skip products that don't match the search query
-                    }
-
-                    if (selectedDepartments.contains("All")) {
-                      return true;
-                    }
-                    return selectedDepartments.contains(product.departmentName);
-                  }).toList();
+                  final List<ProductModel> data = result.maybeWhen(
+                    data: (data) => data == null ? [] : data,
+                    orElse: () => [],
+                  );
+                  final departments = [
+                    "All",
+                    ...data.map((e) => e.departmentName).toSet().toList()
+                  ];
 
                   return ListView.builder(
-                    itemCount: filteredProducts.length,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: departments.length,
                     itemBuilder: (context, index) {
-                      final ProductModel product = filteredProducts[index];
-                      return ProductCard(
-                        onClick: () async {
-                          if (widget.listId != null) {
-                            final bool hasReload = await ref
-                                .read(addProductToMyListProvider.notifier)
-                                .addProductToMyList(
-                                  listId: widget.listId!,
-                                  productRef: product.documentId!,
-                                  productId: product.productId,
-                                  context: context,
-                                );
+                      final department = departments[index];
+                      final isSelected =
+                          selectedDepartments.contains(department);
 
-                            if (hasReload) {
-                              ref
-                                  .read(userProductListProvider.notifier)
-                                  .fetchProductFromListId();
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: SelectableChip(
+                          label: departments[index],
+                          isSelected: isSelected,
+                          onSelected: (selected) {
+                            final updatedDepartments =
+                                Set<String>.from(selectedDepartments);
 
-                              hasValueChanged = true;
+                            if (selected) {
+                              updatedDepartments.clear();
+                              updatedDepartments.add(department);
+                            } else {
+                              updatedDepartments.remove(department);
+                              if (updatedDepartments.isEmpty)
+                                updatedDepartments.add("All");
                             }
 
-                            return;
-                          }
-
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return MyListDialog(
-                                productRef: product.documentId!,
-                                productId: product.productId,
-                              );
-                            },
-                          );
-                        },
-                        measure: product.measure,
-                        imageUrl: product.pImage,
-                        title: product.name,
-                        priceRange: "",
+                            ref
+                                .read(selectedDepartmentsProvider.notifier)
+                                .state = updatedDepartments;
+                          },
+                        ),
                       );
                     },
                   );
-                },
-                error: (error, stackTrace) => Center(child: Text("$error")),
-                loading: () => Center(child: CircularProgressIndicator()),
-              );
-            }),
-          ),
-        ],
+                }),
+              ),
+            ),
+            Expanded(
+              child: Consumer(builder: (context, ref, child) {
+                final data = ref.watch(productForStoreProvider);
+                final selectedDepartments =
+                    ref.watch(selectedDepartmentsProvider);
+                final searchQuery = ref.watch(searchQueryProvider);
+
+                return data.when(
+                  data: (data) {
+                    if (data == null) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    if (data.isEmpty) {
+                      return Center(
+                        child: Text("No Product found"),
+                      );
+                    }
+                    final filteredProducts = data.where((product) {
+                      if (searchQuery.isNotEmpty &&
+                          !product.name.toLowerCase().contains(searchQuery)) {
+                        return false; // Skip products that don't match the search query
+                      }
+
+                      if (selectedDepartments.contains("All")) {
+                        return true;
+                      }
+                      return selectedDepartments
+                          .contains(product.departmentName);
+                    }).toList();
+
+                    return ListView.builder(
+                      itemCount: filteredProducts.length,
+                      itemBuilder: (context, index) {
+                        final ProductModel product = filteredProducts[index];
+                        return ProductCard(
+                          onClick: () async {
+                            if (widget.listId != null) {
+                              final bool hasReload = await ref
+                                  .read(addProductToMyListProvider.notifier)
+                                  .addProductToMyList(
+                                    listId: widget.listId!,
+                                    productRef: product.documentId!,
+                                    productId: product.productId,
+                                    context: context,
+                                  );
+
+                              print("has Reload == $hasReload");
+                              if (hasReload) {
+                                /*  ref
+                                    .read(userProductListProvider.notifier)
+                                    .fetchProductFromListId();*/
+
+                                print("Inside has Reload");
+                                hasValueChanged = true;
+                              }
+
+                              return;
+                            }
+
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return MyListDialog(
+                                  productRef: product.documentId!,
+                                  productId: product.productId,
+                                );
+                              },
+                            );
+                          },
+                          measure: product.measure,
+                          imageUrl: product.pImage,
+                          title: product.name,
+                          priceRange: "",
+                          isPriceRangeVisible: false,
+                        );
+                      },
+                    );
+                  },
+                  error: (error, stackTrace) => Center(child: Text("$error")),
+                  loading: () => Center(child: CircularProgressIndicator()),
+                );
+              }),
+            ),
+          ],
+        ),
       ),
     );
   }

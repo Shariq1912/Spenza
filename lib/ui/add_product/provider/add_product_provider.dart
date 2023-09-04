@@ -6,6 +6,7 @@ import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:spenza/helpers/fireStore_pref_mixin.dart';
+import 'package:spenza/helpers/location_helper.dart';
 import 'package:spenza/helpers/nearby_store_helper.dart';
 import 'package:spenza/ui/add_product/data/product.dart';
 import 'package:spenza/ui/add_product/data/user_product_insert.dart';
@@ -16,7 +17,7 @@ part 'add_product_provider.g.dart';
 
 @riverpod
 class AddProduct extends _$AddProduct
-    with NearbyStoreMixin, FirestoreAndPrefsMixin {
+    with LocationHelper, NearbyStoreMixin, FirestoreAndPrefsMixin {
   @override
   Future<List<Product>?> build() async {
     return null;
@@ -35,11 +36,29 @@ class AddProduct extends _$AddProduct
 
     try {
       state = AsyncValue.loading();
+      final userId = await prefs.then((prefs) => prefs.getUserId());
+
+      GeoPoint? location = await getCurrentLocation();
+
+      if (location == null) {
+        location = await getLocationByZipCode(
+          await getUserZipCodeFromDB(
+            fireStore,
+            userId,
+          ), // Get Zip code from Shared Pref.
+        );
+      }
 
       final nearbyStores = await getNearbyStores(
         firestore: fireStore,
-        userLocation: GeoPoint(20.68016662, -103.3822084),
+        userLocation: location,
       );
+
+      if (nearbyStores.isEmpty) {
+        // Where in requires non empty iterator.
+        state = AsyncValue.error("No nearby stores found!", StackTrace.empty);
+        return;
+      }
 
       nearbyStores.forEach(
         (element) => nearbyStoreRefs.add(

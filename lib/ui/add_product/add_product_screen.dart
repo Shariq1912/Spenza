@@ -31,13 +31,13 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
     debugPrint("Init Called on Add Product Screen");
     debugPrint("Query is ${widget.query}");
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    /*WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(addProductProvider.notifier).searchProducts(query: widget.query);
-    });
+    });*/
 
-    /*Future.microtask(
-      () => ref.read(addProductProvider.notifier).findNearbyLocations(),
-    );*/
+    Future.microtask(
+      () => ref.read(addProductProvider.notifier).searchProducts(query: widget.query),
+    );
   }
 
   @override
