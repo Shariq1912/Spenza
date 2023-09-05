@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -10,6 +12,8 @@ import 'package:spenza/helpers/location_helper.dart';
 import 'package:spenza/helpers/nearby_store_helper.dart';
 import 'package:spenza/ui/add_product/data/product.dart';
 import 'package:spenza/ui/add_product/data/user_product_insert.dart';
+import 'package:spenza/ui/add_product/provider/search_product_repository_provider.dart';
+import 'package:spenza/ui/add_product/repository/search_product_repository.dart';
 import 'package:spenza/utils/fireStore_constants.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
@@ -102,48 +106,41 @@ class AddProduct extends _$AddProduct
         ),
       );*/
 
+      // Group similar products by a unique identifier, e.g., based on measure, department, and generic names
+      final Map<String, List<Product>> productGroups = {};
+
+      for (var product in searchResults) {
+        final key =
+            "${product.measure}-${product.department}-${product.genericNames.join('-')}";
+
+        if (!productGroups.containsKey(key)) {
+          productGroups[key] = [product];
+        } else {
+          productGroups[key]!.add(product);
+        }
+      }
+
+      // Calculate the price range for each group of similar products
       final List<Product> filteredList = [];
 
-      /// Works only if list sorted by product whose genericNames similar
-      if (searchResults.isNotEmpty) {
-        Product selectedProduct = searchResults.first;
-        double minPrice = double.parse(selectedProduct.minPrice);
-        double maxPrice = double.parse(selectedProduct.minPrice);
+      productGroups.forEach((key, group) {
+        double minPrice = double.parse(group.first.minPrice);
+        double maxPrice = double.parse(group.first.minPrice);
 
-        for (var i = 1; i < searchResults.length; i++) {
-          Product product = searchResults[i];
-
-          bool isSimilarProduct = selectedProduct.measure == product.measure &&
-              selectedProduct.department == product.department &&
-              selectedProduct.genericNames
-                  .toSet()
-                  .containsAll(product.genericNames.toSet());
-
-          if (isSimilarProduct) {
-            double productMinPrice = double.parse(product.minPrice);
-            minPrice = min(minPrice, productMinPrice);
-            maxPrice = max(maxPrice, productMinPrice);
-          } else {
-            Product filteredProduct = selectedProduct.copyWith(
-              minPrice: minPrice.toString(),
-              maxPrice: maxPrice.toString(),
-            );
-            filteredList.add(filteredProduct);
-
-            /// Reset selected Product to the current loop element and same for min and max price
-            selectedProduct = product;
-            minPrice = double.parse(product.minPrice);
-            maxPrice = double.parse(product.minPrice);
-          }
+        for (var product in group) {
+          double productMinPrice = double.parse(product.minPrice);
+          minPrice = min(minPrice, productMinPrice);
+          maxPrice = max(maxPrice, productMinPrice);
         }
 
-        /// Last selected product will not be able to added list due to loop ended so handled outside
-        Product filteredProduct = selectedProduct.copyWith(
+        // Create a new product with the calculated price range
+        final filteredProduct = group.first.copyWith(
           minPrice: minPrice.toString(),
           maxPrice: maxPrice.toString(),
         );
+
         filteredList.add(filteredProduct);
-      }
+      });
 
       print('Filter List: ${filteredList.toString()}');
 
@@ -156,6 +153,68 @@ class AddProduct extends _$AddProduct
       }
       state = AsyncValue.error(
           'Error searching products: ${e.message}', StackTrace.current);
+    } catch (e) {
+      print('Error searching products: $e');
+      state =
+          AsyncValue.error('Error searching products: $e', StackTrace.current);
+    }
+  }
+
+  Future<void> searchProductsNew({
+    required String query,
+    required CancelToken cancelToken,
+  }) async {
+    try {
+      state = AsyncValue.loading();
+      final userId = await prefs.then((prefs) => prefs.getUserId());
+
+      GeoPoint? location = await getCurrentLocation();
+
+      if (location == null) {
+        location = await getLocationByZipCode(
+          await getUserZipCodeFromDB(
+            fireStore,
+            userId,
+          ), // Get Zip code from Shared Pref.
+        );
+      }
+
+      final nearbyStores = await getNearbyStores(
+        firestore: fireStore,
+        userLocation: location,
+      );
+
+      if (nearbyStores.isEmpty) {
+        // Where in requires non empty iterator.
+        state = AsyncValue.error("No nearby stores found!", StackTrace.empty);
+        return;
+      }
+
+      final nearbyStoreIds = nearbyStores
+          .map(
+            (element) => element.id,
+          )
+          .toList();
+
+      try {
+        final List<Product> products = await ref
+            .read(searchProductRepositoryProvider)
+            .searchProductRepository(
+              storeIds: nearbyStoreIds,
+              query: query.toLowerCase(),
+              cancelToken: cancelToken,
+            );
+
+        state = AsyncValue.data(products);
+      } on DioException catch (e) {
+        print('Error searching products due to DIO EXCEPTION: $e');
+        state = AsyncValue.error(
+            'Error searching products: $e', StackTrace.current);
+      } catch (e) {
+        print('Error searching products : $e');
+        state = AsyncValue.error(
+            'Error searching products: $e', StackTrace.current);
+      }
     } catch (e) {
       print('Error searching products: $e');
       state =
