@@ -33,17 +33,21 @@ class StoreRanking extends _$StoreRanking
   }
 
   Future<void> rankStoresByPriceTotal({
-    double radius = 3,
+    double radius = 5,
   }) async {
     state = AsyncValue.loading();
 
     final listId = await prefs.then((prefs) => prefs.getUserListId());
+    final userId = await prefs.then((prefs) => prefs.getUserId());
     final userListName = await prefs.then((prefs) => prefs.getUserListName());
 
     GeoPoint? location = await getCurrentLocation();
 
     if (location == null) {
-      location = await getLocationByZipCode("45116");
+      location = await getLocationByZipCode(
+        await getUserZipCodeFromDB(
+            fireStore, userId), // Get Zip code from Shared Pref.
+      );
     }
 
     try {
@@ -55,7 +59,19 @@ class StoreRanking extends _$StoreRanking
         userLocation: location,
       );
 
-      /*nearbyStores.forEach((element) {
+      if (nearbyStores.isEmpty) {
+        // Where in requires non empty iterator.
+        state = AsyncValue.data([]);
+        return;
+      }
+
+      if (nearbyStores.length > 30) {
+        // Where in requires non empty iterator.
+        state = AsyncValue.error("Doesn't support Nearby stores more than 30", StackTrace.empty);
+        return;
+      }
+
+      /* nearbyStores.forEach((element) {
         print("Store IDs = ${element.id} and ${element.name}");
       });*/
 
