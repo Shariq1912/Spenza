@@ -48,17 +48,14 @@ class _MyProductListWidgetState extends ConsumerState<MyProductListWidget> {
     });
   }
 
+
   void _onChipSelected(String chipText) {
     setState(() {
-      if (selectedChips.contains(chipText)) {
-        selectedChips.remove(chipText);
-      } else {
-        selectedChips.add(chipText);
-      }
+      selectedChips.clear();
+      selectedChips.add(chipText);
       _filterStores("");
     });
   }
-
   @override
   Widget build(BuildContext context) {
     if (widget.stores.isEmpty) {

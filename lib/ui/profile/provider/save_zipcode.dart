@@ -38,6 +38,9 @@ class SaveUserData extends _$SaveUserData with FirestoreAndPrefsMixin{
       }
       final Map<String, dynamic> userData = userProfileData.copyWith(profilePhoto: downloadURL).toJson();
 
+      if(userProfileData.profilePhoto!.isEmpty){
+
+      }
       if (userProfileData.zipCode.isEmpty){
         /*final userProfileDataFromDb = await ref.read(profileRepositoryProvider.notifier).getUserProfileData();
         if (userProfileDataFromDb != null) {
@@ -51,7 +54,7 @@ class SaveUserData extends _$SaveUserData with FirestoreAndPrefsMixin{
         String districtName = '';
         DistrictData stateData = DistrictData(name: '');
       if (userProfileData.zipCode.isNotEmpty) {
-        await pref.setString(UserConstant.zipCodeField, postalCode);
+           pref.setString(UserConstant.zipCodeField, userProfileData.zipCode);
          districtName = await fetchDistrictNameFromZipcode(int.parse(userProfileData.zipCode));
           stateData = await fetchStateNameFromZipcode(int.parse(userProfileData.zipCode));
       } else {
@@ -146,4 +149,5 @@ class SaveUserData extends _$SaveUserData with FirestoreAndPrefsMixin{
       return DistrictData(name: '');
     }
   }
+
 }

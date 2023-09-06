@@ -8,7 +8,7 @@ part of 'all_store.dart';
 
 _$_AllStores _$$_AllStoresFromJson(Map<String, dynamic> json) => _$_AllStores(
       name: json['name'] as String,
-      adress: json['adress'] as String,
+      address: json['address'] as String,
       zipCodesList: (json['zipCodesList'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
@@ -21,7 +21,7 @@ _$_AllStores _$$_AllStoresFromJson(Map<String, dynamic> json) => _$_AllStores(
 Map<String, dynamic> _$$_AllStoresToJson(_$_AllStores instance) =>
     <String, dynamic>{
       'name': instance.name,
-      'adress': instance.adress,
+      'address': instance.address,
       'zipCodesList': instance.zipCodesList,
       'logo': instance.logo,
       'isFavorite': instance.isFavorite,

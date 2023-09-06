@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/ui/home/data/my_list_model.dart';
@@ -86,7 +87,13 @@ class _EditListState extends ConsumerState<EditListScreen> {
 
 
     return Scaffold(
-      appBar: AppBar(automaticallyImplyLeading: false),
+      appBar: AppBar(automaticallyImplyLeading: false,
+        leading: IconButton(
+          onPressed: () {
+            context.pop();
+          },
+          icon: Icon(Icons.arrow_back_ios, color: Color(0xFF0CA9E6)),
+        ),),
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(15),
