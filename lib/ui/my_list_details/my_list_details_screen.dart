@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/di/app_providers.dart';
@@ -37,6 +38,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
   final TextEditingController _searchController = TextEditingController();
   bool hasValueChanged = false;
   final _focusNode = FocusNode();
+  KeyboardVisibilityController _keyboardVisibilityController = KeyboardVisibilityController();
 
   final List<PopupMenuItem<PopupMenuAction>> items = [
     PopupMenuItem(
@@ -96,12 +98,18 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
     super.didChangeMetrics();
 
     // todo change with package since deprecated.
-    final bottomInset = WidgetsBinding.instance.window.viewInsets.bottom;
+    /*final bottomInset = WidgetsBinding.instance.window.viewInsets.bottom;
     if (bottomInset == 0) {
       // Soft keyboard closed
       debugPrint('Soft keyboard closed');
      _focusNode.unfocus();
-    }
+    }*/
+    _keyboardVisibilityController.onChange.listen((bool visible) {
+      if (!visible) {
+        debugPrint('Soft keyboard closed');
+        _focusNode.unfocus();
+      }
+    });
   }
 
   @override

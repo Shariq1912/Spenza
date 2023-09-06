@@ -182,11 +182,14 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                           ),
                         );
                       } else {
-                        return ClipOval(
-                            child: AspectRatio(
-                              aspectRatio: 1.0,
-                              child:  Image.asset('user_placeholder.png'.assetImageUrl,fit: BoxFit.cover,),
-                            )
+                        return CircleAvatar(
+                          radius: 35,
+                          child: ClipOval(
+                              child: AspectRatio(
+                                aspectRatio: 1.0,
+                                child:  Image.asset('user_placeholder.png'.assetImageUrl,fit: BoxFit.cover,),
+                              )
+                          ),
                         );
                       }
                     },

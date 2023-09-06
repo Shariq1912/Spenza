@@ -8,11 +8,9 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:spenza/ui/profile/component/profile_fields_row.dart';
-import 'package:spenza/ui/profile/profile_screen.dart';
 import 'package:spenza/ui/profile/provider/save_zipcode.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
-import '../../../router/app_router.dart';
 import '../data/user_profile_data.dart';
 import '../profile_repository.dart';
 
