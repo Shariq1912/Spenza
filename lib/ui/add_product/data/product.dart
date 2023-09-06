@@ -64,7 +64,7 @@ class Product with _$Product {
     final List<String> genericNames = response.genericNames;
 
     return Product(
-      productRef: '',
+      productRef: response.productRef,
       productId: response.productId,
       isExist: response.isExist,
       department: response.departmentName,
