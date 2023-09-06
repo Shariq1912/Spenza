@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -10,6 +11,7 @@ import 'package:spenza/ui/my_list_details/components/custom_app_bar.dart';
 import 'package:spenza/ui/my_list_details/components/searchbox_widget.dart';
 import 'package:spenza/utils/color_utils.dart';
 
+import 'provider/search_product_repository_provider.dart';
 import 'provider/selected_department_provider.dart';
 
 class AddProductScreen extends ConsumerStatefulWidget {
@@ -23,6 +25,7 @@ class AddProductScreen extends ConsumerStatefulWidget {
 
 class _AddProductScreenState extends ConsumerState<AddProductScreen> {
   final TextEditingController _searchController = TextEditingController();
+  late CancelToken _cancelToken;
 
   @override
   void initState() {
@@ -31,12 +34,16 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
     debugPrint("Init Called on Add Product Screen");
     debugPrint("Query is ${widget.query}");
 
-    /*WidgetsBinding.instance.addPostFrameCallback((_) {
+    /*WidgetsBinding.instance.addPostFrameCallback((_) async{
       ref.read(addProductProvider.notifier).searchProducts(query: widget.query);
     });*/
 
+    _cancelToken = CancelToken();
+
     Future.microtask(
-      () => ref.read(addProductProvider.notifier).searchProducts(query: widget.query),
+      () => ref
+          .read(addProductProvider.notifier)
+          .searchProductsNew(query: widget.query, cancelToken: _cancelToken),
     );
   }
 
@@ -50,6 +57,8 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
     ref.invalidate(
         addProductProvider); // todo dispose the background fetching data when screen dispose.
     _searchController.dispose();
+
+    _cancelToken.cancel("Screen Disposed! :) ");
   }
 
   @override

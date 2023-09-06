@@ -39,49 +39,54 @@ class _BottomNavigationWidgetState
   Widget build(BuildContext context) {
     final position = ref.watch(selectedIndexProvider);
 
-    return NavigationBar(
-      selectedIndex: position,
-      onDestinationSelected: (value) => _onTap(value),
-      destinations: customBottomNavItems.asMap().entries.map((entry) {
-        final index = entry.key;
-        final item = entry.value;
+    return Visibility(
+      visible: false,
+      child: NavigationBar(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        selectedIndex: position,
+        onDestinationSelected: (value) => _onTap(value),
+        destinations: customBottomNavItems.asMap().entries.map((entry) {
+          final index = entry.key;
+          final item = entry.value;
 
-        Color color = Colors.grey;
-        if (index == position) {
-          color = ColorUtils.colorPrimary;
-        }
-        if (item.iconAsset is String) {
-          // If iconAsset is a String, assume it's an SVG asset
+          Color color = Colors.grey;
+          if (index == position) {
+            color = ColorUtils.colorPrimary;
+          }
+          if (item.iconAsset is String) {
+            // If iconAsset is a String, assume it's an SVG asset
 
-          return NavigationDestination(
-            icon: Container(
-              height: 22,
-              width: 22,
-              child: SvgPicture.asset(
-                item.iconAsset
-                    .toString()
-                    .assetSvgIconUrl, // Use the SVG asset path
-                colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+            return NavigationDestination(
+              icon: Container(
+                height: 22,
+                width: 22,
+                child: SvgPicture.asset(
+                  item.iconAsset
+                      .toString()
+                      .assetSvgIconUrl, // Use the SVG asset path
+                  colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+                ),
               ),
-            ),
-            label: item.label,
-          );
-        } else if (item.iconAsset is IconData) {
-          // If iconAsset is IconData, use it as-is
-          return NavigationDestination(
-            icon: Icon(
-              item.iconAsset, // Use the IconData
-            ),
-            label: item.label,
-          );
-        } else {
-          // Handle other cases if needed
-          return NavigationDestination(
-            icon: Icon(Icons.error), // Placeholder icon for unknown cases
-            label: 'Unknown',
-          );
-        }
-      }).toList(),
+              label: item.label,
+            );
+          } else if (item.iconAsset is IconData) {
+            // If iconAsset is IconData, use it as-is
+            return NavigationDestination(
+              icon: Icon(
+                item.iconAsset, // Use the IconData
+              ),
+              label: item.label,
+            );
+          } else {
+            // Handle other cases if needed
+            return NavigationDestination(
+              icon: Icon(Icons.error), // Placeholder icon for unknown cases
+              label: 'Unknown',
+            );
+          }
+        }).toList(),
+      ),
     );
   }
 
