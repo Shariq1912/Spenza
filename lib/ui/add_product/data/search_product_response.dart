@@ -17,6 +17,7 @@ class SearchProductResponse with _$SearchProductResponse {
     required double price,
     @JsonKey(name: "product_id") required String productId,
     required String name,
+    required String productRef,
     required String brand,
     required String pImage,
     required double minPrice,
