@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/di/app_providers.dart';
@@ -8,6 +9,7 @@ import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/home/provider/fetch_mylist_provider.dart';
 import 'package:spenza/ui/home/provider/home_preloaded_list.dart';
 import 'package:spenza/ui/home/repo/fetch_favourite_store_repository.dart';
+import 'package:spenza/utils/color_utils.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 import '../profile/profile_repository.dart';
 import 'components/myStore.dart';
@@ -69,7 +71,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Container(
                   //constraints: BoxConstraints(minHeight: 100),
-                  color: Color(0xFF0DA9E6),
+                  color: ColorUtils.colorWhite,
                   child: Consumer(
                     builder: (context, ref, child) =>
                         ref.watch(fetchMyListProvider).when(
@@ -198,8 +200,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     return AppBar(
       elevation: 5.0,
       surfaceTintColor: Colors.white,
-      backgroundColor: Colors.white,
+      backgroundColor: ColorUtils.colorPrimary,
       automaticallyImplyLeading: false,
+      systemOverlayStyle: SystemUiOverlayStyle(
+       // statusBarColor: ColorUtils.colorPrimary
+      ),
       actions: [
         Padding(
           padding: const EdgeInsets.only(
