@@ -34,7 +34,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     });
   }
 
-
   _loadStores() async {
     await ref.read(fetchMyListProvider.notifier).fetchMyListFun();
     ref.read(profileRepositoryProvider.notifier).getUserProfileData();
@@ -52,8 +51,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     ref.invalidate(fetchFavouriteStoreRepositoryProvider);
     ref.invalidate(homePreloadedListProvider);
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -122,11 +119,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                             ref
                                 .read(homePreloadedListProvider.notifier)
                                 .redirectUserToListDetailsScreen(
-                                    context: context,
-                                    listId: listId,
-                                    name: name,
-                                    photo: photo,
-                                    ref: ref);
+                                  context: context,
+                                  listId: listId,
+                                  name: name,
+                                  photo: photo,
+                                  ref: ref,
+                                );
                           },
                           data: data,
                           title:
@@ -199,63 +197,66 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   AppBar topAppBar() {
     return AppBar(
       elevation: 5.0,
-      surfaceTintColor: Colors.white,
+      // surfaceTintColor: Colors.white,
       backgroundColor: ColorUtils.colorPrimary,
       automaticallyImplyLeading: false,
       systemOverlayStyle: SystemUiOverlayStyle(
-       // statusBarColor: ColorUtils.colorPrimary
-      ),
+          // statusBarColor: ColorUtils.colorPrimary
+          ),
       actions: [
         Padding(
           padding: const EdgeInsets.only(
             top: 5,
           ),
-          child: InkWell(
-            onTap: () {
-              context.pushNamed(RouteManager.settingScreen);
-            },
-            child:  Consumer(
-                builder: (context, ref, child) {
-                  final profilePro = ref.watch(profileRepositoryProvider);
-                  return profilePro.when(
-                        () => Container(),
-                    loading: () => Center(child: CircularProgressIndicator()),
-                    error: (message) => CircleAvatar(
-                      child: Image.asset('assets/images/user.png'),
-                    ),
-                    success: (data) {
-                      if (data.profilePhoto != null && data.profilePhoto!.isNotEmpty) {
-                        return CircleAvatar(
-                          radius: 40,
-                          child: ClipOval(
-                              child: AspectRatio(
-                                aspectRatio: 1.0,
-                                child: CachedNetworkImage(
-                                  fit: BoxFit.cover,
-                                  imageUrl: data.profilePhoto!,
-                                  placeholder: (context, url) =>  Image.asset('app_icon_spenza.png'.assetImageUrl),
-                                  errorWidget: (context, url, error) => Image.asset('user_placeholder.png'.assetImageUrl),
-                                ),
-                              ),
-                            ),
-                        );
-                      } else {
-                        return CircleAvatar(
-                          radius: 35,
-                          child: ClipOval(
-                            child: AspectRatio(
-                              aspectRatio: 1.0,
-                              child:  Image.asset('user_placeholder.png'.assetImageUrl,fit: BoxFit.cover,),
-                              )
-                            ),
-                        );
-                      }
-                    },
-                  );
+          child: InkWell(onTap: () {
+            context.pushNamed(RouteManager.settingScreen);
+          }, child: Consumer(
+            builder: (context, ref, child) {
+              final profilePro = ref.watch(profileRepositoryProvider);
+              return profilePro.when(
+                () => Container(),
+                loading: () => Center(child: CircularProgressIndicator()),
+                error: (message) => CircleAvatar(
+                  child: Image.asset('assets/images/user.png'),
+                ),
+                success: (data) {
+                  if (data.profilePhoto != null &&
+                      data.profilePhoto!.isNotEmpty) {
+                    return CircleAvatar(
+                      radius: 40,
+                      child: ClipOval(
+                        child: AspectRatio(
+                          aspectRatio: 1.0,
+                          child: CachedNetworkImage(
+                            fit: BoxFit.cover,
+                            imageUrl: data.profilePhoto!,
+                            placeholder: (context, url) => Image.asset(
+                                'app_icon_spenza.png'.assetImageUrl),
+                            errorWidget: (context, url, error) => Image.asset(
+                                'user_placeholder.png'.assetImageUrl),
+                          ),
+                        ),
+                      ),
+                    );
+                  } else {
+                    return CircleAvatar(
+                      radius: 35,
+                      child: ClipOval(
+                          child: AspectRatio(
+                        aspectRatio: 1.0,
+                        child: Image.asset(
+                          'user_placeholder.png'.assetImageUrl,
+                          fit: BoxFit.cover,
+                        ),
+                      )),
+                    );
+                  }
                 },
-              )
-            //),
-          ),
+              );
+            },
+          )
+              //),
+              ),
         )
       ],
       title: SizedBox(

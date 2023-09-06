@@ -57,7 +57,7 @@ class PreLoadedList extends ConsumerWidget {
             ],
           ),
         ),
-        SizedBox(
+        Container(
           height: 200,
           child: Padding(
             padding: const EdgeInsets.only(top: 10),

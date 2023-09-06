@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:spenza/utils/color_utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,9 +38,17 @@ class SpenzaApp extends ConsumerWidget {
         return l10n!.appTitle;
       },
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
-        brightness: Brightness.light,
-        canvasColor: Colors.white,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.white,
+          primary: ColorUtils.colorPrimary,
+          onPrimary: ColorUtils.colorWhite,
+          // secondary: ColorUtils.colorSecondary,
+          // onSecondary: ColorUtils.colorWhite,
+          // error: ColorUtils.colorError,
+          // onError: ColorUtils.colorWhite,
+          // background: ColorUtils.lightGrey,
+          // onBackground: ColorUtils.colorPrimaryText,
+        ),
         useMaterial3: true,
       ),
       localizationsDelegates: [

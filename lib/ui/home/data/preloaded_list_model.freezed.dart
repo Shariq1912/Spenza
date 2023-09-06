@@ -27,6 +27,7 @@ mixin _$PreloadedListModel {
   String get description => throw _privateConstructorUsedError;
   String get path => throw _privateConstructorUsedError;
   String? get receiptCount => throw _privateConstructorUsedError;
+  String? get count => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -46,7 +47,8 @@ abstract class $PreloadedListModelCopyWith<$Res> {
       @JsonKey(name: "preloaded_photo") String preloadedPhoto,
       String description,
       String path,
-      String? receiptCount});
+      String? receiptCount,
+      String? count});
 }
 
 /// @nodoc
@@ -68,6 +70,7 @@ class _$PreloadedListModelCopyWithImpl<$Res, $Val extends PreloadedListModel>
     Object? description = null,
     Object? path = null,
     Object? receiptCount = freezed,
+    Object? count = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -94,6 +97,10 @@ class _$PreloadedListModelCopyWithImpl<$Res, $Val extends PreloadedListModel>
           ? _value.receiptCount
           : receiptCount // ignore: cast_nullable_to_non_nullable
               as String?,
+      count: freezed == count
+          ? _value.count
+          : count // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -112,7 +119,8 @@ abstract class _$$_PreloadedListModelCopyWith<$Res>
       @JsonKey(name: "preloaded_photo") String preloadedPhoto,
       String description,
       String path,
-      String? receiptCount});
+      String? receiptCount,
+      String? count});
 }
 
 /// @nodoc
@@ -132,6 +140,7 @@ class __$$_PreloadedListModelCopyWithImpl<$Res>
     Object? description = null,
     Object? path = null,
     Object? receiptCount = freezed,
+    Object? count = freezed,
   }) {
     return _then(_$_PreloadedListModel(
       id: null == id
@@ -158,6 +167,10 @@ class __$$_PreloadedListModelCopyWithImpl<$Res>
           ? _value.receiptCount
           : receiptCount // ignore: cast_nullable_to_non_nullable
               as String?,
+      count: freezed == count
+          ? _value.count
+          : count // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -171,7 +184,8 @@ class _$_PreloadedListModel implements _PreloadedListModel {
       @JsonKey(name: "preloaded_photo") required this.preloadedPhoto,
       required this.description,
       required this.path,
-      this.receiptCount});
+      this.receiptCount,
+      this.count});
 
   factory _$_PreloadedListModel.fromJson(Map<String, dynamic> json) =>
       _$$_PreloadedListModelFromJson(json);
@@ -189,10 +203,12 @@ class _$_PreloadedListModel implements _PreloadedListModel {
   final String path;
   @override
   final String? receiptCount;
+  @override
+  final String? count;
 
   @override
   String toString() {
-    return 'PreloadedListModel(id: $id, name: $name, preloadedPhoto: $preloadedPhoto, description: $description, path: $path, receiptCount: $receiptCount)';
+    return 'PreloadedListModel(id: $id, name: $name, preloadedPhoto: $preloadedPhoto, description: $description, path: $path, receiptCount: $receiptCount, count: $count)';
   }
 
   @override
@@ -208,13 +224,14 @@ class _$_PreloadedListModel implements _PreloadedListModel {
                 other.description == description) &&
             (identical(other.path, path) || other.path == path) &&
             (identical(other.receiptCount, receiptCount) ||
-                other.receiptCount == receiptCount));
+                other.receiptCount == receiptCount) &&
+            (identical(other.count, count) || other.count == count));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, id, name, preloadedPhoto, description, path, receiptCount);
+  int get hashCode => Object.hash(runtimeType, id, name, preloadedPhoto,
+      description, path, receiptCount, count);
 
   @JsonKey(ignore: true)
   @override
@@ -238,7 +255,8 @@ abstract class _PreloadedListModel implements PreloadedListModel {
       @JsonKey(name: "preloaded_photo") required final String preloadedPhoto,
       required final String description,
       required final String path,
-      final String? receiptCount}) = _$_PreloadedListModel;
+      final String? receiptCount,
+      final String? count}) = _$_PreloadedListModel;
 
   factory _PreloadedListModel.fromJson(Map<String, dynamic> json) =
       _$_PreloadedListModel.fromJson;
@@ -256,6 +274,8 @@ abstract class _PreloadedListModel implements PreloadedListModel {
   String get path;
   @override
   String? get receiptCount;
+  @override
+  String? get count;
   @override
   @JsonKey(ignore: true)
   _$$_PreloadedListModelCopyWith<_$_PreloadedListModel> get copyWith =>
