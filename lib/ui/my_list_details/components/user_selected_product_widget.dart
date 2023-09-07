@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/ui/add_product/data/user_product.dart';
 import 'package:spenza/ui/my_list_details/provider/user_product_list_provider.dart';
 import 'package:spenza/utils/color_utils.dart';
+import 'package:spenza/utils/spenza_extensions.dart';
 
 class UserSelectedProductCard extends ConsumerWidget {
   final String imageUrl;
@@ -28,24 +30,35 @@ class UserSelectedProductCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+    final poppinsFont = GoogleFonts.poppins().fontFamily;
+    final robotoFont = GoogleFonts.roboto().fontFamily;
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Card(
-        elevation: 2,
+        color: Color(0xFFE5E7E8),
+        //elevation: 2,
         child: Stack(
           alignment: Alignment.topRight,
-          // Align the delete icon to the top right
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            Container(
+              margin: const EdgeInsets.all(8.0),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CachedNetworkImage(
-                    imageUrl: imageUrl,
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.cover,
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: CachedNetworkImage(
+                      errorWidget: (context, url, error) => Image.asset(
+                        "app_icon_spenza.png".assetImageUrl,
+                        fit: BoxFit.fill,
+                        width: 110,
+                        height: 110,
+                      ),
+                      imageUrl: imageUrl,
+                      width: 90,
+                      height: 90,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                   SizedBox(width: 12),
                   Expanded(
@@ -53,18 +66,21 @@ class UserSelectedProductCard extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          department,
+                          department.length > 16
+                              ? '${department.substring(0, 16)}...'
+                              : department,
                           style: TextStyle(
+                            fontFamily: robotoFont,
                             fontSize: 12,
-                            color: Colors.grey,
+                            color: Color(0xFF7B868C),
                           ),
                         ),
                         Text(
                           title,
                           style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF323E48),
                           ),
                         ),
                         /*Text(
@@ -74,88 +90,101 @@ class UserSelectedProductCard extends ConsumerWidget {
                             color: Colors.black,
                           ),
                         ),*/
-                        const SizedBox(height: 4),
+                        const SizedBox(height: 38),
                         Text(
                           measure,
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.grey,
+                            color: Color(0xFF323E48),
                           ),
                         ),
                       ],
                     ),
                   ),
                   SizedBox(width: 12),
-                  Row(
+                  Column(
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          if (product.quantity > 1) {
-                            ref
+                      SizedBox(
+                        height: 62,
+                      ),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              if (product.quantity > 1) {
+                                ref
+                                    .read(userProductListProvider.notifier)
+                                    .updateUserProductList(
+                                      product: product,
+                                      quantity: product.quantity - 1,
+                                    );
+                              }
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                   horizontal: 4),
+                              child: Text(
+                                "-",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF555C62)),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 2),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                 horizontal: 10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              // Set the background color to white
+                              border: Border.all(
+                                  color: Colors.black.withOpacity(0.3)),
+                            ),
+                            child: Text(
+                              product.quantity.toString(),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: ColorUtils.colorPrimary,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 2),
+                          GestureDetector(
+                            onTap: () => ref
                                 .read(userProductListProvider.notifier)
                                 .updateUserProductList(
                                   product: product,
-                                  quantity: product.quantity - 1,
-                                );
-                          }
-                        },
-                        child: Container(
-                          padding:
-                              EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                          child: Text(
-                            "-",
-                            style: TextStyle(fontSize: 30),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 4),
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          // Set the background color to white
-                          border:
-                              Border.all(color: Colors.black.withOpacity(0.3)),
-                        ),
-                        child: Text(
-                          product.quantity.toString(),
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: ColorUtils.colorPrimary,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 4),
-                      GestureDetector(
-                        onTap: () => ref
-                            .read(userProductListProvider.notifier)
-                            .updateUserProductList(
-                              product: product,
-                              quantity: product.quantity + 1,
+                                  quantity: product.quantity + 1,
+                                ),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                   horizontal: 4),
+                              child: Text(
+                                "+",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF555C62)),
+                              ),
                             ),
-                        child: Container(
-                          padding:
-                              EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                          child: Text(
-                            "+",
-                            style: TextStyle(fontSize: 30),
                           ),
-                        ),
-                      ),
-                      SizedBox(width: 4),
-                      GestureDetector(
-                        onTap: () => ref
-                            .read(userProductListProvider.notifier)
-                            .deleteProductFromUserList(
-                              listId: listId,
-                              product: product,
-                            ),
-                        child: Icon(
-                          Icons.delete,
-                          color: Colors
-                              .red, // You can customize the delete icon color
-                        ),
+                          SizedBox(width: 4),
+                          /*GestureDetector(
+                              onTap: () => ref
+                                  .read(userProductListProvider.notifier)
+                                  .deleteProductFromUserList(
+                                    listId: listId,
+                                    product: product,
+                                  ),
+                              child: Icon(
+                                Icons.delete,
+                                color: Colors
+                                    .red, // You can customize the delete icon color
+                              ),
+                            ),*/
+                        ],
                       ),
                     ],
                   ),

@@ -22,11 +22,13 @@ class SearchBox extends StatelessWidget {
           FocusScope.of(context).unfocus();
         },
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(0.0),
+
           child: Container(
+            margin: const EdgeInsets.all(16.0),
             padding: const EdgeInsets.symmetric(horizontal: 10),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Color(0xFFE5E7E8),
               border: Border.all(color: Colors.grey),
               borderRadius: BorderRadius.circular(8),
             ),

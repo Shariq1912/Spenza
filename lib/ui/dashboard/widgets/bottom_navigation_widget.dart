@@ -20,18 +20,11 @@ class _BottomNavigationWidgetState
     extends ConsumerState<BottomNavigationWidget> {
   final List<CustomBottomNavItem> customBottomNavItems = [
     CustomBottomNavItem.fromSvgAsset(iconAsset: 'home_icon.svg', label: 'Home'),
-    CustomBottomNavItem.fromSvgAsset(
-        iconAsset: 'store_icon.svg', label: 'Stores'),
-    CustomBottomNavItem.fromSvgAsset(
-        iconAsset: 'my_list_icon.svg', label: 'My List'),
-    CustomBottomNavItem.fromSvgAsset(
-      iconAsset: 'preloaded_list_icon.svg',
-      label: 'Preloaded',
-    ),
-    CustomBottomNavItem(
-      iconAsset: Icons.account_circle,
-      label: 'Account',
-    ),
+    // CustomBottomNavItem.fromSvgAsset(iconAsset: 'store_icon.svg', label: 'Stores'),
+    CustomBottomNavItem.fromSvgAsset(iconAsset: 'my_list_icon.svg', label: 'My Lists'),
+    CustomBottomNavItem.fromSvgAsset(iconAsset: 'receipts_icon.svg', label: 'Receipts'),
+    // CustomBottomNavItem.fromSvgAsset(iconAsset: 'preloaded_list_icon.svg', label: 'Preloaded'),
+    CustomBottomNavItem(iconAsset: Icons.account_circle, label: 'Account'),
     // Add more items as needed
   ];
 
@@ -39,32 +32,45 @@ class _BottomNavigationWidgetState
   Widget build(BuildContext context) {
     final position = ref.watch(selectedIndexProvider);
 
-    return Visibility(
-      visible: false,
-      child: NavigationBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
-        selectedIndex: position,
-        onDestinationSelected: (value) => _onTap(value),
-        destinations: customBottomNavItems.asMap().entries.map((entry) {
+    return Container(
+      decoration: BoxDecoration(
+          border: Border(top: BorderSide(color: Colors.grey, width: 1.0))),
+      child: BottomNavigationBar(
+        elevation: 20,
+        currentIndex: position,
+        onTap: (value) => _onTap(value),
+        selectedItemColor: ColorUtils.colorPrimary,
+        type: BottomNavigationBarType.fixed,
+        unselectedItemColor: Colors.black,
+        selectedLabelStyle: const TextStyle(
+          color: ColorUtils.colorPrimary,
+          fontSize: 14,
+          fontWeight: FontWeight.w700,
+        ),
+        unselectedLabelStyle: const TextStyle(
+          color: Colors.black,
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+        ),
+        items: customBottomNavItems.asMap().entries.map((entry) {
           final index = entry.key;
           final item = entry.value;
 
-          Color color = Colors.grey;
-          if (index == position) {
-            color = ColorUtils.colorPrimary;
-          }
           if (item.iconAsset is String) {
             // If iconAsset is a String, assume it's an SVG asset
 
-            return NavigationDestination(
+            Color color = Colors.black;
+            if (index == position) {
+              color = ColorUtils.colorPrimary;
+            }
+
+            return BottomNavigationBarItem(
               icon: Container(
-                height: 22,
-                width: 22,
+
+                height: 20,
+                width: 20,
                 child: SvgPicture.asset(
-                  item.iconAsset
-                      .toString()
-                      .assetSvgIconUrl, // Use the SVG asset path
+                  item.iconAsset.toString().assetSvgIconUrl, // Use the SVG asset path
                   colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
                 ),
               ),
@@ -72,7 +78,7 @@ class _BottomNavigationWidgetState
             );
           } else if (item.iconAsset is IconData) {
             // If iconAsset is IconData, use it as-is
-            return NavigationDestination(
+            return BottomNavigationBarItem(
               icon: Icon(
                 item.iconAsset, // Use the IconData
               ),
@@ -80,7 +86,7 @@ class _BottomNavigationWidgetState
             );
           } else {
             // Handle other cases if needed
-            return NavigationDestination(
+            return BottomNavigationBarItem(
               icon: Icon(Icons.error), // Placeholder icon for unknown cases
               label: 'Unknown',
             );
@@ -100,26 +106,20 @@ class _BottomNavigationWidgetState
 
     switch (index) {
       case 0:
-        context.goNamed(RouteManager.homeScreen);
+        context.pushNamed(RouteManager.homeScreen);
         break;
 
       case 1:
-        context.goNamed(RouteManager.storeScreenBottomPath);
+        context.pushNamed(RouteManager.myListScreenBottomPath);
         break;
 
       case 2:
-        context.goNamed(RouteManager.myListScreenBottomPath);
+        context.pushNamed(RouteManager.receiptListScreenBottomPath);
         break;
+
 
       case 3:
-        context.goNamed(RouteManager.preloadedListScreenBottomPath);
-        break;
-      /*case 4:
-        context.goNamed(RouteManager.displayReceiptScreen);
-        break;*/
-
-      case 4:
-        context.goNamed(RouteManager.profileScreenBottomPath);
+        context.pushNamed(RouteManager.profileScreenBottomPath);
         break;
       default:
     }

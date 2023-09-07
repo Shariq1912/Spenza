@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/helpers/popup_menu_mixin.dart';
 import 'package:spenza/router/app_router.dart';
@@ -161,6 +163,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
           return true;
         },
         child: Scaffold(
+          backgroundColor: Colors.white,
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight),
             child: /* Consumer(
@@ -200,81 +203,111 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
               },
             ),*/
           ),
-          body: Column(
+          body: Stack(
             children: [
-              SearchBox(
-                focusNode: _focusNode,
-                hint: "Add products",
-                controller: _searchController,
-                onSearch: (value) async {
-                  Future.microtask(
-                    () => ref
-                        .read(userProductListProvider.notifier)
-                        .saveUserProductListToServer(context: context),
-                  );
+              Column(
+                children: [
+                  SearchBox(
+                    focusNode: _focusNode,
+                    hint: "Add products",
+                    controller: _searchController,
+                    onSearch: (value) async {
+                      Future.microtask(
+                        () => ref
+                            .read(userProductListProvider.notifier)
+                            .saveUserProductListToServer(context: context),
+                      );
 
-                  _searchController.clear();
+                      _searchController.clear();
 
-                  final bool? result = await context.pushNamed(
-                    RouteManager.addProductScreen,
-                    queryParameters: {'query': value},
-                  );
+                      final bool? result = await context.pushNamed(
+                        RouteManager.addProductScreen,
+                        queryParameters: {'query': value},
+                      );
 
-                  if (result ?? false) {
-                    ref
-                        .read(userProductListProvider.notifier)
-                        .fetchProductFromListId();
-                  }
-                },
-              ),
-              const SizedBox(height: 10),
-              Expanded(
-                // Use a single Expanded widget to wrap the ListView
-                child: Consumer(
-                  builder: (context, ref, child) {
-                    final result = ref.watch(userProductListProvider);
+                      if (result ?? false) {
+                        ref
+                            .read(userProductListProvider.notifier)
+                            .fetchProductFromListId();
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  Expanded(
+                    // Use a single Expanded widget to wrap the ListView
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        final result = ref.watch(userProductListProvider);
 
-                    return result.when(
-                      data: (data) {
-                        if (data == null) {
-                          return Center(child: CircularProgressIndicator());
-                        } else if (data.isEmpty) {
-                          return Center(
-                            child: Text("No Product found"),
-                          );
-                        }
+                        return result.when(
+                          data: (data) {
+                            if (data == null) {
+                              return Center(child: CircularProgressIndicator());
+                            } else if (data.isEmpty) {
+                              return Center(
+                                child: Text("No Product found"),
+                              );
+                            }
 
-                        return ListView.builder(
-                          itemCount: data.length,
-                          itemBuilder: (context, index) {
-                            final UserProduct product = data[index];
-                            return UserSelectedProductCard(
-                              measure: product.measure,
-                              listId: widget.listId,
-                              department: product.department,
-                              imageUrl: product.pImage,
-                              title: product.name,
-                              priceRange:
-                                  "\$${product.minPrice} - \$${product.maxPrice}",
-                              product: product,
+                            return ListView.builder(
+                              itemCount: data.length,
+                              itemBuilder: (context, index) {
+                                final UserProduct product = data[index];
+                                return Slidable(
+
+                                  key: const ValueKey(0),
+                                  child: UserSelectedProductCard(
+                                    measure: product.measure,
+                                    listId: widget.listId,
+                                    department: product.department,
+                                    imageUrl: product.pImage,
+                                    title: product.name,
+                                    priceRange:
+                                        "\$${product.minPrice} - \$${product.maxPrice}",
+                                    product: product,
+                                  ),
+                                  endActionPane: ActionPane(
+                                    motion: const BehindMotion(),
+                                    dismissible: DismissiblePane(onDismissed: () {}),
+
+
+                                    children:  [
+                                      SlidableAction(
+                                        onPressed: (context){
+                                        },
+                                        backgroundColor: Color(0xFF7B868C),
+                                        foregroundColor: Colors.white,
+                                        icon: Icons.delete,
+                                        label: 'Delete',
+                                      ),
+
+                                    ],
+                                  ),
+                                );
+                              },
                             );
                           },
+                          error: (error, stackTrace) =>
+                              Center(child: Text("$error")),
+                          loading: () => Center(child: CircularProgressIndicator()),
                         );
                       },
-                      error: (error, stackTrace) =>
-                          Center(child: Text("$error")),
-                      loading: () => Center(child: CircularProgressIndicator()),
-                    );
-                  },
-                ),
+                    ),
+                  ),
+
+                ],
               ),
-              Consumer(builder: (context, ref, child) {
+              Positioned(
+                bottom: 10,
+                right: 0,
+                left: 0,
+                child: Consumer(builder: (context, ref, child) {
                 final bool displayButton =
-                    ref.watch(displaySpenzaButtonProvider);
+                ref.watch(displaySpenzaButtonProvider);
                 return displayButton
                     ? buildMaterialButton(context)
                     : Container();
-              }),
+              }),)
             ],
           ),
         ),
@@ -340,8 +373,8 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
     );
   }
 
-  MaterialButton buildMaterialButton(BuildContext context) {
-    return MaterialButton(
+  Widget buildMaterialButton(BuildContext context) {
+    return /*MaterialButton(
       onPressed: () async {
         final bool? isSuccess = await ref
             .read(userProductListProvider.notifier)
@@ -372,6 +405,62 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
           ),
         ],
       ),
-    );
+    );*/
+      GestureDetector(
+        onTap: () async {
+          final bool? isSuccess = await ref
+              .read(userProductListProvider.notifier)
+              .saveUserProductListToServer(context: context);
+
+          if (isSuccess ?? false)
+            context.pushNamed(RouteManager.storeRankingScreen);
+        },
+        child: Container(
+          height: 40,
+          decoration: BoxDecoration(
+            color: ColorUtils.colorPrimary,
+            borderRadius: BorderRadius.all(Radius.circular(10),
+            ),
+            border: Border.all(
+              color: ColorUtils.colorPrimary
+            ),
+          ),
+          margin: EdgeInsets.only(bottom: 16, left: 16, right: 16),
+          child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  flex: 8,
+                  child: /*Image.asset(
+                    'spenza_no_bg.png'.assetImageUrl,
+                    fit: BoxFit.contain,
+                  ),*/
+                  Text("Spenza",
+                  style: TextStyle(fontWeight: FontWeight.w800, fontFamily: GoogleFonts.calistoga().fontFamily, color: Colors.white, fontSize: 25),
+                  textAlign: TextAlign.center,)
+                ),
+               /* Expanded(
+                  flex: 1,
+                  child: Image.asset(
+                    'app_icon_spenza.png'.assetImageUrl,
+                    fit: BoxFit.contain,
+                  ),
+                ),*/
+                Expanded(
+                  flex: 1,
+                  child: Image.asset(
+                    'app_icon_spenza.png'.assetImageUrl,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+
+
+
+
+
+            ],
+          ),
+        ),
+      );
   }
 }

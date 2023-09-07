@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import '../../../utils/color_utils.dart';
 
 class ImageTextCard extends StatelessWidget {
   final String imageUrl;
@@ -12,40 +15,45 @@ class ImageTextCard extends StatelessWidget {
     required this.onTap,
   });
 
+
   @override
   Widget build(BuildContext context) {
+    final robotoFont = GoogleFonts.roboto().fontFamily;
     return GestureDetector(
       onTap: onTap,
-      child: SizedBox(
-        width: 150,
-        child: Card(
-          elevation: 0,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Column(
-                children: [
-                  CachedNetworkImage(
+      child: Container(
+        padding: EdgeInsets.all(4.0),
+        width: 120,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Column(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: CachedNetworkImage(
                     imageUrl: imageUrl,
                     fit: BoxFit.cover,
-                    width: 130,
-                    height: 130,
+                    width: 110,
+                    height: 110,
                   ),
-                ],
-              ),
-              Text(
-                title,
-                style: const TextStyle(
-                  decoration: TextDecoration.none,
-                  color: Color(0xFF0CA9EA),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
                 ),
-                textAlign: TextAlign.center,
+              ],
+            ),
+            SizedBox(height: 10),
+            Text(
+              title,
+              style:  TextStyle(
+                fontFamily: robotoFont,
+                decoration: TextDecoration.none,
+                color: ColorUtils.primaryText,
+                fontWeight: FontWeight.normal,
+                fontSize: 16,
               ),
+              textAlign: TextAlign.center,
+            ),
 
-            ],
-          ),
+          ],
         ),
       ),
     );
