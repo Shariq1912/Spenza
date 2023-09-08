@@ -5,15 +5,9 @@ import 'package:flutter/material.dart';
 class ColorUtils {
   static const Color colorWhite = Color(0xFFFFFFFF);
   static const Color colorPrimary = Color(0xFF0DA9E6);
-  static const Color colorSecondary = Color(0xFF94d500);
-  static const Color colorError = Color(0xFFff5963);
-  static const Color colorSurface = Color(0xFFe5e7e8);
-
-  static const Color colorPrimaryText = Color(0xFF323e48);
-  static const Color colorSecondaryText = Color(0xFF7b868c);
-
   static const Color lightGrey = Color(0xFFf8f8f8);
   static const Color dashbaordTvColor = Color(0xFF444444);
+  static const Color primaryText = Color(0xFF323E48);
 
   static MaterialColor convertColorIntoMaterialColor(Color color) {
     Map<int, Color> colorMap = {

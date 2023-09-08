@@ -32,61 +32,67 @@ class _BottomNavigationWidgetState
   Widget build(BuildContext context) {
     final position = ref.watch(selectedIndexProvider);
 
-    return BottomNavigationBar(
-      currentIndex: position,
-      onTap: (value) => _onTap(value),
-      selectedItemColor: ColorUtils.colorPrimary,
-      type: BottomNavigationBarType.fixed,
-      unselectedItemColor: Colors.black,
-      selectedLabelStyle: const TextStyle(
-        color: ColorUtils.colorPrimary,
-        fontSize: 14,
-        fontWeight: FontWeight.w700,
-      ),
-      unselectedLabelStyle: const TextStyle(
-        color: Colors.black,
-        fontSize: 12,
-        fontWeight: FontWeight.bold,
-      ),
-      items: customBottomNavItems.asMap().entries.map((entry) {
-        final index = entry.key;
-        final item = entry.value;
+    return Container(
+      decoration: BoxDecoration(
+          border: Border(top: BorderSide(color: Colors.grey, width: 1.0))),
+      child: BottomNavigationBar(
+        elevation: 20,
+        currentIndex: position,
+        onTap: (value) => _onTap(value),
+        selectedItemColor: ColorUtils.colorPrimary,
+        type: BottomNavigationBarType.fixed,
+        unselectedItemColor: Colors.black,
+        selectedLabelStyle: const TextStyle(
+          color: ColorUtils.colorPrimary,
+          fontSize: 14,
+          fontWeight: FontWeight.w700,
+        ),
+        unselectedLabelStyle: const TextStyle(
+          color: Colors.black,
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+        ),
+        items: customBottomNavItems.asMap().entries.map((entry) {
+          final index = entry.key;
+          final item = entry.value;
 
-        if (item.iconAsset is String) {
-          // If iconAsset is a String, assume it's an SVG asset
+          if (item.iconAsset is String) {
+            // If iconAsset is a String, assume it's an SVG asset
 
-          Color color = Colors.grey;
-          if (index == position) {
-            color = ColorUtils.colorPrimary;
-          }
+            Color color = Colors.black;
+            if (index == position) {
+              color = ColorUtils.colorPrimary;
+            }
 
-          return BottomNavigationBarItem(
-            icon: Container(
-              height: 20,
-              width: 20,
-              child: SvgPicture.asset(
-                item.iconAsset.toString().assetSvgIconUrl, // Use the SVG asset path
-                colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+            return BottomNavigationBarItem(
+              icon: Container(
+
+                height: 20,
+                width: 20,
+                child: SvgPicture.asset(
+                  item.iconAsset.toString().assetSvgIconUrl, // Use the SVG asset path
+                  colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+                ),
               ),
-            ),
-            label: item.label,
-          );
-        } else if (item.iconAsset is IconData) {
-          // If iconAsset is IconData, use it as-is
-          return BottomNavigationBarItem(
-            icon: Icon(
-              item.iconAsset, // Use the IconData
-            ),
-            label: item.label,
-          );
-        } else {
-          // Handle other cases if needed
-          return BottomNavigationBarItem(
-            icon: Icon(Icons.error), // Placeholder icon for unknown cases
-            label: 'Unknown',
-          );
-        }
-      }).toList(),
+              label: item.label,
+            );
+          } else if (item.iconAsset is IconData) {
+            // If iconAsset is IconData, use it as-is
+            return BottomNavigationBarItem(
+              icon: Icon(
+                item.iconAsset, // Use the IconData
+              ),
+              label: item.label,
+            );
+          } else {
+            // Handle other cases if needed
+            return BottomNavigationBarItem(
+              icon: Icon(Icons.error), // Placeholder icon for unknown cases
+              label: 'Unknown',
+            );
+          }
+        }).toList(),
+      ),
     );
   }
 
@@ -100,26 +106,20 @@ class _BottomNavigationWidgetState
 
     switch (index) {
       case 0:
-        context.goNamed(RouteManager.homeScreen);
+        context.pushNamed(RouteManager.homeScreen);
         break;
 
-      // case 1:
-      //   context.goNamed(RouteManager.storeScreenBottomPath);
-      //   break;
-
       case 1:
-        context.goNamed(RouteManager.myListScreenBottomPath);
+        context.pushNamed(RouteManager.myListScreenBottomPath);
         break;
 
       case 2:
-        context.goNamed(RouteManager.receiptListScreenBottomPath);
+        context.pushNamed(RouteManager.receiptListScreenBottomPath);
         break;
-      /*case 4:
-        context.goNamed(RouteManager.displayReceiptScreen);
-        break;*/
+
 
       case 3:
-        context.goNamed(RouteManager.profileScreenBottomPath);
+        context.pushNamed(RouteManager.profileScreenBottomPath);
         break;
       default:
     }

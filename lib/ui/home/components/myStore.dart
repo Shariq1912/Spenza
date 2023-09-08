@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/my_store/data/all_store.dart';
 
+import '../../../utils/color_utils.dart';
 import 'image_text_card.dart';
 
 class MyStores extends StatelessWidget {
@@ -17,7 +19,8 @@ class MyStores extends StatelessWidget {
     required this.poppinsFont,
     required this.onAllStoreClicked,
   });
-
+  final arialFont = GoogleFonts.openSans().fontFamily;
+  final poppinFont = GoogleFonts.poppins().fontFamily;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -34,10 +37,10 @@ class MyStores extends StatelessWidget {
                   title,
                   style: TextStyle(
                     decoration: TextDecoration.none,
-                    color: Color(0xFF0CA9E6),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    fontFamily: poppinsFont.fontFamily,
+                    color: ColorUtils.primaryText,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 18,
+                    fontFamily: poppinFont,
                   ),
                 ),
               ),
@@ -47,14 +50,15 @@ class MyStores extends StatelessWidget {
                   alignment: Alignment.topRight,
                   child: Icon(
                       Icons.arrow_forward_ios,
-                      color: Color(0xFF0CA9E6),
-                      size: 32,
+                      color: ColorUtils.primaryText,
+                      size: 18,
                     ),
                 ),
               ),
             ],
           ),
         ),
+        SizedBox(height: 10),
         Padding(
           padding: const EdgeInsets.only(top: 2),
           child: data.isNotEmpty

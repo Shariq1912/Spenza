@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/helpers/fireStore_pref_mixin.dart';
 import 'package:spenza/router/app_router.dart';
@@ -26,6 +27,10 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen>
     with FirestoreAndPrefsMixin {
+  final arialFont = GoogleFonts.openSans().fontFamily;
+  final poppinsFont = GoogleFonts.poppins().fontFamily;
+  String? postalCode;
+
   @override
   void initState() {
     super.initState();
@@ -35,6 +40,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   _loadStores() async {
+    postalCode = await prefs.then((prefs) => prefs.getPostalCode());
     await ref.read(fetchMyListProvider.notifier).fetchMyListFun();
     ref.read(profileRepositoryProvider.notifier).getUserProfileData();
     await ref.read(homePreloadedListProvider.notifier).fetchPreloadedList();
@@ -56,6 +62,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   Widget build(BuildContext context) {
     final poppinsFont = ref.watch(poppinsFontProvider);
 
+    print("pppp $postalCode");
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: topAppBar(),
@@ -104,6 +111,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   ),
                 ),
               ),
+              Divider(
+                color: Color(0xFFE5E7E8),
+                thickness: 7,
+              ),
 
               /// Pre Loaded List
               Consumer(
@@ -113,18 +124,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   return preloadedProvider.when(
                     data: (data) {
                       return Padding(
-                        padding: EdgeInsets.only(left: 10, right: 10, top: 25),
+                        padding: EdgeInsets.only(left: 10, right: 10, top: 5),
                         child: PreLoadedList(
                           onListTap: (listId, name, photo) {
                             ref
                                 .read(homePreloadedListProvider.notifier)
                                 .redirectUserToListDetailsScreen(
-                                  context: context,
-                                  listId: listId,
-                                  name: name,
-                                  photo: photo,
-                                  ref: ref,
-                                );
+                                    context: context,
+                                    listId: listId,
+                                    name: name,
+                                    photo: photo,
+                                    ref: ref);
                           },
                           data: data,
                           title:
@@ -148,6 +158,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                         Center(child: Text(error.toString())),
                   );
                 },
+              ),
+              Divider(
+                color: Color(0xFFE5E7E8),
+                thickness: 7,
               ),
 
               /// Store List
@@ -195,9 +209,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   AppBar topAppBar() {
+    String? zipcode;
+
     return AppBar(
+      toolbarHeight: 90,
       elevation: 5.0,
-      // surfaceTintColor: Colors.white,
+      surfaceTintColor: Colors.white,
       backgroundColor: ColorUtils.colorPrimary,
       automaticallyImplyLeading: false,
       systemOverlayStyle: SystemUiOverlayStyle(
@@ -220,10 +237,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   child: Image.asset('assets/images/user.png'),
                 ),
                 success: (data) {
+                  zipcode = data.zipCode;
+                  print("zzz $zipcode");
                   if (data.profilePhoto != null &&
                       data.profilePhoto!.isNotEmpty) {
-                    return CircleAvatar(
-                      radius: 40,
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                          left: 10, bottom: 18, top: 18, right: 10),
                       child: ClipOval(
                         child: AspectRatio(
                           aspectRatio: 1.0,
@@ -239,8 +259,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       ),
                     );
                   } else {
-                    return CircleAvatar(
-                      radius: 35,
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                          left: 10, bottom: 18, top: 18, right: 10),
                       child: ClipOval(
                           child: AspectRatio(
                         aspectRatio: 1.0,
@@ -255,16 +276,50 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               );
             },
           )
+
               //),
               ),
         )
       ],
-      title: SizedBox(
-        width: 100,
-        height: 100,
-        child: Image.asset("logo.gif".assetImageUrl),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            //AppLocalizations.of(context)!.,
+            "Start saving time and money",
+            style: TextStyle(
+              fontFamily: poppinsFont,
+              decoration: TextDecoration.none,
+              color: ColorUtils.colorWhite,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Consumer(builder: (context, ref, child) {
+            final profilePro = ref.watch(profileRepositoryProvider);
+            return profilePro.when(() => Container(),
+                loading: () => Container(),
+                error: (error) => Container(),
+                success: (data) {
+                  return Text(
+                    //AppLocalizations.of(context)!.,
+                    "Nearby ${data.zipCode}",
+                    style: TextStyle(
+                      fontFamily: poppinsFont,
+                      decoration: TextDecoration.none,
+                      color: ColorUtils.colorWhite,
+                      fontWeight: FontWeight.normal,
+                      fontSize: 16,
+                    ),
+                  );
+                });
+          }),
+        ],
       ),
-      centerTitle: true,
+      centerTitle: false,
     );
   }
 }

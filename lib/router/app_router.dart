@@ -4,6 +4,7 @@ import 'package:spenza/ui/add_product/add_product_screen.dart';
 import 'package:spenza/ui/dashboard/dashboard_screen.dart';
 import 'package:spenza/ui/favourite_stores/favourite_store_screen.dart';
 import 'package:spenza/ui/home/components/add_list.dart';
+import 'package:spenza/ui/home/components/new_list_dialog.dart';
 import 'package:spenza/ui/home/edit_list_screen.dart';
 import 'package:spenza/ui/home/home_screen.dart';
 import 'package:spenza/ui/location/location_screen.dart';
@@ -261,7 +262,7 @@ class RouteManager {
         name: addNewList,
         path: addNewList,
         builder: (context, state) {
-          return AddItemToList();
+          return NewMyList();
         },
       ),
       GoRoute(
