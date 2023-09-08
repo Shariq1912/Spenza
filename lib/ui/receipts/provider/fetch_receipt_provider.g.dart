@@ -7,7 +7,7 @@ part of 'fetch_receipt_provider.dart';
 // **************************************************************************
 
 String _$fetchReciptProviderHash() =>
-    r'cd05b3e289ab86a9a22a2cfb9d358e3f7aa5c7c6';
+    r'95cca204623289d81296d3aa46761b6add31a9cc';
 
 /// See also [FetchReciptProvider].
 @ProviderFor(FetchReciptProvider)

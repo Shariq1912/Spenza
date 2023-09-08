@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/my_list_details/provider/list_details_provider.dart';
 import 'package:spenza/ui/my_list_details/provider/user_product_list_provider.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
@@ -167,7 +168,7 @@ class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
                 final profilePro = ref.watch(profileRepositoryProvider);
                 return profilePro.when(
                   () => Container(),
-                  loading: () => Center(child: CircularProgressIndicator()),
+                  loading: () => Center(child: SpenzaCircularProgress()),
                   error: (message) => CircleAvatar(
                     radius: 40,
                     child: ClipOval(
@@ -227,7 +228,7 @@ class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
             final storeProvider = ref.watch(fetchMyListProvider);
             return storeProvider.when(
 
-              loading: () => Center(child: CircularProgressIndicator()),
+              loading: () => Center(child: SpenzaCircularProgress()),
               error: (error, stackTrace) {
                 print("errorMrss $error");
                 return Center(child: Text(error.toString()));

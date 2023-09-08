@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/receipts/repo/upload_receipt_repo.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
@@ -105,7 +106,7 @@ class _UploadReceiptState extends ConsumerState<UploadReceipt> {
                               child: Text("Upload"),
                             ),
                         loading: () =>Center(
-                          child: CircularProgressIndicator(),
+                          child: SpenzaCircularProgress(),
                         ),
                       orElse: () => ElevatedButton(
                         onPressed: () async {

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/helpers/popup_menu_mixin.dart';
+import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/preloaded_list_screen/component/preloaded_list_widget.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 import '../../router/app_router.dart';
@@ -143,7 +144,7 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen>
                   final profilePro = ref.watch(profileRepositoryProvider);
                   return profilePro.when(
                     () => Container(),
-                    loading: () => Center(child: CircularProgressIndicator()),
+                    loading: () => Center(child: SpenzaCircularProgress()),
                     error: (message) => ClipOval(
                       child: Image.asset('assets/images/user.png'),
                     ),
@@ -187,7 +188,7 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen>
               final preloadedListProvider =
                   ref.watch(homePreloadedListProvider);
               return preloadedListProvider.when(
-                loading: () => Center(child: CircularProgressIndicator()),
+                loading: () => Center(child: SpenzaCircularProgress()),
                 error: (error, stackTrace) {
                   print("errorMrss $error");
                   return Center(child: Text(error.toString()));

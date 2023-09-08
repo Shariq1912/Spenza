@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/router/app_router.dart';
+import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/favourite_stores/favorite_repository.dart';
 import 'package:spenza/ui/favourite_stores/widgets/custom_searchbar.dart';
 import 'package:spenza/ui/favourite_stores/widgets/favorite_store_list_widget.dart';
@@ -80,7 +81,7 @@ class _FavouriteStoreScreenState extends ConsumerState<FavouriteStoreScreen> {
 
                 return storeProvider.when(
                   () => Container(),
-                  loading: () => Center(child: CircularProgressIndicator()),
+                  loading: () => Center(child: SpenzaCircularProgress()),
                   error: (message) => Center(child: Text(message)),
                   // success: (stores) => Container(),
                   success: (data) {

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/router/app_router.dart';
+import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/favourite_stores/data/favourite_stores.dart';
 import 'package:spenza/ui/matching_store/components/matching_store_card.dart';
 import 'package:spenza/ui/matching_store/provider/store_ranking_provider.dart';
@@ -133,7 +134,7 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
                     .when(
                       data: (data) {
                         if (data == null) {
-                            return Center(child: CircularProgressIndicator());
+                            return Center(child: SpenzaCircularProgress());
                         }
 
                         if (data.storeRef != null) {
@@ -208,7 +209,7 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
                       },
                       error: (error, stackTrace) =>
                           Center(child: Text("$error")),
-                      loading: () => Center(child: CircularProgressIndicator()),
+                      loading: () => Center(child: SpenzaCircularProgress()),
                     ),
               ),
             ),

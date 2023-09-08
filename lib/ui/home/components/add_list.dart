@@ -6,6 +6,7 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/home/data/my_list_model.dart';
 import 'package:spenza/ui/home/provider/save_mylist_provider.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
@@ -128,7 +129,7 @@ class _AddItemToListState extends ConsumerState<AddItemToList> {
                       builder: (context, ref, child) =>
                           ref.watch(saveMyListProvider).maybeWhen(
                             loading: () => Center(
-                              child: CircularProgressIndicator(),
+                              child: SpenzaCircularProgress(),
                             ),
                             orElse: () => ElevatedButton(
                               onPressed: () async {
