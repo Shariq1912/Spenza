@@ -218,8 +218,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       backgroundColor: ColorUtils.colorPrimary,
       automaticallyImplyLeading: false,
       systemOverlayStyle: SystemUiOverlayStyle(
-          // statusBarColor: ColorUtils.colorPrimary
-          ),
+        statusBarColor: ColorUtils.colorPrimary,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.dark,
+      ),
       actions: [
         Padding(
           padding: const EdgeInsets.only(

@@ -62,17 +62,7 @@ class MyListItem extends StatelessWidget {
                 width: 110,
                 height: 110,
               ),
-              Positioned(
-                top: 0,
-                right: 0,
-                child: Container(
-                  child: Icon(
-                    Icons.add,
-                    color: Colors.white,
-                    size: 25.0,
-                  ),
-                ),
-              ),
+
             ],
           ),
           /*placeholder: (context, url) => Stack(

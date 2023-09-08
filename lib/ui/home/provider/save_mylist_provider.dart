@@ -11,6 +11,7 @@ import 'package:spenza/utils/spenza_extensions.dart';
 
 import '../../../utils/fireStore_constants.dart';
 import '../data/my_list_model.dart';
+import 'image_picker_provider.dart';
 
 part 'save_mylist_provider.g.dart';
 
@@ -47,6 +48,7 @@ class SaveMyList extends _$SaveMyList with FirestoreAndPrefsMixin {
 
       state = AsyncValue.data(null);
       context.pop(true);
+      ref.read(imagePickerProvider.notifier).state = null;
       context.push(RouteManager.homeScreen);
 
 

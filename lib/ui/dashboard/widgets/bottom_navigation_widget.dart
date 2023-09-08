@@ -34,7 +34,16 @@ class _BottomNavigationWidgetState
 
     return Container(
       decoration: BoxDecoration(
-          border: Border(top: BorderSide(color: Colors.grey, width: 1.0))),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey,
+            blurRadius: 1,
+          ),
+        ],
+        /*border: Border(
+    top: BorderSide(color: Colors.grey, width: 1.0),
+  ),*/
+      ),
       child: BottomNavigationBar(
         elevation: 20,
         currentIndex: position,

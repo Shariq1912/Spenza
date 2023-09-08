@@ -232,7 +232,6 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                       }
                     },
                   ),
-                  const SizedBox(height: 10),
                   Expanded(
                     // Use a single Expanded widget to wrap the ListView
                     child: Consumer(
@@ -253,10 +252,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                               itemCount: data.length,
                               itemBuilder: (context, index) {
                                 final UserProduct product = data[index];
-                                return Slidable(
-
-                                  key: const ValueKey(0),
-                                  child: UserSelectedProductCard(
+                                return UserSelectedProductCard(
                                     measure: product.measure,
                                     listId: widget.listId,
                                     department: product.department,
@@ -265,25 +261,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                                     priceRange:
                                         "\$${product.minPrice} - \$${product.maxPrice}",
                                     product: product,
-                                  ),
-                                  endActionPane: ActionPane(
-                                    motion: const BehindMotion(),
-                                    dismissible: DismissiblePane(onDismissed: () {}),
-
-
-                                    children:  [
-                                      SlidableAction(
-                                        onPressed: (context){
-                                        },
-                                        backgroundColor: Color(0xFF7B868C),
-                                        foregroundColor: Colors.white,
-                                        icon: Icons.delete,
-                                        label: 'Delete',
-                                      ),
-
-                                    ],
-                                  ),
-                                );
+                                  );
                               },
                             );
                           },
