@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/ui/profile/component/profile_fields_row.dart';
 import 'package:spenza/ui/profile/provider/save_zipcode.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
@@ -203,7 +204,9 @@ class _ProfileCardState extends ConsumerState<EditProfileInformation> {
                     orElse: () => TextButton(
                         onPressed: () async {
                           _saveData();
-
+                          /*final prefs = await SharedPreferences.getInstance();
+                          await
+                            prefs.setString("zipCode", zipCodeController.text);*/
                         },
                         child: Text(
                           "Save",

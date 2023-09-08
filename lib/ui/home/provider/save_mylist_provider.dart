@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:spenza/helpers/fireStore_pref_mixin.dart';
+import 'package:spenza/router/app_router.dart';
+import 'package:spenza/ui/preloaded_list_screen/provider/fetch_mylist_provider.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
 import '../../../utils/fireStore_constants.dart';
@@ -45,6 +47,8 @@ class SaveMyList extends _$SaveMyList with FirestoreAndPrefsMixin {
 
       state = AsyncValue.data(null);
       context.pop(true);
+      context.push(RouteManager.homeScreen);
+
 
     } catch (error,stackTrace) {
       state = AsyncValue.error(error, stackTrace);

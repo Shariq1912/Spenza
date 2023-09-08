@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/ui/home/components/image_text_card.dart';
 
+import '../../../utils/color_utils.dart';
 import '../data/preloaded_list_model.dart';
 
 class PreLoadedList extends ConsumerWidget {
@@ -19,7 +21,9 @@ class PreLoadedList extends ConsumerWidget {
     required this.onAllClicked,
     required this.onListTap,
   });
-
+  final arialFont = GoogleFonts.openSans().fontFamily;
+  final robotoFont = GoogleFonts.roboto().fontFamily;
+  final poppinFont = GoogleFonts.poppins().fontFamily;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
@@ -35,11 +39,11 @@ class PreLoadedList extends ConsumerWidget {
                 child: Text(
                   title,
                   style: TextStyle(
-                    fontFamily: poppinsFont.fontFamily,
+                    fontFamily: poppinFont,
                     decoration: TextDecoration.none,
-                    color: Color(0xFF0CA9E6),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
+                    color: ColorUtils.primaryText,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 18,
                   ),
                 ),
               ),
@@ -49,16 +53,18 @@ class PreLoadedList extends ConsumerWidget {
                   alignment: Alignment.topRight,
                   child: Icon(
                       Icons.arrow_forward_ios,
-                      color: Color(0xFF0CA9E6),
-                      size: 32,
+                      color:ColorUtils.primaryText,
+                      size: 18,
                     ),
                 ),
               ),
             ],
           ),
         ),
-        SizedBox(
-          height: 200,
+
+        Container(
+          color: ColorUtils.colorWhite,
+          height: 180,
           child: Padding(
             padding: const EdgeInsets.only(top: 10),
             child: data.isNotEmpty
