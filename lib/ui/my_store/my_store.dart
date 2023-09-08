@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/router/app_router.dart';
+import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/my_store/data/all_store.dart';
 import 'package:spenza/ui/my_store/my_store_provider.dart';
 import 'package:spenza/ui/my_store/widget/my_store_list_widget.dart';
@@ -73,7 +74,7 @@ class _StoresState extends ConsumerState<AllStoresScreen> {
                   final profilePro = ref.watch(profileRepositoryProvider);
                   return profilePro.when(
                         () => Container(),
-                    loading: () => Center(child: CircularProgressIndicator()),
+                    loading: () => Center(child: SpenzaCircularProgress()),
                     error: (message) => CircleAvatar(
                       radius: 40,
                       child: ClipOval(
@@ -132,7 +133,7 @@ class _StoresState extends ConsumerState<AllStoresScreen> {
             final storeProvider = ref.watch(allStoreProvider);
             return storeProvider.when(
               () => Container(),
-              loading: () => Center(child: CircularProgressIndicator()),
+              loading: () => Center(child: SpenzaCircularProgress()),
               error: (message) {
                 print("errorMrss $message");
                 return Center(child: Text(message));

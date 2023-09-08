@@ -23,6 +23,7 @@ mixin _$Users {
   String get uid => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get zipCode => throw _privateConstructorUsedError;
+  String get profilePhoto => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -35,7 +36,12 @@ abstract class $UsersCopyWith<$Res> {
   factory $UsersCopyWith(Users value, $Res Function(Users) then) =
       _$UsersCopyWithImpl<$Res, Users>;
   @useResult
-  $Res call({String uid, String name, String zipCode, String email});
+  $Res call(
+      {String uid,
+      String name,
+      String zipCode,
+      String profilePhoto,
+      String email});
 }
 
 /// @nodoc
@@ -54,6 +60,7 @@ class _$UsersCopyWithImpl<$Res, $Val extends Users>
     Object? uid = null,
     Object? name = null,
     Object? zipCode = null,
+    Object? profilePhoto = null,
     Object? email = null,
   }) {
     return _then(_value.copyWith(
@@ -69,6 +76,10 @@ class _$UsersCopyWithImpl<$Res, $Val extends Users>
           ? _value.zipCode
           : zipCode // ignore: cast_nullable_to_non_nullable
               as String,
+      profilePhoto: null == profilePhoto
+          ? _value.profilePhoto
+          : profilePhoto // ignore: cast_nullable_to_non_nullable
+              as String,
       email: null == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
@@ -83,7 +94,12 @@ abstract class _$$_UsersCopyWith<$Res> implements $UsersCopyWith<$Res> {
       __$$_UsersCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String uid, String name, String zipCode, String email});
+  $Res call(
+      {String uid,
+      String name,
+      String zipCode,
+      String profilePhoto,
+      String email});
 }
 
 /// @nodoc
@@ -98,6 +114,7 @@ class __$$_UsersCopyWithImpl<$Res> extends _$UsersCopyWithImpl<$Res, _$_Users>
     Object? uid = null,
     Object? name = null,
     Object? zipCode = null,
+    Object? profilePhoto = null,
     Object? email = null,
   }) {
     return _then(_$_Users(
@@ -112,6 +129,10 @@ class __$$_UsersCopyWithImpl<$Res> extends _$UsersCopyWithImpl<$Res, _$_Users>
       zipCode: null == zipCode
           ? _value.zipCode
           : zipCode // ignore: cast_nullable_to_non_nullable
+              as String,
+      profilePhoto: null == profilePhoto
+          ? _value.profilePhoto
+          : profilePhoto // ignore: cast_nullable_to_non_nullable
               as String,
       email: null == email
           ? _value.email
@@ -128,6 +149,8 @@ class _$_Users with DiagnosticableTreeMixin implements _Users {
       {required this.uid,
       this.name = "",
       this.zipCode = "",
+      this.profilePhoto =
+          "https://firebasestorage.googleapis.com/v0/b/spenzabeta-74e04.appspot.com/o/images%2Fuser.png?alt=media&token=dc1f756f-b9a7-44b2-9c1a-d98ae5376a85",
       required this.email});
 
   factory _$_Users.fromJson(Map<String, dynamic> json) =>
@@ -142,11 +165,14 @@ class _$_Users with DiagnosticableTreeMixin implements _Users {
   @JsonKey()
   final String zipCode;
   @override
+  @JsonKey()
+  final String profilePhoto;
+  @override
   final String email;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Users(uid: $uid, name: $name, zipCode: $zipCode, email: $email)';
+    return 'Users(uid: $uid, name: $name, zipCode: $zipCode, profilePhoto: $profilePhoto, email: $email)';
   }
 
   @override
@@ -157,6 +183,7 @@ class _$_Users with DiagnosticableTreeMixin implements _Users {
       ..add(DiagnosticsProperty('uid', uid))
       ..add(DiagnosticsProperty('name', name))
       ..add(DiagnosticsProperty('zipCode', zipCode))
+      ..add(DiagnosticsProperty('profilePhoto', profilePhoto))
       ..add(DiagnosticsProperty('email', email));
   }
 
@@ -168,12 +195,15 @@ class _$_Users with DiagnosticableTreeMixin implements _Users {
             (identical(other.uid, uid) || other.uid == uid) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.zipCode, zipCode) || other.zipCode == zipCode) &&
+            (identical(other.profilePhoto, profilePhoto) ||
+                other.profilePhoto == profilePhoto) &&
             (identical(other.email, email) || other.email == email));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, uid, name, zipCode, email);
+  int get hashCode =>
+      Object.hash(runtimeType, uid, name, zipCode, profilePhoto, email);
 
   @JsonKey(ignore: true)
   @override
@@ -194,6 +224,7 @@ abstract class _Users implements Users {
       {required final String uid,
       final String name,
       final String zipCode,
+      final String profilePhoto,
       required final String email}) = _$_Users;
 
   factory _Users.fromJson(Map<String, dynamic> json) = _$_Users.fromJson;
@@ -204,6 +235,8 @@ abstract class _Users implements Users {
   String get name;
   @override
   String get zipCode;
+  @override
+  String get profilePhoto;
   @override
   String get email;
   @override

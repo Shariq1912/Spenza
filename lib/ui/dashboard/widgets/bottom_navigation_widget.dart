@@ -21,10 +21,12 @@ class _BottomNavigationWidgetState
   final List<CustomBottomNavItem> customBottomNavItems = [
     CustomBottomNavItem.fromSvgAsset(iconAsset: 'home_icon.svg', label: 'Home'),
     // CustomBottomNavItem.fromSvgAsset(iconAsset: 'store_icon.svg', label: 'Stores'),
-    CustomBottomNavItem.fromSvgAsset(iconAsset: 'my_list_icon.svg', label: 'My Lists'),
-    CustomBottomNavItem.fromSvgAsset(iconAsset: 'receipts_icon.svg', label: 'Receipts'),
+    CustomBottomNavItem.fromSvgAsset(
+        iconAsset: 'my_list_icon.svg', label: 'My Lists'),
+    CustomBottomNavItem.fromSvgAsset(
+        iconAsset: 'receipts_icon.svg', label: 'Receipts'),
     // CustomBottomNavItem.fromSvgAsset(iconAsset: 'preloaded_list_icon.svg', label: 'Preloaded'),
-    CustomBottomNavItem(iconAsset: Icons.account_circle, label: 'Account'),
+    CustomBottomNavItem(iconAsset: 'account_icon.svg', label: 'Account'),
     // Add more items as needed
   ];
 
@@ -41,11 +43,10 @@ class _BottomNavigationWidgetState
           ),
         ],
         /*border: Border(
-    top: BorderSide(color: Colors.grey, width: 1.0),
-  ),*/
+          top: BorderSide(color: Colors.grey, width: 1.0),
+        ),*/
       ),
       child: BottomNavigationBar(
-        elevation: 20,
         currentIndex: position,
         onTap: (value) => _onTap(value),
         selectedItemColor: ColorUtils.colorPrimary,
@@ -53,13 +54,13 @@ class _BottomNavigationWidgetState
         unselectedItemColor: Colors.black,
         selectedLabelStyle: const TextStyle(
           color: ColorUtils.colorPrimary,
-          fontSize: 14,
+          fontSize: 11,
           fontWeight: FontWeight.w700,
         ),
         unselectedLabelStyle: const TextStyle(
-          color: Colors.black,
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
+          color:ColorUtils.bottomNavIconAndTextColor,
+          fontSize: 11,
+          fontWeight: FontWeight.w500,
         ),
         items: customBottomNavItems.asMap().entries.map((entry) {
           final index = entry.key;
@@ -68,32 +69,25 @@ class _BottomNavigationWidgetState
           if (item.iconAsset is String) {
             // If iconAsset is a String, assume it's an SVG asset
 
-            Color color = Colors.black;
+            Color color = ColorUtils.bottomNavIconAndTextColor;
             if (index == position) {
               color = ColorUtils.colorPrimary;
             }
 
             return BottomNavigationBarItem(
               icon: Container(
-
                 height: 20,
                 width: 20,
                 child: SvgPicture.asset(
-                  item.iconAsset.toString().assetSvgIconUrl, // Use the SVG asset path
+                  item.iconAsset
+                      .toString()
+                      .assetSvgIconUrl, // Use the SVG asset path
                   colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
                 ),
               ),
               label: item.label,
             );
-          } else if (item.iconAsset is IconData) {
-            // If iconAsset is IconData, use it as-is
-            return BottomNavigationBarItem(
-              icon: Icon(
-                item.iconAsset, // Use the IconData
-              ),
-              label: item.label,
-            );
-          } else {
+          }  else {
             // Handle other cases if needed
             return BottomNavigationBarItem(
               icon: Icon(Icons.error), // Placeholder icon for unknown cases
@@ -115,7 +109,7 @@ class _BottomNavigationWidgetState
 
     switch (index) {
       case 0:
-        context.pushNamed(RouteManager.homeScreen);
+        context.goNamed(RouteManager.homeScreen);
         break;
 
       case 1:
@@ -125,7 +119,6 @@ class _BottomNavigationWidgetState
       case 2:
         context.pushNamed(RouteManager.receiptListScreenBottomPath);
         break;
-
 
       case 3:
         context.pushNamed(RouteManager.profileScreenBottomPath);

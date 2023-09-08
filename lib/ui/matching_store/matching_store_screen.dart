@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/di/app_providers.dart';
+import 'package:spenza/ui/common/home_top_app_bar.dart';
+import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/matching_store/components/matching_store_card.dart';
 import 'package:spenza/ui/matching_store/provider/store_ranking_provider.dart';
 import 'package:spenza/ui/my_list_details/components/custom_app_bar.dart';
@@ -32,138 +34,62 @@ class _MatchingStoreScreenState extends ConsumerState<MatchingStoreScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final poppinsFont = ref.watch(poppinsFontProvider).fontFamily;
+    final poppinsFont = ref.watch(poppinsFontProvider);
 
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        appBar:
-        AppBar(
-          surfaceTintColor: Colors.white,
-          title: Text(
-            "Matching Stores",
-            style: TextStyle(
-              fontFamily: poppinsFont,
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              color: Color(0xFF0CA9E6),
-            ),
-          ),
-          centerTitle: true,
-          leading: IconButton(
-            onPressed: () {
-              context.pop();
-            },
-            icon: Icon(Icons.arrow_back_ios, color: Color(0xFF0CA9E6)),
-          ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(top: 5),
-              child: InkWell(
-                  onTap: () {
-                    //Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SettingScreen()));
-                  },
-                  child: Consumer(
-                    builder: (context, ref, child) {
-                      final profilePro = ref.watch(profileRepositoryProvider);
-                      return profilePro.when(
-                            () => Container(),
-                        loading: () => Center(child: CircularProgressIndicator()),
-                        error: (message) => CircleAvatar(
-                          radius: 40,
-                          child: ClipOval(
-                            child: AspectRatio(
-                              aspectRatio: 1.0,
-                              child: Image.asset(
-                                'user_placeholder.png'.assetImageUrl,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        ),
-                        success: (data) {
-                          if (data.profilePhoto != null && data.profilePhoto!.isNotEmpty) {
-                            return CircleAvatar(
-                              radius: 40,
-                              child: ClipOval(
-                                child: AspectRatio(
-                                  aspectRatio: 1.0,
-                                  child: CachedNetworkImage(
-                                    fit: BoxFit.cover,
-                                    imageUrl: data.profilePhoto!,
-                                    placeholder: (context, url) =>  Image.asset('app_icon_spenza.png'.assetImageUrl),
-                                    errorWidget: (context, url, error) => Image.asset('user_placeholder.png'.assetImageUrl),
-                                  ),
-                                ),
-                              ),
-                            );
-
-                          } else {
-                            return CircleAvatar(
-                              radius: 40,
-                              child: ClipOval(
-                                child: AspectRatio(
-                                  aspectRatio: 1.0,
-                                  child: Image.asset(
-                                    'user_placeholder.png'.assetImageUrl,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                      );
-                    },
-                  )
-              ),
-            ),
-          ],
+        backgroundColor: ColorUtils.colorSurface,
+        appBar: HomeTopAppBar(
+          title: "Choose your best option!",
+          poppinsFont: poppinsFont,
         ),
-        body: Consumer(builder: (context, ref, child) {
-          final result = ref.watch(storeRankingProvider);
+        body: Consumer(
+          builder: (context, ref, child) {
+            final result = ref.watch(storeRankingProvider);
 
-          return result.when(
-            data: (data) {
-              if (data == null) {
-                return Center(child: CircularProgressIndicator());
-              }
-              if (data.isEmpty) {
-                return Center(
-                  child: Text("No stores found!"),
-                );
-              }
-
-              return ListView.builder(
-                itemCount: data.length,
-                itemBuilder: (context, index) {
-                  final MatchingStores store = data[index];
-                  return MatchingStoreCard(
-                    matchingPercentage: store.matchingPercentage,
-                    address: store.address,
-                    imageUrl: store.logo,
-                    title: store.name,
-                    totalPrice: store.totalPrice.toString(),
-                    distance: store.distance,
-                    onClick: () {
-                      ref
-                          .read(storeRankingProvider.notifier)
-                          .redirectUserToStoreDetails(
-                            storeRef: store.storeRef!,
-                            context: context,
-                            total: store.totalPrice,
-                          );
-                    },
+            return result.when(
+              data: (data) {
+                if (data == null) {
+                  return Center(child: SpenzaCircularProgress());
+                }
+                if (data.isEmpty) {
+                  return Center(
+                    child: Text("No stores found!"),
                   );
-                },
-              );
-            },
-            error: (error, stackTrace) => Center(child: Text("$error")),
-            loading: () => Center(child: CircularProgressIndicator()),
-          );
-        }),
+                }
+
+                return ListView.builder(
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    final MatchingStores store = data[index];
+                    return MatchingStoreCard(
+                      matchingPercentage: store.matchingPercentage,
+                      address: store.address,
+                      imageUrl: store.logo,
+                      title: store.name,
+                      totalPrice: store.totalPrice.toString(),
+                      distance: store.distance,
+                      onClick: () {
+                        ref
+                            .read(storeRankingProvider.notifier)
+                            .redirectUserToStoreDetails(
+                              storeRef: store.storeRef!,
+                              context: context,
+                              total: store.totalPrice,
+                            );
+                      },
+                    );
+                  },
+                );
+              },
+              error: (error, stackTrace) => Center(child: Text("$error")),
+              loading: () => Center(child: SpenzaCircularProgress()),
+            );
+          },
+        ),
       ),
     );
   }
@@ -182,3 +108,48 @@ class _MatchingStoreScreenState extends ConsumerState<MatchingStoreScreen> {
               },
             )
           ]*/
+
+/*Consumer(
+          builder: (context, ref, child) {
+            final result = ref.watch(storeRankingProvider);
+
+            return result.when(
+              data: (data) {
+                if (data == null) {
+                  return Center(child: SpenzaCircularProgress());
+                }
+                if (data.isEmpty) {
+                  return Center(
+                    child: Text("No stores found!"),
+                  );
+                }
+
+                return ListView.builder(
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    final MatchingStores store = data[index];
+                    return MatchingStoreCard(
+                      matchingPercentage: store.matchingPercentage,
+                      address: store.address,
+                      imageUrl: store.logo,
+                      title: store.name,
+                      totalPrice: store.totalPrice.toString(),
+                      distance: store.distance,
+                      onClick: () {
+                        ref
+                            .read(storeRankingProvider.notifier)
+                            .redirectUserToStoreDetails(
+                              storeRef: store.storeRef!,
+                              context: context,
+                              total: store.totalPrice,
+                            );
+                      },
+                    );
+                  },
+                );
+              },
+              error: (error, stackTrace) => Center(child: Text("$error")),
+              loading: () => Center(child: SpenzaCircularProgress()),
+            );
+          },
+        )*/

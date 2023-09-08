@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/helpers/fireStore_pref_mixin.dart';
 import 'package:spenza/router/app_router.dart';
+import 'package:spenza/ui/common/home_top_app_bar.dart';
 import 'package:spenza/ui/home/provider/fetch_mylist_provider.dart';
 import 'package:spenza/ui/home/provider/home_preloaded_list.dart';
 import 'package:spenza/ui/home/repo/fetch_favourite_store_repository.dart';
@@ -27,13 +29,14 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen>
     with FirestoreAndPrefsMixin {
-  final arialFont = GoogleFonts.openSans().fontFamily;
-  final poppinsFont = GoogleFonts.poppins().fontFamily;
+  final arialFont = GoogleFonts.openSans();
+  final poppinsFont = GoogleFonts.poppins();
   String? postalCode;
 
   @override
   void initState() {
     super.initState();
+    print("Init called From Home");
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadStores();
     });
@@ -52,6 +55,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void dispose() {
     super.dispose();
+    print("Dispose called From Home");
 
     ref.invalidate(fetchMyListProvider);
     ref.invalidate(fetchFavouriteStoreRepositoryProvider);
@@ -60,12 +64,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    final poppinsFont = ref.watch(poppinsFontProvider);
-
     print("pppp $postalCode");
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: topAppBar(),
+      appBar: HomeTopAppBar(
+        poppinsFont: poppinsFont,
+        title: "Start saving time and money!",
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -287,41 +292,65 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
+            maxLines: 2,
             //AppLocalizations.of(context)!.,
-            "Start saving time and money",
+            "Start saving time and money!",
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
-              fontFamily: poppinsFont,
+              fontFamily: poppinsFont.fontFamily,
               decoration: TextDecoration.none,
               color: ColorUtils.colorWhite,
               fontWeight: FontWeight.bold,
-              fontSize: 20,
+              fontSize: 17,
             ),
           ),
           SizedBox(
             height: 10,
           ),
-          Consumer(builder: (context, ref, child) {
-            final profilePro = ref.watch(profileRepositoryProvider);
-            return profilePro.when(() => Container(),
+          Consumer(
+            builder: (context, ref, child) {
+              final profilePro = ref.watch(profileRepositoryProvider);
+              return profilePro.when(
+                () => Container(),
                 loading: () => Container(),
                 error: (error) => Container(),
                 success: (data) {
-                  return Text(
-                    //AppLocalizations.of(context)!.,
-                    "Nearby ${data.zipCode}",
-                    style: TextStyle(
-                      fontFamily: poppinsFont,
-                      decoration: TextDecoration.none,
-                      color: ColorUtils.colorWhite,
-                      fontWeight: FontWeight.normal,
-                      fontSize: 16,
-                    ),
-                  );
-                });
-          }),
+                  return _buildNearbyText(data.zipCode, 12);
+                },
+              );
+            },
+          ),
         ],
       ),
       centerTitle: false,
+    );
+  }
+
+  Text _buildNearbyText(String zipCode, double fontSize) {
+    return Text.rich(
+      TextSpan(
+        text: "Nearby",
+        style: TextStyle(
+          fontFamily: poppinsFont.fontFamily,
+          decoration: TextDecoration.none,
+          color: ColorUtils.colorWhite,
+          fontWeight: FontWeight.normal,
+          fontSize: fontSize,
+        ),
+        children: [
+          TextSpan(
+            text: " $zipCode",
+            style: TextStyle(
+              fontFamily: poppinsFont.fontFamily,
+              decoration: TextDecoration.none,
+              color: ColorUtils.colorWhite,
+              fontWeight: FontWeight.w700,
+              fontSize: fontSize,
+            ),
+          ),
+        ],
+      ),
+      textAlign: TextAlign.center,
     );
   }
 }

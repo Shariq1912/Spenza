@@ -6,7 +6,7 @@ part of 'fetch_mylist_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fetchMyListHash() => r'adbf7b2ad087c116295105748cb85f20d1c53bc7';
+String _$fetchMyListHash() => r'521f14d8c0f52dd881ae38db588ee62d1cb423a2';
 
 /// See also [FetchMyList].
 @ProviderFor(FetchMyList)

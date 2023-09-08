@@ -1,24 +1,24 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'store_ranking_provider.dart';
+part of 'zipcode_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$storeRankingHash() => r'dccc9f57751795b6279e8a3f166fd5d1b05e14af';
+String _$zipcodeHash() => r'f51b717cefceeb9558eaa7b0315e30697322b076';
 
-/// See also [StoreRanking].
-@ProviderFor(StoreRanking)
-final storeRankingProvider = AutoDisposeAsyncNotifierProvider<StoreRanking,
-    List<MatchingStores>?>.internal(
-  StoreRanking.new,
-  name: r'storeRankingProvider',
+/// See also [Zipcode].
+@ProviderFor(Zipcode)
+final zipcodeProvider =
+    AutoDisposeAsyncNotifierProvider<Zipcode, List<int>>.internal(
+  Zipcode.new,
+  name: r'zipcodeProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$storeRankingHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$zipcodeHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$StoreRanking = AutoDisposeAsyncNotifier<List<MatchingStores>?>;
+typedef _$Zipcode = AutoDisposeAsyncNotifier<List<int>>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

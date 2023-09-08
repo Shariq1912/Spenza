@@ -368,9 +368,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               onPressed: () {
                 // Handle login button press
                 if (!_formKey.currentState!.validate()) {
-                  context.showSnackBar(
+                  /*context.showSnackBar(
                     message: AppLocalizations.of(context)!.loginFormErrors,
-                  );
+                  );*/
+                  return;
                 }
 
                 final loginData = LoginRequest(
