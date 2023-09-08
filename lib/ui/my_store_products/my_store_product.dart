@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/ui/add_product/components/product_card_widget.dart';
 import 'package:spenza/ui/add_product/components/selectable_chip.dart';
 import 'package:spenza/ui/add_product/provider/selected_department_provider.dart';
+import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/my_list_details/components/searchbox_widget.dart';
 import 'package:spenza/ui/my_list_details/provider/user_product_list_provider.dart';
 import 'package:spenza/ui/my_store_products/data/products.dart';
@@ -220,7 +221,7 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct>
                 return data.when(
                   data: (data) {
                     if (data == null) {
-                      return Center(child: CircularProgressIndicator());
+                      return Center(child: SpenzaCircularProgress());
                     }
                     if (data.isEmpty) {
                       return Center(
@@ -289,7 +290,7 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct>
                     );
                   },
                   error: (error, stackTrace) => Center(child: Text("$error")),
-                  loading: () => Center(child: CircularProgressIndicator()),
+                  loading: () => Center(child: SpenzaCircularProgress()),
                 );
               }),
             ),
@@ -307,7 +308,7 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct>
             final productProvider = ref.watch(productForStoreProvider);
             final departmentProvider = ref.watch(departmentRepositoryProvider);
             return productProvider.when(
-              loading: () => Center(child: CircularProgressIndicator()),
+              loading: () => Center(child: SpenzaCircularProgress()),
               error: (error, stackTrace) {
                 print("errorMrsss $error");
                 return Center(child: Text(error.toString()));
@@ -317,7 +318,7 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct>
               return MyProductListWidget(stores: data, onButtonClicked: (Product product) {});
                 return departmentProvider.when(
                   () => Container(),
-                  loading: () => Center(child: CircularProgressIndicator()),
+                  loading: () => Center(child: SpenzaCircularProgress()),
                   error: (message) {
                     print("errorMrss $message");
                     return Center(child: Text(message));

@@ -5,6 +5,7 @@ import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/helpers/popup_menu_mixin.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/add_product/data/user_product.dart';
+import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/my_list_details/components/custom_app_bar.dart';
 import 'package:spenza/ui/my_list_details/components/searchbox_widget.dart';
 import 'package:spenza/ui/my_list_details/components/user_selected_product_widget.dart';
@@ -143,12 +144,12 @@ class _PreLoadedListDetailsScreenState
                     final result = ref.watch(userProductListProvider);
 
                     return result.when(
-                      loading: () => Center(child: CircularProgressIndicator()),
+                      loading: () => Center(child: SpenzaCircularProgress()),
 
                       data: (data) {
                         if (data == null) {
                           return Center(
-                              child: CircularProgressIndicator()
+                              child: SpenzaCircularProgress()
                           );
                         }else if(data.isEmpty){
                           return Center(

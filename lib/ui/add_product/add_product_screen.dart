@@ -7,6 +7,7 @@ import 'package:spenza/ui/add_product/components/product_card_widget.dart';
 import 'package:spenza/ui/add_product/components/selectable_chip.dart';
 import 'package:spenza/ui/add_product/data/product.dart';
 import 'package:spenza/ui/add_product/provider/add_product_provider.dart';
+import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/my_list_details/components/custom_app_bar.dart';
 import 'package:spenza/ui/my_list_details/components/searchbox_widget.dart';
 import 'package:spenza/utils/color_utils.dart';
@@ -165,7 +166,7 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                 return data.when(
                   data: (data) {
                     if (data == null) {
-                      return Center(child: CircularProgressIndicator());
+                      return Center(child: SpenzaCircularProgress());
                     }
                     if (data.isEmpty) {
                       return Center(
@@ -206,7 +207,7 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                     );
                   },
                   error: (error, stackTrace) => Center(child: Text("$error")),
-                  loading: () => Center(child: CircularProgressIndicator()),
+                  loading: () => Center(child: SpenzaCircularProgress()),
                 );
               }),
             ),
