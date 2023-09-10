@@ -17,6 +17,7 @@ import 'package:spenza/utils/spenza_extensions.dart';
 import '../profile/profile_repository.dart';
 import 'components/myStore.dart';
 import 'components/preLoadedList.dart';
+import 'components/shimmer_items/home_shimmer_list_view.dart';
 import 'components/topStrip2.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -44,12 +45,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   _loadStores() async {
     postalCode = await prefs.then((prefs) => prefs.getPostalCode());
-    await ref.read(fetchMyListProvider.notifier).fetchMyListFun();
-    ref.read(profileRepositoryProvider.notifier).getUserProfileData();
-    await ref.read(homePreloadedListProvider.notifier).fetchPreloadedList();
-    await ref
-        .read(fetchFavouriteStoreRepositoryProvider.notifier)
-        .fetchFavStores();
+
+    Future.wait([
+      ref.read(profileRepositoryProvider.notifier).getUserProfileData(),
+      ref.read(fetchMyListProvider.notifier).fetchMyListFun(),
+      ref.read(homePreloadedListProvider.notifier).fetchPreloadedList(),
+      ref.read(fetchFavouriteStoreRepositoryProvider.notifier).fetchFavStores()
+    ]);
   }
 
   @override
@@ -110,8 +112,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                 },
                               ),
                               error: (error, stackTrace) => Text('$error'),
-                              loading: () =>
-                                  Center(child: CircularProgressIndicator()),
+                              loading: () => HomeShimmerListView(),
                             ),
                   ),
                 ),
@@ -158,7 +159,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                         ),
                       );
                     },
-                    loading: () => Center(child: CircularProgressIndicator()),
+                    loading: () => HomeShimmerListView(),
                     error: (error, stackTrace) =>
                         Center(child: Text(error.toString())),
                   );
@@ -176,7 +177,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       ref.watch(fetchFavouriteStoreRepositoryProvider);
                   return storeProvider.when(
                     () => Container(),
-                    loading: () => Center(child: CircularProgressIndicator()),
+                    loading: () => HomeShimmerListView(),
                     error: (message) => Center(child: Text(message)),
                     success: (data) {
                       return Padding(
