@@ -20,7 +20,7 @@ import 'package:spenza/ui/profile/profile_screen.dart';
 import 'package:spenza/ui/receipts/display_receipt.dart';
 import 'package:spenza/ui/receipts/upload_receipt.dart';
 import 'package:spenza/ui/selected_store/selected_store_screen.dart';
-import 'package:spenza/ui/settings/setting_Screen.dart';
+import 'package:spenza/ui/settings/setting_screen.dart';
 import 'package:spenza/ui/sign_up/register_screen.dart';
 import 'package:spenza/ui/splash/splash_screen.dart';
 import 'package:spenza/ui/webview_screen/webview_screen.dart';
@@ -62,7 +62,7 @@ class RouteManager {
 
   static const bottomNavPath = 'bottom_navigation';
   static const storeScreenBottomPath = '/storeScreenBottomPath';
-  static const profileScreenBottomPath = '/profileScreenBottomPath';
+  static const settingsScreenBottomPath = '/settingsScreenBottomPath';
   static const myListScreenBottomPath = '/myListScreenBottomPath';
   static const preloadedListScreenBottomPath = '/preloadedListScreenBottomPath';
   static const receiptListScreenBottomPath = '/receiptListScreenBottomPath';
@@ -72,7 +72,79 @@ class RouteManager {
     debugLogDiagnostics: true,
     navigatorKey: _rootNavigator,
     routes: [
-      ShellRoute(
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return DashboardScreen(
+              key: state.pageKey, navigationShell: navigationShell);
+        },
+        branches: [
+          StatefulShellBranch(
+            navigatorKey: GlobalKey(debugLabel: "home"),
+            routes: [
+              GoRoute(
+                name: homeScreen,
+                path: "/shell/home",
+                pageBuilder: (context, state) {
+                  return NoTransitionPage(
+                    child: HomeScreen(
+                      key: state.pageKey,
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            navigatorKey: GlobalKey(debugLabel: "my_list"),
+            routes: [
+              GoRoute(
+                name: myListScreenBottomPath,
+                path: "/shell/my_list",
+                pageBuilder: (context, state) {
+                  return NoTransitionPage(
+                    child: MyListScreen(
+                      key: state.pageKey,
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            navigatorKey: GlobalKey(debugLabel: "receipts"),
+            routes: [
+              GoRoute(
+                name: receiptListScreenBottomPath,
+                path: "/shell/receipts",
+                pageBuilder: (context, state) {
+                  final String path = state.queryParameters['list_ref'] ?? "";
+                  return NoTransitionPage(
+                    child: DisplayReceiptScreen(key: state.pageKey, path: path),
+                  );
+                },
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            navigatorKey: GlobalKey(debugLabel: "settings"),
+            routes: [
+              GoRoute(
+                name: settingsScreenBottomPath,
+                path: "/shell/settings",
+                pageBuilder: (context, state) {
+                  return NoTransitionPage(
+                    child: SettingScreen(
+                      key: state.pageKey,
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+
+      /*ShellRoute(
         navigatorKey: _shellNavigator,
         builder: (context, state, child) =>
             DashboardScreen(key: state.pageKey, child: child),
@@ -82,12 +154,9 @@ class RouteManager {
             path: "/receiptListScreenBottomPath",
             parentNavigatorKey: _shellNavigator,
             pageBuilder: (context, state) {
-              final String path =
-                  state.queryParameters['list_ref'] ?? "";
+              final String path = state.queryParameters['list_ref'] ?? "";
               return NoTransitionPage(
-                child: DisplayReceiptScreen(
-                    key: state.pageKey,path: path
-                ),
+                child: DisplayReceiptScreen(key: state.pageKey, path: path),
               );
             },
           ),
@@ -152,7 +221,7 @@ class RouteManager {
             },
           ),
         ],
-      ),
+      ),*/
 
       /*GoRoute(
         name: homeScreen,
@@ -217,8 +286,8 @@ class RouteManager {
           final String path = state.queryParameters['path'] ?? "";
           //return MyListDetailsScreen(listId: listId);
 
-            return MyListDetailsScreen(listId: listId, name:name, photo:photo, path: path);
-
+          return MyListDetailsScreen(
+              listId: listId, name: name, photo: photo, path: path);
         },
       ),
       GoRoute(
@@ -226,10 +295,12 @@ class RouteManager {
         name: preLoadedListDetailScreen,
         path: preLoadedListDetailScreen,
         builder: (context, state) {
-          final String listId = state.queryParameters['list_id'] ?? "4NlYnhmchdlu528Gw2yK";
+          final String listId =
+              state.queryParameters['list_id'] ?? "4NlYnhmchdlu528Gw2yK";
           final String name = state.queryParameters['name'] ?? "preloaded";
           final String photo = state.queryParameters['photo'] ?? "";
-          return PreLoadedListDetailsScreen(listId: listId,name:name,photo:photo);
+          return PreLoadedListDetailsScreen(
+              listId: listId, name: name, photo: photo);
         },
       ),
       GoRoute(
@@ -308,7 +379,9 @@ class RouteManager {
         name: profileScreen,
         path: profileScreen,
         builder: (context, state) {
-          return ProfileScreen( key: state.pageKey,);
+          return ProfileScreen(
+            key: state.pageKey,
+          );
         },
       ),
       GoRoute(
@@ -316,8 +389,7 @@ class RouteManager {
         name: uploadReceiptScreen,
         path: uploadReceiptScreen,
         builder: (context, state) {
-          final String path =
-              state.queryParameters['list_id'] ?? "";
+          final String path = state.queryParameters['list_id'] ?? "";
           //return MyListDetailsScreen(listId: listId);
           if (path != "") {
             print("Notequal $path");
@@ -333,9 +405,11 @@ class RouteManager {
         name: displayReceiptScreen,
         path: displayReceiptScreen,
         builder: (context, state) {
-          final String path =
-              state.queryParameters['list_ref'] ?? "";
-            return DisplayReceiptScreen(key: state.pageKey,path: path,);
+          final String path = state.queryParameters['list_ref'] ?? "";
+          return DisplayReceiptScreen(
+            key: state.pageKey,
+            path: path,
+          );
         },
       ),
       GoRoute(
@@ -359,7 +433,9 @@ class RouteManager {
         name: myListScreen,
         path: myListScreen,
         builder: (context, state) {
-          return MyListScreen( key: state.pageKey,);
+          return MyListScreen(
+            key: state.pageKey,
+          );
         },
       ),
       GoRoute(

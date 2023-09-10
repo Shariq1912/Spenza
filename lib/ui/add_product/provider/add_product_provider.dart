@@ -42,7 +42,8 @@ class AddProduct extends _$AddProduct
       state = AsyncValue.loading();
       final userId = await prefs.then((prefs) => prefs.getUserId());
 
-      GeoPoint? location = await getCurrentLocation();
+      // GeoPoint? location = await getCurrentLocation();
+      GeoPoint? location;
 
       if (location == null) {
         location = await getLocationByZipCode(
@@ -168,16 +169,17 @@ class AddProduct extends _$AddProduct
       state = AsyncValue.loading();
       final userId = await prefs.then((prefs) => prefs.getUserId());
 
-      GeoPoint? location = await getCurrentLocation();
+      // GeoPoint? location = await getCurrentLocation();
+      GeoPoint? location;
 
-      if (location == null) {
-        location = await getLocationByZipCode(
-          await getUserZipCodeFromDB(
-            fireStore,
-            userId,
-          ), // Get Zip code from Shared Pref.
-        );
-      }
+      location = await getLocationByZipCode(
+        await getUserZipCodeFromDB(
+          fireStore,
+          userId,
+        ), // Get Zip code from Shared Pref.
+      );
+
+      print("${location.latitude}");
 
       final nearbyStores = await getNearbyStores(
         firestore: fireStore,
