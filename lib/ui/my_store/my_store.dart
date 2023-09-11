@@ -74,7 +74,7 @@ class _StoresState extends ConsumerState<AllStoresScreen> {
                   final profilePro = ref.watch(profileRepositoryProvider);
                   return profilePro.when(
                         () => Container(),
-                    loading: () => Center(child: SpenzaCircularProgress()),
+                    loading: () => Container(),
                     error: (message) => CircleAvatar(
                       radius: 40,
                       child: ClipOval(
