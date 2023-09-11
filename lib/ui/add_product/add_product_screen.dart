@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/ui/add_product/components/product_card_widget.dart';
 import 'package:spenza/ui/add_product/components/selectable_chip.dart';
@@ -11,6 +15,7 @@ import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/my_list_details/components/custom_app_bar.dart';
 import 'package:spenza/ui/my_list_details/components/searchbox_widget.dart';
 import 'package:spenza/utils/color_utils.dart';
+import "package:collection/collection.dart";
 
 import 'provider/search_product_repository_provider.dart';
 import 'provider/selected_department_provider.dart';
@@ -27,6 +32,9 @@ class AddProductScreen extends ConsumerStatefulWidget {
 class _AddProductScreenState extends ConsumerState<AddProductScreen> {
   final TextEditingController _searchController = TextEditingController();
   late CancelToken _cancelToken;
+  final poppinsFont = GoogleFonts.poppins().fontFamily;
+  late StreamSubscription<bool> keyboardSubscription;
+  final _focusNode = FocusNode();
 
   @override
   void initState() {
@@ -46,6 +54,16 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
           .read(addProductProvider.notifier)
           .searchProductsNew(query: widget.query, cancelToken: _cancelToken),
     );
+
+    final keyboardVisibilityController = KeyboardVisibilityController();
+
+    keyboardSubscription =
+        keyboardVisibilityController.onChange.listen((bool visible) {
+      if (!visible) {
+        debugPrint('Soft keyboard closed');
+        _focusNode.unfocus();
+      }
+    });
   }
 
   @override
@@ -60,12 +78,12 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
     _searchController.dispose();
 
     _cancelToken.cancel("Screen Disposed! :) ");
+
+    keyboardSubscription.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
-    final poppinsFont = ref.watch(poppinsFontProvider).fontFamily;
-
     _searchController.addListener(() {
       ref.read(searchQueryProvider.notifier).state =
           _searchController.text.trim().toLowerCase();
@@ -78,7 +96,7 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
       child: Scaffold(
         appBar: CustomAppBar(
           displayActionIcon: false,
-          title: 'Add Product',
+          title: 'Add Product to List',
           textStyle: TextStyle(
             fontFamily: poppinsFont,
             fontWeight: FontWeight.bold,
@@ -91,7 +109,11 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
         ),
         body: Column(
           children: [
-            SearchBox(controller: _searchController, hint: "Search Product"),
+            SearchBox(
+              controller: _searchController,
+              hint: "Search Product",
+              focusNode: _focusNode,
+            ),
             Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
@@ -158,7 +180,6 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
             ),
             Expanded(
               child: Consumer(builder: (context, ref, child) {
-
                 final data = ref.watch(addProductProvider);
                 final selectedDepartments =
                     ref.watch(selectedDepartmentsProvider);
@@ -174,6 +195,9 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                         child: Text("No Product found"),
                       );
                     }
+
+                    final isAllSelected = selectedDepartments.contains("All");
+
                     final filteredProducts = data.where((product) {
                       if (searchQuery.isNotEmpty &&
                           !product.name.toLowerCase().contains(searchQuery)) {
@@ -187,25 +211,32 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                           selectedDepartments.contains(department));
                     }).toList();
 
-                    return ListView.builder(
-                      itemCount: filteredProducts.length,
-                      itemBuilder: (context, index) {
-                        final Product product = filteredProducts[index];
-                        return ProductCard(
-                          onClick: () => ref
-                              .read(addProductProvider.notifier)
-                              .addProductToUserList(
-                                context,
-                                product: product,
-                              ),
-                          measure: product.measure,
-                          imageUrl: product.pImage,
-                          title: product.name,
-                          priceRange:
-                              "\$${product.minPrice} - \$${product.maxPrice}",
-                        );
-                      },
-                    );
+                    if (isAllSelected) {
+                      final Map<String, List<Product>> productByDepartment =
+                          groupBy(
+                        filteredProducts,
+                        (product) => product.department,
+                      );
+                      return buildListViewWithLabel(
+                        productByDepartment,
+                        (product) => ref
+                            .read(addProductProvider.notifier)
+                            .addProductToUserList(
+                              context,
+                              product: product,
+                            ),
+                      );
+                    } else {
+                      return buildListViewWithoutLabel(
+                        filteredProducts,
+                        (product) => ref
+                            .read(addProductProvider.notifier)
+                            .addProductToUserList(
+                              context,
+                              product: product,
+                            ),
+                      );
+                    }
                   },
                   error: (error, stackTrace) => Center(child: Text("$error")),
                   loading: () => Center(child: SpenzaCircularProgress()),
@@ -215,6 +246,76 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildListViewWithLabel(
+    Map<String, List<Product>> productByDepartment,
+    Function(Product product) onClick,
+  ) {
+    final List<String> departments = productByDepartment.keys.toList();
+
+    return ListView.builder(
+      itemCount: departments.length,
+      itemBuilder: (context, departmentIndex) {
+        final String department = departments[departmentIndex];
+        final List<Product> departmentProducts =
+            productByDepartment[department] ?? [];
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0)
+                  .copyWith(top: 16, bottom: 10),
+              child: Text(
+                department,
+                style: TextStyle(
+                  color: ColorUtils.colorPrimary,
+                  fontFamily: poppinsFont,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            SizedBox(height: 4),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: departmentProducts.length,
+              itemBuilder: (context, productIndex) {
+                final Product product = departmentProducts[productIndex];
+                return ProductCard(
+                  onClick: () => onClick.call(product),
+                  measure: product.measure,
+                  imageUrl: product.pImage,
+                  title: product.name,
+                  priceRange: "\$${product.minPrice} - \$${product.maxPrice}",
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget buildListViewWithoutLabel(
+    List<Product> products,
+    Function(Product product) onClick,
+  ) {
+    return ListView.builder(
+      itemCount: products.length,
+      itemBuilder: (context, index) {
+        final Product product = products[index];
+        return ProductCard(
+          onClick: () => onClick.call(product),
+          measure: product.measure,
+          imageUrl: product.pImage,
+          title: product.name,
+          priceRange: "\$${product.minPrice} - \$${product.maxPrice}",
+        );
+      },
     );
   }
 }
