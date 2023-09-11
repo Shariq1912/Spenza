@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:spenza/helpers/bottom_nav_helper.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/profile/profile_repository.dart';
 import 'package:spenza/utils/color_utils.dart';
@@ -46,7 +47,8 @@ class HomeTopAppBar extends ConsumerWidget implements PreferredSizeWidget {
           ),
           child: InkWell(
             onTap: () {
-              context.pushNamed(RouteManager.settingScreen);
+              // context.pushNamed(RouteManager.settingScreen);
+              StatefulNavigationShell.of(context).goBranch(screenNameToIndex[ScreenName.settings]!);
             },
             child: Consumer(
               builder: (context, ref, child) {

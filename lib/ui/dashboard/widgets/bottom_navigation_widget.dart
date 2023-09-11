@@ -9,11 +9,7 @@ import 'package:spenza/utils/color_utils.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
 class BottomNavigationWidget extends ConsumerStatefulWidget {
-  // final String location;
   final StatefulNavigationShell navigationShell;
-
-  // const BottomNavigationWidget({Key? key, required this.location}) : super(key: key);
-  // const BottomNavigationWidget({Key? key}) : super(key: key);
 
   const BottomNavigationWidget({Key? key, required this.navigationShell})
       : super(key: key);
@@ -50,7 +46,7 @@ class _BottomNavigationWidgetState
       // navigating to the initial location when tapping the item that is
       // already active. This example demonstrates how to support this behavior,
       // using the initialLocation parameter of goBranch.
-      initialLocation: index == 0,
+      initialLocation: index == widget.navigationShell.currentIndex,
     );
   }
 

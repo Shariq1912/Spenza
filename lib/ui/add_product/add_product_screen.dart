@@ -158,6 +158,7 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
             ),
             Expanded(
               child: Consumer(builder: (context, ref, child) {
+
                 final data = ref.watch(addProductProvider);
                 final selectedDepartments =
                     ref.watch(selectedDepartmentsProvider);
