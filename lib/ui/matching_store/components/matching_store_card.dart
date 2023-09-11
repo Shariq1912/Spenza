@@ -85,8 +85,8 @@ class MatchingStoreCard extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(8.0),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black.withOpacity(0.5),
-                                      blurRadius: 5,
+                                      color: Colors.black12,
+                                      blurRadius: 2,
                                       offset: Offset(0, 2),
                                     ),
                                   ],

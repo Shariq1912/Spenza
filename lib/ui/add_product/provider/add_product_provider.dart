@@ -16,6 +16,7 @@ import 'package:spenza/ui/add_product/provider/search_product_repository_provide
 import 'package:spenza/ui/add_product/repository/search_product_repository.dart';
 import 'package:spenza/utils/fireStore_constants.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
+import "package:collection/collection.dart";
 
 part 'add_product_provider.g.dart';
 
@@ -42,7 +43,8 @@ class AddProduct extends _$AddProduct
       state = AsyncValue.loading();
       final userId = await prefs.then((prefs) => prefs.getUserId());
 
-      GeoPoint? location = await getCurrentLocation();
+      // GeoPoint? location = await getCurrentLocation();
+      GeoPoint? location;
 
       if (location == null) {
         location = await getLocationByZipCode(
@@ -168,16 +170,17 @@ class AddProduct extends _$AddProduct
       state = AsyncValue.loading();
       final userId = await prefs.then((prefs) => prefs.getUserId());
 
-      GeoPoint? location = await getCurrentLocation();
+      // GeoPoint? location = await getCurrentLocation();
+      GeoPoint? location;
 
-      if (location == null) {
-        location = await getLocationByZipCode(
-          await getUserZipCodeFromDB(
-            fireStore,
-            userId,
-          ), // Get Zip code from Shared Pref.
-        );
-      }
+      location = await getLocationByZipCode(
+        await getUserZipCodeFromDB(
+          fireStore,
+          userId,
+        ), // Get Zip code from Shared Pref.
+      );
+
+      print("${location.latitude}");
 
       final nearbyStores = await getNearbyStores(
         firestore: fireStore,
@@ -204,6 +207,13 @@ class AddProduct extends _$AddProduct
               query: query.toLowerCase(),
               cancelToken: cancelToken,
             );
+
+        // todo use this on UI layer instead of provider to make product searchable and filtered on the basis of chips
+        Map<String, List<Product>> productByDepartment = groupBy(
+          products,
+          (product) => product.department,
+        );
+
 
         state = AsyncValue.data(products);
       } on DioException catch (e) {

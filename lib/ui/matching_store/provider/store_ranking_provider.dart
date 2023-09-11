@@ -41,7 +41,8 @@ class StoreRanking extends _$StoreRanking
     final userId = await prefs.then((prefs) => prefs.getUserId());
     final userListName = await prefs.then((prefs) => prefs.getUserListName());
 
-    GeoPoint? location = await getCurrentLocation();
+    // GeoPoint? location = await getCurrentLocation();
+    GeoPoint? location;
 
     if (location == null) {
       location = await getLocationByZipCode(
