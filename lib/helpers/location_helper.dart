@@ -24,6 +24,8 @@ mixin LocationHelper {
   }
 
   Future<GeoPoint> getLocationByZipCode(String postalCode) async {
+
+    print("$postalCode");
     try {
       List<Location> locations = await locationFromAddress(postalCode);
       if (locations.isNotEmpty) {

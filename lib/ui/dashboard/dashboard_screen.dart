@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:spenza/ui/common/spenza_circular_progress.dart';
+import 'package:go_router/src/route.dart';
 
 import 'widgets/bottom_navigation_widget.dart';
 
 class DashboardScreen extends StatelessWidget {
-  final Widget child;
+  final StatefulNavigationShell navigationShell;
 
-  const DashboardScreen({required this.child, Key? key}) : super(key: key);
+  const DashboardScreen({Key? key, required this.navigationShell})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: child,
-      bottomNavigationBar: const BottomNavigationWidget(),
+      body: navigationShell,
+      bottomNavigationBar: BottomNavigationWidget(
+        navigationShell: navigationShell,
+      ),
     );
   }
 }

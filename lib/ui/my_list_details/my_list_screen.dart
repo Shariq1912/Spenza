@@ -24,6 +24,7 @@ class MyListScreen extends ConsumerStatefulWidget {
 class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
   final poppinsFont = GoogleFonts.poppins().fontFamily;
   bool hasValueChanged = false;
+
   @override
   void initState() {
     super.initState();
@@ -133,7 +134,6 @@ class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
           }
         }
       },
-
     );
   }
 
@@ -152,12 +152,14 @@ class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
           ),
         ),
         centerTitle: true,
-        leading: IconButton(
-          onPressed: () {
-            context.pushReplacement(RouteManager.homeScreen);
-          },
-          icon: Icon(Icons.arrow_back_ios, color: Color(0xFF0CA9E6)),
-        ),
+        leading: widget.key == null
+            ? IconButton(
+                onPressed: () {
+                  context.pop();
+                },
+                icon: Icon(Icons.arrow_back_ios, color: Color(0xFF0CA9E6)),
+              )
+            : Container(),
         actions: [
           Padding(
             padding: const EdgeInsets.only(top: 5),
@@ -227,7 +229,6 @@ class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
           builder: (context, ref, child) {
             final storeProvider = ref.watch(fetchMyListProvider);
             return storeProvider.when(
-
               loading: () => Center(child: SpenzaCircularProgress()),
               error: (error, stackTrace) {
                 print("errorMrss $error");

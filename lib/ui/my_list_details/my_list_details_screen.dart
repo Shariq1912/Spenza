@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -41,7 +43,8 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
   final TextEditingController _searchController = TextEditingController();
   bool hasValueChanged = false;
   final _focusNode = FocusNode();
-  KeyboardVisibilityController _keyboardVisibilityController = KeyboardVisibilityController();
+  late StreamSubscription<bool> keyboardSubscription;
+
 
   final List<PopupMenuItem<PopupMenuAction>> items = [
     PopupMenuItem(
@@ -91,29 +94,12 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
     ref.invalidate(userProductListProvider);
 
     WidgetsBinding.instance.removeObserver(this);
+    keyboardSubscription.cancel();
 
     super.dispose();
   }
 
 
-  @override
-  void didChangeMetrics() {
-    super.didChangeMetrics();
-
-    // todo change with package since deprecated.
-    /*final bottomInset = WidgetsBinding.instance.window.viewInsets.bottom;
-    if (bottomInset == 0) {
-      // Soft keyboard closed
-      debugPrint('Soft keyboard closed');
-     _focusNode.unfocus();
-    }*/
-    _keyboardVisibilityController.onChange.listen((bool visible) {
-      if (!visible) {
-        debugPrint('Soft keyboard closed');
-        _focusNode.unfocus();
-      }
-    });
-  }
 
   @override
   void initState() {
@@ -134,6 +120,16 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
       ref.read(displaySpenzaButtonProvider.notifier).state =
           !_focusNode.hasFocus;
     });
+
+    // For Keyboard Visibility
+    final keyboardVisibilityController = KeyboardVisibilityController();
+    keyboardSubscription =
+        keyboardVisibilityController.onChange.listen((bool visible) {
+          if (!visible) {
+            debugPrint('Soft keyboard closed');
+            _focusNode.unfocus();
+          }
+        });
   }
 
   @override

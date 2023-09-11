@@ -9,7 +9,10 @@ import 'package:spenza/utils/color_utils.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
 class BottomNavigationWidget extends ConsumerStatefulWidget {
-  const BottomNavigationWidget({Key? key}) : super(key: key);
+  final StatefulNavigationShell navigationShell;
+
+  const BottomNavigationWidget({Key? key, required this.navigationShell})
+      : super(key: key);
 
   @override
   ConsumerState<BottomNavigationWidget> createState() =>
@@ -26,13 +29,30 @@ class _BottomNavigationWidgetState
     CustomBottomNavItem.fromSvgAsset(
         iconAsset: 'receipts_icon.svg', label: 'Receipts'),
     // CustomBottomNavItem.fromSvgAsset(iconAsset: 'preloaded_list_icon.svg', label: 'Preloaded'),
-    CustomBottomNavItem(iconAsset: 'account_icon.svg', label: 'Account'),
+    CustomBottomNavItem.fromSvgAsset(
+        iconAsset: 'account_icon.svg', label: 'Account'),
     // Add more items as needed
   ];
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  void _goBranch(int index) {
+    widget.navigationShell.goBranch(
+      index,
+      // A common pattern when using bottom navigation bars is to support
+      // navigating to the initial location when tapping the item that is
+      // already active. This example demonstrates how to support this behavior,
+      // using the initialLocation parameter of goBranch.
+      initialLocation: index == widget.navigationShell.currentIndex,
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final position = ref.watch(selectedIndexProvider);
+    final position = widget.navigationShell.currentIndex;
 
     return Container(
       decoration: BoxDecoration(
@@ -48,17 +68,17 @@ class _BottomNavigationWidgetState
       ),
       child: BottomNavigationBar(
         currentIndex: position,
-        onTap: (value) => _onTap(value),
+        onTap: _goBranch,
         selectedItemColor: ColorUtils.colorPrimary,
         type: BottomNavigationBarType.fixed,
-        unselectedItemColor: Colors.black,
+        unselectedItemColor: ColorUtils.bottomNavIconAndTextColor,
         selectedLabelStyle: const TextStyle(
           color: ColorUtils.colorPrimary,
           fontSize: 11,
           fontWeight: FontWeight.w700,
         ),
         unselectedLabelStyle: const TextStyle(
-          color:ColorUtils.bottomNavIconAndTextColor,
+          color: ColorUtils.bottomNavIconAndTextColor,
           fontSize: 11,
           fontWeight: FontWeight.w500,
         ),
@@ -87,7 +107,7 @@ class _BottomNavigationWidgetState
               ),
               label: item.label,
             );
-          }  else {
+          } else {
             // Handle other cases if needed
             return BottomNavigationBarItem(
               icon: Icon(Icons.error), // Placeholder icon for unknown cases
@@ -121,9 +141,20 @@ class _BottomNavigationWidgetState
         break;
 
       case 3:
-        context.pushNamed(RouteManager.profileScreenBottomPath);
+        // hasBackStackEntry(RouteManager.profileScreenBottomPath);
+        context.pushNamed(RouteManager.settingsScreenBottomPath);
         break;
       default:
     }
+  }
+
+  bool hasBackStackEntry(String routePath) {
+    final router = GoRouterState.of(context);
+    var hasLocation = false;
+    while (router.location != routePath) {
+      debugPrint('Found ${router.location}');
+    }
+
+    return hasLocation;
   }
 }
