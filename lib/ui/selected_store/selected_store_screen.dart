@@ -41,13 +41,13 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
       print("Has focus: ${_focusNode.hasFocus}");
 
       if (_focusNode.hasFocus) {
+        _focusNode.unfocus();
+
         final Stores store = ref.read(storeDetailsProvider).requireValue;
         if (store.id.isEmpty) {
           debugPrint("Store ID is Empty");
           return;
         }
-
-        _focusNode.unfocus();
 
         ref
             .read(selectedStoreProvider.notifier)
@@ -155,7 +155,7 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
                                   ? Padding(
                                       padding: const EdgeInsets.symmetric(
                                               horizontal: 16.0)
-                                          .copyWith(top: 16, bottom: 10),
+                                          .copyWith(top: 6, bottom: 10),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -191,17 +191,23 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
                                     ),
                               similarProduct: (product) =>
                                   buildSelectedStoreProductCard(
+                                index: index,
+                                size: data.products.length,
                                 product: product,
                                 onClick: () {},
                               ),
                               missingProduct: (product) =>
                                   buildSelectedStoreProductCard(
+                                index: index,
+                                size: data.products.length,
                                 product: product,
                                 isMissing: true,
                                 onClick: () {},
                               ),
                               exactProduct: (product) =>
                                   buildSelectedStoreProductCard(
+                                index: index,
+                                size: data.products.length,
                                 product: product,
                                 onClick: () {},
                               ),
@@ -217,7 +223,7 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
             ),
             ElevatedButtonWithCenteredText(
               onClick: () {},
-              text: "I finished Shopping",  // todo localize the text
+              text: "I finished Shopping", // todo localize the text
               fontFamily: poppinsFont!,
             ),
           ],
@@ -226,19 +232,31 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
     );
   }
 
-  SelectedStoreProductCard buildSelectedStoreProductCard({
+  Widget buildSelectedStoreProductCard({
     required SelectedProductElement product,
+    required int index,
+    required int size,
     required VoidCallback onClick,
     bool isMissing = false,
   }) {
-    return SelectedStoreProductCard(
-      isMissing: isMissing,
-      imageUrl: product.productImage,
-      price: product.price,
-      measure: product.measure,
-      quantity: product.quantity,
-      title: product.name,
-      onClick: () => onClick,
+    return Column(
+      children: [
+        SelectedStoreProductCard(
+          isMissing: isMissing,
+          imageUrl: product.productImage,
+          price: product.price,
+          measure: product.measure,
+          quantity: product.quantity,
+          title: product.name,
+          onClick: () => onClick,
+        ),
+        if (index > 0)
+          Divider(
+            color: ColorUtils.colorSurface, // Specify the divider color.
+            thickness: 1.0, // Specify the divider thickness.
+            height: 0, // Set the height to 0 to avoid extra space.
+          ),
+      ],
     );
   }
 }

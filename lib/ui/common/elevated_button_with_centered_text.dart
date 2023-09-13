@@ -5,12 +5,14 @@ class ElevatedButtonWithCenteredText extends StatelessWidget {
   final String fontFamily;
   final String text;
   final VoidCallback onClick;
+  final Size size;
 
   const ElevatedButtonWithCenteredText({
     super.key,
     required this.fontFamily,
     required this.text,
     required this.onClick,
+    this.size = const Size(300, 40),
   });
 
   @override
@@ -29,7 +31,7 @@ class ElevatedButtonWithCenteredText extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
-        fixedSize: const Size(310, 40),
+        // fixedSize: size,
       ),
       child: Text(text),
     );

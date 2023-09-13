@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import "package:collection/collection.dart";
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,12 +11,16 @@ import 'package:spenza/ui/add_product/components/product_card_widget.dart';
 import 'package:spenza/ui/add_product/components/selectable_chip.dart';
 import 'package:spenza/ui/add_product/provider/selected_department_provider.dart';
 import 'package:spenza/ui/common/spenza_circular_progress.dart';
+import 'package:spenza/ui/my_list_details/components/custom_app_bar.dart';
 import 'package:spenza/ui/my_list_details/components/searchbox_widget.dart';
 import 'package:spenza/ui/my_list_details/provider/user_product_list_provider.dart';
 import 'package:spenza/ui/my_store_products/data/products.dart';
 import 'package:spenza/ui/my_store_products/provider/product_for_store_provider.dart';
 import 'package:spenza/ui/my_store_products/repo/department_repository.dart';
+import 'package:spenza/ui/selected_store/provider/store_details_provider.dart';
 import 'package:spenza/utils/color_utils.dart';
+import 'package:spenza/utils/fireStore_constants.dart';
+import 'package:spenza/utils/spenza_extensions.dart';
 
 import '../../router/app_router.dart';
 import '../profile/profile_repository.dart';
@@ -37,14 +44,15 @@ class MyStoreProduct extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _MyStoreProductState();
 }
 
-class _MyStoreProductState extends ConsumerState<MyStoreProduct>
-    with WidgetsBindingObserver {
+class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
   final poppinsFont = GoogleFonts.poppins().fontFamily;
   bool hasValueChanged = false;
   final TextEditingController _searchController = TextEditingController();
   final _focusNode = FocusNode();
-  KeyboardVisibilityController _keyboardVisibilityController = KeyboardVisibilityController();
+  KeyboardVisibilityController _keyboardVisibilityController =
+      KeyboardVisibilityController();
 
+  late StreamSubscription<bool> keyboardSubscription;
 
   @override
   void initState() {
@@ -53,14 +61,26 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct>
       _loadProducts();
     });
 
-    WidgetsBinding.instance.addObserver(this);
+    final keyboardVisibilityController = KeyboardVisibilityController();
+
+    keyboardSubscription =
+        keyboardVisibilityController.onChange.listen((bool visible) {
+      if (!visible) {
+        debugPrint('Soft keyboard closed');
+        _focusNode.unfocus();
+      }
+    });
   }
 
   _loadProducts() async {
-    await ref
-        .read(productForStoreProvider.notifier)
-        .getProductsForStore(widget.storeId);
-    // await ref.read(departmentRepositoryProvider.notifier).getDepartments();
+    Future.wait([
+      ref
+          .read(productForStoreProvider.notifier)
+          .getProductsForStore(widget.storeId),
+      ref
+          .read(storeDetailsProvider.notifier)
+          .getSelectedStoreFromStoreId(storeId: widget.storeId),
+    ]);
   }
 
   @override
@@ -68,28 +88,10 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct>
     super.dispose();
 
     ref.invalidate(productForStoreProvider);
+    ref.invalidate(storeDetailsProvider);
     _searchController.dispose();
     _focusNode.dispose();
-    WidgetsBinding.instance.removeObserver(this);
-  }
-
-  @override
-  void didChangeMetrics() {
-    super.didChangeMetrics();
-
-    // todo change with package since deprecated.
-   /* final bottomInset = WidgetsBinding.instance.window.viewInsets.bottom;
-    if (bottomInset == 0) {
-      // Soft keyboard closed
-      debugPrint('Soft keyboard closed');
-      _focusNode.unfocus();
-    }*/
-    _keyboardVisibilityController.onChange.listen((bool visible) {
-      if (!visible) {
-        debugPrint('Soft keyboard closed');
-        _focusNode.unfocus();
-      }
-    });
+    keyboardSubscription.cancel();
   }
 
   @override
@@ -112,42 +114,42 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct>
         return true;
       },
       child: Scaffold(
-        appBar: AppBar(
-          surfaceTintColor: Colors.white,
-          title: Text(
-            "Stores", // todo change it to localized string
-            style: TextStyle(
-              fontFamily: poppinsFont,
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              color: ColorUtils.colorPrimary,
-            ),
-          ),
-          centerTitle: true,
-          leading: IconButton(
-            onPressed: () {
-              context.pop();
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(kToolbarHeight),
+          child: Consumer(
+            builder: (context, ref, child) {
+              return ref.watch(storeDetailsProvider).maybeWhen(
+                    data: (data) => CustomAppBar(
+                      displayActionIcon: true,
+                      title: data.groupName,
+                      subtitle: data.name,
+                      logo: data.logo,
+                      textStyle: TextStyle(
+                        fontFamily: poppinsFont,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: ColorUtils.colorPrimary,
+                      ),
+                      onBackIconPressed: () {
+                        context.pop();
+                      },
+                    ),
+                    orElse: () => CustomAppBar(
+                      displayActionIcon: true,
+                      title: "",
+                      textStyle: TextStyle(
+                        fontFamily: poppinsFont,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: ColorUtils.colorPrimary,
+                      ),
+                      onBackIconPressed: () {
+                        context.pop();
+                      },
+                    ),
+                  );
             },
-            icon: Icon(Icons.arrow_back_ios, color: ColorUtils.colorPrimary),
           ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 5,
-              ),
-              child: InkWell(
-                onTap: () {
-                  //Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SettingScreen()));
-                },
-                child: CircleAvatar(
-                  radius: 40,
-                  child: ClipOval(
-                    child: CachedNetworkImage(imageUrl: widget.logo),
-                  ),
-                ),
-              ),
-            )
-          ],
         ),
         body: Column(
           children: [
@@ -228,6 +230,9 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct>
                         child: Text("No Product found"),
                       );
                     }
+
+                    final isAllSelected = selectedDepartments.contains("All");
+
                     final filteredProducts = data.where((product) {
                       if (searchQuery.isNotEmpty &&
                           !product.name.toLowerCase().contains(searchQuery)) {
@@ -241,7 +246,33 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct>
                           .contains(product.departmentName);
                     }).toList();
 
-                    return ListView.builder(
+                    if (isAllSelected) {
+                      final Map<String, List<ProductModel>>
+                          productByDepartment = groupBy(
+                        filteredProducts,
+                        (product) => product.departmentName,
+                      );
+                      return buildListViewWithLabel(
+                        productByDepartment,
+                        (product) async {
+                          await handleAddProduct(product, context);
+                        },
+                      );
+                    } else {
+                      return buildListViewWithoutLabel(
+                        filteredProducts,
+                        (product) async {
+                          await handleAddProduct(product, context);
+                        },
+                      );
+                    }
+
+                    return ListView.separated(
+                      separatorBuilder: (context, index) => Divider(
+                        color: ColorUtils.colorSurface,
+                        thickness: 1.0,
+                        height: 0, // Set the height to 0 to avoid extra space.
+                      ),
                       itemCount: filteredProducts.length,
                       itemBuilder: (context, index) {
                         final ProductModel product = filteredProducts[index];
@@ -296,6 +327,124 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct>
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Future<void> handleAddProduct(
+    ProductModel product,
+    BuildContext context,
+  ) async {
+    if (widget.listId != null) {
+      final bool hasReload = await ref
+          .read(addProductToMyListProvider.notifier)
+          .addProductToMyList(
+            listId: widget.listId!,
+            productRef: product.documentId!,
+            productId: product.productId,
+            context: context,
+          );
+
+      print("has Reload == $hasReload");
+      if (hasReload) {
+        /*  ref
+            .read(userProductListProvider.notifier)
+            .fetchProductFromListId();*/
+
+        print("Inside has Reload");
+        hasValueChanged = true;
+      }
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return MyListDialog(
+            productRef: product.documentId!,
+            productId: product.productId,
+          );
+        },
+      );
+    }
+  }
+
+  Widget buildListViewWithLabel(
+    Map<String, List<ProductModel>> productByDepartment,
+    Function(ProductModel product) onClick,
+  ) {
+    final List<String> departments = productByDepartment.keys.toList();
+
+    return ListView.builder(
+      itemCount: departments.length,
+      itemBuilder: (context, departmentIndex) {
+        final String department = departments[departmentIndex];
+        final List<ProductModel> departmentProducts =
+            productByDepartment[department] ?? [];
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0)
+                  .copyWith(top: 16, bottom: 10),
+              child: Text(
+                department,
+                style: TextStyle(
+                  color: ColorUtils.colorPrimary,
+                  fontFamily: poppinsFont,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            SizedBox(height: 4),
+            ListView.separated(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: departmentProducts.length,
+              itemBuilder: (context, productIndex) {
+                final ProductModel product = departmentProducts[productIndex];
+                return ProductCard(
+                  onClick: () => onClick.call(product),
+                  measure: product.measure,
+                  imageUrl: product.pImage,
+                  title: product.name,
+                  priceRange: "",
+                  isPriceRangeVisible: false,
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) => Divider(
+                color: ColorUtils.colorSurface,
+                thickness: 1.0,
+                height: 0, // Set the height to 0 to avoid extra space.
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget buildListViewWithoutLabel(
+    List<ProductModel> products,
+    Function(ProductModel product) onClick,
+  ) {
+    return ListView.separated(
+      itemCount: products.length,
+      itemBuilder: (context, index) {
+        final ProductModel product = products[index];
+        return ProductCard(
+          onClick: () => onClick.call(product),
+          measure: product.measure,
+          imageUrl: product.pImage,
+          title: product.name,
+          priceRange: "",
+          isPriceRangeVisible: false,
+        );
+      },
+      separatorBuilder: (BuildContext context, int index) => Divider(
+        color: ColorUtils.colorSurface,
+        thickness: 1.0,
+        height: 0, // Set the height to 0 to avoid extra space.
       ),
     );
   }
