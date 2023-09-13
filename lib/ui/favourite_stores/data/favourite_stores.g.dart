@@ -8,6 +8,7 @@ part of 'favourite_stores.dart';
 
 _$_Stores _$$_StoresFromJson(Map<String, dynamic> json) => _$_Stores(
       id: json['id'] as String? ?? "",
+      groupName: json['groupName'] as String? ?? "",
       name: json['name'] as String,
       address: json['address'] as String,
       zipCodesList: (json['zipCodesList'] as List<dynamic>)
@@ -19,6 +20,7 @@ _$_Stores _$$_StoresFromJson(Map<String, dynamic> json) => _$_Stores(
 
 Map<String, dynamic> _$$_StoresToJson(_$_Stores instance) => <String, dynamic>{
       'id': instance.id,
+      'groupName': instance.groupName,
       'name': instance.name,
       'address': instance.address,
       'zipCodesList': instance.zipCodesList,

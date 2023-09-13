@@ -133,7 +133,7 @@ class MatchingStoreCard extends StatelessWidget {
                               // Wrap the distance text in a container
                               padding: EdgeInsets.symmetric(
                                   horizontal: 2, vertical: 4),
-                              color: Colors.white,
+                              color: Colors.white30,
                               child: Text(
                                 distance,
                                 style: TextStyle(

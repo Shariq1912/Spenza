@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/router/app_router.dart';
+import 'package:spenza/ui/common/elevated_button_with_centered_text.dart';
 import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/favourite_stores/data/favourite_stores.dart';
 import 'package:spenza/ui/matching_store/components/matching_store_card.dart';
@@ -91,7 +92,8 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
               return ref.watch(storeDetailsProvider).maybeWhen(
                     data: (data) => CustomAppBar(
                       displayActionIcon: true,
-                      title: data.name,
+                      title: data.groupName,
+                      subtitle: data.name,
                       logo: data.logo,
                       textStyle: TextStyle(
                         fontFamily: poppinsFont,
@@ -134,7 +136,7 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
                     .when(
                       data: (data) {
                         if (data == null) {
-                            return Center(child: SpenzaCircularProgress());
+                          return Center(child: SpenzaCircularProgress());
                         }
 
                         if (data.storeRef != null) {
@@ -166,7 +168,7 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
                                             ),
                                           ),
                                           Text(
-                                            'Total Price: ${data.total.toStringAsFixed(2)}',
+                                            'Total Price : \$ ${data.total.toStringAsFixed(2)}',
                                             style: TextStyle(
                                               color: ColorUtils.colorPrimary,
                                               fontWeight: FontWeight.w500,
@@ -212,6 +214,11 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
                       loading: () => Center(child: SpenzaCircularProgress()),
                     ),
               ),
+            ),
+            ElevatedButtonWithCenteredText(
+              onClick: () {},
+              text: "I finished Shopping",  // todo localize the text
+              fontFamily: poppinsFont!,
             ),
           ],
         ),

@@ -27,6 +27,7 @@ class StoreDetails extends _$StoreDetails {
     final store = Stores(
         id: storeSnapshot.id,
         name: storeSnapshot['name'],
+        groupName: storeSnapshot['groupName'],
         address: "",
         zipCodesList: [],
         logo: storeSnapshot['logo']);

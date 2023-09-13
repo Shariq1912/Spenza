@@ -23,13 +23,13 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: GestureDetector(
         onTap: () => onClick.call(),
         child: Card(
           surfaceTintColor: Colors.white,
-          shape: RoundedRectangleBorder(),
-          elevation: 2,
+          // shape: RoundedRectangleBorder(),
+          elevation: 3,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(

@@ -39,12 +39,11 @@ class MyListDetailsScreen extends ConsumerStatefulWidget {
 }
 
 class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
-    with PopupMenuMixin, WidgetsBindingObserver {
+    with PopupMenuMixin {
   final TextEditingController _searchController = TextEditingController();
   bool hasValueChanged = false;
   final _focusNode = FocusNode();
   late StreamSubscription<bool> keyboardSubscription;
-
 
   final List<PopupMenuItem<PopupMenuAction>> items = [
     PopupMenuItem(
@@ -93,13 +92,10 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
     ref.read(displaySpenzaButtonProvider.notifier).dispose();
     ref.invalidate(userProductListProvider);
 
-    WidgetsBinding.instance.removeObserver(this);
     keyboardSubscription.cancel();
 
     super.dispose();
   }
-
-
 
   @override
   void initState() {
@@ -112,8 +108,6 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
       //  await ref.read(listDetailsProvider.notifier).getSelectedListDetails();
     });
 
-    WidgetsBinding.instance.addObserver(this);
-
     _focusNode.addListener(() {
       print("Has focus: ${_focusNode.hasFocus}");
 
@@ -125,11 +119,11 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
     final keyboardVisibilityController = KeyboardVisibilityController();
     keyboardSubscription =
         keyboardVisibilityController.onChange.listen((bool visible) {
-          if (!visible) {
-            debugPrint('Soft keyboard closed');
-            _focusNode.unfocus();
-          }
-        });
+      if (!visible) {
+        debugPrint('Soft keyboard closed');
+        _focusNode.unfocus();
+      }
+    });
   }
 
   @override
@@ -251,7 +245,6 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                               itemBuilder: (context, index) {
                                 final UserProduct product = data[index];
                                 return Slidable(
-
                                   key: const ValueKey(0),
                                   child: UserSelectedProductCard(
                                     measure: product.measure,
@@ -265,19 +258,16 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                                   ),
                                   endActionPane: ActionPane(
                                     motion: const BehindMotion(),
-                                    dismissible: DismissiblePane(onDismissed: () {}),
-
-
-                                    children:  [
+                                    dismissible:
+                                        DismissiblePane(onDismissed: () {}),
+                                    children: [
                                       SlidableAction(
-                                        onPressed: (context){
-                                        },
+                                        onPressed: (context) {},
                                         backgroundColor: Color(0xFF7B868C),
                                         foregroundColor: Colors.white,
                                         icon: Icons.delete,
                                         label: 'Delete',
                                       ),
-
                                     ],
                                   ),
                                 );
@@ -286,12 +276,12 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                           },
                           error: (error, stackTrace) =>
                               Center(child: Text("$error")),
-                          loading: () => Center(child: SpenzaCircularProgress()),
+                          loading: () =>
+                              Center(child: SpenzaCircularProgress()),
                         );
                       },
                     ),
                   ),
-
                 ],
               ),
               Positioned(
@@ -299,12 +289,13 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                 right: 0,
                 left: 0,
                 child: Consumer(builder: (context, ref, child) {
-                final bool displayButton =
-                ref.watch(displaySpenzaButtonProvider);
-                return displayButton
-                    ? buildMaterialButton(context)
-                    : Container();
-              }),)
+                  final bool displayButton =
+                      ref.watch(displaySpenzaButtonProvider);
+                  return displayButton
+                      ? buildMaterialButton(context)
+                      : Container();
+                }),
+              )
             ],
           ),
         ),
@@ -403,61 +394,60 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
         ],
       ),
     );*/
-      GestureDetector(
-        onTap: () async {
-          final bool? isSuccess = await ref
-              .read(userProductListProvider.notifier)
-              .saveUserProductListToServer(context: context);
+        GestureDetector(
+      onTap: () async {
+        final bool? isSuccess = await ref
+            .read(userProductListProvider.notifier)
+            .saveUserProductListToServer(context: context);
 
-          if (isSuccess ?? false)
-            context.pushNamed(RouteManager.storeRankingScreen);
-        },
-        child: Container(
-          height: 40,
-          decoration: BoxDecoration(
-            color: ColorUtils.colorPrimary,
-            borderRadius: BorderRadius.all(Radius.circular(10),
-            ),
-            border: Border.all(
-              color: ColorUtils.colorPrimary
-            ),
+        if (isSuccess ?? false)
+          context.pushNamed(RouteManager.storeRankingScreen);
+      },
+      child: Container(
+        height: 40,
+        decoration: BoxDecoration(
+          color: ColorUtils.colorPrimary,
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
           ),
-          margin: EdgeInsets.only(bottom: 16, left: 16, right: 16),
-          child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  flex: 8,
-                  child: /*Image.asset(
+          border: Border.all(color: ColorUtils.colorPrimary),
+        ),
+        margin: EdgeInsets.only(bottom: 16, left: 16, right: 16),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+                flex: 8,
+                child: /*Image.asset(
                     'spenza_no_bg.png'.assetImageUrl,
                     fit: BoxFit.contain,
                   ),*/
-                  Text("Spenza",
-                  style: TextStyle(fontWeight: FontWeight.w800, fontFamily: GoogleFonts.calistoga().fontFamily, color: Colors.white, fontSize: 25),
-                  textAlign: TextAlign.center,)
-                ),
-               /* Expanded(
+                    Text(
+                  "Spenza",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontFamily: GoogleFonts.calistoga().fontFamily,
+                      color: Colors.white,
+                      fontSize: 25),
+                  textAlign: TextAlign.center,
+                )),
+            /* Expanded(
                   flex: 1,
                   child: Image.asset(
                     'app_icon_spenza.png'.assetImageUrl,
                     fit: BoxFit.contain,
                   ),
                 ),*/
-                Expanded(
-                  flex: 1,
-                  child: Image.asset(
-                    'app_icon_spenza.png'.assetImageUrl,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-
-
-
-
-
-            ],
-          ),
+            Expanded(
+              flex: 1,
+              child: Image.asset(
+                'app_icon_spenza.png'.assetImageUrl,
+                fit: BoxFit.contain,
+              ),
+            ),
+          ],
         ),
-      );
+      ),
+    );
   }
 }

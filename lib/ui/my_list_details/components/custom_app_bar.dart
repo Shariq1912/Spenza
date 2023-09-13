@@ -5,6 +5,7 @@ import 'package:spenza/utils/spenza_extensions.dart';
 
 class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final String title;
+  final String subtitle;
   final String logo;
   final TextStyle textStyle;
   final displayActionIcon;
@@ -14,6 +15,7 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
   const CustomAppBar({
     Key? key,
     required this.title,
+    this.subtitle = "",
     required this.textStyle,
     this.logo = "https://picsum.photos/250?image=9",
     required this.onBackIconPressed,
@@ -46,26 +48,39 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
         displayActionIcon
             ? InkWell(
                 onTap: onActionIconPressed,
-               child: CircleAvatar(
-                 radius: 40,
-                 child: ClipOval(
+                child: CircleAvatar(
+                  radius: 40,
+                  child: ClipOval(
                     child: AspectRatio(
                       aspectRatio: 1.0,
                       child: CachedNetworkImage(
                         fit: BoxFit.cover,
                         imageUrl: logo,
-                        placeholder: (context, url) =>  Image.asset('placeholder_myList.png'.assetImageUrl),
-                        errorWidget: (context, url, error) => Image.asset('placeholder_myList.png'.assetImageUrl),
+                        placeholder: (context, url) =>
+                            Image.asset('placeholder_myList.png'.assetImageUrl),
+                        errorWidget: (context, url, error) =>
+                            Image.asset('placeholder_myList.png'.assetImageUrl),
                       ),
                     ),
                   ),
-               ),
+                ),
               )
             : Container()
       ],
-      title: Text(
-        title,
-        style: textStyle,
+      title: Column(
+        children: [
+          Text(
+            title,
+            style: textStyle,
+          ),
+          Visibility(
+            visible: subtitle.isNotEmpty,
+            child: Text(
+              subtitle,
+              style: textStyle.copyWith(fontSize: 14),
+            ),
+          ),
+        ],
       ),
       centerTitle: true,
     );

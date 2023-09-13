@@ -36,14 +36,17 @@ class PreLoadedList extends ConsumerWidget {
             children: [
               Expanded(
                 flex: 1,
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    fontFamily: poppinFont,
-                    decoration: TextDecoration.none,
-                    color: ColorUtils.primaryText,
-                    fontWeight: FontWeight.w900,
-                    fontSize: 18,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 6.0),
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontFamily: poppinFont,
+                      decoration: TextDecoration.none,
+                      color: ColorUtils.primaryText,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 18,
+                    ),
                   ),
                 ),
               ),
