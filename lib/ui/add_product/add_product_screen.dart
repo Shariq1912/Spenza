@@ -279,7 +279,7 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
               ),
             ),
             SizedBox(height: 4),
-            ListView.builder(
+            ListView.separated(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               itemCount: departmentProducts.length,
@@ -292,7 +292,9 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                   title: product.name,
                   priceRange: "\$${product.minPrice} - \$${product.maxPrice}",
                 );
-              },
+              }, separatorBuilder: (BuildContext context, int index) {
+              return  Divider(height: 5,color: Colors.white,);
+            },
             ),
           ],
         );

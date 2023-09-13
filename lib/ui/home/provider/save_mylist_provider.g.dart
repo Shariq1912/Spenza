@@ -6,7 +6,7 @@ part of 'save_mylist_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$saveMyListHash() => r'9d735662351f9af1bfed47bf104189e2d71faab9';
+String _$saveMyListHash() => r'd48ae304dcfc085447b6c0140fdafe709298009f';
 
 /// See also [SaveMyList].
 @ProviderFor(SaveMyList)

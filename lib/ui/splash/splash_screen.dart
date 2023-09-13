@@ -7,8 +7,6 @@ import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/splash/provider/splash_provider.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
-import '../profile/profile_repository.dart';
-
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
@@ -30,7 +28,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   _loadData() async {
     ref.read(splashProvider.notifier).isLoggedIn();
-
   }
 
   @override
@@ -41,6 +38,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   @override
   Widget build(BuildContext buildContext) {
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -73,12 +71,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                         ),
                         Center(
                           child: Image.asset(
-                            'logo.png'.assetImageUrl,
+                            'spenza_logo.png'.assetImageUrl,
+                            height: 90,
                             width: 300,
                             fit: BoxFit.fitWidth,
                           ),
                         ),
-                        const SizedBox(height: 22),
+                        const SizedBox(height: 15),
                         _buildText(
                           AppLocalizations.of(context)!.find_stores,
                           fontSize: 21,
@@ -89,7 +88,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                           fontSize: 12,
                           color: const Color(0xFF7B868C),
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 20),
                         _buildText(
                           AppLocalizations.of(context)!.make_shopping_list,
                           fontSize: 21,
@@ -101,7 +100,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                           fontSize: 12,
                           color: const Color(0xFF7B868C),
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 20),
                         _buildText(
                           AppLocalizations.of(context)!.compare_prices,
                           fontSize: 21,
@@ -113,7 +112,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                           fontSize: 12,
                           color: const Color(0xFF7B868C),
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 20),
                         _buildText(
                           AppLocalizations.of(context)!.shop_in_store_or_online,
                           fontSize: 21,
@@ -173,28 +172,34 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                                                       RouteManager.loginScreen);
                                                 },
                                                 style: ElevatedButton.styleFrom(
-                                                  backgroundColor: Color(0xFFE5E7E8),
-                                                  foregroundColor:
-                                                      const Color(0xFF0CA9E6),
-                                                  textStyle: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontFamily: poppinsFont,
-                                                    color: Colors.lightGreen,
-                                                  ),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                    side:  BorderSide.none,
-                                                  ),
-                                                  fixedSize:
-                                                      const Size(310, 40),
-                                                  surfaceTintColor: Colors.white
+                                                    backgroundColor:
+                                                        Color(0xFFE5E7E8),
+                                                    foregroundColor:
+                                                        const Color(0xFF0CA9E6),
+                                                    textStyle: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontFamily: poppinsFont,
+                                                      color: Colors.lightGreen,
+                                                    ),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      side: BorderSide.none,
+                                                    ),
+                                                    fixedSize:
+                                                        const Size(310, 40),
+                                                    surfaceTintColor:
+                                                        Colors.white),
+                                                child: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .login,
+                                                  style: TextStyle(
+                                                      color: Color(0xFF7b868C)),
                                                 ),
-                                                child: Text(AppLocalizations.of(
-                                                        context)!
-                                                    .login,style: TextStyle(color: Color(0xFF7b868C)),),
                                               ),
                                             ),
                                           ],
