@@ -1,16 +1,13 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/helpers/popup_menu_mixin.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/add_product/data/user_product.dart';
-import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/my_list_details/components/custom_app_bar.dart';
 import 'package:spenza/ui/my_list_details/components/searchbox_widget.dart';
 import 'package:spenza/ui/my_list_details/components/user_selected_product_widget.dart';
@@ -24,10 +21,10 @@ import 'provider/display_spenza_button_provider.dart';
 class MyListDetailsScreen extends ConsumerStatefulWidget {
   const MyListDetailsScreen(
       {super.key,
-      required this.listId,
-      required this.name,
-      required this.photo,
-      required this.path});
+        required this.listId,
+        required this.name,
+        required this.photo,
+        required this.path});
 
   final String listId;
   final String name;
@@ -43,8 +40,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
   final TextEditingController _searchController = TextEditingController();
   bool hasValueChanged = false;
   final _focusNode = FocusNode();
-  late StreamSubscription<bool> keyboardSubscription;
-
+  KeyboardVisibilityController _keyboardVisibilityController = KeyboardVisibilityController();
 
   final List<PopupMenuItem<PopupMenuAction>> items = [
     PopupMenuItem(
@@ -94,12 +90,29 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
     ref.invalidate(userProductListProvider);
 
     WidgetsBinding.instance.removeObserver(this);
-    keyboardSubscription.cancel();
 
     super.dispose();
   }
 
 
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+
+    // todo change with package since deprecated.
+    /*final bottomInset = WidgetsBinding.instance.window.viewInsets.bottom;
+    if (bottomInset == 0) {
+      // Soft keyboard closed
+      debugPrint('Soft keyboard closed');
+     _focusNode.unfocus();
+    }*/
+    _keyboardVisibilityController.onChange.listen((bool visible) {
+      if (!visible) {
+        debugPrint('Soft keyboard closed');
+        _focusNode.unfocus();
+      }
+    });
+  }
 
   @override
   void initState() {
@@ -118,18 +131,8 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
       print("Has focus: ${_focusNode.hasFocus}");
 
       ref.read(displaySpenzaButtonProvider.notifier).state =
-          !_focusNode.hasFocus;
+      !_focusNode.hasFocus;
     });
-
-    // For Keyboard Visibility
-    final keyboardVisibilityController = KeyboardVisibilityController();
-    keyboardSubscription =
-        keyboardVisibilityController.onChange.listen((bool visible) {
-          if (!visible) {
-            debugPrint('Soft keyboard closed');
-            _focusNode.unfocus();
-          }
-        });
   }
 
   @override
@@ -163,42 +166,23 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
           backgroundColor: Colors.white,
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight),
-            child: /* Consumer(
-              builder: (context, ref, child) {
-                return ref.watch(listDetailsProvider).maybeWhen(
-                      data: (data) =>*/
-                CustomAppBar(
-                    displayActionIcon: true,
-                    title: widget.name,
-                    logo: widget.photo ?? "",
-                    textStyle: TextStyle(
-                      fontFamily: poppinsFont,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: ColorUtils.colorPrimary,
-                    ),
-                    onBackIconPressed: () {
-                      // context.pushNamed(RouteManager.addProductScreen);
-                      context.pop(hasValueChanged);
-                    },
-                    onActionIconPressed: _onActionIconPressed),
-            /*orElse: () => CustomAppBar(
-                        displayActionIcon: true,
-                        title: "",
-                        textStyle: TextStyle(
-                          fontFamily: poppinsFont,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: ColorUtils.colorPrimary,
-                        ),
-                        onBackIconPressed: () {
-                          context.pushNamed(RouteManager.addProductScreen);
-                        },
-                        onActionIconPressed: _onActionIconPressed,
-                      ),
-                    );
-              },
-            ),*/
+            child:
+            CustomAppBar(
+                displayActionIcon: true,
+                title: widget.name,
+                logo: widget.photo ?? "",
+                textStyle: TextStyle(
+                  fontFamily: poppinsFont,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: ColorUtils.colorPrimary,
+                ),
+                onBackIconPressed: () {
+                  // context.pushNamed(RouteManager.addProductScreen);
+                  context.pop(hasValueChanged);
+                },
+                onActionIconPressed: _onActionIconPressed),
+
           ),
           body: Stack(
             children: [
@@ -210,7 +194,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                     controller: _searchController,
                     onSearch: (value) async {
                       Future.microtask(
-                        () => ref
+                            () => ref
                             .read(userProductListProvider.notifier)
                             .saveUserProductListToServer(context: context),
                       );
@@ -229,6 +213,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                       }
                     },
                   ),
+                  const SizedBox(height: 1),
                   Expanded(
                     // Use a single Expanded widget to wrap the ListView
                     child: Consumer(
@@ -238,7 +223,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                         return result.when(
                           data: (data) {
                             if (data == null) {
-                              return Center(child: SpenzaCircularProgress());
+                              return Center(child: CircularProgressIndicator());
                             } else if (data.isEmpty) {
                               return Center(
                                 child: Text("No Product found"),
@@ -250,21 +235,21 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                               itemBuilder: (context, index) {
                                 final UserProduct product = data[index];
                                 return UserSelectedProductCard(
-                                    measure: product.measure,
-                                    listId: widget.listId,
-                                    department: product.department,
-                                    imageUrl: product.pImage,
-                                    title: product.name,
-                                    priceRange:
-                                        "\$${product.minPrice} - \$${product.maxPrice}",
-                                    product: product,
-                                  );
+                                  measure: product.measure,
+                                  listId: widget.listId,
+                                  department: product.department,
+                                  imageUrl: product.pImage,
+                                  title: product.name,
+                                  priceRange:
+                                  "\$${product.minPrice} - \$${product.maxPrice}",
+                                  product: product,
+                                );
                               },
                             );
                           },
                           error: (error, stackTrace) =>
                               Center(child: Text("$error")),
-                          loading: () => Center(child: SpenzaCircularProgress()),
+                          loading: () => Center(child: CircularProgressIndicator()),
                         );
                       },
                     ),
@@ -277,12 +262,12 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                 right: 0,
                 left: 0,
                 child: Consumer(builder: (context, ref, child) {
-                final bool displayButton =
-                ref.watch(displaySpenzaButtonProvider);
-                return displayButton
-                    ? buildMaterialButton(context)
-                    : Container();
-              }),)
+                  final bool displayButton =
+                  ref.watch(displaySpenzaButtonProvider);
+                  return displayButton
+                      ? buildMaterialButton(context)
+                      : Container();
+                }),)
             ],
           ),
         ),
@@ -292,9 +277,9 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
 
   void _onActionIconPressed() {
     final RenderBox customAppBarRenderBox =
-        context.findRenderObject() as RenderBox;
+    context.findRenderObject() as RenderBox;
     final customAppBarPosition =
-        customAppBarRenderBox.localToGlobal(Offset.zero);
+    customAppBarRenderBox.localToGlobal(Offset.zero);
 
     showPopupMenu(
       context: context,
@@ -327,7 +312,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
         } else if (value == PopupMenuAction.edit) {
           debugPrint("edit action");
           final bool? result =
-              await context.pushNamed(RouteManager.editListScreen);
+          await context.pushNamed(RouteManager.editListScreen);
           if (result ?? false) {
             context.showSnackBar(message: "List Edited Successfully!");
             ref.read(listDetailsProvider.notifier).getSelectedListDetails();
@@ -397,37 +382,37 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
             borderRadius: BorderRadius.all(Radius.circular(10),
             ),
             border: Border.all(
-              color: ColorUtils.colorPrimary
+                color: ColorUtils.colorPrimary
             ),
           ),
           margin: EdgeInsets.only(bottom: 16, left: 16, right: 16),
           child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
                   flex: 8,
                   child: /*Image.asset(
                     'spenza_no_bg.png'.assetImageUrl,
                     fit: BoxFit.contain,
                   ),*/
                   Text("Spenza",
-                  style: TextStyle(fontWeight: FontWeight.w800, fontFamily: GoogleFonts.calistoga().fontFamily, color: Colors.white, fontSize: 25),
-                  textAlign: TextAlign.center,)
-                ),
-               /* Expanded(
+                    style: TextStyle(fontWeight: FontWeight.w800, fontFamily: GoogleFonts.calistoga().fontFamily, color: Colors.white, fontSize: 25),
+                    textAlign: TextAlign.center,)
+              ),
+              /* Expanded(
                   flex: 1,
                   child: Image.asset(
                     'app_icon_spenza.png'.assetImageUrl,
                     fit: BoxFit.contain,
                   ),
                 ),*/
-                Expanded(
-                  flex: 1,
-                  child: Image.asset(
-                    'app_icon_spenza.png'.assetImageUrl,
-                    fit: BoxFit.contain,
-                  ),
+              Expanded(
+                flex: 1,
+                child: Image.asset(
+                  'app_icon_spenza.png'.assetImageUrl,
+                  fit: BoxFit.contain,
                 ),
+              ),
 
 
 

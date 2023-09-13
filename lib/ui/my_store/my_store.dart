@@ -58,7 +58,7 @@ class _StoresState extends ConsumerState<AllStoresScreen> {
         centerTitle: true,
         leading: IconButton(
           onPressed: () {
-            context.pushReplacement(RouteManager.homeScreen);
+            context.pop();
           },
           icon: Icon(Icons.arrow_back_ios, color: Color(0xFF0CA9E6)),
         ),

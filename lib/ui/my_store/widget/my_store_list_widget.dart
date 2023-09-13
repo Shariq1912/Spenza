@@ -33,8 +33,8 @@ class MyStoreListWidget extends StatelessWidget {
               );
             },
             child: Card(
-              surfaceTintColor: Color(0xFFE5E7E8),
-              color: Color(0xFFE5E7E8),
+             // surfaceTintColor: Color,
+              //color: Color(0xFFE5E7E8),
               elevation: 1,
               child: Container(
                 margin: const EdgeInsets.all(8.0),

@@ -13,11 +13,12 @@ class MyListWidget extends StatelessWidget {
 
   final List<MyListModel> stores;
   final Function(String store, String name, String photo, String? path) onButtonClicked;
-  final Function(String store) onPopUpClicked;
+  final Function(String store, Offset position) onPopUpClicked;
 
 
   @override
   Widget build(BuildContext context) {
+    Offset? position;
     final poppinsFont = GoogleFonts.poppins().fontFamily;
     if(stores.isEmpty){
       return Center(
@@ -37,8 +38,9 @@ class MyListWidget extends StatelessWidget {
         MyListModel store = stores[index];
 
         return GestureDetector(
-          onTap: (){
+          onTapDown: (TapDownDetails tapDownDetails){
             onButtonClicked(store.documentId!, store.name, store.myListPhoto!, store.path!);
+             position = tapDownDetails.globalPosition;
           },
           child: Card(
             color: Colors.white,
@@ -82,7 +84,8 @@ class MyListWidget extends StatelessWidget {
                   ),
                   IconButton(
                     onPressed: () {
-                     onPopUpClicked(store.path!);
+
+                     onPopUpClicked(store.path!, position!);
                     },
                     icon: Icon(Icons.more_vert),
                   ),

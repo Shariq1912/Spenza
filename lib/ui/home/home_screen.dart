@@ -1,11 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/helpers/bottom_nav_helper.dart';
 import 'package:spenza/helpers/fireStore_pref_mixin.dart';
 import 'package:spenza/router/app_router.dart';
@@ -15,12 +14,12 @@ import 'package:spenza/ui/home/provider/home_preloaded_list.dart';
 import 'package:spenza/ui/home/repo/fetch_favourite_store_repository.dart';
 import 'package:spenza/utils/color_utils.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
+
 import '../profile/profile_repository.dart';
 import 'components/myStore.dart';
 import 'components/preLoadedList.dart';
 import 'components/shimmer_items/home_shimmer_list_view.dart';
 import 'components/topStrip2.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -29,8 +28,7 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen>
-    with FirestoreAndPrefsMixin {
+class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsMixin {
   final arialFont = GoogleFonts.openSans();
   final poppinsFont = GoogleFonts.poppins();
   String? postalCode;

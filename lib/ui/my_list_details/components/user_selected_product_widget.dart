@@ -34,10 +34,10 @@ class UserSelectedProductCard extends ConsumerWidget {
     final poppinsFont = GoogleFonts.poppins().fontFamily;
     final robotoFont = GoogleFonts.roboto().fontFamily;
     return Slidable(
-      key: const ValueKey(0),
+      key: ValueKey(product.productId),
       endActionPane: ActionPane(
         motion: const BehindMotion(),
-    extentRatio: 0.25,
+        extentRatio: 0.25,
         children:  [
           SlidableAction(
             onPressed: (context){
