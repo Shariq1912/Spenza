@@ -26,6 +26,7 @@ import 'package:spenza/ui/splash/splash_screen.dart';
 import 'package:spenza/ui/webview_screen/webview_screen.dart';
 
 import '../ui/my_store/my_store.dart';
+import '../ui/splash/provider/splash_widget.dart';
 
 final GlobalKey<NavigatorState> _rootNavigator = GlobalKey(debugLabel: 'root');
 
@@ -34,6 +35,8 @@ final GlobalKey<NavigatorState> _shellNavigator =
     GlobalKey(debugLabel: 'shell');
 
 class RouteManager {
+  static const String splashWidget = '/';
+  static const String splashScreen = '/splashScreen';
   static const String splashScreen = '/selectedStoreScreen';
 
   static const String loginScreen = '/loginScreen';
@@ -143,14 +146,22 @@ class RouteManager {
           ),
         ],
       ),
-
+      GoRoute(
+        parentNavigatorKey: _rootNavigator,
+        name: splashWidget,
+        path: splashWidget,
+        builder: (context, state) {
+          return SplashWidget();
+          // return const LoginScreen();
+        },
+      ),
 
       GoRoute(
         parentNavigatorKey: _rootNavigator,
         name: splashScreen,
         path: splashScreen,
         builder: (context, state) {
-          return const SplashScreen();
+          return SplashScreen();
           // return const LoginScreen();
         },
       ),

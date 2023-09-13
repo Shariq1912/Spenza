@@ -173,7 +173,7 @@ class _NewMyListState extends ConsumerState<NewMyList> {
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
                               _saveData(context);
-                              ref.read(imagePickerProvider.notifier).state = null;
+
                             }
 
                           },

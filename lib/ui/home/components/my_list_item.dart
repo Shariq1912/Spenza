@@ -24,6 +24,8 @@ class MyListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final arialFont = GoogleFonts.openSans().fontFamily;
     final robotoFont = GoogleFonts.roboto().fontFamily;
+    Color textColor = name == "New List" ? ColorUtils.colorPrimary : ColorUtils.primaryText;
+
     return InkWell(
       onTap: onTap,
       child: Column(
@@ -36,7 +38,7 @@ class MyListItem extends StatelessWidget {
             style:  TextStyle(
               fontFamily: robotoFont,
               decoration: TextDecoration.none,
-              color: ColorUtils.primaryText,
+              color: textColor,
               //fontWeight: FontWeight.bold,
               fontSize: 15,
             ),
@@ -62,17 +64,7 @@ class MyListItem extends StatelessWidget {
                 width: 110,
                 height: 110,
               ),
-              Positioned(
-                top: 0,
-                right: 0,
-                child: Container(
-                  child: Icon(
-                    Icons.add,
-                    color: Colors.white,
-                    size: 25.0,
-                  ),
-                ),
-              ),
+
             ],
           ),
           /*placeholder: (context, url) => Stack(

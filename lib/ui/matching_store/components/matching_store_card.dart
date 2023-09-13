@@ -61,7 +61,7 @@ class MatchingStoreCard extends StatelessWidget {
                 alignment: Alignment.topRight,
                 children: [
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8.0),
@@ -120,7 +120,8 @@ class MatchingStoreCard extends StatelessWidget {
                                 color: Colors.black,
                               ),
                             ),
-                            SizedBox(height: 10),
+
+                            //SizedBox(height: 10),
                             Text(
                               address,
                               style: TextStyle(
@@ -128,12 +129,17 @@ class MatchingStoreCard extends StatelessWidget {
                                 color: Colors.grey,
                               ),
                             ),
-                            SizedBox(height: 18),
+                            SizedBox(height: 8),
                             Container(
+
                               // Wrap the distance text in a container
+                              decoration: BoxDecoration(
+                               // border: Border.all(color: Colors.grey.shade200,),
+                                color:Colors.grey.shade200,
+                              ),
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 2, vertical: 4),
-                              color: Colors.white30,
+                                  horizontal: 8, vertical: 1),
+
                               child: Text(
                                 distance,
                                 style: TextStyle(

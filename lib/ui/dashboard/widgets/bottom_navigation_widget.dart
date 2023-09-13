@@ -55,7 +55,9 @@ class _BottomNavigationWidgetState
     final position = widget.navigationShell.currentIndex;
 
     return Container(
+
       decoration: BoxDecoration(
+        color: Colors.white,
         boxShadow: [
           BoxShadow(
             color: Colors.grey,
@@ -77,6 +79,7 @@ class _BottomNavigationWidgetState
           fontSize: 11,
           fontWeight: FontWeight.w700,
         ),
+        backgroundColor: Colors.white,
         unselectedLabelStyle: const TextStyle(
           color: ColorUtils.bottomNavIconAndTextColor,
           fontSize: 11,

@@ -76,14 +76,14 @@ class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
     ),
   ];
 
-  void _onActionIconPressed(String itemPath) {
+  void _onActionIconPressed(String itemPath, Offset itemposition) {
     print("clickedItemPath : $itemPath");
     final RenderBox customAppBarRenderBox =
         context.findRenderObject() as RenderBox;
     final customAppBarPosition =
         customAppBarRenderBox.localToGlobal(Offset.zero);
 
-    showPopupMenu(
+    /*showPopupMenu(
       context: context,
       position: RelativeRect.fromLTRB(
         customAppBarPosition.dx + customAppBarRenderBox.size.width - 40,
@@ -134,7 +134,9 @@ class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
           }
         }
       },
-    );
+    );*/
+    final customPopupMenuOverlay = CustomPopupMenuOverlay(context);
+    customPopupMenuOverlay.show(itemPath, itemposition);
   }
 
   @override
@@ -170,7 +172,7 @@ class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
                 final profilePro = ref.watch(profileRepositoryProvider);
                 return profilePro.when(
                   () => Container(),
-                  loading: () => Center(child: SpenzaCircularProgress()),
+                  loading: () => Container(),
                   error: (message) => CircleAvatar(
                     radius: 40,
                     child: ClipOval(
@@ -223,39 +225,44 @@ class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Consumer(
-          builder: (context, ref, child) {
-            final storeProvider = ref.watch(fetchMyListProvider);
-            return storeProvider.when(
-              loading: () => Center(child: SpenzaCircularProgress()),
-              error: (error, stackTrace) {
-                print("errorMrss $error");
-                return Center(child: Text(error.toString()));
-              },
-              data: (data) {
-                print("allStoredata $data");
-                return MyListWidget(
-                  stores: data,
-                  onButtonClicked: (listId, name, photo, path) {
-                    ref
-                        .read(fetchMyListProvider.notifier)
-                        .redirectUserToListDetailsScreen(
-                            context: context,
-                            listId: listId,
-                            name: name,
-                            photo: photo,
-                            path: path!);
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Consumer(
+              builder: (context, ref, child) {
+                final storeProvider = ref.watch(fetchMyListProvider);
+                return storeProvider.when(
+                  loading: () => Center(child: SpenzaCircularProgress()),
+                  error: (error, stackTrace) {
+                    print("errorMrss $error");
+                    return Center(child: Text(error.toString()));
                   },
-                  onPopUpClicked: (String path) {
-                    _onActionIconPressed(path);
+                  data: (data) {
+                    print("allStoredata $data");
+                    return MyListWidget(
+                      stores: data,
+                      onButtonClicked: (listId, name, photo, path) {
+                        ref
+                            .read(fetchMyListProvider.notifier)
+                            .redirectUserToListDetailsScreen(
+                                context: context,
+                                listId: listId,
+                                name: name,
+                                photo: photo,
+                                path: path!);
+                      },
+                      onPopUpClicked: (String path, Offset position) {
+                        _onActionIconPressed(path, position);
+
+                      },
+                    );
                   },
                 );
               },
-            );
-          },
-        ),
+            ),
+          ),
+        ],
       ),
     );
   }

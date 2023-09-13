@@ -218,7 +218,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         );
                       },
                     ),
-                    Row(
+                    /*Row(
                       children: [
                         Expanded(
                           child: TextButton(
@@ -233,7 +233,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                         ),
                       ],
-                    ),
+                    ),*/
                     const SizedBox(height: 25),
                     Row(
                       children: <Widget>[
