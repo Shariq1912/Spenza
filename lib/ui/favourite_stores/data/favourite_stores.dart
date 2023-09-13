@@ -9,6 +9,7 @@ part 'favourite_stores.g.dart';
 class Stores with _$Stores {
   const factory Stores({
     @Default("") String id,
+    @Default("") String groupName,
     required String name,
     required String address,
     required List<String> zipCodesList,

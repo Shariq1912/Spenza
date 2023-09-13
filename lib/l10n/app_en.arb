@@ -104,7 +104,7 @@
     "@displayAllUserMyList": {
       "description": "Message for displaying all user's lists"
     },
-    "preloadedListTitle": "Preloaded List",
+    "preloadedListTitle": "Preloaded Lists",
     "@preloadedListTitle": {
       "description": "Title for the 'Preloaded List' section"
     },
