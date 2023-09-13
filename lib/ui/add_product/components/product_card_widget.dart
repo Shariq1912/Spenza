@@ -84,9 +84,8 @@ class ProductCard extends StatelessWidget {
                       child: Container(
                         height: 20,
                         width: 20,
-                        child: SvgPicture.asset(
-                          "add_icon.svg".assetImageUrl,
-                          colorFilter: ColorFilter.mode(ColorUtils.colorSecondary, BlendMode.srcIn),
+                        child: Image.asset(
+                          "add_icon.png".assetImageUrl,
                         ),
                       ),
                     ),

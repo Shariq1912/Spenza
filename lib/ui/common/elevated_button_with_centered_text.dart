@@ -31,7 +31,7 @@ class ElevatedButtonWithCenteredText extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
-        // fixedSize: size,
+        fixedSize: size,
       ),
       child: Text(text),
     );

@@ -70,7 +70,7 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
   @override
   Widget build(BuildContext context) {
     final poppinsFont = ref.watch(poppinsFontProvider).fontFamily;
-
+    final size = MediaQuery.of(context).size;
     /*ref.listen(selectedStoreProvider, (previous, next) {
       next.maybeWhen(
         orElse: () {},
@@ -221,10 +221,14 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
                     ),
               ),
             ),
-            ElevatedButtonWithCenteredText(
-              onClick: () {},
-              text: "I finished Shopping", // todo localize the text
-              fontFamily: poppinsFont!,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: ElevatedButtonWithCenteredText(
+                size: Size(size.width, 40),
+                onClick: () {},
+                text: "I finished Shopping", // todo localize the text
+                fontFamily: poppinsFont!,
+              ),
             ),
           ],
         ),
