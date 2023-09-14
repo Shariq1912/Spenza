@@ -27,6 +27,7 @@ import '../../router/app_router.dart';
 import '../profile/profile_repository.dart';
 import 'component/dialog_list.dart';
 import 'component/my_product_list_widget.dart';
+import 'data/list_item.dart';
 import 'provider/add_product_to_my_list_provider.dart';
 
 class MyStoreProduct extends ConsumerStatefulWidget {
@@ -216,7 +217,7 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
             ),
             Expanded(
               child: Container(
-                padding: EdgeInsets.only(left: 8.0,right: 8.0),
+                padding: EdgeInsets.only(left: 8.0, right: 8.0),
                 child: Consumer(builder: (context, ref, child) {
                   final data = ref.watch(productForStoreProvider);
                   final selectedDepartments =
@@ -269,59 +270,6 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
                           },
                         );
                       }
-
-                      return ListView.separated(
-                        separatorBuilder: (context, index) => Divider(
-                          color: ColorUtils.colorSurface,
-                          thickness: 1.0,
-                          height: 0, // Set the height to 0 to avoid extra space.
-                        ),
-                        itemCount: filteredProducts.length,
-                        itemBuilder: (context, index) {
-                          final ProductModel product = filteredProducts[index];
-                          return ProductCard(
-                            onClick: () async {
-                              if (widget.listId != null) {
-                                final bool hasReload = await ref
-                                    .read(addProductToMyListProvider.notifier)
-                                    .addProductToMyList(
-                                      listId: widget.listId!,
-                                      productRef: product.documentId!,
-                                      productId: product.productId,
-                                      context: context,
-                                    );
-
-                                print("has Reload == $hasReload");
-                                if (hasReload) {
-                                  /*  ref
-                                      .read(userProductListProvider.notifier)
-                                      .fetchProductFromListId();*/
-
-                                  print("Inside has Reload");
-                                  hasValueChanged = true;
-                                }
-
-                                return;
-                              }
-
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return MyListDialog(
-                                    productRef: product.documentId!,
-                                    productId: product.productId,
-                                  );
-                                },
-                              );
-                            },
-                            measure: product.measure,
-                            imageUrl: product.pImage,
-                            title: product.name,
-                            priceRange: "",
-                            isPriceRangeVisible: false,
-                          );
-                        },
-                      );
                     },
                     error: (error, stackTrace) => Center(child: Text("$error")),
                     loading: () => Center(child: SpenzaCircularProgress()),
@@ -376,54 +324,52 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
     Function(ProductModel product) onClick,
   ) {
     final List<String> departments = productByDepartment.keys.toList();
+    List<ListItem> listItems = [];
+
+    // Create a list of items with department labels and products
+    for (String department in departments) {
+      listItems.add(ListItem(department: department));
+      final List<ProductModel> departmentProducts =
+          productByDepartment[department] ?? [];
+      listItems.addAll(
+          departmentProducts.map((product) => ListItem(product: product)));
+    }
 
     return ListView.builder(
-      itemCount: departments.length,
-      itemBuilder: (context, departmentIndex) {
-        final String department = departments[departmentIndex];
-        final List<ProductModel> departmentProducts =
-            productByDepartment[department] ?? [];
+      itemCount: listItems.length,
+      itemBuilder: (context, index) {
+        final ListItem item = listItems[index];
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0)
-                  .copyWith(top: 10, bottom: 10),
-              child: Text(
-                department,
-                style: TextStyle(
-                  color: ColorUtils.colorPrimary,
-                  fontFamily: poppinsFont,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+        if (item.department != null) {
+          // Render department label
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0)
+                .copyWith(top: 10, bottom: 10),
+            child: Text(
+              item.department!,
+              style: TextStyle(
+                color: ColorUtils.colorPrimary,
+                fontFamily: poppinsFont,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 4),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: departmentProducts.length,
-              itemBuilder: (context, productIndex) {
-                final ProductModel product = departmentProducts[productIndex];
-                return ProductCard(
-                  onClick: () => onClick.call(product),
-                  measure: product.measure,
-                  imageUrl: product.pImage,
-                  title: product.name,
-                  priceRange: "",
-                  isPriceRangeVisible: false,
-                );
-              },
-              /*separatorBuilder: (BuildContext context, int index) => Divider(
-                color: ColorUtils.colorSurface,
-                thickness: 1.0,
-                height: 0, // Set the height to 0 to avoid extra space.
-              ),*/
-            ),
-          ],
-        );
+          );
+        } else if (item.product != null) {
+          // Render product card
+          final ProductModel product = item.product!;
+          return ProductCard(
+            onClick: () => onClick.call(product),
+            measure: product.measure,
+            imageUrl: product.pImage,
+            title: product.name,
+            priceRange: "",
+            isPriceRangeVisible: false,
+          );
+        } else {
+          // Handle other cases if needed
+          return SizedBox();
+        }
       },
     );
   }
@@ -433,7 +379,7 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
     Function(ProductModel product) onClick,
   ) {
     return Container(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: ListView.builder(
         itemCount: products.length,
         itemBuilder: (context, index) {
