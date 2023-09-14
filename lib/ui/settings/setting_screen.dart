@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:spenza/utils/color_utils.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 import '../../router/app_router.dart';
+import '../login/login_provider.dart';
 import '../profile/profile_repository.dart';
 import 'components/card_item.dart';
 
@@ -68,29 +70,43 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     context.pushNamed(RouteManager.storesScreen);
                   }),
               SizedBox(height: 10),
-              Card(
-                color: Colors.white,
+              Container(
+                color: Color(0xFFE5E7E8),
                 child: Column(
                   children: [
                     ListTile(
                       leading: Icon(Icons.notification_important,
-                          color: Colors.pinkAccent),
+                          color: Colors.grey.shade600),
                       title: Text(
                         "Notifications",
                         style: TextStyle(
                           fontSize: 14,
                           fontFamily: poppinsFont,
+                            color: ColorUtils.primaryText
+                        ),
+                      ),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.lock_rounded,
+                          color: Colors.grey.shade600),
+                      title: Text(
+                        "Privacy Policy",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: poppinsFont,
+                            color: ColorUtils.primaryText
                         ),
                       ),
                     ),
                     ListTile(
                       leading:
-                          Icon(Icons.privacy_tip, color: Color(0xFF0CA9E6)),
+                          Icon(Icons.lock_rounded, color: Colors.grey.shade600),
                       title: Text(
-                        "Privacy",
+                        "Terms and Condition",
                         style: TextStyle(
                           fontSize: 14,
                           fontFamily: poppinsFont,
+                            color: ColorUtils.primaryText
                         ),
                       ),
                     ),
@@ -98,19 +114,48 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                 ),
               ),
               SizedBox(height: 10),
-              Card(
-                color: Colors.white,
+              Container(
+                color: Color(0xFFE5E7E8),
                 child: Column(
                   children: [
                     ListTile(
-                      leading: Icon(Icons.share, color: Colors.greenAccent),
+                      leading: Icon(Icons.favorite, color: ColorUtils.colorSecondary),
                       title: Text(
                         "Share and earn",
                         style: TextStyle(
                           fontSize: 14,
                           fontFamily: poppinsFont,
+                            color: ColorUtils.primaryText
                         ),
                       ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 10),
+              Container(
+                color: Color(0xFFE5E7E8),
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: Icon(Icons.logout, color: Colors.grey.shade600),
+                      title: Text(
+                        "Sign Out",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: poppinsFont,
+                          color: ColorUtils.primaryText
+                        ),
+                      ),
+                      onTap: () async {
+                        ref
+                            .read(loginRepositoryProvider.notifier)
+                            .signOut()
+                            .then(
+                              (value) =>
+                              context.goNamed(RouteManager.loginScreen),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -156,73 +201,79 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
               },
               icon: Icon(Icons.arrow_back_ios, color: Color(0xFF0CA9E6)),
             )
-          : Container(),
+          : Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Consumer(
+                builder: (context, ref, child) {
+                  final profilePro = ref.watch(profileRepositoryProvider);
+                  return profilePro.when(
+                    () => Container(),
+                    loading: () => Center(child: CircularProgressIndicator()),
+                    error: (message) => CircleAvatar(
+                      child: Image.asset('assets/images/user.png'),
+                    ),
+                    success: (data) {
+                      if (data.profilePhoto != null &&
+                          data.profilePhoto!.isNotEmpty) {
+                        return CircleAvatar(
+                          radius: 40,
+                          child: ClipOval(
+                            child: AspectRatio(
+                              aspectRatio: 1.0,
+                              child: CachedNetworkImage(
+                                fit: BoxFit.cover,
+                                imageUrl: data.profilePhoto!,
+                                placeholder: (context, url) => Image.asset(
+                                    'app_icon_spenza.png'.assetImageUrl),
+                                errorWidget: (context, url, error) =>
+                                    Image.asset(
+                                        'user_placeholder.png'.assetImageUrl),
+                              ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return CircleAvatar(
+                          radius: 35,
+                          child: ClipOval(
+                              child: AspectRatio(
+                            aspectRatio: 1.0,
+                            child: Image.asset(
+                              'user_placeholder.png'.assetImageUrl,
+                              fit: BoxFit.cover,
+                            ),
+                          )),
+                        );
+                      }
+                    },
+                  );
+                },
+              ),
+            ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(
-            top: 5,
-          ),
-          child: InkWell(onTap: () {
-            context.pushNamed(RouteManager.profileScreen);
-          }, child: Consumer(
-            builder: (context, ref, child) {
-              final profilePro = ref.watch(profileRepositoryProvider);
-              return profilePro.when(
-                () => Container(),
-                loading: () => Center(child: CircularProgressIndicator()),
-                error: (message) => CircleAvatar(
-                  child: Image.asset('assets/images/user.png'),
-                ),
-                success: (data) {
-                  if (data.profilePhoto != null &&
-                      data.profilePhoto!.isNotEmpty) {
-                    return CircleAvatar(
-                      radius: 40,
-                      child: ClipOval(
-                        child: AspectRatio(
-                          aspectRatio: 1.0,
-                          child: CachedNetworkImage(
-                            fit: BoxFit.cover,
-                            imageUrl: data.profilePhoto!,
-                            placeholder: (context, url) => Image.asset(
-                                'app_icon_spenza.png'.assetImageUrl),
-                            errorWidget: (context, url, error) => Image.asset(
-                                'user_placeholder.png'.assetImageUrl),
-                          ),
-                        ),
-                      ),
-                    );
-                  } else {
-                    return CircleAvatar(
-                      radius: 35,
-                      child: ClipOval(
-                          child: AspectRatio(
-                        aspectRatio: 1.0,
-                        child: Image.asset(
-                          'user_placeholder.png'.assetImageUrl,
-                          fit: BoxFit.cover,
-                        ),
-                      )),
-                    );
-                  }
-                },
-              );
-            },
-          )
-              //),
-              ),
-        )
+            padding: const EdgeInsets.only(
+              top: 5,
+            ),
+            child: IconButton(
+              onPressed: () {
+                context.push(RouteManager.profileScreen);
+              },
+              icon: Icon(Icons.arrow_forward_ios, color: Color(0xFF0CA9E6)),
+            )
+            //),
+            ),
       ],
       title: Text(
-        "Setting",
+        "Account Information",
         style: TextStyle(
           fontFamily: poppinsFont,
           fontWeight: FontWeight.bold,
-          fontSize: 20,
-          color: Color(0xFF0CA9E6),
+          fontSize: 16,
+          color: ColorUtils.primaryText,
         ),
       ),
-      centerTitle: true,
+      centerTitle: false,
     );
   }
 }

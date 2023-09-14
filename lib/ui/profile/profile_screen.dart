@@ -76,7 +76,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       ),
                       SizedBox(height: 10),
                       SizedBox(height: 10),
-                      Container(
+                      /*Container(
                         width: double.infinity,
                         padding: EdgeInsets.only(left: 10, right: 10),
                         child: ElevatedButton(
@@ -105,7 +105,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           child: Text("Log out"),
                         ),
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 10)*/
                       buildCard(
                         "Profile Information",
                         [

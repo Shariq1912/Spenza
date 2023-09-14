@@ -130,7 +130,7 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen>
           centerTitle: true,
           leading: IconButton(
             onPressed: () {
-              context.pushReplacement(RouteManager.homeScreen);
+              context.pop();
             },
             icon: Icon(Icons.arrow_back_ios, color: Color(0xFF0CA9E6)),
           ),
@@ -144,7 +144,7 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen>
                   final profilePro = ref.watch(profileRepositoryProvider);
                   return profilePro.when(
                     () => Container(),
-                    loading: () => Center(child: SpenzaCircularProgress()),
+                    loading: () => Container(),
                     error: (message) => ClipOval(
                       child: Image.asset('assets/images/user.png'),
                     ),
