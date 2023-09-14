@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:spenza/helpers/bottom_nav_helper.dart';
 import 'package:spenza/utils/color_utils.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 import '../../router/app_router.dart';
@@ -51,11 +52,13 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               CardItem(
-                  icon: Icons.list,
-                  title: "My Lists",
-                  onTap: () {
-                    context.push(RouteManager.myListScreen);
-                  }),
+                icon: Icons.list,
+                title: "My Lists",
+                onTap: () {
+                  StatefulNavigationShell.of(context)
+                      .goBranch(screenNameToIndex[ScreenName.myList]!);
+                },
+              ),
               CardItem(
                   icon: Icons.receipt,
                   title: "My Receipts",
@@ -80,22 +83,20 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                       title: Text(
                         "Notifications",
                         style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: poppinsFont,
-                            color: ColorUtils.primaryText
-                        ),
+                            fontSize: 14,
+                            fontFamily: poppinsFont,
+                            color: ColorUtils.primaryText),
                       ),
                     ),
                     ListTile(
-                      leading: Icon(Icons.lock_rounded,
-                          color: Colors.grey.shade600),
+                      leading:
+                          Icon(Icons.lock_rounded, color: Colors.grey.shade600),
                       title: Text(
                         "Privacy Policy",
                         style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: poppinsFont,
-                            color: ColorUtils.primaryText
-                        ),
+                            fontSize: 14,
+                            fontFamily: poppinsFont,
+                            color: ColorUtils.primaryText),
                       ),
                     ),
                     ListTile(
@@ -104,10 +105,9 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                       title: Text(
                         "Terms and Condition",
                         style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: poppinsFont,
-                            color: ColorUtils.primaryText
-                        ),
+                            fontSize: 14,
+                            fontFamily: poppinsFont,
+                            color: ColorUtils.primaryText),
                       ),
                     ),
                   ],
@@ -119,14 +119,14 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                 child: Column(
                   children: [
                     ListTile(
-                      leading: Icon(Icons.favorite, color: ColorUtils.colorSecondary),
+                      leading: Icon(Icons.favorite,
+                          color: ColorUtils.colorSecondary),
                       title: Text(
                         "Share and earn",
                         style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: poppinsFont,
-                            color: ColorUtils.primaryText
-                        ),
+                            fontSize: 14,
+                            fontFamily: poppinsFont,
+                            color: ColorUtils.primaryText),
                       ),
                     ),
                   ],
@@ -140,19 +140,14 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                   title: Text(
                     "Sign Out",
                     style: TextStyle(
-                      fontSize: 14,
-                      fontFamily: poppinsFont,
-                      color: ColorUtils.primaryText
-                    ),
+                        fontSize: 14,
+                        fontFamily: poppinsFont,
+                        color: ColorUtils.primaryText),
                   ),
                   onTap: () async {
-                    ref
-                        .read(loginRepositoryProvider.notifier)
-                        .signOut()
-                        .then(
-                          (value) =>
-                          context.goNamed(RouteManager.loginScreen),
-                    );
+                    ref.read(loginRepositoryProvider.notifier).signOut().then(
+                          (value) => context.goNamed(RouteManager.loginScreen),
+                        );
                   },
                 ),
               )

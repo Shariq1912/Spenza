@@ -97,7 +97,7 @@ class ProductCard extends StatelessWidget {
               ),
             ),
           )*/
-        Card(
+            Card(
           surfaceTintColor: Color(0xFFE5E7E8),
           color: Color(0xFFE5E7E8),
           child: Padding(
@@ -108,14 +108,12 @@ class ProductCard extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: CachedNetworkImage(
-                    imageUrl: imageUrl,
-                    width: 80,
-                    height: 80,
-                    fit: BoxFit.cover,
+                      imageUrl: imageUrl,
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.cover,
                       errorWidget: (context, url, error) =>
-                          Image.asset(
-                              'app_icon_spenza.png'.assetImageUrl)
-                  ),
+                          Image.asset('app_icon_spenza.png'.assetImageUrl)),
                 ),
                 SizedBox(width: 8),
                 Expanded(
@@ -123,12 +121,19 @@ class ProductCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        title.length > 20 ? '${title.substring(0, 20)}...' : title,
-                        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        title,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                       SizedBox(height: 3),
-                      Text(measure,
-                        style: TextStyle(fontSize: 13, ),),
+                      Text(
+                        measure,
+                        style: TextStyle(
+                          fontSize: 13,
+                        ),
+                      ),
                       SizedBox(height: 4),
                       Text(
                         priceRange,
@@ -156,9 +161,8 @@ class ProductCard extends StatelessWidget {
               ],
             ),
           ),
-
         ),
-       // ),
+        // ),
       ),
     );
   }

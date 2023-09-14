@@ -11,6 +11,7 @@ import 'package:spenza/helpers/nearby_store_helper.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/add_product/data/product.dart';
 import 'package:spenza/ui/favourite_stores/data/favourite_stores.dart';
+import 'package:spenza/ui/home/data/fetch_favourite_store.dart';
 import 'package:spenza/ui/my_list_details/data/matching_store.dart';
 import 'package:spenza/utils/fireStore_constants.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
@@ -68,7 +69,8 @@ class StoreRanking extends _$StoreRanking
 
       if (nearbyStores.length > 30) {
         // Where in requires non empty iterator.
-        state = AsyncValue.error("Doesn't support Nearby stores more than 30", StackTrace.empty);
+        state = AsyncValue.error(
+            "Doesn't support Nearby stores more than 30", StackTrace.empty);
         return;
       }
 
@@ -239,8 +241,11 @@ class StoreRanking extends _$StoreRanking
         stores.add(store);
       }
 
+      final List<MatchingStores> favouriteStores =
+          markFavorites(stores, await fetchFavouriteStoreIds());
+
       // Sort the stores based on the matching percentage
-      stores.sort((a, b) {
+      favouriteStores.sort((a, b) {
         final result = b.matchingPercentage.compareTo(a.matchingPercentage);
         if (result == 0) {
           return a.distance.compareTo(b
@@ -249,13 +254,30 @@ class StoreRanking extends _$StoreRanking
         return result;
       });
 
-      state = AsyncValue.data(stores);
+      state = AsyncValue.data(favouriteStores);
     } catch (e) {
       print('Error ranking stores: $e');
 
       state =
           AsyncValue.error('Error searching stores: $e', StackTrace.current);
     }
+  }
+
+  List<MatchingStores> markFavorites(
+      List<MatchingStores> matchingStores, List<String> favoriteStores) {
+    // Create a Set of favorite store IDs for quick lookup
+
+    print("FAV STORE IDS == $favoriteStores");
+
+    final favoriteStoreIds = favoriteStores.toSet();
+
+    // Iterate through matching stores and mark them as favorite if they match
+    final markedMatchingStores = matchingStores.map((store) {
+      final isFavorite = favoriteStoreIds.contains(store.storeRef?.id);
+      return store.copyWith(isFavourite: isFavorite);
+    }).toList();
+
+    return markedMatchingStores;
   }
 
   Product? _getSimilarProductFromList({
@@ -376,6 +398,38 @@ class StoreRanking extends _$StoreRanking
       address: storeSnapshot[
           'address'], //todo change the typo address once field changed in db
     );
+  }
+
+  Future<List<String>> fetchFavouriteStoreIds() async {
+    final userId = await prefs.then((value) => value.getUserId());
+
+    try {
+      final snapshot = await fireStore
+          .collection(FavoriteConstant.favoriteCollection)
+          .where(FavoriteConstant.userIdField, isEqualTo: 'users/$userId')
+          .get();
+
+      if (snapshot.docs.isEmpty) {
+        return [];
+      }
+
+      final List<dynamic> storeIdStringsDynamic = snapshot.docs.first['store_ids'] ?? [];
+      final List<String> storeIdStrings = storeIdStringsDynamic.cast<String>();
+      final List<String> storeIds = [];
+
+      for (String storeIdString in storeIdStrings) {
+        final DocumentReference storeRef = fireStore.doc(storeIdString);
+        final DocumentSnapshot storeSnapshot = await storeRef.get();
+        if (storeSnapshot.exists) {
+          storeIds.add(storeSnapshot.id);
+        }
+      }
+
+      return storeIds;
+    } catch (error) {
+      print("Error fetching favorite store IDs: $error");
+      return [];
+    }
   }
 
   Future<void> redirectUserToStoreDetails({

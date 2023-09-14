@@ -27,167 +27,167 @@ class MatchingStoreCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => onClick.call(),
-      child: Card(
+    return Padding(
+      padding: const EdgeInsets.only(left: 4.0),
+      child: Container(
         color: Colors.white,
-        surfaceTintColor: Colors.white,
-        shape: RoundedRectangleBorder(),
-        elevation: 1,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 4.0),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "$matchingPercentage% Match",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                      color: ColorUtils.colorPrimary,
-                    ),
-                  ),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.black,
-                    size: 14,
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Stack(
-                alignment: Alignment.topRight,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
-                        child: Stack(
-                          children: [
-                            SizedBox(
-                              height: 90,
-                              width: 90,
-                              child: CachedNetworkImage(
-                                imageUrl: imageUrl,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            // Position the heart icon on the top right corner
-                            Positioned(
-                              top: 1,
-                              right: 5,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.transparent,
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black12,
-                                      blurRadius: 2,
-                                      offset: Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: isFavouriteStore
-                                    ? Icon(
-                                        Icons.favorite,
-                                        color: Colors.white,
-                                        size: 20,
-                                      )
-                                    : Icon(
-                                        Icons.favorite_border,
-                                        color: Colors.grey[400],
-                                        size: 20,
-                                      ),
-                              ),
-                            ),
-                          ],
-                        ),
+        child: InkWell(
+          onTap: () =>  onClick.call(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 4.0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "$matchingPercentage% Match",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: ColorUtils.colorPrimary,
                       ),
-                      SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              title,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 16,
-                                color: Colors.black,
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.black,
+                      size: 14,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Stack(
+                  alignment: Alignment.topRight,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Stack(
+                            children: [
+                              SizedBox(
+                                height: 90,
+                                width: 90,
+                                child: CachedNetworkImage(
+                                  imageUrl: imageUrl,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
-                            ),
-
-                            //SizedBox(height: 10),
-                            Text(
-                              address,
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: Colors.grey,
+                              // Position the heart icon on the top right corner
+                              Positioned(
+                                top: 1,
+                                right: 5,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.transparent,
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black12,
+                                        blurRadius: 2,
+                                        offset: Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: isFavouriteStore
+                                      ? Icon(
+                                          Icons.favorite,
+                                          color: Colors.white,
+                                          size: 20,
+                                        )
+                                      : Icon(
+                                          Icons.favorite_border,
+                                          color: Colors.grey[400],
+                                          size: 20,
+                                        ),
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 8),
-                            Container(
-
-                              // Wrap the distance text in a container
-                              decoration: BoxDecoration(
-                               // border: Border.all(color: Colors.grey.shade200,),
-                                color:Colors.grey.shade200,
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                title,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                ),
                               ),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 1),
 
-                              child: Text(
-                                distance,
+                              //SizedBox(height: 10),
+                              Text(
+                                address,
                                 style: TextStyle(
                                   fontSize: 13,
-                                  fontWeight: FontWeight.w700,
-                                  color: ColorUtils.colorPrimary,
+                                  color: Colors.grey,
                                 ),
                               ),
-                            ),
-                          ],
+                              SizedBox(height: 8),
+                              Container(
+
+                                // Wrap the distance text in a container
+                                decoration: BoxDecoration(
+                                 // border: Border.all(color: Colors.grey.shade200,),
+                                  color:Colors.grey.shade200,
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 1),
+
+                                child: Text(
+                                  distance,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700,
+                                    color: ColorUtils.colorPrimary,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Visibility(
+                      visible: false,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: _getColorForPercentage(matchingPercentage),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        child: Text(
+                          "$matchingPercentage% Match",
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                    ],
-                  ),
-                  Visibility(
-                    visible: false,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: _getColorForPercentage(matchingPercentage),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    ),
+                    Positioned(
+                      right: 8,
+                      bottom: 3,
                       child: Text(
-                        "$matchingPercentage% Match",
+                        '\$ $totalPrice', // Display the actual price here
                         style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                          color: Colors.black,
                         ),
                       ),
                     ),
-                  ),
-                  Positioned(
-                    right: 8,
-                    bottom: 3,
-                    child: Text(
-                      '\$ $totalPrice', // Display the actual price here
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

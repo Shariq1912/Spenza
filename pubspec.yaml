@@ -126,6 +126,7 @@ dependencies:
   flutter_keyboard_visibility: ^5.4.1
   flutter_slidable: ^3.0.0
   shimmer: ^3.0.0
+  flutter_speed_dial: ^7.0.0
 
 dev_dependencies:
 

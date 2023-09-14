@@ -27,8 +27,10 @@ class _MatchingStoreScreenState extends ConsumerState<MatchingStoreScreen> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(profileRepositoryProvider.notifier).getUserProfileData();
-      ref.read(storeRankingProvider.notifier).rankStoresByPriceTotal();
+      Future.wait([
+        ref.read(profileRepositoryProvider.notifier).getUserProfileData(),
+        ref.read(storeRankingProvider.notifier).rankStoresByPriceTotal()
+      ]);
     });
   }
 
@@ -36,60 +38,60 @@ class _MatchingStoreScreenState extends ConsumerState<MatchingStoreScreen> {
   Widget build(BuildContext context) {
     final poppinsFont = ref.watch(poppinsFontProvider);
 
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: Scaffold(
-        backgroundColor: ColorUtils.colorSurface,
-        appBar: HomeTopAppBar(
-          title: "Choose your best option!",
-          poppinsFont: poppinsFont,
-        ),
-        body: Consumer(
-          builder: (context, ref, child) {
-            final result = ref.watch(storeRankingProvider);
+    return Scaffold(
+      appBar: HomeTopAppBar(
+        title: "Choose your best option!",
+        poppinsFont: poppinsFont,
+      ),
+      body: Consumer(
+        builder: (context, ref, child) {
+          final result = ref.watch(storeRankingProvider);
 
-            return result.when(
-              data: (data) {
-                if (data == null) {
-                  return Center(child: SpenzaCircularProgress());
-                }
-                if (data.isEmpty) {
-                  return Center(
-                    child: Text("No stores found!"),
-                  );
-                }
-
-                return ListView.builder(
-                  itemCount: data.length,
-                  itemBuilder: (context, index) {
-                    final MatchingStores store = data[index];
-                    return MatchingStoreCard(
-                      matchingPercentage: store.matchingPercentage,
-                      address: store.address,
-                      imageUrl: store.logo,
-                      title: store.name,
-                      totalPrice: store.totalPrice.toString(),
-                      distance: store.distance,
-                      onClick: () {
-                        ref
-                            .read(storeRankingProvider.notifier)
-                            .redirectUserToStoreDetails(
-                              storeRef: store.storeRef!,
-                              context: context,
-                              total: store.totalPrice,
-                            );
-                      },
-                    );
-                  },
+          return result.when(
+            data: (data) {
+              if (data == null) {
+                return Center(child: SpenzaCircularProgress());
+              }
+              if (data.isEmpty) {
+                return Center(
+                  child: Text("No stores found!"),
                 );
-              },
-              error: (error, stackTrace) => Center(child: Text("$error")),
-              loading: () => Center(child: SpenzaCircularProgress()),
-            );
-          },
-        ),
+              }
+
+              return ListView.separated(
+                itemCount: data.length,
+                separatorBuilder: (BuildContext context, int index) => Divider(
+                  color: ColorUtils.colorSurface,
+                  thickness: 1.0,
+                  height: 1, // Set the height to 0 to avoid extra space.
+                ),
+                itemBuilder: (context, index) {
+                  final MatchingStores store = data[index];
+                  return MatchingStoreCard(
+                    isFavouriteStore : store.isFavourite,
+                    matchingPercentage: store.matchingPercentage,
+                    address: store.address,
+                    imageUrl: store.logo,
+                    title: store.name,
+                    totalPrice: store.totalPrice.toString(),
+                    distance: store.distance,
+                    onClick: () {
+                      ref
+                          .read(storeRankingProvider.notifier)
+                          .redirectUserToStoreDetails(
+                            storeRef: store.storeRef!,
+                            context: context,
+                            total: store.totalPrice,
+                          );
+                    },
+                  );
+                },
+              );
+            },
+            error: (error, stackTrace) => Center(child: Text("$error")),
+            loading: () => Center(child: SpenzaCircularProgress()),
+          );
+        },
       ),
     );
   }

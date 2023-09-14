@@ -50,7 +50,18 @@ class _SelectedStoreProductCardState extends State<SelectedStoreProductCard> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    if (!widget.isMissing) ...[
+
+
+                    Text(
+                      "${widget.quantity} pza",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
+                    ),
+
+                    /*if (!widget.isMissing) ...[
                       Text(
                         "${widget.quantity} pza",
                         style: TextStyle(
@@ -69,7 +80,7 @@ class _SelectedStoreProductCardState extends State<SelectedStoreProductCard> {
                           color: Colors.black,
                         ),
                       ),
-                    ]
+                    ]*/
                   ],
                 ),
                 SizedBox(width: 5),

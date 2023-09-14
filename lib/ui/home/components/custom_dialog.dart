@@ -4,12 +4,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:spenza/ui/home/provider/fetch_mylist_provider.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
 import '../../my_store_products/component/add_product_to_new_list.dart';
 import '../../my_store_products/data/user_product_list_data.dart';
 import '../../my_store_products/provider/add_product_to_my_list_provider.dart';
-import '../../preloaded_list_screen/provider/fetch_mylist_provider.dart';
 import '../data/my_list_model.dart';
 
 class CustomDialog extends ConsumerStatefulWidget {

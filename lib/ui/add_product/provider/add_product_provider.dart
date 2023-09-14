@@ -208,12 +208,6 @@ class AddProduct extends _$AddProduct
               cancelToken: cancelToken,
             );
 
-        // todo use this on UI layer instead of provider to make product searchable and filtered on the basis of chips
-        Map<String, List<Product>> productByDepartment = groupBy(
-          products,
-          (product) => product.department,
-        );
-
 
         state = AsyncValue.data(products);
       } on DioException catch (e) {
