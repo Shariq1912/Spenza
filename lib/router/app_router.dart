@@ -35,7 +35,7 @@ final GlobalKey<NavigatorState> _shellNavigator =
     GlobalKey(debugLabel: 'shell');
 
 class RouteManager {
-  static const String splashWidget = '/';
+  static const String splashWidget = '/selectedStoreScreen';
   static const String splashScreen = '/splashScreen';
 
   static const String loginScreen = '/loginScreen';
@@ -47,7 +47,7 @@ class RouteManager {
   static const String myListScreen = '/myListScreen';
   static const String preLoadedListDetailScreen = '/preLoadedListDetailScreen';
   static const String storeRankingScreen = '/storeMatchingScreen';
-  static const String selectedStoreScreen = '/selectedStoreScreen';
+  static const String selectedStoreScreen = '/';
   static const String addProductScreen = '/addProductScreen';
   static const String addNewList = '/addNewList';
   static const String editListScreen = '/editListScreen';

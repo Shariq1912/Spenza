@@ -49,7 +49,7 @@ class SelectedStore extends _$SelectedStore with FirestoreAndPrefsMixin {
             ))
         .toList();
 
-    final labeledProducts = [
+  /*  final labeledProducts = [
       matchingProducts.isNotEmpty
           ? SelectedProductList.label(label: "Matching Products")
           : SelectedProductList.label(label: ""),
@@ -57,6 +57,17 @@ class SelectedStore extends _$SelectedStore with FirestoreAndPrefsMixin {
       similarProducts.isNotEmpty
           ? SelectedProductList.label(label: "Similar Products")
           : SelectedProductList.label(label: ""),
+      ...similarProducts,
+      missingProducts.isNotEmpty
+          ? SelectedProductList.label(label: "Missing Products")
+          : SelectedProductList.label(label: ""),
+      ...missingProducts,
+    ];*/
+
+
+    final labeledProducts = [
+      SelectedProductList.label(label: ""),
+      ...matchingProducts,
       ...similarProducts,
       missingProducts.isNotEmpty
           ? SelectedProductList.label(label: "Missing Products")

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/router/app_router.dart';
+import 'package:spenza/ui/common/elevated_button_with_centered_text.dart';
 import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/favourite_stores/data/favourite_stores.dart';
 import 'package:spenza/ui/matching_store/components/matching_store_card.dart';
@@ -40,13 +41,13 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
       print("Has focus: ${_focusNode.hasFocus}");
 
       if (_focusNode.hasFocus) {
+        _focusNode.unfocus();
+
         final Stores store = ref.read(storeDetailsProvider).requireValue;
         if (store.id.isEmpty) {
           debugPrint("Store ID is Empty");
           return;
         }
-
-        _focusNode.unfocus();
 
         ref
             .read(selectedStoreProvider.notifier)
@@ -69,7 +70,7 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
   @override
   Widget build(BuildContext context) {
     final poppinsFont = ref.watch(poppinsFontProvider).fontFamily;
-
+    final size = MediaQuery.of(context).size;
     /*ref.listen(selectedStoreProvider, (previous, next) {
       next.maybeWhen(
         orElse: () {},
@@ -91,7 +92,8 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
               return ref.watch(storeDetailsProvider).maybeWhen(
                     data: (data) => CustomAppBar(
                       displayActionIcon: true,
-                      title: data.name,
+                      title: data.groupName,
+                      subtitle: data.name,
                       logo: data.logo,
                       textStyle: TextStyle(
                         fontFamily: poppinsFont,
@@ -134,7 +136,7 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
                     .when(
                       data: (data) {
                         if (data == null) {
-                            return Center(child: SpenzaCircularProgress());
+                          return Center(child: SpenzaCircularProgress());
                         }
 
                         if (data.storeRef != null) {
@@ -153,7 +155,7 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
                                   ? Padding(
                                       padding: const EdgeInsets.symmetric(
                                               horizontal: 16.0)
-                                          .copyWith(top: 16, bottom: 10),
+                                          .copyWith(top: 6, bottom: 10),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -166,7 +168,7 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
                                             ),
                                           ),
                                           Text(
-                                            'Total Price: ${data.total.toStringAsFixed(2)}',
+                                            'Total Price : \$ ${data.total.toStringAsFixed(2)}',
                                             style: TextStyle(
                                               color: ColorUtils.colorPrimary,
                                               fontWeight: FontWeight.w500,
@@ -189,17 +191,23 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
                                     ),
                               similarProduct: (product) =>
                                   buildSelectedStoreProductCard(
+                                index: index,
+                                size: data.products.length,
                                 product: product,
                                 onClick: () {},
                               ),
                               missingProduct: (product) =>
                                   buildSelectedStoreProductCard(
+                                index: index,
+                                size: data.products.length,
                                 product: product,
                                 isMissing: true,
                                 onClick: () {},
                               ),
                               exactProduct: (product) =>
                                   buildSelectedStoreProductCard(
+                                index: index,
+                                size: data.products.length,
                                 product: product,
                                 onClick: () {},
                               ),
@@ -213,25 +221,46 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
                     ),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: ElevatedButtonWithCenteredText(
+                size: Size(size.width, 40),
+                onClick: () {},
+                text: "I finished Shopping", // todo localize the text
+                fontFamily: poppinsFont!,
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  SelectedStoreProductCard buildSelectedStoreProductCard({
+  Widget buildSelectedStoreProductCard({
     required SelectedProductElement product,
+    required int index,
+    required int size,
     required VoidCallback onClick,
     bool isMissing = false,
   }) {
-    return SelectedStoreProductCard(
-      isMissing: isMissing,
-      imageUrl: product.productImage,
-      price: product.price,
-      measure: product.measure,
-      quantity: product.quantity,
-      title: product.name,
-      onClick: () => onClick,
+    return Column(
+      children: [
+        SelectedStoreProductCard(
+          isMissing: isMissing,
+          imageUrl: product.productImage,
+          price: product.price,
+          measure: product.measure,
+          quantity: product.quantity,
+          title: product.name,
+          onClick: () => onClick,
+        ),
+        if (index > 0)
+          Divider(
+            color: ColorUtils.colorSurface, // Specify the divider color.
+            thickness: 1.0, // Specify the divider thickness.
+            height: 0, // Set the height to 0 to avoid extra space.
+          ),
+      ],
     );
   }
 }

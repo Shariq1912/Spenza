@@ -21,6 +21,7 @@ Stores _$StoresFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Stores {
   String get id => throw _privateConstructorUsedError;
+  String get groupName => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get address => throw _privateConstructorUsedError;
   List<String> get zipCodesList => throw _privateConstructorUsedError;
@@ -39,6 +40,7 @@ abstract class $StoresCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
+      String groupName,
       String name,
       String address,
       List<String> zipCodesList,
@@ -60,6 +62,7 @@ class _$StoresCopyWithImpl<$Res, $Val extends Stores>
   @override
   $Res call({
     Object? id = null,
+    Object? groupName = null,
     Object? name = null,
     Object? address = null,
     Object? zipCodesList = null,
@@ -70,6 +73,10 @@ class _$StoresCopyWithImpl<$Res, $Val extends Stores>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      groupName: null == groupName
+          ? _value.groupName
+          : groupName // ignore: cast_nullable_to_non_nullable
               as String,
       name: null == name
           ? _value.name
@@ -103,6 +110,7 @@ abstract class _$$_StoresCopyWith<$Res> implements $StoresCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
+      String groupName,
       String name,
       String address,
       List<String> zipCodesList,
@@ -121,6 +129,7 @@ class __$$_StoresCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
+    Object? groupName = null,
     Object? name = null,
     Object? address = null,
     Object? zipCodesList = null,
@@ -131,6 +140,10 @@ class __$$_StoresCopyWithImpl<$Res>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      groupName: null == groupName
+          ? _value.groupName
+          : groupName // ignore: cast_nullable_to_non_nullable
               as String,
       name: null == name
           ? _value.name
@@ -161,6 +174,7 @@ class __$$_StoresCopyWithImpl<$Res>
 class _$_Stores with DiagnosticableTreeMixin implements _Stores {
   const _$_Stores(
       {this.id = "",
+      this.groupName = "",
       required this.name,
       required this.address,
       required final List<String> zipCodesList,
@@ -174,6 +188,9 @@ class _$_Stores with DiagnosticableTreeMixin implements _Stores {
   @override
   @JsonKey()
   final String id;
+  @override
+  @JsonKey()
+  final String groupName;
   @override
   final String name;
   @override
@@ -194,7 +211,7 @@ class _$_Stores with DiagnosticableTreeMixin implements _Stores {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Stores(id: $id, name: $name, address: $address, zipCodesList: $zipCodesList, logo: $logo, isFavorite: $isFavorite)';
+    return 'Stores(id: $id, groupName: $groupName, name: $name, address: $address, zipCodesList: $zipCodesList, logo: $logo, isFavorite: $isFavorite)';
   }
 
   @override
@@ -203,6 +220,7 @@ class _$_Stores with DiagnosticableTreeMixin implements _Stores {
     properties
       ..add(DiagnosticsProperty('type', 'Stores'))
       ..add(DiagnosticsProperty('id', id))
+      ..add(DiagnosticsProperty('groupName', groupName))
       ..add(DiagnosticsProperty('name', name))
       ..add(DiagnosticsProperty('address', address))
       ..add(DiagnosticsProperty('zipCodesList', zipCodesList))
@@ -216,6 +234,8 @@ class _$_Stores with DiagnosticableTreeMixin implements _Stores {
         (other.runtimeType == runtimeType &&
             other is _$_Stores &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.groupName, groupName) ||
+                other.groupName == groupName) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.address, address) || other.address == address) &&
             const DeepCollectionEquality()
@@ -227,7 +247,7 @@ class _$_Stores with DiagnosticableTreeMixin implements _Stores {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, address,
+  int get hashCode => Object.hash(runtimeType, id, groupName, name, address,
       const DeepCollectionEquality().hash(_zipCodesList), logo, isFavorite);
 
   @JsonKey(ignore: true)
@@ -247,6 +267,7 @@ class _$_Stores with DiagnosticableTreeMixin implements _Stores {
 abstract class _Stores implements Stores {
   const factory _Stores(
       {final String id,
+      final String groupName,
       required final String name,
       required final String address,
       required final List<String> zipCodesList,
@@ -257,6 +278,8 @@ abstract class _Stores implements Stores {
 
   @override
   String get id;
+  @override
+  String get groupName;
   @override
   String get name;
   @override

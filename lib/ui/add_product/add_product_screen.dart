@@ -1,12 +1,12 @@
 import 'dart:async';
 
+import "package:collection/collection.dart";
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/ui/add_product/components/product_card_widget.dart';
 import 'package:spenza/ui/add_product/components/selectable_chip.dart';
 import 'package:spenza/ui/add_product/data/product.dart';
@@ -15,9 +15,7 @@ import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/my_list_details/components/custom_app_bar.dart';
 import 'package:spenza/ui/my_list_details/components/searchbox_widget.dart';
 import 'package:spenza/utils/color_utils.dart';
-import "package:collection/collection.dart";
 
-import 'provider/search_product_repository_provider.dart';
 import 'provider/selected_department_provider.dart';
 
 class AddProductScreen extends ConsumerStatefulWidget {

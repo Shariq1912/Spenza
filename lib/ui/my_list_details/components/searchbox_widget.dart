@@ -29,7 +29,7 @@ class SearchBox extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 10),
             decoration: BoxDecoration(
               color: Color(0xFFE5E7E8),
-              border: Border.all(color: Colors.grey),
+              border: Border.all(color: Colors.transparent),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
