@@ -26,6 +26,7 @@ import 'package:spenza/ui/splash/splash_screen.dart';
 import 'package:spenza/ui/webview_screen/webview_screen.dart';
 
 import '../ui/my_store/my_store.dart';
+import '../ui/receipts/upload_receipt_screen.dart';
 import '../ui/splash/provider/splash_widget.dart';
 
 final GlobalKey<NavigatorState> _rootNavigator = GlobalKey(debugLabel: 'root');
@@ -35,7 +36,7 @@ final GlobalKey<NavigatorState> _shellNavigator =
     GlobalKey(debugLabel: 'shell');
 
 class RouteManager {
-  static const String splashWidget = '/selectedStoreScreen';
+  static const String splashWidget = '/';
   static const String splashScreen = '/splashScreen';
 
   static const String loginScreen = '/loginScreen';
@@ -47,7 +48,7 @@ class RouteManager {
   static const String myListScreen = '/myListScreen';
   static const String preLoadedListDetailScreen = '/preLoadedListDetailScreen';
   static const String storeRankingScreen = '/storeMatchingScreen';
-  static const String selectedStoreScreen = '/';
+  static const String selectedStoreScreen = '/selectedStoreScreen';
   static const String addProductScreen = '/addProductScreen';
   static const String addNewList = '/addNewList';
   static const String editListScreen = '/editListScreen';
@@ -317,10 +318,10 @@ class RouteManager {
           //return MyListDetailsScreen(listId: listId);
           if (path != "") {
             print("Notequal $path");
-            return UploadReceipt(path: path);
+            return UploadReceiptScreen(path: path);
           } else {
             print("equal $path");
-            return UploadReceipt(path: path); // For example
+            return UploadReceiptScreen(path: path); // For example
           }
         },
       ),

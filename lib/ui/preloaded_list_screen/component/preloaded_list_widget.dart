@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spenza/ui/home/data/preloaded_list_model.dart';
+import 'package:spenza/utils/color_utils.dart';
 
 class PreloadedListWidget extends ConsumerWidget {
   final List<PreloadedListModel> data;
@@ -19,7 +20,8 @@ class PreloadedListWidget extends ConsumerWidget {
              onCardClicked(item.id, item.name, item.preloadedPhoto);
           },
           child: Card(
-            color: Colors.white,
+            surfaceTintColor: Color(0xFFE5E7E8),
+            color: Color(0xFFE5E7E8),
             child: Padding(
               padding: EdgeInsets.all(8.0),
               child: Row(
@@ -47,7 +49,21 @@ class PreloadedListWidget extends ConsumerWidget {
                         Text(item.description.length > 50 ? '${item.description.substring(0, 50)}...' : item.description,
                           style: TextStyle(fontSize: 13, ),),
                         SizedBox(height: 14),
-                        Text("Recibos ${item.count!}",style: TextStyle(fontSize: 13, )),
+                        //Text("Recibos ${item.count!}",style: TextStyle(fontSize: 13, )),
+                        Row(
+                          children: [
+                            Icon(Icons.upload_file, color: int.parse(item.count!) > 0 ? ColorUtils.colorPrimary : Colors.red,size: 20,),
+                            SizedBox(width: 4), // Add some space between the icon and text
+                            Text(
+                              int.parse(item.count!) > 0 ? "${item.count!} Receipt": "Upload receipt",
+                              style: TextStyle(
+                                color: int.parse(item.count!) > 0 ? ColorUtils.primaryText : Colors.red,
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        )
                       ],
                     ),
                   ),

@@ -76,14 +76,14 @@ class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
     ),
   ];
 
-  void _onActionIconPressed(String itemPath, Offset itemposition) {
+/*  void _onActionIconPressed(String itemPath) {
     print("clickedItemPath : $itemPath");
     final RenderBox customAppBarRenderBox =
         context.findRenderObject() as RenderBox;
     final customAppBarPosition =
         customAppBarRenderBox.localToGlobal(Offset.zero);
 
-    /*showPopupMenu(
+    showPopupMenu(
       context: context,
       position: RelativeRect.fromLTRB(
         customAppBarPosition.dx + customAppBarRenderBox.size.width - 40,
@@ -134,10 +134,53 @@ class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
           }
         }
       },
-    );*/
-    final customPopupMenuOverlay = CustomPopupMenuOverlay(context);
-    customPopupMenuOverlay.show(itemPath, itemposition);
+    );
+ *//*   final customPopupMenuOverlay = CustomPopupMenuOverlay(context);
+    customPopupMenuOverlay.show(itemPath);*//*
+  }*/
+  void _onActionIconPressed(String itemPath, PopupMenuAction action) async {
+    if (action == PopupMenuAction.upload) {
+      debugPrint("upload");
+      context.pushNamed(RouteManager.uploadReceiptScreen,
+          queryParameters: {'list_id': itemPath});
+    } else if (action == PopupMenuAction.receipt) {
+      debugPrint("receipt action, $itemPath");
+      context.pushNamed(RouteManager.displayReceiptScreen,
+          queryParameters: {'list_ref': itemPath});
+    } else if (action == PopupMenuAction.delete) {
+      debugPrint("delete action");
+      final bool result = await ref
+          .read(fetchMyListProvider.notifier)
+          .deleteTheList(path: itemPath);
+
+      if (result) {
+        hasValueChanged = true;
+        ref.read(fetchMyListProvider.notifier).fetchMyListFun();
+        context.showSnackBar(message: "List deleted successfully!");
+      }
+    } else if (action == PopupMenuAction.edit) {
+      debugPrint("edit action");
+      final bool? result =
+      await context.pushNamed(RouteManager.editListScreen);
+      if (result ?? false) {
+        context.showSnackBar(message: "List Edited Successfully!");
+        ref.read(listDetailsProvider.notifier).getSelectedListDetails();
+        hasValueChanged = true;
+      }
+    } else if (action == PopupMenuAction.copy) {
+      debugPrint("copy action");
+      final bool result = await ref
+          .read(fetchMyListProvider.notifier)
+          .copyTheList(path: itemPath);
+
+      if (result) {
+        hasValueChanged = true;
+        ref.read(fetchMyListProvider.notifier).fetchMyListFun();
+        context.showSnackBar(message: "List copied successfully!");
+      }
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -252,8 +295,8 @@ class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
                                 photo: photo,
                                 path: path!);
                       },
-                      onPopUpClicked: (String path, Offset position) {
-                        _onActionIconPressed(path, position);
+                      onPopUpClicked: (String path, PopupMenuAction action) {
+                        _onActionIconPressed(path, action);
 
                       },
                     );

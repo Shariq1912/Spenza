@@ -46,14 +46,17 @@ class TopStrip extends ConsumerWidget {
               children: [
                 Expanded(
                   flex: 1,
-                  child: Text(
-                    AppLocalizations.of(context)!.myListsTitle, // Updated
-                    style: TextStyle(
-                      fontFamily: poppinsFont,
-                      decoration: TextDecoration.none,
-                      color: ColorUtils.primaryText,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 18,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 6.0),
+                    child: Text(
+                      AppLocalizations.of(context)!.myListsTitle, // Updated
+                      style: TextStyle(
+                        fontFamily: poppinsFont,
+                        decoration: TextDecoration.none,
+                        color: ColorUtils.primaryText,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 18,
+                      ),
                     ),
                   ),
                 ),

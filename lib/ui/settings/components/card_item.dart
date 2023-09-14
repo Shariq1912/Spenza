@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../utils/color_utils.dart';
+
 class CardItem extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -11,8 +13,10 @@ class CardItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Colors.white,
+    return Container(
+
+      //surfaceTintColor: Color(0xFFE5E7E8),
+      color: Color(0xFFE5E7E8),
       child: ListTile(
         leading: Icon(icon, color: Color(0xFF0CA9E6)),
         title: Text(
@@ -20,6 +24,7 @@ class CardItem extends StatelessWidget {
           style: TextStyle(
             fontSize: 14,
             fontFamily: poppinsFont,
+              color: ColorUtils.primaryText
           ),
         ),
         onTap: onTap,
