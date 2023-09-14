@@ -11,6 +11,7 @@ import 'package:spenza/ui/add_product/components/product_card_widget.dart';
 import 'package:spenza/ui/add_product/components/selectable_chip.dart';
 import 'package:spenza/ui/add_product/provider/selected_department_provider.dart';
 import 'package:spenza/ui/common/spenza_circular_progress.dart';
+import 'package:spenza/ui/home/components/custom_dialog.dart';
 import 'package:spenza/ui/my_list_details/components/custom_app_bar.dart';
 import 'package:spenza/ui/my_list_details/components/searchbox_widget.dart';
 import 'package:spenza/ui/my_list_details/provider/user_product_list_provider.dart';
@@ -214,116 +215,119 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
               ),
             ),
             Expanded(
-              child: Consumer(builder: (context, ref, child) {
-                final data = ref.watch(productForStoreProvider);
-                final selectedDepartments =
-                    ref.watch(selectedDepartmentsProvider);
-                final searchQuery = ref.watch(searchQueryProvider);
+              child: Container(
+                padding: EdgeInsets.only(left: 8.0,right: 8.0),
+                child: Consumer(builder: (context, ref, child) {
+                  final data = ref.watch(productForStoreProvider);
+                  final selectedDepartments =
+                      ref.watch(selectedDepartmentsProvider);
+                  final searchQuery = ref.watch(searchQueryProvider);
 
-                return data.when(
-                  data: (data) {
-                    if (data == null) {
-                      return Center(child: SpenzaCircularProgress());
-                    }
-                    if (data.isEmpty) {
-                      return Center(
-                        child: Text("No Product found"),
-                      );
-                    }
-
-                    final isAllSelected = selectedDepartments.contains("All");
-
-                    final filteredProducts = data.where((product) {
-                      if (searchQuery.isNotEmpty &&
-                          !product.name.toLowerCase().contains(searchQuery)) {
-                        return false; // Skip products that don't match the search query
+                  return data.when(
+                    data: (data) {
+                      if (data == null) {
+                        return Center(child: SpenzaCircularProgress());
+                      }
+                      if (data.isEmpty) {
+                        return Center(
+                          child: Text("No Product found"),
+                        );
                       }
 
-                      if (selectedDepartments.contains("All")) {
-                        return true;
+                      final isAllSelected = selectedDepartments.contains("All");
+
+                      final filteredProducts = data.where((product) {
+                        if (searchQuery.isNotEmpty &&
+                            !product.name.toLowerCase().contains(searchQuery)) {
+                          return false; // Skip products that don't match the search query
+                        }
+
+                        if (selectedDepartments.contains("All")) {
+                          return true;
+                        }
+                        return selectedDepartments
+                            .contains(product.departmentName);
+                      }).toList();
+
+                      if (isAllSelected) {
+                        final Map<String, List<ProductModel>>
+                            productByDepartment = groupBy(
+                          filteredProducts,
+                          (product) => product.departmentName,
+                        );
+                        return buildListViewWithLabel(
+                          productByDepartment,
+                          (product) async {
+                            await handleAddProduct(product, context);
+                          },
+                        );
+                      } else {
+                        return buildListViewWithoutLabel(
+                          filteredProducts,
+                          (product) async {
+                            await handleAddProduct(product, context);
+                          },
+                        );
                       }
-                      return selectedDepartments
-                          .contains(product.departmentName);
-                    }).toList();
 
-                    if (isAllSelected) {
-                      final Map<String, List<ProductModel>>
-                          productByDepartment = groupBy(
-                        filteredProducts,
-                        (product) => product.departmentName,
-                      );
-                      return buildListViewWithLabel(
-                        productByDepartment,
-                        (product) async {
-                          await handleAddProduct(product, context);
-                        },
-                      );
-                    } else {
-                      return buildListViewWithoutLabel(
-                        filteredProducts,
-                        (product) async {
-                          await handleAddProduct(product, context);
-                        },
-                      );
-                    }
+                      return ListView.separated(
+                        separatorBuilder: (context, index) => Divider(
+                          color: ColorUtils.colorSurface,
+                          thickness: 1.0,
+                          height: 0, // Set the height to 0 to avoid extra space.
+                        ),
+                        itemCount: filteredProducts.length,
+                        itemBuilder: (context, index) {
+                          final ProductModel product = filteredProducts[index];
+                          return ProductCard(
+                            onClick: () async {
+                              if (widget.listId != null) {
+                                final bool hasReload = await ref
+                                    .read(addProductToMyListProvider.notifier)
+                                    .addProductToMyList(
+                                      listId: widget.listId!,
+                                      productRef: product.documentId!,
+                                      productId: product.productId,
+                                      context: context,
+                                    );
 
-                    return ListView.separated(
-                      separatorBuilder: (context, index) => Divider(
-                        color: ColorUtils.colorSurface,
-                        thickness: 1.0,
-                        height: 0, // Set the height to 0 to avoid extra space.
-                      ),
-                      itemCount: filteredProducts.length,
-                      itemBuilder: (context, index) {
-                        final ProductModel product = filteredProducts[index];
-                        return ProductCard(
-                          onClick: () async {
-                            if (widget.listId != null) {
-                              final bool hasReload = await ref
-                                  .read(addProductToMyListProvider.notifier)
-                                  .addProductToMyList(
-                                    listId: widget.listId!,
-                                    productRef: product.documentId!,
-                                    productId: product.productId,
-                                    context: context,
-                                  );
+                                print("has Reload == $hasReload");
+                                if (hasReload) {
+                                  /*  ref
+                                      .read(userProductListProvider.notifier)
+                                      .fetchProductFromListId();*/
 
-                              print("has Reload == $hasReload");
-                              if (hasReload) {
-                                /*  ref
-                                    .read(userProductListProvider.notifier)
-                                    .fetchProductFromListId();*/
+                                  print("Inside has Reload");
+                                  hasValueChanged = true;
+                                }
 
-                                print("Inside has Reload");
-                                hasValueChanged = true;
+                                return;
                               }
 
-                              return;
-                            }
-
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return MyListDialog(
-                                  productRef: product.documentId!,
-                                  productId: product.productId,
-                                );
-                              },
-                            );
-                          },
-                          measure: product.measure,
-                          imageUrl: product.pImage,
-                          title: product.name,
-                          priceRange: "",
-                          isPriceRangeVisible: false,
-                        );
-                      },
-                    );
-                  },
-                  error: (error, stackTrace) => Center(child: Text("$error")),
-                  loading: () => Center(child: SpenzaCircularProgress()),
-                );
-              }),
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return MyListDialog(
+                                    productRef: product.documentId!,
+                                    productId: product.productId,
+                                  );
+                                },
+                              );
+                            },
+                            measure: product.measure,
+                            imageUrl: product.pImage,
+                            title: product.name,
+                            priceRange: "",
+                            isPriceRangeVisible: false,
+                          );
+                        },
+                      );
+                    },
+                    error: (error, stackTrace) => Center(child: Text("$error")),
+                    loading: () => Center(child: SpenzaCircularProgress()),
+                  );
+                }),
+              ),
             ),
           ],
         ),
@@ -358,7 +362,7 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return MyListDialog(
+          return CustomDialog(
             productRef: product.documentId!,
             productId: product.productId,
           );
@@ -385,7 +389,7 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0)
-                  .copyWith(top: 16, bottom: 10),
+                  .copyWith(top: 10, bottom: 10),
               child: Text(
                 department,
                 style: TextStyle(
@@ -397,7 +401,7 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
               ),
             ),
             SizedBox(height: 4),
-            ListView.separated(
+            ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               itemCount: departmentProducts.length,
@@ -412,11 +416,11 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
                   isPriceRangeVisible: false,
                 );
               },
-              separatorBuilder: (BuildContext context, int index) => Divider(
+              /*separatorBuilder: (BuildContext context, int index) => Divider(
                 color: ColorUtils.colorSurface,
                 thickness: 1.0,
                 height: 0, // Set the height to 0 to avoid extra space.
-              ),
+              ),*/
             ),
           ],
         );
@@ -428,23 +432,26 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
     List<ProductModel> products,
     Function(ProductModel product) onClick,
   ) {
-    return ListView.separated(
-      itemCount: products.length,
-      itemBuilder: (context, index) {
-        final ProductModel product = products[index];
-        return ProductCard(
-          onClick: () => onClick.call(product),
-          measure: product.measure,
-          imageUrl: product.pImage,
-          title: product.name,
-          priceRange: "",
-          isPriceRangeVisible: false,
-        );
-      },
-      separatorBuilder: (BuildContext context, int index) => Divider(
-        color: ColorUtils.colorSurface,
-        thickness: 1.0,
-        height: 0, // Set the height to 0 to avoid extra space.
+    return Container(
+      padding: const EdgeInsets.all(10.0),
+      child: ListView.builder(
+        itemCount: products.length,
+        itemBuilder: (context, index) {
+          final ProductModel product = products[index];
+          return ProductCard(
+            onClick: () => onClick.call(product),
+            measure: product.measure,
+            imageUrl: product.pImage,
+            title: product.name,
+            priceRange: "",
+            isPriceRangeVisible: false,
+          );
+        },
+        /*separatorBuilder: (BuildContext context, int index) => Divider(
+          color: ColorUtils.colorSurface,
+          thickness: 1.0,
+          height: 0, // Set the height to 0 to avoid extra space.
+        ),*/
       ),
     );
   }

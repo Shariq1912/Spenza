@@ -56,6 +56,7 @@ class AddProductToMyList extends _$AddProductToMyList
       context.showSnackBar(message: "Product successfully added in the List");
 
       print("productId : $productId");
+      context.pop();
       return true;
       // context.pop(true);
     } catch (error) {

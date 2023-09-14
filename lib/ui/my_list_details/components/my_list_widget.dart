@@ -111,8 +111,9 @@ class MyListWidget extends StatelessWidget {
                           },
                         ),
                         SpeedDialChild(
-                          child: SvgPicture.asset("cloud_upload.svg".assetSvgIconUrl,
-                              colorFilter: ColorFilter.mode(Colors.white, BlendMode.clear)),
+                          child:/* SvgPicture.asset("cloud_upload.svg".assetSvgIconUrl,
+                              colorFilter: ColorFilter.mode(Colors.white, BlendMode.clear)),*/
+                          Icon(Icons.upload_file_outlined, size: 25,),
                           backgroundColor: ColorUtils.colorPrimary,
                           foregroundColor: Colors.white,
                           shape: CircleBorder(),

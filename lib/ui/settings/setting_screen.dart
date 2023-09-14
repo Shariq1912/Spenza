@@ -135,29 +135,25 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
               SizedBox(height: 10),
               Container(
                 color: Color(0xFFE5E7E8),
-                child: Column(
-                  children: [
-                    ListTile(
-                      leading: Icon(Icons.logout, color: Colors.grey.shade600),
-                      title: Text(
-                        "Sign Out",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: poppinsFont,
-                          color: ColorUtils.primaryText
-                        ),
-                      ),
-                      onTap: () async {
-                        ref
-                            .read(loginRepositoryProvider.notifier)
-                            .signOut()
-                            .then(
-                              (value) =>
-                              context.goNamed(RouteManager.loginScreen),
-                        );
-                      },
+                child: ListTile(
+                  leading: Icon(Icons.logout, color: Colors.grey.shade600),
+                  title: Text(
+                    "Sign Out",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: poppinsFont,
+                      color: ColorUtils.primaryText
                     ),
-                  ],
+                  ),
+                  onTap: () async {
+                    ref
+                        .read(loginRepositoryProvider.notifier)
+                        .signOut()
+                        .then(
+                          (value) =>
+                          context.goNamed(RouteManager.loginScreen),
+                    );
+                  },
                 ),
               )
             ],

@@ -1,44 +1,36 @@
-import 'dart:ui';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:spenza/ui/my_store/data/all_store.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
-import '../../my_store_products/component/add_product_to_new_list.dart';
-import '../../my_store_products/data/user_product_list_data.dart';
-import '../../my_store_products/provider/add_product_to_my_list_provider.dart';
-import '../../preloaded_list_screen/provider/fetch_mylist_provider.dart';
-import '../data/my_list_model.dart';
+import '../../my_store/my_store_provider.dart';
 
-class CustomDialog extends ConsumerStatefulWidget {
-  final String productId;
-  final String productRef;
+class StorePickDialog extends ConsumerStatefulWidget {
 
-  CustomDialog({Key? key, required this.productId, required this.productRef})
+  StorePickDialog({Key? key})
       : super(key: key);
 
   @override
-  ConsumerState<CustomDialog> createState() => _CustomDialogState();
+  ConsumerState<StorePickDialog> createState() => _StorePickDialogState();
 }
 
-class _CustomDialogState extends ConsumerState<CustomDialog> {
+class _StorePickDialogState extends ConsumerState<StorePickDialog> {
   final poppinsFont = GoogleFonts.poppins().fontFamily;
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadMyList();
+      _loadStore();
     });
     super.initState();
   }
 
-  _loadMyList() async {
-    await ref.read(fetchMyListProvider.notifier).fetchMyListFun();
+  _loadStore() async {
+    await ref.read(allStoreProvider.notifier).fetchAllStores();
   }
 
-  UserProductData myListData = UserProductData(productId: "");
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +62,7 @@ class _CustomDialogState extends ConsumerState<CustomDialog> {
                       size: 35,
                     ))),
             Text(
-              "Choose your list where you want to add product",
+              "Select the store for which you'd like to upload a receipt",
               style: TextStyle(
                   color: Color(0xFF0da9ea),
                   fontFamily: poppinsFont,
@@ -81,15 +73,16 @@ class _CustomDialogState extends ConsumerState<CustomDialog> {
             ),
             Expanded(
               child: Consumer(builder: (context, ref, child) {
-                final mylist = ref.watch(fetchMyListProvider);
+                final mylist = ref.watch(allStoreProvider);
                 return mylist.when(
-                  data: (data) {
+                    () => Container(),
+                  success: (data) {
                     return ListView.builder(
                       shrinkWrap: true,
                       itemCount: data.length,
                       itemBuilder: (context, index) {
-                        MyListModel item = data[index];
-                        var fileName = item.myListPhoto ?? "";
+                        AllStores item = data[index];
+                        var fileName = item.logo ?? "";
                         return Container(
                           color: Color(0xFFE5E7E8),
                           margin: EdgeInsets.only(top: 8, bottom: 8),
@@ -109,15 +102,16 @@ class _CustomDialogState extends ConsumerState<CustomDialog> {
                                           'app_icon_spenza.png'.assetImageUrl),
                                 ),
                               ),
-                              SizedBox(width: 16),
+                              SizedBox(width: 1),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    item.name,
+                                    item.name.length > 12 ? '${item.name.substring(0, 12)}...' : item.name,
                                     style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold
+
                                     ),
                                   ),
                                 ],
@@ -125,14 +119,6 @@ class _CustomDialogState extends ConsumerState<CustomDialog> {
                               Spacer(),
                               IconButton(
                                 onPressed: () async {
-                                  await ref
-                                      .read(addProductToMyListProvider.notifier)
-                                      .addProductToMyList(
-                                    listId: item.documentId!,
-                                    productRef: widget.productRef,
-                                    productId: widget.productId,
-                                    context: context,
-                                  );
                                 },
                                 icon: Icon(Icons.playlist_add_rounded),
                               ),
@@ -142,7 +128,7 @@ class _CustomDialogState extends ConsumerState<CustomDialog> {
                       },
                     );
                   },
-                  error: (error, stackTrace) {
+                  error: (error) {
                     print("errorMrss $error");
                     return Center(child: Text(error.toString()));
                   },
@@ -153,26 +139,8 @@ class _CustomDialogState extends ConsumerState<CustomDialog> {
             SizedBox(
               height: 30,
             ),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Text("Add the product to a new list",
-                  style: TextStyle(
-                      color: Color(0xFF0da9ea),
-                      fontFamily: poppinsFont,
-                      fontWeight: FontWeight.bold)),
-            ),
-            SizedBox(
-              height: 10,
-            ),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AddProductToNewList(
-                        productId: widget.productId, productRef: widget.productRef),
-                  ),
-                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF0CA9E6),
@@ -188,7 +156,7 @@ class _CustomDialogState extends ConsumerState<CustomDialog> {
                 ),
                 fixedSize: const Size(310, 40),
               ),
-              child: Text("Create my list"),
+              child: Text("Pick Store"),
             ),
           ],
         ),
