@@ -87,7 +87,7 @@ class PreloadedListWidget extends ConsumerWidget {
                     childrenButtonSize: Size(35.0, 35.0),
                     mini: true,
                     closeManually: false,
-                    overlayOpacity: 0.0,
+                    overlayOpacity: 0.5,
                     elevation: 0.0,
                     shape: CircleBorder(),
                     childMargin: EdgeInsets.symmetric(horizontal: 5),

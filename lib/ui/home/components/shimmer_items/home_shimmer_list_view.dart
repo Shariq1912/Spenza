@@ -23,19 +23,17 @@ class HomeShimmerListView extends StatelessWidget {
     return Shimmer.fromColors(
       baseColor: Colors.grey[300]!,
       highlightColor: Colors.grey[100]!,
-      child: Expanded(
-        child: Column(
-          children: [
-            ShimmeringHeaderRow(),
-            SizedBox(height: 8),
-            Row(
-              children: List.generate(
-                3, // Number of shimmer items
-                (index) => HomeShimmerItem(),
-              ),
+      child: Column(
+        children: [
+          ShimmeringHeaderRow(),
+          SizedBox(height: 8),
+          Row(
+            children: List.generate(
+              3, // Number of shimmer items
+              (index) => HomeShimmerItem(),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

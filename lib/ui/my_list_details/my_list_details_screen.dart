@@ -8,6 +8,7 @@ import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/helpers/popup_menu_mixin.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/add_product/data/user_product.dart';
+import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/my_list_details/components/custom_app_bar.dart';
 import 'package:spenza/ui/my_list_details/components/searchbox_widget.dart';
 import 'package:spenza/ui/my_list_details/components/user_selected_product_widget.dart';
@@ -181,7 +182,8 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                   // context.pushNamed(RouteManager.addProductScreen);
                   context.pop(hasValueChanged);
                 },
-                onActionIconPressed: _onActionIconPressed),
+                //onActionIconPressed: _onActionIconPressed
+    ),
 
           ),
           body: Stack(
@@ -215,7 +217,6 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                   ),
                   const SizedBox(height: 1),
                   Expanded(
-                    // Use a single Expanded widget to wrap the ListView
                     child: Consumer(
                       builder: (context, ref, child) {
                         final result = ref.watch(userProductListProvider);
@@ -223,7 +224,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                         return result.when(
                           data: (data) {
                             if (data == null) {
-                              return Center(child: CircularProgressIndicator());
+                              return Center(child: SpenzaCircularProgress());
                             } else if (data.isEmpty) {
                               return Center(
                                 child: Text("No Product found"),
@@ -249,7 +250,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                           },
                           error: (error, stackTrace) =>
                               Center(child: Text("$error")),
-                          loading: () => Center(child: CircularProgressIndicator()),
+                          loading: () => Center(child: SpenzaCircularProgress()),
                         );
                       },
                     ),

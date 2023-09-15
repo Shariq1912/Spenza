@@ -160,9 +160,9 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen>
           actions: [
             Padding(
               padding: const EdgeInsets.only(top: 5),
-              child: InkWell(onTap: () {
+              child: InkWell(/*onTap: () {
                 //Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SettingScreen()));
-              }, child: Consumer(
+              },*/ child: Consumer(
                 builder: (context, ref, child) {
                   final profilePro = ref.watch(profileRepositoryProvider);
                   return profilePro.when(

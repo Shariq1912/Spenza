@@ -38,7 +38,7 @@ class _SplashWidgetState extends ConsumerState<SplashWidget> {
                   children: <Widget>[
                     SvgPicture.asset(
                       'assets/images/spenza_white.svg',
-                      colorFilter: ColorFilter.mode(Colors.red, BlendMode.color),
+                     // colorFilter: ColorFilter.mode(Colors.red, BlendMode.color),
                       fit: BoxFit.cover,
                       width: 80,
                       height: 100,

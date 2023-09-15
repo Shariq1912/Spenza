@@ -49,12 +49,13 @@ class _DisplayReceiptScreen extends ConsumerState<DisplayReceiptScreen>{
           ),
         ),
         centerTitle: true,
-        leading: IconButton(
+        /*leading: IconButton(
           onPressed: () {
             context.pop();
           },
           icon: Icon(Icons.arrow_back_ios, color: Color(0xFF0CA9E6)),
-        ),
+        ),*/
+        automaticallyImplyLeading: false,
         actions: [
           Padding(
             padding: const EdgeInsets.only(top: 5),

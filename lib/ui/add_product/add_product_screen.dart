@@ -288,7 +288,7 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                   measure: product.measure,
                   imageUrl: product.pImage,
                   title: product.name,
-                  priceRange: "\$${product.minPrice} - \$${product.maxPrice}",
+                  priceRange: "\$${double.parse(product.minPrice).toStringAsFixed(2)} - \$${double.parse(product.maxPrice).toStringAsFixed(2)}",
                 );
               }, separatorBuilder: (BuildContext context, int index) {
               return  Divider(height: 5,color: Colors.white,);
@@ -313,7 +313,7 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
           measure: product.measure,
           imageUrl: product.pImage,
           title: product.name,
-          priceRange: "\$${product.minPrice} - \$${product.maxPrice}",
+          priceRange: "\$${double.parse(product.minPrice).toStringAsFixed(2)} - \$${double.parse(product.maxPrice).toStringAsFixed(2)}",
         );
       },
     );

@@ -83,7 +83,7 @@ class MyListWidget extends StatelessWidget {
                              store.description,
                             style: TextStyle(fontSize: 13, fontFamily: poppinsFont),
                           ),
-                          SizedBox(height: 14),
+                          SizedBox(height: 33),
                           Row(
                             children: [
                               Icon(Icons.upload_file, color: int.parse(store.count!) > 0 ? ColorUtils.colorPrimary : Colors.red,size: 20,),

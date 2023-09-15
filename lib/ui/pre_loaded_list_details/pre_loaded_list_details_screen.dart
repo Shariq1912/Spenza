@@ -112,10 +112,10 @@ class _PreLoadedListDetailsScreenState
                           ///context.pushNamed(RouteManager.addProductScreen);
                           context.pop(hasValueChanged);
                         },
-                        onActionIconPressed: () {
+                       /* onActionIconPressed: () {
                          // _onActionIconPressed("preloaded_default/${widget.listId}");
                           _onActionIconPressed("preloaded_default/${widget.listId}");
-                        }
+                        }*/
                       ),
                       orElse: () => CustomAppBar(
                         displayActionIcon: true,
@@ -129,9 +129,9 @@ class _PreLoadedListDetailsScreenState
                         onBackIconPressed: () {
                           context.pushNamed(RouteManager.addProductScreen);
                         },
-                        onActionIconPressed:() {
+                        /*onActionIconPressed:() {
                           _onActionIconPressed("preloaded_default/${widget.listId}");
-                        },
+                        },*/
                       ),
                     );
               },

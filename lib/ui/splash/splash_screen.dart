@@ -32,8 +32,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   @override
   void dispose() {
-    super.dispose();
     ref.invalidate(splashProvider);
+    super.dispose();
+
+  }
+  @override
+  void didChangeDependencies() {
+    ref.invalidate(splashProvider);
+    super.didChangeDependencies();
   }
 
   @override
