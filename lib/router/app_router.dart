@@ -121,8 +121,10 @@ class RouteManager {
                 path: "/shell/receipts",
                 pageBuilder: (context, state) {
                   final String path = state.queryParameters['list_ref'] ?? "";
+                  print("Shell Route Path Called == $path");
                   return NoTransitionPage(
-                    child: DisplayReceiptScreen(key: state.pageKey, path: path),
+                    child:
+                        DisplayReceiptScreen(key: ValueKey(path), path: path),
                   );
                 },
               ),
@@ -155,7 +157,6 @@ class RouteManager {
           // return const LoginScreen();
         },
       ),
-
       GoRoute(
         parentNavigatorKey: _rootNavigator,
         name: splashScreen,
