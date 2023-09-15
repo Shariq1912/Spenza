@@ -56,7 +56,7 @@ class HomeTopAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 },
                 icon: Icon(
                   Icons.close,
-                  color: Color(0xFF7B868C),
+                  color: Colors.white,
                   size: 35,
                 )): Consumer(
               builder: (context, ref, child) {

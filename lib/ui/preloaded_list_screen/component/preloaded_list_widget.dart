@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/helpers/popup_menu_mixin.dart';
 import 'package:spenza/ui/home/data/preloaded_list_model.dart';
 import 'package:spenza/utils/color_utils.dart';
+import 'package:spenza/utils/spenza_extensions.dart';
 
 class PreloadedListWidget extends ConsumerWidget {
   final List<PreloadedListModel> data;
@@ -88,7 +89,7 @@ class PreloadedListWidget extends ConsumerWidget {
                     backgroundColor: Color(0xFFE5E7E8),
                     foregroundColor: Color(0xFF7B868C),
                     direction: SpeedDialDirection.left,
-                    childrenButtonSize: Size(35.0, 35.0),
+                    childrenButtonSize: Size(45.0, 45.0),
                     mini: true,
                     closeManually: false,
                     overlayOpacity: 0.5,
@@ -98,9 +99,11 @@ class PreloadedListWidget extends ConsumerWidget {
                     children: [
 
                       SpeedDialChild(
-                        child:/* SvgPicture.asset("cloud_upload.svg".assetSvgIconUrl,
-                              colorFilter: ColorFilter.mode(Colors.white, BlendMode.clear)),*/
-                        Icon(Icons.upload_file_outlined, size: 20,),
+                        child:Image.asset("cloud_upload.png".assetImageUrl,
+                          fit: BoxFit.contain,
+                          width: 23,
+                          height: 23,
+                          color: Colors.white,),
                         backgroundColor: ColorUtils.colorPrimary,
                         foregroundColor: Colors.white,
                         shape: CircleBorder(),
@@ -111,7 +114,11 @@ class PreloadedListWidget extends ConsumerWidget {
                       ),
                       SpeedDialChild(
                         shape: CircleBorder(),
-                        child: Icon(Icons.receipt_long_rounded, size: 20,),
+                        child: Image.asset("receipts.png".assetImageUrl,
+                          fit: BoxFit.contain,
+                          width: 18,
+                          height: 18,
+                          color: Colors.white,),
                         foregroundColor: Colors.white,
                         backgroundColor: ColorUtils.colorPrimary,
                         labelStyle: TextStyle(fontSize: 18.0),
@@ -121,7 +128,11 @@ class PreloadedListWidget extends ConsumerWidget {
                       ),
                       SpeedDialChild(
                         shape: CircleBorder(),
-                        child: Icon(Icons.copy_all, size: 20,),
+                        child: Image.asset("Copy.png".assetImageUrl,
+                          fit: BoxFit.contain,
+                          width: 18,
+                          height: 18,
+                          color: Colors.white,),
                         foregroundColor: Colors.white,
                         backgroundColor: ColorUtils.colorPrimary,
                         labelStyle: TextStyle(fontSize: 18.0),
