@@ -19,7 +19,11 @@ import 'package:spenza/utils/spenza_extensions.dart';
 import '../home/provider/home_preloaded_list.dart';
 
 class PreLoadedListDetailsScreen extends ConsumerStatefulWidget {
-  const PreLoadedListDetailsScreen({super.key, required this.listId, required  this.name, required this.photo});
+  const PreLoadedListDetailsScreen(
+      {super.key,
+      required this.listId,
+      required this.name,
+      required this.photo});
 
   final String listId;
   final String name;
@@ -63,13 +67,14 @@ class _PreLoadedListDetailsScreenState
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await ref.read(userProductListProvider.notifier).fetchProductFromListId(
-            isPreloadedList: true,
-          );
-
-      await ref.read(listDetailsProvider.notifier).getSelectedListDetails(
-            isPreloadedList: true,
-          );
+      Future.wait([
+        ref.read(userProductListProvider.notifier).fetchProductFromListId(
+              isPreloadedList: true,
+            ),
+        ref.read(listDetailsProvider.notifier).getSelectedListDetails(
+              isPreloadedList: true,
+            ),
+      ]);
     });
   }
 
@@ -114,7 +119,7 @@ class _PreLoadedListDetailsScreenState
                           ///context.pushNamed(RouteManager.addProductScreen);
                           context.pop(hasValueChanged);
                         },
-                       /* onActionIconPressed: () {
+                        /* onActionIconPressed: () {
                          // _onActionIconPressed("preloaded_default/${widget.listId}");
                           _onActionIconPressed("preloaded_default/${widget.listId}");
                         }*/
@@ -148,53 +153,48 @@ class _PreLoadedListDetailsScreenState
 
                     return result.when(
                       loading: () => Center(child: SpenzaCircularProgress()),
-
                       data: (data) {
                         if (data == null) {
+                          return Center(child: SpenzaCircularProgress());
+                        } else if (data.isEmpty) {
                           return Center(
-                              child: SpenzaCircularProgress()
-                          );
-                        }else if(data.isEmpty){
-                          return Center(
-                            child: Text(
-                                "No Product found"
-                            ),
+                            child: Text("No Product found"),
                           );
                         }
-                          return ListView.builder(
-                            itemCount: data.length,
-                            itemBuilder: (context, index) {
-                              final UserProduct product = data[index];
-                              return PreloadedProductCard(
-                                measure: product.measure,
-                                listId: widget.listId,
-                                department: product.department,
-                                imageUrl: product.pImage,
-                                title: product.name,
-                                priceRange: "\$${product.minPrice} - \$${product.maxPrice}",
-                                product: product,
-                              );
-                            },
-                          );
-                        },
-
-
+                        return ListView.builder(
+                          itemCount: data.length,
+                          itemBuilder: (context, index) {
+                            final UserProduct product = data[index];
+                            return PreloadedProductCard(
+                              measure: product.measure,
+                              listId: widget.listId,
+                              department: product.department,
+                              imageUrl: product.pImage,
+                              title: product.name,
+                              priceRange:
+                                  "\$${product.minPrice} - \$${product.maxPrice}",
+                              product: product,
+                            );
+                          },
+                        );
+                      },
                       error: (error, stackTrace) =>
                           Center(child: Text("$error")),
                     );
                   },
                 ),
-
               ),
               Consumer(
                 builder: (context, ref, child) =>
                     ref.watch(userProductListProvider).maybeWhen(
-                      orElse: () => buildMaterialButton(context),
-                      data: (data) =>data== null?Container():  data.isEmpty
-                          ? Container()
-                          : buildMaterialButton(context),
-                      loading: () => Container(),
-                    ),
+                          orElse: () => buildMaterialButton(context),
+                          data: (data) => data == null
+                              ? Container()
+                              : data.isEmpty
+                                  ? Container()
+                                  : buildMaterialButton(context),
+                          loading: () => Container(),
+                        ),
               ),
             ],
           ),
@@ -204,13 +204,11 @@ class _PreLoadedListDetailsScreenState
   }
 
   void _onActionIconPressed(String itemPath) {
-
     print("clickedItemPath : $itemPath");
     final RenderBox customAppBarRenderBox =
-    context.findRenderObject() as RenderBox;
+        context.findRenderObject() as RenderBox;
     final customAppBarPosition =
-    customAppBarRenderBox.localToGlobal(Offset.zero);
-
+        customAppBarRenderBox.localToGlobal(Offset.zero);
 
     showPopupMenu(
       context: context,
@@ -223,11 +221,11 @@ class _PreLoadedListDetailsScreenState
       items: items,
       onSelected: (PopupMenuAction value) async {
         if (value == PopupMenuAction.upload) {
-
-          context.pushNamed(RouteManager.uploadReceiptScreen,queryParameters: {'list_id': itemPath});
-
+          context.pushNamed(RouteManager.uploadReceiptScreen,
+              queryParameters: {'list_id': itemPath});
         } else if (value == PopupMenuAction.receipt) {
-          context.pushNamed(RouteManager.displayReceiptScreen,queryParameters: {'list_ref': itemPath});
+          context.pushNamed(RouteManager.displayReceiptScreen,
+              queryParameters: {'list_ref': itemPath});
         } else if (value == PopupMenuAction.copy) {
           debugPrint("copy action");
           final bool result = await ref
@@ -238,97 +236,62 @@ class _PreLoadedListDetailsScreenState
             hasValueChanged = true;
             context.showSnackBar(message: "List copied successfully!");
           }
-
         }
       },
     );
   }
 
   Widget buildMaterialButton(BuildContext context) {
-    return /*MaterialButton(
-      onPressed: () {
-        ref
-            .read(userProductListProvider.notifier)
-            .redirectFromPreloadedList(context: context);
+    return InkWell(
+      splashColor: ColorUtils.colorSurface,
+      onTap: () async {
+        context.pushNamed(RouteManager.storeRankingScreen);
       },
-      color: Colors.blue,
-      // Change the button color to your desired color
-      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.arrow_forward,
-            color: Colors.white, // Change the icon color to your desired color
+      child: Container(
+        height: 40,
+        decoration: BoxDecoration(
+          color: ColorUtils.colorPrimary,
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
           ),
-          SizedBox(width: 8),
-          Text(
-            'Continue',
-            style: TextStyle(
-              color: Colors.white,
-              // Change the text color to your desired color
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-          ),
-        ],
-      ),
-    );*/
-      GestureDetector(
-        onTap: () async {
-          final bool? isSuccess = await ref
-              .read(userProductListProvider.notifier)
-              .saveUserProductListToServer(context: context);
-
-          if (isSuccess ?? false)
-            context.pushNamed(RouteManager.storeRankingScreen);
-        },
-        child: Container(
-          height: 40,
-          decoration: BoxDecoration(
-            color: ColorUtils.colorPrimary,
-            borderRadius: BorderRadius.all(Radius.circular(10),
-            ),
-            border: Border.all(
-                color: ColorUtils.colorPrimary
-            ),
-          ),
-          margin: EdgeInsets.only(bottom: 16, left: 16, right: 16),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                  flex: 8,
-                  child: /*Image.asset(
+          border: Border.all(color: ColorUtils.colorPrimary),
+        ),
+        margin: EdgeInsets.only(bottom: 16, left: 16, right: 16),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+                flex: 8,
+                child: /*Image.asset(
                     'spenza_no_bg.png'.assetImageUrl,
                     fit: BoxFit.contain,
                   ),*/
-                  Text("Spenza",
-                    style: TextStyle(fontWeight: FontWeight.w800, fontFamily: GoogleFonts.calistoga().fontFamily, color: Colors.white, fontSize: 25),
-                    textAlign: TextAlign.center,)
-              ),
-              /* Expanded(
+                    Text(
+                  "Spenza",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontFamily: GoogleFonts.calistoga().fontFamily,
+                      color: Colors.white,
+                      fontSize: 25),
+                  textAlign: TextAlign.center,
+                )),
+            /* Expanded(
                   flex: 1,
                   child: Image.asset(
                     'app_icon_spenza.png'.assetImageUrl,
                     fit: BoxFit.contain,
                   ),
                 ),*/
-              Expanded(
-                flex: 1,
-                child: Image.asset(
-                  'app_icon_spenza.png'.assetImageUrl,
-                  fit: BoxFit.contain,
-                ),
+            Expanded(
+              flex: 1,
+              child: Image.asset(
+                'app_icon_spenza.png'.assetImageUrl,
+                fit: BoxFit.contain,
               ),
-
-
-
-
-
-            ],
-          ),
+            ),
+          ],
         ),
-      );
+      ),
+    );
   }
 }

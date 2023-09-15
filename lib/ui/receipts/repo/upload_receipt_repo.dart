@@ -10,6 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/helpers/fireStore_pref_mixin.dart';
 import 'package:spenza/network/api_responses.dart';
+import 'package:spenza/ui/home/provider/fetch_mylist_provider.dart';
 import 'package:spenza/ui/home/provider/home_preloaded_list.dart';
 import 'package:spenza/ui/receipts/data/image_pick_state.dart';
 import 'package:spenza/ui/receipts/data/receipt_model.dart';
@@ -19,13 +20,12 @@ import 'package:spenza/utils/spenza_extensions.dart';
 part 'upload_receipt_repo.g.dart';
 
 @riverpod
-class UploadReceiptRepo extends _$UploadReceiptRepo with FirestoreAndPrefsMixin {
-
+class UploadReceiptRepo extends _$UploadReceiptRepo
+    with FirestoreAndPrefsMixin {
   @override
   ImagePickState build() {
     return ImagePickState();
   }
-
 
   Future<void> pickImage(BuildContext context) async {
     final pickedImage = await ImagePicker().pickImageFromGallery(context);
@@ -33,7 +33,9 @@ class UploadReceiptRepo extends _$UploadReceiptRepo with FirestoreAndPrefsMixin 
       state = ImagePickState.selected(File(pickedImage.path));
     }
   }
-  Future<void> uploadReceipt(File? image, BuildContext context, String path, String amount) async {
+
+  Future<void> uploadReceipt(
+      File? image, BuildContext context, String path, String amount) async {
     try {
       state = ImagePickState.loading();
 
@@ -64,7 +66,8 @@ class UploadReceiptRepo extends _$UploadReceiptRepo with FirestoreAndPrefsMixin 
         String name = data['name'] ?? "Name Not Available";
         String description = data['description'] ?? "Description Not Available";
 
-        final myListCollection = fireStore.collection(ReceiptConstant.collectionName);
+        final myListCollection =
+            fireStore.collection(ReceiptConstant.collectionName);
         await myListCollection.add({
           'uid': userId,
           'list_ref': documentReference,
@@ -75,9 +78,15 @@ class UploadReceiptRepo extends _$UploadReceiptRepo with FirestoreAndPrefsMixin 
           'amount': amount
         });
 
-        state = ImagePickState.uploaded(msg: "Uploaded successfully");
-        ref.read(homePreloadedListProvider.notifier).fetchPreloadedList();
-        context.pop(true);
+
+        Future.wait([
+          ref.read(homePreloadedListProvider.notifier).fetchPreloadedList(),
+          ref.read(fetchMyListProvider.notifier).fetchMyListFun()
+        ]).then((value) {
+          state = ImagePickState.uploaded(msg: "Uploaded successfully");
+          context.pop(true);
+        });
+
       } else {
         print("Document does not exist");
       }
@@ -85,5 +94,4 @@ class UploadReceiptRepo extends _$UploadReceiptRepo with FirestoreAndPrefsMixin 
       state = ImagePickState.error(msg: error.toString());
     }
   }
-
 }

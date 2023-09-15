@@ -135,8 +135,8 @@ class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
         }
       },
     );
- *//*   final customPopupMenuOverlay = CustomPopupMenuOverlay(context);
-    customPopupMenuOverlay.show(itemPath);*//*
+ */ /*   final customPopupMenuOverlay = CustomPopupMenuOverlay(context);
+    customPopupMenuOverlay.show(itemPath);*/ /*
   }*/
   void _onActionIconPressed(String itemPath, PopupMenuAction action) async {
     if (action == PopupMenuAction.upload) {
@@ -145,9 +145,12 @@ class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
           queryParameters: {'list_id': itemPath});
     } else if (action == PopupMenuAction.receipt) {
       debugPrint("receipt action, $itemPath");
-      context.pushNamed(RouteManager.displayReceiptScreen,
-          queryParameters: {'list_ref': itemPath});
-      StatefulNavigationShell.of(context).goBranch(screenNameToIndex[ScreenName.receipts]!);
+
+      context.goNamed(
+        RouteManager.receiptListScreenBottomPath,
+        queryParameters: {'list_ref': itemPath},
+      );
+
     } else if (action == PopupMenuAction.delete) {
       debugPrint("delete action");
       final bool result = await ref
@@ -161,8 +164,7 @@ class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
       }
     } else if (action == PopupMenuAction.edit) {
       debugPrint("edit action");
-      final bool? result =
-      await context.pushNamed(RouteManager.editListScreen);
+      final bool? result = await context.pushNamed(RouteManager.editListScreen);
       if (result ?? false) {
         context.showSnackBar(message: "List Edited Successfully!");
         ref.read(listDetailsProvider.notifier).getSelectedListDetails();
@@ -181,7 +183,6 @@ class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
       }
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -296,7 +297,6 @@ class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
                       },
                       onPopUpClicked: (String path, PopupMenuAction action) {
                         _onActionIconPressed(path, action);
-
                       },
                     );
                   },

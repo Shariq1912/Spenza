@@ -9,27 +9,19 @@ import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/utils/color_utils.dart';
 
-import 'firebase_options.dart';
+// import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //await Firebase.initializeApp();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp();
+  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   final sharedPrefs = await SharedPreferences.getInstance();
   runApp(
     ProviderScope(
       overrides: [
         sharedPreferencesProvider.overrideWithValue(sharedPrefs),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-          home: Container(),
-          builder: (context, child) {
-            return MediaQuery(
-                data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-                child: SpenzaApp(),);
-          },
-      ),
+      child: SpenzaApp(),
     ),
   );
 }
@@ -45,6 +37,12 @@ class SpenzaApp extends ConsumerWidget {
       DeviceOrientation.portraitDown,
     ]);
     return MaterialApp.router(
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+          child: child!,
+        );
+      },
       debugShowCheckedModeBanner: false,
       onGenerateTitle: (context) {
         final l10n = AppLocalizations.of(context);

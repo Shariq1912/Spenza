@@ -35,7 +35,6 @@ class _UploadReceiptScreenState extends ConsumerState<UploadReceiptScreen> {
     RequiredValidator(errorText: 'Field is required'),
   ]);
 
-
   @override
   void dispose() {
     ref.read(imagePickerProvider.notifier).state = null;
@@ -82,7 +81,7 @@ class _UploadReceiptScreenState extends ConsumerState<UploadReceiptScreen> {
             GestureDetector(
               onTap: () async {
                 final pickedImage =
-                await ImagePicker().pickImageFromGallery(context);
+                    await ImagePicker().pickImageFromGallery(context);
                 if (pickedImage != null) {
                   ref.read(imagePickerProvider.notifier).state = pickedImage;
                 }
@@ -94,28 +93,33 @@ class _UploadReceiptScreenState extends ConsumerState<UploadReceiptScreen> {
                   selectedImage = ref.watch(imagePickerProvider);
                   return selectedImage != null
                       ? Stack(
-                    children: [
-                      ClipOval(child: AspectRatio(aspectRatio: 1.0,child: Image.file(selectedImage!, fit: BoxFit.fill))),
-                      Positioned(
-                        bottom: 1,
-                        right: 8,
-                        child: Container(
-                          padding: EdgeInsets.all(5.0),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.blue, // Change the color as desired
-                          ),
-                          child: Icon(
-                            Icons.edit,
-                            color: Colors.white,
-                            size: 15,
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
+                          children: [
+                            ClipOval(
+                                child: AspectRatio(
+                                    aspectRatio: 1.0,
+                                    child: Image.file(selectedImage!,
+                                        fit: BoxFit.fill))),
+                            Positioned(
+                              bottom: 1,
+                              right: 8,
+                              child: Container(
+                                padding: EdgeInsets.all(5.0),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors
+                                      .blue, // Change the color as desired
+                                ),
+                                child: Icon(
+                                  Icons.edit,
+                                  color: Colors.white,
+                                  size: 15,
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
                       : Image.asset('upload_images.png'.assetImageUrl,
-                      fit: BoxFit.cover);
+                          fit: BoxFit.cover);
                 }),
               ),
             ),
@@ -145,7 +149,7 @@ class _UploadReceiptScreenState extends ConsumerState<UploadReceiptScreen> {
                       color: ColorUtils.primaryText),
                 ),
                 trailing:
-                Icon(Icons.arrow_drop_down, color: Colors.grey.shade600),
+                    Icon(Icons.arrow_drop_down, color: Colors.grey.shade600),
                 onTap: () => showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -172,7 +176,7 @@ class _UploadReceiptScreenState extends ConsumerState<UploadReceiptScreen> {
                   prefixIcon: Icon(Icons.attach_money),
                   hintText: "Amount Paid",
                   contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5),
                     borderSide: BorderSide.none,
@@ -193,62 +197,71 @@ class _UploadReceiptScreenState extends ConsumerState<UploadReceiptScreen> {
                   builder: (context, ref, child) =>
                       ref.watch(uploadReceiptRepoProvider).maybeWhen(
                             () => ElevatedButton(
-                          onPressed: () async {
-                            if(selectedImage == null || selectedImage?.path == null ){
-                              context.showSnackBar(message: "Please choose receipt");
-                              return;
-                            }
-                            else if(!_formKey.currentState!.validate()){
-                              context.showSnackBar(message: "Please enter amount");
-                              return;
-                            }
-                            ref.read(uploadReceiptRepoProvider.notifier).uploadReceipt(selectedImage,  context, widget.path, amountController.text);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF0CA9E6),
-                            foregroundColor: Colors.white,
-                            textStyle: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: poppinsFont,
+                              onPressed: () async {
+                                if (selectedImage == null ||
+                                    selectedImage?.path == null) {
+                                  context.showSnackBar(
+                                      message: "Please choose receipt");
+                                  return;
+                                } else if (!_formKey.currentState!.validate()) {
+                                  context.showSnackBar(
+                                      message: "Please enter amount");
+                                  return;
+                                }
+                                ref
+                                    .read(uploadReceiptRepoProvider.notifier)
+                                    .uploadReceipt(selectedImage, context,
+                                        widget.path, amountController.text);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xFF0CA9E6),
+                                foregroundColor: Colors.white,
+                                textStyle: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: poppinsFont,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                              ),
+                              child: Text("Upload"),
                             ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
+                            loading: () => Center(
+                              child: SpenzaCircularProgress(),
                             ),
-                          ),
-                          child: Text("Upload"),
-                        ),
-                        loading: () =>Center(
-                          child: SpenzaCircularProgress(),
-                        ),
-                        orElse: () => ElevatedButton(
-                          onPressed: () async {
-                            if(selectedImage == null || selectedImage?.path == null ){
-                              context.showSnackBar(message: "Please choose receipt");
-                              return;
-                            }
-                            else if(!_formKey.currentState!.validate()){
-                              context.showSnackBar(message: "Please enter amount");
-                              return;
-                            }
-                            ref.read(uploadReceiptRepoProvider.notifier).uploadReceipt(selectedImage, context, widget.path, amountController.text);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF0CA9E6),
-                            foregroundColor: Colors.white,
-                            textStyle: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: poppinsFont,
+                            orElse: () => ElevatedButton(
+                              onPressed: () async {
+                                if (selectedImage == null ||
+                                    selectedImage?.path == null) {
+                                  context.showSnackBar(
+                                      message: "Please choose receipt");
+                                  return;
+                                } else if (!_formKey.currentState!.validate()) {
+                                  context.showSnackBar(
+                                      message: "Please enter amount");
+                                  return;
+                                }
+                                ref
+                                    .read(uploadReceiptRepoProvider.notifier)
+                                    .uploadReceipt(selectedImage, context,
+                                        widget.path, amountController.text);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xFF0CA9E6),
+                                foregroundColor: Colors.white,
+                                textStyle: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: poppinsFont,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                              ),
+                              child: Text("Upload"),
                             ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                          ),
-                          child: Text("Upload"),
-                        ),
-                      )
-              ),
+                          )),
             ),
           ],
         ),
