@@ -68,7 +68,7 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen>
     super.dispose();
   }
 
-  void _onActionIconPressed(String itemPath) {
+  /* void _onActionIconPressed(String itemPath) {
     print("clickedItemPath : $itemPath");
     final RenderBox customAppBarRenderBox =
         context.findRenderObject() as RenderBox;
@@ -106,6 +106,29 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen>
         }
       },
     );
+  }*/
+
+  void _onActionIconPressed(String itemPath, PopupMenuAction action) async {
+    if (action == PopupMenuAction.upload) {
+      debugPrint("upload");
+      context.pushNamed(RouteManager.uploadReceiptScreen,
+          queryParameters: {'list_id': itemPath});
+    } else if (action == PopupMenuAction.receipt) {
+      debugPrint("receipt action, $itemPath");
+      context.pushNamed(RouteManager.displayReceiptScreen,
+          queryParameters: {'list_ref': itemPath});
+    }   else if (action == PopupMenuAction.copy) {
+      debugPrint("copy action");
+      final bool result = await ref
+          .read(homePreloadedListProvider.notifier)
+          .copyDocument(itemPath);
+
+      if (result) {
+        hasValueChanged = true;
+        context.showSnackBar(message: "List copied successfully!");
+      }
+
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -143,7 +166,7 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen>
                 builder: (context, ref, child) {
                   final profilePro = ref.watch(profileRepositoryProvider);
                   return profilePro.when(
-                    () => Container(),
+                        () => Container(),
                     loading: () => Container(),
                     error: (message) => ClipOval(
                       child: Image.asset('assets/images/user.png'),
@@ -186,7 +209,7 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen>
           child: Consumer(
             builder: (context, ref, child) {
               final preloadedListProvider =
-                  ref.watch(homePreloadedListProvider);
+              ref.watch(homePreloadedListProvider);
               return preloadedListProvider.when(
                 loading: () => Center(child: SpenzaCircularProgress()),
                 error: (error, stackTrace) {
@@ -197,19 +220,19 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen>
                   print("preloadedList $data");
                   return PreloadedListWidget(
                     data: data,
-                    onButtonClicked: (itemPath) {
-                      _onActionIconPressed(itemPath);
+                    onButtonClicked: (itemPath,PopupMenuAction action) {
+                      _onActionIconPressed(itemPath,action);
                     },
                     onCardClicked: (listId, name, photo) {
                       ref
                           .read(homePreloadedListProvider.notifier)
                           .redirectUserToListDetailsScreen(
-                            context: context,
-                            listId: listId,
-                            name: name,
-                            photo: photo,
-                            ref: ref,
-                          );
+                        context: context,
+                        listId: listId,
+                        name: name,
+                        photo: photo,
+                        ref: ref,
+                      );
                     },
                   );
                 },

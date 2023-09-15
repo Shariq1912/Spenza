@@ -52,13 +52,12 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               CardItem(
-                icon: Icons.list,
-                title: "My Lists",
-                onTap: () {
-                  StatefulNavigationShell.of(context)
-                      .goBranch(screenNameToIndex[ScreenName.myList]!);
-                },
-              ),
+                  icon: Icons.list,
+                  title: "My Lists",
+                  onTap: () {
+
+                    StatefulNavigationShell.of(context).goBranch(screenNameToIndex[ScreenName.myList]!);
+                  }),
               CardItem(
                   icon: Icons.receipt,
                   title: "My Receipts",
@@ -85,29 +84,32 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                         style: TextStyle(
                             fontSize: 14,
                             fontFamily: poppinsFont,
-                            color: ColorUtils.primaryText),
+                            color: ColorUtils.primaryText
+                        ),
                       ),
                     ),
                     ListTile(
-                      leading:
-                          Icon(Icons.lock_rounded, color: Colors.grey.shade600),
+                      leading: Icon(Icons.lock_rounded,
+                          color: Colors.grey.shade600),
                       title: Text(
                         "Privacy Policy",
                         style: TextStyle(
                             fontSize: 14,
                             fontFamily: poppinsFont,
-                            color: ColorUtils.primaryText),
+                            color: ColorUtils.primaryText
+                        ),
                       ),
                     ),
                     ListTile(
                       leading:
-                          Icon(Icons.lock_rounded, color: Colors.grey.shade600),
+                      Icon(Icons.lock_rounded, color: Colors.grey.shade600),
                       title: Text(
                         "Terms and Condition",
                         style: TextStyle(
                             fontSize: 14,
                             fontFamily: poppinsFont,
-                            color: ColorUtils.primaryText),
+                            color: ColorUtils.primaryText
+                        ),
                       ),
                     ),
                   ],
@@ -119,14 +121,14 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                 child: Column(
                   children: [
                     ListTile(
-                      leading: Icon(Icons.favorite,
-                          color: ColorUtils.colorSecondary),
+                      leading: Icon(Icons.favorite, color: ColorUtils.colorSecondary),
                       title: Text(
                         "Share and earn",
                         style: TextStyle(
                             fontSize: 14,
                             fontFamily: poppinsFont,
-                            color: ColorUtils.primaryText),
+                            color: ColorUtils.primaryText
+                        ),
                       ),
                     ),
                   ],
@@ -142,12 +144,17 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     style: TextStyle(
                         fontSize: 14,
                         fontFamily: poppinsFont,
-                        color: ColorUtils.primaryText),
+                        color: ColorUtils.primaryText
+                    ),
                   ),
                   onTap: () async {
-                    ref.read(loginRepositoryProvider.notifier).signOut().then(
-                          (value) => context.goNamed(RouteManager.loginScreen),
-                        );
+                    ref
+                        .read(loginRepositoryProvider.notifier)
+                        .signOut()
+                        .then(
+                          (value) =>
+                          context.goNamed(RouteManager.loginScreen),
+                    );
                   },
                 ),
               )
@@ -161,22 +168,22 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
   Widget _buildImageWidget(String? image) {
     return image != null
         ? CircleAvatar(
-            radius: MediaQuery.of(context).size.width * 0.08,
-            backgroundColor: Colors.white,
-            child: ClipOval(
-              child: CachedNetworkImage(
-                imageUrl: image!,
-                width: double.infinity,
-                height: double.infinity,
-                fit: BoxFit.cover,
-              ),
-            ),
-          )
+      radius: MediaQuery.of(context).size.width * 0.08,
+      backgroundColor: Colors.white,
+      child: ClipOval(
+        child: CachedNetworkImage(
+          imageUrl: image!,
+          width: double.infinity,
+          height: double.infinity,
+          fit: BoxFit.cover,
+        ),
+      ),
+    )
         : CircleAvatar(
-            radius: MediaQuery.of(context).size.width * 0.08,
-            backgroundColor: Colors.white,
-            child: ClipOval(child: Image.asset('assets/images/user.png')),
-          );
+      radius: MediaQuery.of(context).size.width * 0.08,
+      backgroundColor: Colors.white,
+      child: ClipOval(child: Image.asset('assets/images/user.png')),
+    );
   }
 
   AppBar topAppBar() {
@@ -187,60 +194,60 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
       automaticallyImplyLeading: false,
       leading: widget.key == null
           ? IconButton(
-              onPressed: () {
-                context.pop();
-              },
-              icon: Icon(Icons.arrow_back_ios, color: Color(0xFF0CA9E6)),
-            )
+        onPressed: () {
+          context.pop();
+        },
+        icon: Icon(Icons.arrow_back_ios, color: Color(0xFF0CA9E6)),
+      )
           : Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Consumer(
-                builder: (context, ref, child) {
-                  final profilePro = ref.watch(profileRepositoryProvider);
-                  return profilePro.when(
-                    () => Container(),
-                    loading: () => Center(child: CircularProgressIndicator()),
-                    error: (message) => CircleAvatar(
-                      child: Image.asset('assets/images/user.png'),
-                    ),
-                    success: (data) {
-                      if (data.profilePhoto != null &&
-                          data.profilePhoto!.isNotEmpty) {
-                        return CircleAvatar(
-                          radius: 40,
-                          child: ClipOval(
-                            child: AspectRatio(
-                              aspectRatio: 1.0,
-                              child: CachedNetworkImage(
-                                fit: BoxFit.cover,
-                                imageUrl: data.profilePhoto!,
-                                placeholder: (context, url) => Image.asset(
-                                    'app_icon_spenza.png'.assetImageUrl),
-                                errorWidget: (context, url, error) =>
-                                    Image.asset(
-                                        'user_placeholder.png'.assetImageUrl),
-                              ),
-                            ),
-                          ),
-                        );
-                      } else {
-                        return CircleAvatar(
-                          radius: 35,
-                          child: ClipOval(
-                              child: AspectRatio(
-                            aspectRatio: 1.0,
-                            child: Image.asset(
-                              'user_placeholder.png'.assetImageUrl,
-                              fit: BoxFit.cover,
-                            ),
-                          )),
-                        );
-                      }
-                    },
-                  );
-                },
+        padding: const EdgeInsets.only(left: 8.0),
+        child: Consumer(
+          builder: (context, ref, child) {
+            final profilePro = ref.watch(profileRepositoryProvider);
+            return profilePro.when(
+                  () => Container(),
+              loading: () => Center(child: CircularProgressIndicator()),
+              error: (message) => CircleAvatar(
+                child: Image.asset('assets/images/user.png'),
               ),
-            ),
+              success: (data) {
+                if (data.profilePhoto != null &&
+                    data.profilePhoto!.isNotEmpty) {
+                  return CircleAvatar(
+                    radius: 40,
+                    child: ClipOval(
+                      child: AspectRatio(
+                        aspectRatio: 1.0,
+                        child: CachedNetworkImage(
+                          fit: BoxFit.cover,
+                          imageUrl: data.profilePhoto!,
+                          placeholder: (context, url) => Image.asset(
+                              'app_icon_spenza.png'.assetImageUrl),
+                          errorWidget: (context, url, error) =>
+                              Image.asset(
+                                  'user_placeholder.png'.assetImageUrl),
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  return CircleAvatar(
+                    radius: 35,
+                    child: ClipOval(
+                        child: AspectRatio(
+                          aspectRatio: 1.0,
+                          child: Image.asset(
+                            'user_placeholder.png'.assetImageUrl,
+                            fit: BoxFit.cover,
+                          ),
+                        )),
+                  );
+                }
+              },
+            );
+          },
+        ),
+      ),
       actions: [
         Padding(
             padding: const EdgeInsets.only(
@@ -252,8 +259,8 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
               },
               icon: Icon(Icons.arrow_forward_ios, color: Color(0xFF0CA9E6)),
             )
-            //),
-            ),
+          //),
+        ),
       ],
       title: Text(
         "Account Information",

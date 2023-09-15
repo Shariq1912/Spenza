@@ -1,10 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:spenza/ui/profile/profile_repository.dart';
 import 'package:spenza/ui/receipts/component/my_receipt_widget.dart';
 import 'package:spenza/ui/receipts/provider/fetch_receipt_provider.dart';
+import 'package:spenza/utils/spenza_extensions.dart';
 
 
 class DisplayReceiptScreen extends ConsumerStatefulWidget{
@@ -28,6 +30,7 @@ class _DisplayReceiptScreen extends ConsumerState<DisplayReceiptScreen>{
   }
 
   Future<void> _loadAllMyList() async {
+    ref.read(profileRepositoryProvider.notifier).getUserProfileData();
     await ref.read(fetchReciptProviderProvider.notifier).fetchReceipt(widget.path);
   }
 
@@ -46,25 +49,72 @@ class _DisplayReceiptScreen extends ConsumerState<DisplayReceiptScreen>{
           ),
         ),
         centerTitle: true,
-        leading: widget.key == null ? IconButton(
+        leading: IconButton(
           onPressed: () {
             context.pop();
           },
           icon: Icon(Icons.arrow_back_ios, color: Color(0xFF0CA9E6)),
-        ) : Container(),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(top: 5),
             child: InkWell(
-              onTap: () {
-                //Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SettingScreen()));
-              },
-              child: CircleAvatar(
-                radius: 40,
-                child: ClipOval(
-                  child: Image.network('https://picsum.photos/250?image=9'),
-                ),
-              ),
+                onTap: () {
+                  //Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SettingScreen()));
+                },
+                child: Consumer(
+                  builder: (context, ref, child) {
+                    final profilePro = ref.watch(profileRepositoryProvider);
+                    return profilePro.when(
+                          () => Container(),
+                      loading: () => Container(),
+                      error: (message) => CircleAvatar(
+                        radius: 40,
+                        child: ClipOval(
+                          child: AspectRatio(
+                            aspectRatio: 1.0,
+                            child: Image.asset(
+                              'user_placeholder.png'.assetImageUrl,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                      success: (data) {
+                        if (data.profilePhoto != null && data.profilePhoto!.isNotEmpty) {
+                          return CircleAvatar(
+                            radius: 40,
+                            child: ClipOval(
+                              child: AspectRatio(
+                                aspectRatio: 1.0,
+                                child: CachedNetworkImage(
+                                  fit: BoxFit.cover,
+                                  imageUrl: data.profilePhoto!,
+                                  placeholder: (context, url) =>  Image.asset('app_icon_spenza.png'.assetImageUrl),
+                                  errorWidget: (context, url, error) => Image.asset('user_placeholder.png'.assetImageUrl),
+                                ),
+                              ),
+                            ),
+                          );
+
+                        } else {
+                          return CircleAvatar(
+                            radius: 40,
+                            child: ClipOval(
+                              child: AspectRatio(
+                                aspectRatio: 1.0,
+                                child: Image.asset(
+                                  'user_placeholder.png'.assetImageUrl,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                    );
+                  },
+                )
             ),
           ),
         ],
