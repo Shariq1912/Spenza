@@ -5,9 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/my_list_details/provider/list_details_provider.dart';
-import 'package:spenza/ui/my_list_details/provider/user_product_list_provider.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
+import '../../helpers/bottom_nav_helper.dart';
 import '../../helpers/popup_menu_mixin.dart';
 import '../../router/app_router.dart';
 import '../home/provider/fetch_mylist_provider.dart';
@@ -147,6 +147,7 @@ class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
       debugPrint("receipt action, $itemPath");
       context.pushNamed(RouteManager.displayReceiptScreen,
           queryParameters: {'list_ref': itemPath});
+      StatefulNavigationShell.of(context).goBranch(screenNameToIndex[ScreenName.receipts]!);
     } else if (action == PopupMenuAction.delete) {
       debugPrint("delete action");
       final bool result = await ref

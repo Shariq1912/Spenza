@@ -10,6 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/helpers/fireStore_pref_mixin.dart';
 import 'package:spenza/network/api_responses.dart';
+import 'package:spenza/ui/home/provider/home_preloaded_list.dart';
 import 'package:spenza/ui/receipts/data/image_pick_state.dart';
 import 'package:spenza/ui/receipts/data/receipt_model.dart';
 import 'package:spenza/utils/fireStore_constants.dart';
@@ -22,8 +23,8 @@ class UploadReceiptRepo extends _$UploadReceiptRepo with FirestoreAndPrefsMixin 
 
   @override
   ImagePickState build() {
-     return ImagePickState();
-   }
+    return ImagePickState();
+  }
 
 
   Future<void> pickImage(BuildContext context) async {
@@ -32,7 +33,7 @@ class UploadReceiptRepo extends _$UploadReceiptRepo with FirestoreAndPrefsMixin 
       state = ImagePickState.selected(File(pickedImage.path));
     }
   }
-  Future<void> uploadReceipt(File? image, BuildContext context, String path) async {
+  Future<void> uploadReceipt(File? image, BuildContext context, String path, String amount) async {
     try {
       state = ImagePickState.loading();
 
@@ -71,9 +72,11 @@ class UploadReceiptRepo extends _$UploadReceiptRepo with FirestoreAndPrefsMixin 
           'receipt': downloadURL,
           'date': formattedDate,
           'description': description,
+          'amount': amount
         });
 
         state = ImagePickState.uploaded(msg: "Uploaded successfully");
+        ref.read(homePreloadedListProvider.notifier).fetchPreloadedList();
         context.pop(true);
       } else {
         print("Document does not exist");

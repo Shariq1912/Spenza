@@ -45,7 +45,6 @@ class MyListWidget extends StatelessWidget {
               onButtonClicked(store.documentId!, store.name, store.myListPhoto!, store.path!);
             },
             child: Card(
-
               surfaceTintColor: Color(0xFFE5E7E8),
               color: Color(0xFFE5E7E8),
               child: Padding(
@@ -54,16 +53,18 @@ class MyListWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ClipRRect(
-                borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(8),
                       child: store.myListPhoto!.isNotEmpty
                           ? CachedNetworkImage(
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.fill,
-                        imageUrl: store.myListPhoto!,
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.fill,
+                          imageUrl: store.myListPhoto!,
+                          errorWidget: (builder, error, url)=> Image.asset(
+                              'app_icon_spenza.png'.assetImageUrl)
                       )
                           : Image.asset(
-                        'favicon.png'.assetImageUrl,
+                        'app_icon_spenza.png'.assetImageUrl,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -78,30 +79,45 @@ class MyListWidget extends StatelessWidget {
                           ),
                           SizedBox(height: 3),
                           Text(
-                            store.description.length > 50 ? '${store.description.substring(0, 50)}...' : store.description,
+                            maxLines:1,
+                             store.description,
                             style: TextStyle(fontSize: 13, fontFamily: poppinsFont),
                           ),
-                          SizedBox(height: 14),
-                          Text("${store.count!} recibos", style: TextStyle(fontSize: 13, fontFamily: poppinsFont)),
+                          SizedBox(height: 33),
+                          Row(
+                            children: [
+                              Icon(Icons.upload_file, color: int.parse(store.count!) > 0 ? ColorUtils.colorPrimary : Colors.red,size: 20,),
+                              SizedBox(width: 4),
+                              Text(
+                                int.parse(store.count!) > 0 ? "${store.count!} Receipt": "Upload receipt",
+                                style: TextStyle(
+                                  color: int.parse(store.count!) > 0 ? ColorUtils.primaryText : Colors.red,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          )
                         ],
                       ),
                     ),
                     SpeedDial(
+                      activeBackgroundColor: Color(0xFFE5E7E8),
                       icon: Icons.more_vert,
                       activeIcon: Icons.close,
                       backgroundColor: Color(0xFFE5E7E8),
-                      foregroundColor: Colors.black,
+                      foregroundColor: Color(0xFF7B868C),
                       direction: SpeedDialDirection.left,
-                      //childrenButtonSize: Size(35.0, 35.0),
-                      visible: true,
-                      //mini: true,
+                      childrenButtonSize: Size(35.0, 35.0),
+                      mini: true,
                       closeManually: false,
-                      overlayOpacity: 0.5,
+                      overlayOpacity: 0.0,
                       elevation: 0.0,
                       shape: CircleBorder(),
+                      childMargin: EdgeInsets.symmetric(horizontal: 5),
                       children: [
                         SpeedDialChild(
-                          child: Icon(Icons.edit),
+                          child: Icon(Icons.edit, size: 20,),
                           backgroundColor: ColorUtils.colorPrimary,
                           foregroundColor: Colors.white,
                           shape: CircleBorder(),
@@ -113,7 +129,7 @@ class MyListWidget extends StatelessWidget {
                         SpeedDialChild(
                           child:/* SvgPicture.asset("cloud_upload.svg".assetSvgIconUrl,
                               colorFilter: ColorFilter.mode(Colors.white, BlendMode.clear)),*/
-                          Icon(Icons.upload_file_outlined, size: 25,),
+                          Icon(Icons.upload_file_outlined, size: 20,),
                           backgroundColor: ColorUtils.colorPrimary,
                           foregroundColor: Colors.white,
                           shape: CircleBorder(),
@@ -124,17 +140,17 @@ class MyListWidget extends StatelessWidget {
                         ),
                         SpeedDialChild(
                           shape: CircleBorder(),
-                          child: Icon(Icons.receipt_long_rounded, size: 25,),
+                          child: Icon(Icons.receipt_long_rounded, size: 20,),
                           foregroundColor: Colors.white,
                           backgroundColor: ColorUtils.colorPrimary,
                           labelStyle: TextStyle(fontSize: 18.0),
                           onTap: ()  {
-                        onPopUpClicked(store.path!,PopupMenuAction.receipt);
-                        },
+                            onPopUpClicked(store.path!,PopupMenuAction.receipt);
+                          },
                         ),
                         SpeedDialChild(
                           shape: CircleBorder(),
-                          child: Icon(Icons.copy_all, size: 25,),
+                          child: Icon(Icons.copy_all, size: 20,),
                           foregroundColor: Colors.white,
                           backgroundColor: ColorUtils.colorPrimary,
                           labelStyle: TextStyle(fontSize: 18.0),
@@ -144,7 +160,7 @@ class MyListWidget extends StatelessWidget {
                         ),
                         SpeedDialChild(
                           shape: CircleBorder(),
-                          child: Icon(Icons.delete_forever_sharp, size: 25,),
+                          child: Icon(Icons.delete_forever_sharp, size: 20,),
                           foregroundColor: Colors.white,
                           backgroundColor: ColorUtils.colorPrimary,
                           labelStyle: TextStyle(fontSize: 18.0),

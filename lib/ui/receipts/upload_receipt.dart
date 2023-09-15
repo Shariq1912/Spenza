@@ -89,7 +89,7 @@ class _UploadReceiptState extends ConsumerState<UploadReceipt> {
                                   context.showSnackBar(message: "Please choose receipt");
                                   return;
                                 }
-                                ref.read(uploadReceiptRepoProvider.notifier).uploadReceipt(SelectedImage,  context, widget.path);
+                                ref.read(uploadReceiptRepoProvider.notifier).uploadReceipt(SelectedImage,  context, widget.path,"");
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Color(0xFF0CA9E6),
@@ -114,7 +114,7 @@ class _UploadReceiptState extends ConsumerState<UploadReceipt> {
                             context.showSnackBar(message: "Please choose receipt");
                             return;
                           }
-                          ref.read(uploadReceiptRepoProvider.notifier).uploadReceipt(SelectedImage, context, widget.path);
+                          ref.read(uploadReceiptRepoProvider.notifier).uploadReceipt(SelectedImage, context, widget.path,"");
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xFF0CA9E6),

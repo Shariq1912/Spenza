@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/helpers/popup_menu_mixin.dart';
 import 'package:spenza/router/app_router.dart';
@@ -111,10 +112,10 @@ class _PreLoadedListDetailsScreenState
                           ///context.pushNamed(RouteManager.addProductScreen);
                           context.pop(hasValueChanged);
                         },
-                        onActionIconPressed: () {
+                       /* onActionIconPressed: () {
                          // _onActionIconPressed("preloaded_default/${widget.listId}");
                           _onActionIconPressed("preloaded_default/${widget.listId}");
-                        }
+                        }*/
                       ),
                       orElse: () => CustomAppBar(
                         displayActionIcon: true,
@@ -128,9 +129,9 @@ class _PreLoadedListDetailsScreenState
                         onBackIconPressed: () {
                           context.pushNamed(RouteManager.addProductScreen);
                         },
-                        onActionIconPressed:() {
+                        /*onActionIconPressed:() {
                           _onActionIconPressed("preloaded_default/${widget.listId}");
-                        },
+                        },*/
                       ),
                     );
               },
@@ -241,8 +242,8 @@ class _PreLoadedListDetailsScreenState
     );
   }
 
-  MaterialButton buildMaterialButton(BuildContext context) {
-    return MaterialButton(
+  Widget buildMaterialButton(BuildContext context) {
+    return /*MaterialButton(
       onPressed: () {
         ref
             .read(userProductListProvider.notifier)
@@ -270,6 +271,62 @@ class _PreLoadedListDetailsScreenState
           ),
         ],
       ),
-    );
+    );*/
+      GestureDetector(
+        onTap: () async {
+          final bool? isSuccess = await ref
+              .read(userProductListProvider.notifier)
+              .saveUserProductListToServer(context: context);
+
+          if (isSuccess ?? false)
+            context.pushNamed(RouteManager.storeRankingScreen);
+        },
+        child: Container(
+          height: 40,
+          decoration: BoxDecoration(
+            color: ColorUtils.colorPrimary,
+            borderRadius: BorderRadius.all(Radius.circular(10),
+            ),
+            border: Border.all(
+                color: ColorUtils.colorPrimary
+            ),
+          ),
+          margin: EdgeInsets.only(bottom: 16, left: 16, right: 16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                  flex: 8,
+                  child: /*Image.asset(
+                    'spenza_no_bg.png'.assetImageUrl,
+                    fit: BoxFit.contain,
+                  ),*/
+                  Text("Spenza",
+                    style: TextStyle(fontWeight: FontWeight.w800, fontFamily: GoogleFonts.calistoga().fontFamily, color: Colors.white, fontSize: 25),
+                    textAlign: TextAlign.center,)
+              ),
+              /* Expanded(
+                  flex: 1,
+                  child: Image.asset(
+                    'app_icon_spenza.png'.assetImageUrl,
+                    fit: BoxFit.contain,
+                  ),
+                ),*/
+              Expanded(
+                flex: 1,
+                child: Image.asset(
+                  'app_icon_spenza.png'.assetImageUrl,
+                  fit: BoxFit.contain,
+                ),
+              ),
+
+
+
+
+
+            ],
+          ),
+        ),
+      );
   }
 }

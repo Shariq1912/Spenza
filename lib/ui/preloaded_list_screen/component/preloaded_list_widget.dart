@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:spenza/helpers/popup_menu_mixin.dart';
 import 'package:spenza/ui/home/data/preloaded_list_model.dart';
 import 'package:spenza/utils/color_utils.dart';
 
 class PreloadedListWidget extends ConsumerWidget {
   final List<PreloadedListModel> data;
-  final Function(String) onButtonClicked;
+  final Function(String, PopupMenuAction action) onButtonClicked;
   final Function(String , String, String) onCardClicked;
   PreloadedListWidget( {required this.data, required this.onButtonClicked, required this.onCardClicked});
 
@@ -17,7 +19,7 @@ class PreloadedListWidget extends ConsumerWidget {
         PreloadedListModel item = data[index];
         return GestureDetector(
           onTap: (){
-             onCardClicked(item.id, item.name, item.preloadedPhoto);
+            onCardClicked(item.id, item.name, item.preloadedPhoto);
           },
           child: Card(
             surfaceTintColor: Color(0xFFE5E7E8),
@@ -67,14 +69,66 @@ class PreloadedListWidget extends ConsumerWidget {
                       ],
                     ),
                   ),
-                  IconButton(
+                  /*IconButton(
                     onPressed: () {
                       print("three ${item.path}");
                       // Do something when three dots are clicked
                       onButtonClicked(item.path);
                     },
                     icon: Icon(Icons.more_vert),
-                  ),
+                  ),*/
+                  SpeedDial(
+                    activeBackgroundColor: Color(0xFFE5E7E8),
+                    icon: Icons.more_vert,
+                    activeIcon: Icons.close,
+                    backgroundColor: Color(0xFFE5E7E8),
+                    foregroundColor: Color(0xFF7B868C),
+                    direction: SpeedDialDirection.left,
+                    childrenButtonSize: Size(35.0, 35.0),
+                    mini: true,
+                    closeManually: false,
+                    overlayOpacity: 0.5,
+                    elevation: 0.0,
+                    shape: CircleBorder(),
+                    childMargin: EdgeInsets.symmetric(horizontal: 5),
+                    children: [
+
+                      SpeedDialChild(
+                        child:/* SvgPicture.asset("cloud_upload.svg".assetSvgIconUrl,
+                              colorFilter: ColorFilter.mode(Colors.white, BlendMode.clear)),*/
+                        Icon(Icons.upload_file_outlined, size: 20,),
+                        backgroundColor: ColorUtils.colorPrimary,
+                        foregroundColor: Colors.white,
+                        shape: CircleBorder(),
+                        labelStyle: TextStyle(fontSize: 18.0),
+                        onTap: () {
+                          onButtonClicked(item.path!, PopupMenuAction.upload);
+                        },
+                      ),
+                      SpeedDialChild(
+                        shape: CircleBorder(),
+                        child: Icon(Icons.receipt_long_rounded, size: 20,),
+                        foregroundColor: Colors.white,
+                        backgroundColor: ColorUtils.colorPrimary,
+                        labelStyle: TextStyle(fontSize: 18.0),
+                        onTap: ()  {
+                          onButtonClicked(item.path!,PopupMenuAction.receipt);
+                        },
+                      ),
+                      SpeedDialChild(
+                        shape: CircleBorder(),
+                        child: Icon(Icons.copy_all, size: 20,),
+                        foregroundColor: Colors.white,
+                        backgroundColor: ColorUtils.colorPrimary,
+                        labelStyle: TextStyle(fontSize: 18.0),
+                        onTap: () {
+                          onButtonClicked(item.path!, PopupMenuAction.copy);
+                        },
+                      ),
+
+
+                    ],
+                  )
                 ],
               ),
             ),

@@ -102,6 +102,7 @@ class UserSelectedProductCard extends ConsumerWidget {
                           ),
                           Text(
                             title,
+                            maxLines: 1,
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w700,

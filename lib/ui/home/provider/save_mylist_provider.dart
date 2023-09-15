@@ -48,7 +48,7 @@ class SaveMyList extends _$SaveMyList with FirestoreAndPrefsMixin {
       state = AsyncValue.data(null);
       context.pop(true);
       ref.read(imagePickerProvider.notifier).state = null;
-      context.push(RouteManager.homeScreen);
+      //context.pop();
 
 
     } catch (error,stackTrace) {
