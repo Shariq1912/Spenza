@@ -15,7 +15,7 @@ class _SplashWidgetState extends ConsumerState<SplashWidget> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 5), () {
       context.goNamed(RouteManager.splashScreen);
     });
   }
@@ -39,8 +39,8 @@ class _SplashWidgetState extends ConsumerState<SplashWidget> {
                     SvgPicture.asset(
                       'assets/images/spenza_white.svg',
                      // colorFilter: ColorFilter.mode(Colors.red, BlendMode.color),
-                      fit: BoxFit.cover,
-                      width: 80,
+                      fit: BoxFit.fitWidth,
+                      width: 50,
                       height: 100,
                     ),
                   ],

@@ -156,6 +156,7 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
         body: Column(
           children: [
             SearchBox(
+              colors: Color(0xFFE5E7E8),
               controller: _searchController,
               hint: "Search Product",
               focusNode: _focusNode,

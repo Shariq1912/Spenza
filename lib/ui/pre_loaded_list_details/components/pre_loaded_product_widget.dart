@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -165,9 +166,10 @@ class PreloadedProductCard extends ConsumerWidget {
                         Text(
                           title,
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 13,
                             fontWeight: FontWeight.w700,
                             color: Color(0xFF323E48),
+                            fontFamily: robotoFont
                           ),
                         ),
                         /*Text(
@@ -183,6 +185,7 @@ class PreloadedProductCard extends ConsumerWidget {
                           style: TextStyle(
                             fontSize: 12,
                             color: Color(0xFF323E48),
+                            fontFamily: robotoFont
                           ),
                         ),
                       ],
@@ -190,94 +193,54 @@ class PreloadedProductCard extends ConsumerWidget {
                   ),
                   SizedBox(width: 12),
                   Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        height: 62,
-                      ),
-                      Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              if (product.quantity > 1) {
-                                ref
-                                    .read(userProductListProvider.notifier)
-                                    .updateUserProductList(
-                                  product: product,
-                                  quantity: product.quantity - 1,
-                                );
-                              }
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 4),
-                              child: Text(
-                                "-",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFF555C62)),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 2),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              // Set the background color to white
-                              border: Border.all(
-                                  color: Colors.black.withOpacity(0.3)),
-                            ),
-                            child: Text(
-                              product.quantity.toString(),
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: ColorUtils.colorPrimary,
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 2),
-                          GestureDetector(
-                            onTap: () => ref
+                      InkWell(
+                          onTap: (){
+                            ref
                                 .read(userProductListProvider.notifier)
                                 .updateUserProductList(
                               product: product,
                               quantity: product.quantity + 1,
-                            ),
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 4),
-                              child: Text(
-                                "+",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFF555C62)),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 4),
-                          /*GestureDetector(
-                                onTap: () => ref
-                                    .read(userProductListProvider.notifier)
-                                    .deleteProductFromUserList(
-                                      listId: listId,
-                                      product: product,
-                                    ),
-                                child: Icon(
-                                  Icons.delete,
-                                  color: Colors
-                                      .red, // You can customize the delete icon color
-                                ),
-                              ),*/
-                        ],
+                            );
+                          },
+                          child: Icon(CupertinoIcons.add_circled_solid,color: ColorUtils.colorSecondary,)
                       ),
+                      SizedBox(height: 11),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 10),
+                        child: Text(
+                        product.quantity.toString().padLeft(2, '0'),
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Color(0xFF323E48),
+                              fontFamily: robotoFont,
+                            fontWeight: FontWeight.w600
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 11),
+                      InkWell(
+                          onTap: (){
+                            if (product.quantity > 1) {
+                              ref
+                                  .read(userProductListProvider.notifier)
+                                  .updateUserProductList(
+                                product: product,
+                                quantity: product.quantity - 1,
+                              );
+                            }
+                          },
+                          child: Icon(CupertinoIcons.minus_circle_fill,color: ColorUtils.colorSecondary,)
+                      ),
+
                     ],
                   ),
                 ],
               ),
             ),
+
           ],
         ),
       ),

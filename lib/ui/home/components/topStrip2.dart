@@ -74,7 +74,7 @@ class TopStrip extends ConsumerWidget {
               ],
             ),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 0),
           if (data.isEmpty)
             _noItemInTheList(context)
           else

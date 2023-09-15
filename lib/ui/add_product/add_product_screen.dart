@@ -108,6 +108,7 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
         body: Column(
           children: [
             SearchBox(
+              colors: Colors.white,
               controller: _searchController,
               hint: "Search Product",
               focusNode: _focusNode,

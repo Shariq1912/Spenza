@@ -42,6 +42,7 @@ class _MatchingStoreScreenState extends ConsumerState<MatchingStoreScreen> {
       appBar: HomeTopAppBar(
         title: "Choose your best option!",
         poppinsFont: poppinsFont,
+        isUserIconVisible: false,
       ),
       body: Consumer(
         builder: (context, ref, child) {

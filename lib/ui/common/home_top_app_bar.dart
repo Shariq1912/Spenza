@@ -50,7 +50,15 @@ class HomeTopAppBar extends ConsumerWidget implements PreferredSizeWidget {
               // context.pushNamed(RouteManager.settingScreen);
               StatefulNavigationShell.of(context).goBranch(screenNameToIndex[ScreenName.settings]!);
             },
-            child: Consumer(
+            child:!isUserIconVisible ? IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: Icon(
+                  Icons.close,
+                  color: Color(0xFF7B868C),
+                  size: 35,
+                )): Consumer(
               builder: (context, ref, child) {
                 final profilePro = ref.watch(profileRepositoryProvider);
                 return profilePro.when(

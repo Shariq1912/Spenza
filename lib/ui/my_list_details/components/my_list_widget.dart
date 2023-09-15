@@ -23,6 +23,7 @@ class MyListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final poppinsFont = GoogleFonts.poppins().fontFamily;
+    final robotoFont = GoogleFonts.roboto().fontFamily;
     if(stores.isEmpty){
       return Center(
         child: Text(
@@ -75,13 +76,13 @@ class MyListWidget extends StatelessWidget {
                         children: [
                           Text(
                             store.name,
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, fontFamily: poppinsFont),
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, fontFamily: robotoFont ),
                           ),
                           SizedBox(height: 3),
                           Text(
                             maxLines:1,
                              store.description,
-                            style: TextStyle(fontSize: 13, fontFamily: poppinsFont),
+                            style: TextStyle(fontSize: 13, fontFamily: robotoFont),
                           ),
                           SizedBox(height: 33),
                           Row(
@@ -94,6 +95,7 @@ class MyListWidget extends StatelessWidget {
                                   color: int.parse(store.count!) > 0 ? ColorUtils.primaryText : Colors.red,
                                   fontSize: 13,
                                   fontWeight: FontWeight.bold,
+                                  fontFamily: robotoFont
                                 ),
                               ),
                             ],
@@ -111,7 +113,7 @@ class MyListWidget extends StatelessWidget {
                       childrenButtonSize: Size(35.0, 35.0),
                       mini: true,
                       closeManually: false,
-                      overlayOpacity: 0.0,
+                      overlayOpacity: 0.5,
                       elevation: 0.0,
                       shape: CircleBorder(),
                       childMargin: EdgeInsets.symmetric(horizontal: 5),

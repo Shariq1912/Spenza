@@ -22,7 +22,7 @@ class ImageTextCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(4.0),
+        //padding: EdgeInsets.all(4.0),
         width: 120,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

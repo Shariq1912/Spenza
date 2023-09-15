@@ -61,9 +61,9 @@ class MyStores extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: 10),
+        /*SizedBox(height: 10),*/
         Padding(
-          padding: const EdgeInsets.only(top: 2),
+          padding: const EdgeInsets.only(top: 5),
           child: data.isNotEmpty
               ? Container(
             height: 200, // Adjust the height as needed

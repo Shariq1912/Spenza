@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/helpers/popup_menu_mixin.dart';
 import 'package:spenza/ui/home/data/preloaded_list_model.dart';
 import 'package:spenza/utils/color_utils.dart';
@@ -13,6 +14,7 @@ class PreloadedListWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final robotoFont = GoogleFonts.roboto().fontFamily;
     return ListView.builder(
       itemCount: data.length,
       itemBuilder: (context, index) {
@@ -45,11 +47,12 @@ class PreloadedListWidget extends ConsumerWidget {
                       children: [
                         Text(
                           item.name,
-                          style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),
+                          style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16,fontFamily: robotoFont),
                         ),
                         SizedBox(height: 3),
                         Text(item.description.length > 50 ? '${item.description.substring(0, 50)}...' : item.description,
-                          style: TextStyle(fontSize: 13, ),),
+                          style: TextStyle(fontSize: 13,
+                          fontFamily: robotoFont),),
                         SizedBox(height: 14),
                         //Text("Recibos ${item.count!}",style: TextStyle(fontSize: 13, )),
                         Row(
@@ -62,6 +65,7 @@ class PreloadedListWidget extends ConsumerWidget {
                                 color: int.parse(item.count!) > 0 ? ColorUtils.primaryText : Colors.red,
                                 fontSize: 13,
                                 fontWeight: FontWeight.bold,
+                                fontFamily: robotoFont
                               ),
                             ),
                           ],

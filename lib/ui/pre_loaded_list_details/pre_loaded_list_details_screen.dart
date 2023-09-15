@@ -93,6 +93,8 @@ class _PreLoadedListDetailsScreenState
           return true;
         },
         child: Scaffold(
+          backgroundColor: Colors.white,
+
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight),
             child: Consumer(

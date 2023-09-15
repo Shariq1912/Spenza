@@ -191,6 +191,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
               Column(
                 children: [
                   SearchBox(
+                    colors: Colors.white,
                     focusNode: _focusNode,
                     hint: "Add products",
                     controller: _searchController,

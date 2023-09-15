@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -59,8 +60,8 @@ class UserSelectedProductCard extends ConsumerWidget {
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Card(
-          surfaceTintColor: Color(0xFFE5E7E8),
-          color: Color(0xFFE5E7E8),
+          surfaceTintColor: Colors.white,
+          color: Colors.white,
           elevation: 2,
           child: Stack(
             alignment: Alignment.topRight,
@@ -104,9 +105,10 @@ class UserSelectedProductCard extends ConsumerWidget {
                             title,
                             maxLines: 1,
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 13,
                               fontWeight: FontWeight.w700,
                               color: Color(0xFF323E48),
+                              fontFamily: robotoFont
                             ),
                           ),
                           /*Text(
@@ -122,13 +124,14 @@ class UserSelectedProductCard extends ConsumerWidget {
                             style: TextStyle(
                               fontSize: 12,
                               color: Color(0xFF323E48),
+                              fontFamily: robotoFont
                             ),
                           ),
                         ],
                       ),
                     ),
                     SizedBox(width: 12),
-                    Column(
+                    /*Column(
                       children: [
                         SizedBox(
                           height: 62,
@@ -159,7 +162,7 @@ class UserSelectedProductCard extends ConsumerWidget {
                               ),
                             ),
                             SizedBox(width: 2),
-                            Container(
+                            *//*Container(
                               padding: EdgeInsets.symmetric(
                                    horizontal: 10),
                               decoration: BoxDecoration(
@@ -196,22 +199,55 @@ class UserSelectedProductCard extends ConsumerWidget {
                                 ),
                               ),
                             ),
-                            SizedBox(width: 4),
-                            /*GestureDetector(
-                                onTap: () => ref
-                                    .read(userProductListProvider.notifier)
-                                    .deleteProductFromUserList(
-                                      listId: listId,
-                                      product: product,
-                                    ),
-                                child: Icon(
-                                  Icons.delete,
-                                  color: Colors
-                                      .red, // You can customize the delete icon color
-                                ),
-                              ),*/
+                            SizedBox(width: 4),*//*
+
                           ],
                         ),
+                      ],
+                    ),*/
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        InkWell(
+                            onTap: (){
+                              ref
+                                  .read(userProductListProvider.notifier)
+                                  .updateUserProductList(
+                                product: product,
+                                quantity: product.quantity + 1,
+                              );
+                            },
+                            child: Icon(CupertinoIcons.add_circled,color: ColorUtils.primaryText,)
+                        ),
+                        SizedBox(height: 11),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10),
+                          child: Text(
+                            product.quantity.toString().padLeft(2, '0'),
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: ColorUtils.primaryText,
+                                fontFamily: robotoFont,
+                                fontWeight: FontWeight.w600
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 11),
+                        InkWell(
+                            onTap: (){
+                              if (product.quantity > 1) {
+                                ref
+                                    .read(userProductListProvider.notifier)
+                                    .updateUserProductList(
+                                  product: product,
+                                  quantity: product.quantity - 1,
+                                );
+                              }
+                            },
+                            child: Icon(CupertinoIcons.minus_circle,color: ColorUtils.primaryText,)
+                        ),
+
                       ],
                     ),
                   ],

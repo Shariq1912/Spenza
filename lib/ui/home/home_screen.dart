@@ -118,10 +118,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
                   ),
                 ),
               ),
-              Divider(
+              /*Divider(
                 color: Color(0xFFE5E7E8),
                 thickness: 7,
-              ),
+              ),*/
 
               /// Pre Loaded List
               Consumer(
@@ -166,10 +166,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
                   );
                 },
               ),
-              Divider(
+              /*Divider(
                 color: Color(0xFFE5E7E8),
                 thickness: 7,
-              ),
+              ),*/
 
               /// Store List
               Consumer(
