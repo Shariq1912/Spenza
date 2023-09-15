@@ -32,9 +32,10 @@ class MatchingStoreCard extends StatelessWidget {
       child: Container(
         color: Colors.white,
         child: InkWell(
-          onTap: () =>  onClick.call(),
+          onTap: () => onClick.call(),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 4.0),
+            padding:
+                const EdgeInsets.symmetric(vertical: 16.0, horizontal: 4.0),
             child: Column(
               children: [
                 Row(
@@ -96,11 +97,12 @@ class MatchingStoreCard extends StatelessWidget {
                                           color: Colors.white,
                                           size: 20,
                                         )
-                                      : Icon(
+                                      : /*Icon(
                                           Icons.favorite_border,
                                           color: Colors.grey[400],
                                           size: 20,
-                                        ),
+                                        ),*/
+                                      Container(),
                                 ),
                               ),
                             ],
@@ -130,11 +132,10 @@ class MatchingStoreCard extends StatelessWidget {
                               ),
                               SizedBox(height: 8),
                               Container(
-
                                 // Wrap the distance text in a container
                                 decoration: BoxDecoration(
-                                 // border: Border.all(color: Colors.grey.shade200,),
-                                  color:Colors.grey.shade200,
+                                  // border: Border.all(color: Colors.grey.shade200,),
+                                  color: Colors.grey.shade200,
                                 ),
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 8, vertical: 1),

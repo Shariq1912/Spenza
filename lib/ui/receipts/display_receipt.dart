@@ -24,6 +24,9 @@ class _DisplayReceiptScreen extends ConsumerState<DisplayReceiptScreen>{
   @override
   void initState() {
     super.initState();
+
+    print("PATH OF RECEIPT === ${widget.path}");
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadAllMyList();
     });

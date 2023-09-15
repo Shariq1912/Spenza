@@ -115,8 +115,16 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen>
           queryParameters: {'list_id': itemPath});
     } else if (action == PopupMenuAction.receipt) {
       debugPrint("receipt action, $itemPath");
-      context.pushNamed(RouteManager.displayReceiptScreen,
-          queryParameters: {'list_ref': itemPath});
+
+      context.goNamed(
+        RouteManager.receiptListScreenBottomPath,
+        queryParameters: {'list_ref': itemPath},
+      );
+
+      /*context.pushNamed(RouteManager.displayReceiptScreen,
+          queryParameters: {'list_ref': itemPath});*/
+
+
     }   else if (action == PopupMenuAction.copy) {
       debugPrint("copy action");
       final bool result = await ref
