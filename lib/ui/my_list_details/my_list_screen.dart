@@ -210,9 +210,7 @@ class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
         actions: [
           Padding(
             padding: const EdgeInsets.only(top: 5),
-            child: InkWell(onTap: () {
-              //Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SettingScreen()));
-            }, child: Consumer(
+            child: InkWell( child: Consumer(
               builder: (context, ref, child) {
                 final profilePro = ref.watch(profileRepositoryProvider);
                 return profilePro.when(

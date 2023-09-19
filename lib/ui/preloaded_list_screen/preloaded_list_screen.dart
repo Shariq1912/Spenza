@@ -8,6 +8,7 @@ import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/preloaded_list_screen/component/preloaded_list_widget.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 import '../../router/app_router.dart';
+import '../home/provider/fetch_mylist_provider.dart';
 import '../home/provider/home_preloaded_list.dart';
 import '../profile/profile_repository.dart';
 
@@ -143,6 +144,7 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen>
     return WillPopScope(
       onWillPop: () async {
         debugPrint("Will Pop Scope == $hasValueChanged");
+       await ref.read(fetchMyListProvider.notifier).fetchMyListFun();
         context.pop(hasValueChanged);
         return true;
       },
@@ -160,7 +162,8 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen>
           ),
           centerTitle: true,
           leading: IconButton(
-            onPressed: () {
+            onPressed: () async{
+              await ref.read(fetchMyListProvider.notifier).fetchMyListFun();
               context.pop();
             },
             icon: Icon(Icons.arrow_back_ios, color: Color(0xFF0CA9E6)),

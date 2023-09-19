@@ -191,6 +191,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
               Column(
                 children: [
                   SearchBox(
+                    colors: Colors.white,
                     focusNode: _focusNode,
                     hint: "Add products",
                     controller: _searchController,
@@ -259,7 +260,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                 ],
               ),
               Positioned(
-                bottom: 10,
+                bottom: 20,
                 right: 0,
                 left: 0,
                 child: Consumer(builder: (context, ref, child) {
@@ -335,38 +336,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
   }
 
   Widget buildMaterialButton(BuildContext context) {
-    return /*MaterialButton(
-      onPressed: () async {
-        final bool? isSuccess = await ref
-            .read(userProductListProvider.notifier)
-            .saveUserProductListToServer(context: context);
-
-        if (isSuccess ?? false)
-          context.pushNamed(RouteManager.storeRankingScreen);
-      },
-      color: Colors.blue,
-      // Change the button color to your desired color
-      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.arrow_forward,
-            color: Colors.white, // Change the icon color to your desired color
-          ),
-          SizedBox(width: 8),
-          Text(
-            'Continue',
-            style: TextStyle(
-              color: Colors.white,
-              // Change the text color to your desired color
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-          ),
-        ],
-      ),
-    );*/
+    return
       GestureDetector(
         onTap: () async {
           final bool? isSuccess = await ref
@@ -376,50 +346,14 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
           if (isSuccess ?? false)
             context.pushNamed(RouteManager.storeRankingScreen);
         },
-        child: Container(
-          height: 40,
-          decoration: BoxDecoration(
-            color: ColorUtils.colorPrimary,
-            borderRadius: BorderRadius.all(Radius.circular(10),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.asset(
+              'spenza_compare.png'.assetImageUrl,
+              fit: BoxFit.contain,
             ),
-            border: Border.all(
-                color: ColorUtils.colorPrimary
-            ),
-          ),
-          margin: EdgeInsets.only(bottom: 16, left: 16, right: 16),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                  flex: 8,
-                  child: /*Image.asset(
-                    'spenza_no_bg.png'.assetImageUrl,
-                    fit: BoxFit.contain,
-                  ),*/
-                  Text("Spenza",
-                    style: TextStyle(fontWeight: FontWeight.w800, fontFamily: GoogleFonts.calistoga().fontFamily, color: Colors.white, fontSize: 25),
-                    textAlign: TextAlign.center,)
-              ),
-              /* Expanded(
-                  flex: 1,
-                  child: Image.asset(
-                    'app_icon_spenza.png'.assetImageUrl,
-                    fit: BoxFit.contain,
-                  ),
-                ),*/
-              Expanded(
-                flex: 1,
-                child: Image.asset(
-                  'app_icon_spenza.png'.assetImageUrl,
-                  fit: BoxFit.contain,
-                ),
-              ),
-
-
-
-
-
-            ],
           ),
         ),
       );

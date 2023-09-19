@@ -69,7 +69,7 @@ class PreLoadedList extends ConsumerWidget {
           color: ColorUtils.colorWhite,
           height: 180,
           child: Padding(
-            padding: const EdgeInsets.only(top: 10),
+            padding: const EdgeInsets.only(top: 5),
             child: data.isNotEmpty
                 ? ListView.builder(
               scrollDirection: Axis.horizontal,

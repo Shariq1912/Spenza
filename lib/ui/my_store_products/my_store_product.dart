@@ -116,6 +116,7 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
         return true;
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(kToolbarHeight),
           child: Consumer(
@@ -156,6 +157,7 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
         body: Column(
           children: [
             SearchBox(
+              colors: Colors.white,
               controller: _searchController,
               hint: "Search Product",
               focusNode: _focusNode,

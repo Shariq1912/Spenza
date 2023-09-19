@@ -3,22 +3,20 @@ import 'package:go_router/go_router.dart';
 import 'package:spenza/ui/add_product/add_product_screen.dart';
 import 'package:spenza/ui/dashboard/dashboard_screen.dart';
 import 'package:spenza/ui/favourite_stores/favourite_store_screen.dart';
-import 'package:spenza/ui/home/components/add_list.dart';
 import 'package:spenza/ui/home/components/new_list_dialog.dart';
 import 'package:spenza/ui/home/edit_list_screen.dart';
 import 'package:spenza/ui/home/home_screen.dart';
 import 'package:spenza/ui/location/location_screen.dart';
 import 'package:spenza/ui/login/login_screen.dart';
 import 'package:spenza/ui/matching_store/matching_store_screen.dart';
-import 'package:spenza/ui/my_list_details/my_list_screen.dart';
 import 'package:spenza/ui/my_list_details/my_list_details_screen.dart';
+import 'package:spenza/ui/my_list_details/my_list_screen.dart';
 import 'package:spenza/ui/my_store_products/my_store_product.dart';
 import 'package:spenza/ui/pre_loaded_list_details/pre_loaded_list_details_screen.dart';
 import 'package:spenza/ui/preloaded_list_screen/preloaded_list_screen.dart';
 import 'package:spenza/ui/profile/component/edit_profile_info.dart';
 import 'package:spenza/ui/profile/profile_screen.dart';
 import 'package:spenza/ui/receipts/display_receipt.dart';
-import 'package:spenza/ui/receipts/upload_receipt.dart';
 import 'package:spenza/ui/selected_store/selected_store_screen.dart';
 import 'package:spenza/ui/settings/setting_screen.dart';
 import 'package:spenza/ui/sign_up/register_screen.dart';
@@ -69,6 +67,11 @@ class RouteManager {
   static const myListScreenBottomPath = '/myListScreenBottomPath';
   static const preloadedListScreenBottomPath = '/preloadedListScreenBottomPath';
   static const receiptListScreenBottomPath = '/receiptListScreenBottomPath';
+  final GlobalKey<StatefulNavigationShellState> homeNavigationKey = GlobalKey();
+  final GlobalKey<StatefulNavigationShellState> myListNavigationKey = GlobalKey();
+  final GlobalKey<StatefulNavigationShellState> receiptsNavigationKey = GlobalKey();
+  final GlobalKey<StatefulNavigationShellState> settingsNavigationKey = GlobalKey();
+
 
   /// The route configuration.
   static final GoRouter router = GoRouter(
@@ -124,7 +127,7 @@ class RouteManager {
                   print("Shell Route Path Called == $path");
                   return NoTransitionPage(
                     child:
-                        DisplayReceiptScreen(key: ValueKey(path), path: path),
+                        DisplayReceiptScreen(key: UniqueKey(), path: path),
                   );
                 },
               ),
@@ -375,4 +378,6 @@ class RouteManager {
       ),
     ],
   );
+
+
 }

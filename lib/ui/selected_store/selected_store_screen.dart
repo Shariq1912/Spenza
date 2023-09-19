@@ -125,6 +125,7 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
         body: Column(
           children: [
             SearchBox(
+              colors: Colors.white,
               focusNode: _focusNode,
               controller: _searchController,
               hint: "Add Product",
@@ -222,10 +223,12 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16),
               child: ElevatedButtonWithCenteredText(
                 size: Size(size.width, 40),
-                onClick: () {},
+                onClick: () {
+                  context.pushNamed(RouteManager.uploadReceiptScreen);
+                },
                 text: "I finished Shopping", // todo localize the text
                 fontFamily: poppinsFont!,
               ),

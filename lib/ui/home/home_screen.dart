@@ -55,12 +55,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
 
   @override
   void dispose() {
-    super.dispose();
+
     print("Dispose called From Home");
 
     ref.invalidate(fetchMyListProvider);
     ref.invalidate(fetchFavouriteStoreRepositoryProvider);
     ref.invalidate(homePreloadedListProvider);
+    ref.invalidate(profileRepositoryProvider);
+    super.dispose();
   }
 
   @override
@@ -118,10 +120,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
                   ),
                 ),
               ),
-              Divider(
+              /*Divider(
                 color: Color(0xFFE5E7E8),
                 thickness: 7,
-              ),
+              ),*/
 
               /// Pre Loaded List
               Consumer(
@@ -166,10 +168,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
                   );
                 },
               ),
-              Divider(
+              /*Divider(
                 color: Color(0xFFE5E7E8),
                 thickness: 7,
-              ),
+              ),*/
 
               /// Store List
               Consumer(

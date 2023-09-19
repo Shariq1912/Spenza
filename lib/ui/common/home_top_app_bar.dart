@@ -43,63 +43,82 @@ class HomeTopAppBar extends ConsumerWidget implements PreferredSizeWidget {
       actions: [
         Padding(
           padding: const EdgeInsets.only(
-            top: 5,
+            //top: 5,
           ),
           child: InkWell(
             onTap: () {
               // context.pushNamed(RouteManager.settingScreen);
-              StatefulNavigationShell.of(context).goBranch(screenNameToIndex[ScreenName.settings]!);
+              StatefulNavigationShell.of(context)
+                  .goBranch(screenNameToIndex[ScreenName.settings]!);
             },
-            child: Consumer(
-              builder: (context, ref, child) {
-                final profilePro = ref.watch(profileRepositoryProvider);
-                return profilePro.when(
-                  () => Container(),
-                  loading: () => Center(child: CircularProgressIndicator()),
-                  error: (message) => CircleAvatar(
-                    child: Image.asset('assets/images/user.png'),
+            child: !isUserIconVisible
+                ? Padding(
+                  padding: const EdgeInsets.only(right: 8.0, bottom: 15),
+                  child: InkWell(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        height: 22,
+                        width: 22,
+                        child: Image.asset(
+                          "x_close.png".assetImageUrl,
+                        ),
+                      ),
+                    ),
+                )
+                : Consumer(
+                    builder: (context, ref, child) {
+                      final profilePro = ref.watch(profileRepositoryProvider);
+                      return profilePro.when(
+                        () => Container(),
+                        loading: () =>
+                            Center(child: CircularProgressIndicator()),
+                        error: (message) => CircleAvatar(
+                          child: Image.asset('assets/images/user.png'),
+                        ),
+                        success: (data) {
+                          final zipcode = data.zipCode;
+                          print("zzz $zipcode");
+                          if (data.profilePhoto != null &&
+                              data.profilePhoto!.isNotEmpty) {
+                            return Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 10, bottom: 18, top: 18, right: 10),
+                              child: ClipOval(
+                                child: AspectRatio(
+                                  aspectRatio: 1.0,
+                                  child: CachedNetworkImage(
+                                    fit: BoxFit.cover,
+                                    imageUrl: data.profilePhoto!,
+                                    placeholder: (context, url) => Image.asset(
+                                        'app_icon_spenza.png'.assetImageUrl),
+                                    errorWidget: (context, url, error) =>
+                                        Image.asset('user_placeholder.png'
+                                            .assetImageUrl),
+                                  ),
+                                ),
+                              ),
+                            );
+                          } else {
+                            return Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 10, bottom: 18, top: 18, right: 10),
+                              child: ClipOval(
+                                child: AspectRatio(
+                                  aspectRatio: 1.0,
+                                  child: Image.asset(
+                                    'user_placeholder.png'.assetImageUrl,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      );
+                    },
                   ),
-                  success: (data) {
-                    final zipcode = data.zipCode;
-                    print("zzz $zipcode");
-                    if (data.profilePhoto != null &&
-                        data.profilePhoto!.isNotEmpty) {
-                      return Padding(
-                        padding: const EdgeInsets.only(
-                            left: 10, bottom: 18, top: 18, right: 10),
-                        child: ClipOval(
-                          child: AspectRatio(
-                            aspectRatio: 1.0,
-                            child: CachedNetworkImage(
-                              fit: BoxFit.cover,
-                              imageUrl: data.profilePhoto!,
-                              placeholder: (context, url) => Image.asset(
-                                  'app_icon_spenza.png'.assetImageUrl),
-                              errorWidget: (context, url, error) => Image.asset(
-                                  'user_placeholder.png'.assetImageUrl),
-                            ),
-                          ),
-                        ),
-                      );
-                    } else {
-                      return Padding(
-                        padding: const EdgeInsets.only(
-                            left: 10, bottom: 18, top: 18, right: 10),
-                        child: ClipOval(
-                          child: AspectRatio(
-                            aspectRatio: 1.0,
-                            child: Image.asset(
-                              'user_placeholder.png'.assetImageUrl,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      );
-                    }
-                  },
-                );
-              },
-            ),
           ),
         )
       ],
