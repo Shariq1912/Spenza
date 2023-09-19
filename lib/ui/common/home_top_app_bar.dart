@@ -53,14 +53,14 @@ class HomeTopAppBar extends ConsumerWidget implements PreferredSizeWidget {
             },
             child: !isUserIconVisible
                 ? Padding(
-                  padding: const EdgeInsets.only(right: 8.0, bottom: 15),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0).copyWith(bottom: 10),
                   child: InkWell(
                       onTap: () {
                         Navigator.of(context).pop();
                       },
                       child: Container(
-                        height: 22,
-                        width: 22,
+                        height: 20,
+                        width: 20,
                         child: Image.asset(
                           "x_close.png".assetImageUrl,
                         ),

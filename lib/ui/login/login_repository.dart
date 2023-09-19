@@ -85,13 +85,12 @@ class LoginRepository extends StateNotifier<ApiResponse>
     }
   }
 
-  Future<bool> signOut(BuildContext context) async {
+  Future<bool> signOut() async {
     await _auth.signOut();
     await GoogleSignIn().signOut();
     final pref = await SharedPreferences.getInstance();
-    runApp(SpenzaApp());
-    return pref.clear().then((value) => true);
 
+    return pref.clear().then((value) => true);
   }
 
 

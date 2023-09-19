@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:spenza/utils/color_utils.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
 class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
@@ -38,7 +39,7 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
         child: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            color: Color(0xFF0CA9E6),
+            color: ColorUtils.colorPrimary,
             size: 24,
           ),
           onPressed: onBackIconPressed,

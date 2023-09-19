@@ -266,8 +266,7 @@ class _PreLoadedListDetailsScreenState
   }
 
   Widget buildMaterialButton(BuildContext context) {
-    return InkWell(
-      splashColor: ColorUtils.colorSurface,
+    return GestureDetector(
       onTap: () async {
         context.pushNamed(RouteManager.storeRankingScreen);
       },

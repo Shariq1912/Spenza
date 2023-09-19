@@ -133,7 +133,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
                   return preloadedProvider.when(
                     data: (data) {
                       return Padding(
-                        padding: EdgeInsets.only(left: 10, right: 10, top: 5),
+                        padding: EdgeInsets.symmetric(horizontal: 10).copyWith(top: 10),
                         child: PreLoadedList(
                           onListTap: (listId, name, photo) {
                             ref
@@ -184,7 +184,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
                     error: (message) => Center(child: Text(message)),
                     success: (data) {
                       return Padding(
-                        padding: EdgeInsets.only(left: 10, right: 10),
+                        padding: EdgeInsets.symmetric(horizontal: 10),
                         child: MyStores(
                           data: data,
                           title: AppLocalizations.of(context)!.myStoreTitle,

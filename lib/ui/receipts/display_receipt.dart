@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/profile/profile_repository.dart';
 import 'package:spenza/ui/receipts/component/my_receipt_widget.dart';
 import 'package:spenza/ui/receipts/provider/fetch_receipt_provider.dart';
@@ -135,7 +136,7 @@ class _DisplayReceiptScreen extends ConsumerState<DisplayReceiptScreen>{
             final storeProvider = ref.watch(fetchReciptProviderProvider);
             return storeProvider.when(
 
-              loading: () => Center(child: CircularProgressIndicator()),
+              loading: () => Center(child: SpenzaCircularProgress()),
               error: (error,stackTrace) {
                 print("errorMrss $error");
                 return Center(child: Text(error.toString()));

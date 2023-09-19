@@ -46,7 +46,9 @@ class MatchingStoreCard extends StatelessWidget {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
-                        color: ColorUtils.colorPrimary,
+                        color: matchingPercentage >= 80
+                            ? ColorUtils.colorPrimary
+                            : ColorUtils.bottomNavIconAndTextColor,
                       ),
                     ),
                     Icon(

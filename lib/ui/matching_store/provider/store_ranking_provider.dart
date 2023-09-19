@@ -248,8 +248,8 @@ class StoreRanking extends _$StoreRanking
       favouriteStores.sort((a, b) {
         final result = b.matchingPercentage.compareTo(a.matchingPercentage);
         if (result == 0) {
-          return a.distance.compareTo(b
-              .distance); // Sort by distance when matchingPercentage is the same
+          return a.totalPrice.compareTo(b
+              .totalPrice); // Sort by price when matchingPercentage is the same
         }
         return result;
       });
