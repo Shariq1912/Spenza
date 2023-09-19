@@ -12,6 +12,7 @@ _$_MatchingStore _$$_MatchingStoreFromJson(Map<String, dynamic> json) =>
           const DocumentReferenceJsonConverter().fromJson(json['storeRef']),
       logo: json['logo'] as String,
       name: json['name'] as String,
+      isFavourite: json['isFavourite'] as bool? ?? false,
       totalPrice: (json['totalPrice'] as num).toDouble(),
       distance: json['distance'] as String,
       address: json['address'] as String,
@@ -31,6 +32,7 @@ Map<String, dynamic> _$$_MatchingStoreToJson(_$_MatchingStore instance) {
       const DocumentReferenceJsonConverter().toJson(instance.storeRef));
   val['logo'] = instance.logo;
   val['name'] = instance.name;
+  val['isFavourite'] = instance.isFavourite;
   val['totalPrice'] = instance.totalPrice;
   val['distance'] = instance.distance;
   val['address'] = instance.address;

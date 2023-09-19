@@ -25,6 +25,7 @@ mixin _$ReceiptModel {
   String? get receipt => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
   String? get date => throw _privateConstructorUsedError;
+  String? get amount => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -43,7 +44,8 @@ abstract class $ReceiptModelCopyWith<$Res> {
       String? name,
       String? receipt,
       String? description,
-      String? date});
+      String? date,
+      String? amount});
 }
 
 /// @nodoc
@@ -64,6 +66,7 @@ class _$ReceiptModelCopyWithImpl<$Res, $Val extends ReceiptModel>
     Object? receipt = freezed,
     Object? description = freezed,
     Object? date = freezed,
+    Object? amount = freezed,
   }) {
     return _then(_value.copyWith(
       uid: null == uid
@@ -86,6 +89,10 @@ class _$ReceiptModelCopyWithImpl<$Res, $Val extends ReceiptModel>
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
               as String?,
+      amount: freezed == amount
+          ? _value.amount
+          : amount // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -103,7 +110,8 @@ abstract class _$$_ReceiptModelCopyWith<$Res>
       String? name,
       String? receipt,
       String? description,
-      String? date});
+      String? date,
+      String? amount});
 }
 
 /// @nodoc
@@ -122,6 +130,7 @@ class __$$_ReceiptModelCopyWithImpl<$Res>
     Object? receipt = freezed,
     Object? description = freezed,
     Object? date = freezed,
+    Object? amount = freezed,
   }) {
     return _then(_$_ReceiptModel(
       uid: null == uid
@@ -144,6 +153,10 @@ class __$$_ReceiptModelCopyWithImpl<$Res>
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
               as String?,
+      amount: freezed == amount
+          ? _value.amount
+          : amount // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -156,7 +169,8 @@ class _$_ReceiptModel implements _ReceiptModel {
       this.name,
       this.receipt,
       this.description,
-      this.date});
+      this.date,
+      this.amount});
 
   factory _$_ReceiptModel.fromJson(Map<String, dynamic> json) =>
       _$$_ReceiptModelFromJson(json);
@@ -171,10 +185,12 @@ class _$_ReceiptModel implements _ReceiptModel {
   final String? description;
   @override
   final String? date;
+  @override
+  final String? amount;
 
   @override
   String toString() {
-    return 'ReceiptModel(uid: $uid, name: $name, receipt: $receipt, description: $description, date: $date)';
+    return 'ReceiptModel(uid: $uid, name: $name, receipt: $receipt, description: $description, date: $date, amount: $amount)';
   }
 
   @override
@@ -187,13 +203,14 @@ class _$_ReceiptModel implements _ReceiptModel {
             (identical(other.receipt, receipt) || other.receipt == receipt) &&
             (identical(other.description, description) ||
                 other.description == description) &&
-            (identical(other.date, date) || other.date == date));
+            (identical(other.date, date) || other.date == date) &&
+            (identical(other.amount, amount) || other.amount == amount));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, uid, name, receipt, description, date);
+      Object.hash(runtimeType, uid, name, receipt, description, date, amount);
 
   @JsonKey(ignore: true)
   @override
@@ -215,7 +232,8 @@ abstract class _ReceiptModel implements ReceiptModel {
       final String? name,
       final String? receipt,
       final String? description,
-      final String? date}) = _$_ReceiptModel;
+      final String? date,
+      final String? amount}) = _$_ReceiptModel;
 
   factory _ReceiptModel.fromJson(Map<String, dynamic> json) =
       _$_ReceiptModel.fromJson;
@@ -230,6 +248,8 @@ abstract class _ReceiptModel implements ReceiptModel {
   String? get description;
   @override
   String? get date;
+  @override
+  String? get amount;
   @override
   @JsonKey(ignore: true)
   _$$_ReceiptModelCopyWith<_$_ReceiptModel> get copyWith =>
