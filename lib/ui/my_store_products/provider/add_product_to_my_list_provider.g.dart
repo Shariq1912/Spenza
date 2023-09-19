@@ -7,7 +7,7 @@ part of 'add_product_to_my_list_provider.dart';
 // **************************************************************************
 
 String _$addProductToMyListHash() =>
-    r'3fa4d45f49ad4861c654977b87284a0fdcc4d013';
+    r'553bf59b4b0ba58a8a2121441acaf25e00920e20';
 
 /// See also [AddProductToMyList].
 @ProviderFor(AddProductToMyList)

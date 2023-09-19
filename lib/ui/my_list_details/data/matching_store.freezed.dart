@@ -24,6 +24,7 @@ mixin _$MatchingStores {
       throw _privateConstructorUsedError;
   String get logo => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
+  bool get isFavourite => throw _privateConstructorUsedError;
   double get totalPrice => throw _privateConstructorUsedError;
   String get distance => throw _privateConstructorUsedError;
   String get address => throw _privateConstructorUsedError;
@@ -45,6 +46,7 @@ abstract class $MatchingStoresCopyWith<$Res> {
       {DocumentReference<Object?>? storeRef,
       String logo,
       String name,
+      bool isFavourite,
       double totalPrice,
       String distance,
       String address,
@@ -67,6 +69,7 @@ class _$MatchingStoresCopyWithImpl<$Res, $Val extends MatchingStores>
     Object? storeRef = freezed,
     Object? logo = null,
     Object? name = null,
+    Object? isFavourite = null,
     Object? totalPrice = null,
     Object? distance = null,
     Object? address = null,
@@ -85,6 +88,10 @@ class _$MatchingStoresCopyWithImpl<$Res, $Val extends MatchingStores>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
+      isFavourite: null == isFavourite
+          ? _value.isFavourite
+          : isFavourite // ignore: cast_nullable_to_non_nullable
+              as bool,
       totalPrice: null == totalPrice
           ? _value.totalPrice
           : totalPrice // ignore: cast_nullable_to_non_nullable
@@ -117,6 +124,7 @@ abstract class _$$_MatchingStoreCopyWith<$Res>
       {DocumentReference<Object?>? storeRef,
       String logo,
       String name,
+      bool isFavourite,
       double totalPrice,
       String distance,
       String address,
@@ -137,6 +145,7 @@ class __$$_MatchingStoreCopyWithImpl<$Res>
     Object? storeRef = freezed,
     Object? logo = null,
     Object? name = null,
+    Object? isFavourite = null,
     Object? totalPrice = null,
     Object? distance = null,
     Object? address = null,
@@ -155,6 +164,10 @@ class __$$_MatchingStoreCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
+      isFavourite: null == isFavourite
+          ? _value.isFavourite
+          : isFavourite // ignore: cast_nullable_to_non_nullable
+              as bool,
       totalPrice: null == totalPrice
           ? _value.totalPrice
           : totalPrice // ignore: cast_nullable_to_non_nullable
@@ -184,6 +197,7 @@ class _$_MatchingStore with DiagnosticableTreeMixin implements _MatchingStore {
       {this.storeRef,
       required this.logo,
       required this.name,
+      this.isFavourite = false,
       required this.totalPrice,
       required this.distance,
       required this.address,
@@ -199,6 +213,9 @@ class _$_MatchingStore with DiagnosticableTreeMixin implements _MatchingStore {
   @override
   final String name;
   @override
+  @JsonKey()
+  final bool isFavourite;
+  @override
   final double totalPrice;
   @override
   final String distance;
@@ -209,7 +226,7 @@ class _$_MatchingStore with DiagnosticableTreeMixin implements _MatchingStore {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'MatchingStores(storeRef: $storeRef, logo: $logo, name: $name, totalPrice: $totalPrice, distance: $distance, address: $address, matchingPercentage: $matchingPercentage)';
+    return 'MatchingStores(storeRef: $storeRef, logo: $logo, name: $name, isFavourite: $isFavourite, totalPrice: $totalPrice, distance: $distance, address: $address, matchingPercentage: $matchingPercentage)';
   }
 
   @override
@@ -220,6 +237,7 @@ class _$_MatchingStore with DiagnosticableTreeMixin implements _MatchingStore {
       ..add(DiagnosticsProperty('storeRef', storeRef))
       ..add(DiagnosticsProperty('logo', logo))
       ..add(DiagnosticsProperty('name', name))
+      ..add(DiagnosticsProperty('isFavourite', isFavourite))
       ..add(DiagnosticsProperty('totalPrice', totalPrice))
       ..add(DiagnosticsProperty('distance', distance))
       ..add(DiagnosticsProperty('address', address))
@@ -235,6 +253,8 @@ class _$_MatchingStore with DiagnosticableTreeMixin implements _MatchingStore {
                 other.storeRef == storeRef) &&
             (identical(other.logo, logo) || other.logo == logo) &&
             (identical(other.name, name) || other.name == name) &&
+            (identical(other.isFavourite, isFavourite) ||
+                other.isFavourite == isFavourite) &&
             (identical(other.totalPrice, totalPrice) ||
                 other.totalPrice == totalPrice) &&
             (identical(other.distance, distance) ||
@@ -246,8 +266,8 @@ class _$_MatchingStore with DiagnosticableTreeMixin implements _MatchingStore {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, storeRef, logo, name, totalPrice,
-      distance, address, matchingPercentage);
+  int get hashCode => Object.hash(runtimeType, storeRef, logo, name,
+      isFavourite, totalPrice, distance, address, matchingPercentage);
 
   @JsonKey(ignore: true)
   @override
@@ -268,6 +288,7 @@ abstract class _MatchingStore implements MatchingStores {
       {final DocumentReference<Object?>? storeRef,
       required final String logo,
       required final String name,
+      final bool isFavourite,
       required final double totalPrice,
       required final String distance,
       required final String address,
@@ -282,6 +303,8 @@ abstract class _MatchingStore implements MatchingStores {
   String get logo;
   @override
   String get name;
+  @override
+  bool get isFavourite;
   @override
   double get totalPrice;
   @override

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/helpers/bottom_nav_helper.dart';
+import 'package:spenza/router/go_router_provider.dart';
 import 'package:spenza/utils/color_utils.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 import '../../router/app_router.dart';
@@ -152,8 +153,11 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                         .read(loginRepositoryProvider.notifier)
                         .signOut()
                         .then(
-                          (value) =>
-                          context.goNamed(RouteManager.loginScreen),
+                          (value) {
+                            // context.goNamed(RouteManager.loginScreen);
+                            ref.invalidate(goRouterProvider);
+                          }
+
                     );
                   },
                 ),

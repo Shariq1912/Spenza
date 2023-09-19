@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/router/app_router.dart';
+import 'package:spenza/router/go_router_provider.dart';
 import 'package:spenza/utils/color_utils.dart';
 
 // import 'firebase_options.dart';
@@ -32,6 +33,8 @@ class SpenzaApp extends ConsumerWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final goRouter = ref.watch(goRouterProvider);
+
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -72,9 +75,9 @@ class SpenzaApp extends ConsumerWidget {
       /// If manually want to set locale
       // locale: locale,
       supportedLocales: AppLocalizations.supportedLocales,
-      routeInformationParser: RouteManager.router.routeInformationParser,
-      routerDelegate: RouteManager.router.routerDelegate,
-      routeInformationProvider: RouteManager.router.routeInformationProvider,
+      routeInformationParser: goRouter.routeInformationParser,
+      routerDelegate: goRouter.routerDelegate,
+      routeInformationProvider: goRouter.routeInformationProvider,
     );
   }
 }

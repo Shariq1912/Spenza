@@ -6,7 +6,7 @@ part of 'upload_receipt_repo.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$uploadReceiptRepoHash() => r'83660996783de4635dcba76fbf19164f830eb699';
+String _$uploadReceiptRepoHash() => r'd781d52184753f6f7488b97462fe35981cd87f7a';
 
 /// See also [UploadReceiptRepo].
 @ProviderFor(UploadReceiptRepo)
