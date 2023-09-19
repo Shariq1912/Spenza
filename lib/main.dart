@@ -9,12 +9,14 @@ import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/utils/color_utils.dart';
 
+import 'firebase_options.dart';
+
 // import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  //await Firebase.initializeApp();
+   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   final sharedPrefs = await SharedPreferences.getInstance();
   runApp(
     ProviderScope(
@@ -32,6 +34,8 @@ class SpenzaApp extends ConsumerWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+    debugPrint("called");
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,

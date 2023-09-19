@@ -1,16 +1,12 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/ui/common/home_top_app_bar.dart';
 import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/matching_store/components/matching_store_card.dart';
 import 'package:spenza/ui/matching_store/provider/store_ranking_provider.dart';
-import 'package:spenza/ui/my_list_details/components/custom_app_bar.dart';
 import 'package:spenza/ui/my_list_details/data/matching_store.dart';
 import 'package:spenza/utils/color_utils.dart';
-import 'package:spenza/utils/spenza_extensions.dart';
 
 import '../profile/profile_repository.dart';
 

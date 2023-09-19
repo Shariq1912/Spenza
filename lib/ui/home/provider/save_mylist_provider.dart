@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:spenza/helpers/fireStore_pref_mixin.dart';
 import 'package:spenza/router/app_router.dart';
+import 'package:spenza/ui/home/provider/fetch_mylist_provider.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
 import '../../../utils/fireStore_constants.dart';
@@ -45,7 +46,7 @@ class SaveMyList extends _$SaveMyList with FirestoreAndPrefsMixin {
       );*/
 
 
-      state = AsyncValue.data(null);
+      ref.read(fetchMyListProvider.notifier).fetchMyListFun();
       context.pop(true);
       ref.read(imagePickerProvider.notifier).state = null;
       //context.pop();

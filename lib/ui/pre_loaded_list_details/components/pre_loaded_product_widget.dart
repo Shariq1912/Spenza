@@ -32,100 +32,16 @@ class PreloadedProductCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final robotoFont = GoogleFonts.roboto().fontFamily;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: /*Card(
-        elevation: 2,
-        child: Stack(
-          alignment: Alignment.topRight,
-          // Align the delete icon to the top right
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CachedNetworkImage(
-                    imageUrl: imageUrl,
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.cover,
-                  ),
-                  SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          department,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        Text(
-                          title,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                        *//*Text(
-                          priceRange,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.black,
-                          ),
-                        ),*//*
-                        const SizedBox(height: 4),
-                        Text(
-                          measure,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: 12),
-                  Row(
-                    children: [
-
-                      SizedBox(width: 4),
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          // Set the background color to white
-                          border:
-                              Border.all(color: Colors.black.withOpacity(0.3)),
-                        ),
-                        child: Text(
-                          "x ${product.quantity}",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: ColorUtils.colorPrimary,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 4),
-
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+          child: Divider(
+            height: 1,
+            color: ColorUtils.colorSurface,
+          ),
         ),
-      ),*/
-      Card(
-        surfaceTintColor: Color(0xFFE5E7E8),
-        color: Color(0xFFE5E7E8),
-        elevation: 2,
-        child: Stack(
+        Stack(
           alignment: Alignment.topRight,
           children: [
             Container(
@@ -165,12 +81,12 @@ class PreloadedProductCard extends ConsumerWidget {
                         ),
                         Text(
                           title,
+                          maxLines: 1,
                           style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFF323E48),
-                            fontFamily: robotoFont
-                          ),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF323E48),
+                              fontFamily: robotoFont),
                         ),
                         /*Text(
                             priceRange,
@@ -183,10 +99,9 @@ class PreloadedProductCard extends ConsumerWidget {
                         Text(
                           measure,
                           style: TextStyle(
-                            fontSize: 12,
-                            color: Color(0xFF323E48),
-                            fontFamily: robotoFont
-                          ),
+                              fontSize: 12,
+                              color: Color(0xFF323E48),
+                              fontFamily: robotoFont),
                         ),
                       ],
                     ),
@@ -196,54 +111,61 @@ class PreloadedProductCard extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       InkWell(
-                          onTap: (){
+                          onTap: () {
                             ref
                                 .read(userProductListProvider.notifier)
                                 .updateUserProductList(
-                              product: product,
-                              quantity: product.quantity + 1,
-                            );
+                                  product: product,
+                                  quantity: product.quantity + 1,
+                                );
                           },
-                          child: Icon(CupertinoIcons.add_circled_solid,color: ColorUtils.colorSecondary,)
-                      ),
+                          child: Icon(
+                            CupertinoIcons.add_circled_solid,
+                            color: ColorUtils.colorSecondary,
+                          )),
                       SizedBox(height: 11),
                       Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 10),
+                        padding: EdgeInsets.symmetric(horizontal: 10),
                         child: Text(
-                        product.quantity.toString().padLeft(2, '0'),
+                          product.quantity.toString().padLeft(2, '0'),
                           style: TextStyle(
                               fontSize: 14,
                               color: Color(0xFF323E48),
                               fontFamily: robotoFont,
-                            fontWeight: FontWeight.w600
-                          ),
+                              fontWeight: FontWeight.w600),
                         ),
                       ),
                       SizedBox(height: 11),
                       InkWell(
-                          onTap: (){
+                          onTap: () {
                             if (product.quantity > 1) {
                               ref
                                   .read(userProductListProvider.notifier)
                                   .updateUserProductList(
-                                product: product,
-                                quantity: product.quantity - 1,
-                              );
+                                    product: product,
+                                    quantity: product.quantity - 1,
+                                  );
                             }
                           },
-                          child: Icon(CupertinoIcons.minus_circle_fill,color: ColorUtils.colorSecondary,)
-                      ),
-
+                          child: Icon(
+                            CupertinoIcons.minus_circle_fill,
+                            color: ColorUtils.colorSecondary,
+                          )),
                     ],
                   ),
                 ],
               ),
             ),
-
           ],
         ),
-      ),
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+          child: Divider(
+            height: 1,
+            color: ColorUtils.colorSurface,
+          ),
+        ),
+      ],
     );
   }
 }

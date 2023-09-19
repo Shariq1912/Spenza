@@ -38,15 +38,18 @@ class MyReceiptWidget extends ConsumerWidget {
         itemCount: receipt.length,
         itemBuilder: (context, index) {
           ReceiptModel store = receipt[index];
-          return Container(
-            margin: EdgeInsets.only(bottom: 6),
-            child: Stack(
-              children: [
-                Card(
-                  shape: RoundedRectangleBorder(),
-                  surfaceTintColor: Color(0xFFE5E7E8),
-                  color: Color(0xFFE5E7E8),
-                  child: Padding(
+          return Stack(
+            children: [
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                    child: Divider(
+                      height: 1,
+                      color: ColorUtils.colorSurface,
+                    ),
+                  ),
+                  Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,8 +58,8 @@ class MyReceiptWidget extends ConsumerWidget {
                           // borderRadius: BorderRadius.circular(8),
                           child: store.receipt!.isNotEmpty
                               ? CachedNetworkImage(
-                              width: 100,
-                              height: 100,
+                              width: 90,
+                              height: 90,
                               fit: BoxFit.fill,
                               imageUrl: store.receipt!,
                               errorWidget: (builder, error, url) =>
@@ -115,7 +118,7 @@ class MyReceiptWidget extends ConsumerWidget {
                                 ],
                               ),
                               SizedBox(height: 3),
-                              SizedBox(height: 35),
+                              SizedBox(height: 31),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,84 +166,92 @@ class MyReceiptWidget extends ConsumerWidget {
                       ],
                     ),
                   ),
-                ),
-                Positioned(
-                    top: 2,
-                    right: 2,
-                    child: SpeedDial(
-                      activeBackgroundColor: Color(0xFFE5E7E8),
-                      icon: Icons.more_vert,
-                      activeIcon: Icons.close,
-                      backgroundColor: Color(0xFFE5E7E8),
-                      foregroundColor: Color(0xFF7B868C),
-                      direction: SpeedDialDirection.left,
-                      childrenButtonSize: Size(35.0, 35.0),
-                      mini: true,
-                      closeManually: false,
-                      overlayOpacity: 0.0,
-                      elevation: 0.0,
-                      shape: CircleBorder(),
-                      childMargin: EdgeInsets.symmetric(horizontal: 5),
-                      children: [
-                        SpeedDialChild(
-                          child: Icon(
-                            Icons.edit,
-                            size: 20,
-                          ),
-                          backgroundColor: ColorUtils.colorPrimary,
-                          foregroundColor: Colors.white,
-                          shape: CircleBorder(),
-                          labelStyle: TextStyle(fontSize: 18.0),
-                          onTap: () {
-                            //onPopUpClicked(store.path!, PopupMenuAction.edit);
-                          },
-                        ),
-                        SpeedDialChild(
-                          child: /* SvgPicture.asset("cloud_upload.svg".assetSvgIconUrl,
-                                    colorFilter: ColorFilter.mode(Colors.white, BlendMode.clear)),*/
-                          Icon(
-                            Icons.delete,
-                            size: 20,
-                          ),
-                          backgroundColor: ColorUtils.colorPrimary,
-                          foregroundColor: Colors.white,
-                          shape: CircleBorder(),
-                          labelStyle: TextStyle(fontSize: 18.0),
-                          onTap: () {
-                            //  onPopUpClicked(store.path!, PopupMenuAction.upload);
-                          },
-                        ),
-                      ],
-                    )),
-                Positioned(
-                  bottom: 18,
-                  right: 10,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Total Paid",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                            fontFamily: robotoFont,
-                            color: Color(0xFF7B868C),
-                            height: 1),
-                      ),
-                      Text(
-                        " \$ ${store.amount ?? 'xxx'}",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                            fontFamily: robotoFont,
-                            color: Color(0xFF7B868C),
-                            height: 1),
-                      )
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                    child: Divider(
+                      height: 1,
+                      color: ColorUtils.colorSurface,
+                    ),
                   ),
-                )
-              ],
-            ),
+                ],
+              ),
+              Positioned(
+                  top: 2,
+                  right: 2,
+                  child: SpeedDial(
+                    activeBackgroundColor: Color(0xFFE5E7E8),
+                    icon: Icons.more_vert,
+                    activeIcon: Icons.close,
+                    backgroundColor: Colors.white,
+                    foregroundColor: Color(0xFF7B868C),
+                    direction: SpeedDialDirection.left,
+                    childrenButtonSize: Size(35.0, 35.0),
+                    mini: true,
+                    closeManually: false,
+                    overlayOpacity: 0.0,
+                    elevation: 0.0,
+                    shape: CircleBorder(),
+                    childMargin: EdgeInsets.symmetric(horizontal: 5),
+                    children: [
+                      SpeedDialChild(
+                        child: Icon(
+                          Icons.edit,
+                          size: 20,
+                        ),
+                        backgroundColor: ColorUtils.colorPrimary,
+                        foregroundColor: Colors.white,
+                        shape: CircleBorder(),
+                        labelStyle: TextStyle(fontSize: 18.0),
+                        onTap: () {
+                          //onPopUpClicked(store.path!, PopupMenuAction.edit);
+                        },
+                      ),
+                      SpeedDialChild(
+                        child: /* SvgPicture.asset("cloud_upload.svg".assetSvgIconUrl,
+                                  colorFilter: ColorFilter.mode(Colors.white, BlendMode.clear)),*/
+                        Icon(
+                          Icons.delete,
+                          size: 20,
+                        ),
+                        backgroundColor: ColorUtils.colorPrimary,
+                        foregroundColor: Colors.white,
+                        shape: CircleBorder(),
+                        labelStyle: TextStyle(fontSize: 18.0),
+                        onTap: () {
+                          //  onPopUpClicked(store.path!, PopupMenuAction.upload);
+                        },
+                      ),
+                    ],
+                  )),
+              Positioned(
+                bottom: 7,
+                right: 10,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Total Paid",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                          fontFamily: robotoFont,
+                          color: Color(0xFF7B868C),
+                          height: 1),
+                    ),
+                    Text(
+                      " \$ ${store.amount ?? 'xxx'}",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                          fontFamily: robotoFont,
+                          color: Color(0xFF7B868C),
+                          height: 1),
+                    ),
+
+                  ],
+                ),
+              )
+            ],
           );
         },
       );

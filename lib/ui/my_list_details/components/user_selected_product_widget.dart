@@ -39,223 +39,161 @@ class UserSelectedProductCard extends ConsumerWidget {
       endActionPane: ActionPane(
         motion: const BehindMotion(),
         extentRatio: 0.25,
-        children:  [
+        children: [
           SlidableAction(
-            onPressed: (context){
+            onPressed: (context) {
               ref
                   .read(userProductListProvider.notifier)
                   .deleteProductFromUserList(
-                listId: listId,
-                product: product,
-              );
+                    listId: listId,
+                    product: product,
+                  );
             },
             backgroundColor: Color(0xFF7B868C),
             foregroundColor: Colors.white,
             icon: Icons.delete,
             label: 'Delete',
           ),
-
         ],
       ),
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Card(
-          surfaceTintColor: Colors.white,
-          color: Colors.white,
-          elevation: 2,
-          child: Stack(
-            alignment: Alignment.topRight,
-            children: [
-              Container(
-                margin: const EdgeInsets.all(8.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
-                      child: CachedNetworkImage(
-                        errorWidget: (context, url, error) => Image.asset(
-                          "app_icon_spenza.png".assetImageUrl,
-                          fit: BoxFit.fill,
-                          width: 110,
-                          height: 110,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+            child: Divider(
+              height: 1,
+              color: ColorUtils.colorSurface,
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Stack(
+              alignment: Alignment.topRight,
+              children: [
+                Container(
+                  margin: const EdgeInsets.all(8.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: CachedNetworkImage(
+                          errorWidget: (context, url, error) => Image.asset(
+                            "app_icon_spenza.png".assetImageUrl,
+                            fit: BoxFit.fill,
+                            width: 110,
+                            height: 110,
+                          ),
+                          imageUrl: imageUrl,
+                          width: 90,
+                          height: 90,
+                          fit: BoxFit.cover,
                         ),
-                        imageUrl: imageUrl,
-                        width: 90,
-                        height: 90,
-                        fit: BoxFit.cover,
                       ),
-                    ),
-                    SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            department.length > 16
-                                ? '${department.substring(0, 16)}...'
-                                : department,
-                            style: TextStyle(
-                              fontFamily: robotoFont,
-                              fontSize: 12,
-                              color: Color(0xFF7B868C),
-                            ),
-                          ),
-                          Text(
-                            title,
-                            maxLines: 1,
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFF323E48),
-                              fontFamily: robotoFont
-                            ),
-                          ),
-                          /*Text(
-                            priceRange,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black,
-                            ),
-                          ),*/
-                          const SizedBox(height: 38),
-                          Text(
-                            measure,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Color(0xFF323E48),
-                              fontFamily: robotoFont
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 12),
-                    /*Column(
-                      children: [
-                        SizedBox(
-                          height: 62,
-                        ),
-                        Row(
+                      SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            GestureDetector(
-                              onTap: () {
-                                if (product.quantity > 1) {
-                                  ref
-                                      .read(userProductListProvider.notifier)
-                                      .updateUserProductList(
-                                        product: product,
-                                        quantity: product.quantity - 1,
-                                      );
-                                }
-                              },
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                     horizontal: 4),
-                                child: Text(
-                                  "-",
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color(0xFF555C62)),
-                                ),
+                            Text(
+                              department.length > 16
+                                  ? '${department.substring(0, 16)}...'
+                                  : department,
+                              style: TextStyle(
+                                fontFamily: robotoFont,
+                                fontSize: 12,
+                                color: Color(0xFF7B868C),
                               ),
                             ),
-                            SizedBox(width: 2),
-                            *//*Container(
-                              padding: EdgeInsets.symmetric(
-                                   horizontal: 10),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                // Set the background color to white
-                                border: Border.all(
-                                    color: Colors.black.withOpacity(0.3)),
-                              ),
-                              child: Text(
-                                product.quantity.toString(),
-                                style: TextStyle(
+                            Text(
+                              title,
+                              maxLines: 1,
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF323E48),
+                                  fontFamily: robotoFont),
+                            ),
+                            const SizedBox(height: 38),
+                            Text(
+                              measure,
+                              style: TextStyle(
                                   fontSize: 12,
-                                  color: ColorUtils.colorPrimary,
-                                ),
-                              ),
+                                  color: Color(0xFF323E48),
+                                  fontFamily: robotoFont),
                             ),
-                            SizedBox(width: 2),
-                            GestureDetector(
-                              onTap: () => ref
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 12),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              ref
                                   .read(userProductListProvider.notifier)
                                   .updateUserProductList(
                                     product: product,
                                     quantity: product.quantity + 1,
-                                  ),
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                     horizontal: 4),
-                                child: Text(
-                                  "+",
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color(0xFF555C62)),
-                                ),
+                                  );
+                            },
+                            child: Container(
+                              height: 20,
+                              width: 20,
+                              child: Image.asset(
+                                "add_icon.png".assetImageUrl,
                               ),
                             ),
-                            SizedBox(width: 4),*//*
-
-                          ],
-                        ),
-                      ],
-                    ),*/
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        InkWell(
-                            onTap: (){
-                              ref
-                                  .read(userProductListProvider.notifier)
-                                  .updateUserProductList(
-                                product: product,
-                                quantity: product.quantity + 1,
-                              );
-                            },
-                            child: Icon(CupertinoIcons.add_circled,color: ColorUtils.primaryText,)
-                        ),
-                        SizedBox(height: 11),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10),
-                          child: Text(
-                            product.quantity.toString().padLeft(2, '0'),
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: ColorUtils.primaryText,
-                                fontFamily: robotoFont,
-                                fontWeight: FontWeight.w600
+                          ),
+                          SizedBox(height: 15),
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Text(
+                              product.quantity.toString().padLeft(2, '0'),
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: ColorUtils.primaryText,
+                                  fontFamily: robotoFont,
+                                  fontWeight: FontWeight.w600),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 11),
-                        InkWell(
-                            onTap: (){
+                          SizedBox(height: 15),
+                          InkWell(
+                            onTap: () {
                               if (product.quantity > 1) {
                                 ref
                                     .read(userProductListProvider.notifier)
                                     .updateUserProductList(
-                                  product: product,
-                                  quantity: product.quantity - 1,
-                                );
+                                      product: product,
+                                      quantity: product.quantity - 1,
+                                    );
                               }
                             },
-                            child: Icon(CupertinoIcons.minus_circle,color: ColorUtils.primaryText,)
-                        ),
-
-                      ],
-                    ),
-                  ],
+                            child: Container(
+                              height: 20,
+                              width: 20,
+                              child: Image.asset(
+                                "Minus_GW.png".assetImageUrl,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+            child: Divider(
+              height: 1,
+              color: ColorUtils.colorSurface,
+            ),
+          ),
+        ],
       ),
     );
   }

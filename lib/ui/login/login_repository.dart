@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spenza/main.dart';
 import 'package:spenza/network/api_responses.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/login/data/login_request.dart';
@@ -84,13 +85,15 @@ class LoginRepository extends StateNotifier<ApiResponse>
     }
   }
 
-  Future<bool> signOut() async {
+  Future<bool> signOut(BuildContext context) async {
     await _auth.signOut();
     await GoogleSignIn().signOut();
     final pref = await SharedPreferences.getInstance();
-
+    runApp(SpenzaApp());
     return pref.clear().then((value) => true);
+
   }
+
 
   Future<void> signInWithGoogle() async {
     try {

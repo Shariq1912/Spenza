@@ -99,7 +99,6 @@ class _PreLoadedListDetailsScreenState
         },
         child: Scaffold(
           backgroundColor: Colors.white,
-
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight),
             child: Consumer(
@@ -144,59 +143,84 @@ class _PreLoadedListDetailsScreenState
               },
             ),
           ),
-          body: Column(
-            children: [
-              Expanded(
-                child: Consumer(
-                  builder: (context, ref, child) {
-                    final result = ref.watch(userProductListProvider);
+          body: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Stack(
+              children: [
+                Column(
+                  children: [
+                    Expanded(
+                      child: Consumer(
+                        builder: (context, ref, child) {
+                          final result = ref.watch(userProductListProvider);
 
-                    return result.when(
-                      loading: () => Center(child: SpenzaCircularProgress()),
-                      data: (data) {
-                        if (data == null) {
-                          return Center(child: SpenzaCircularProgress());
-                        } else if (data.isEmpty) {
-                          return Center(
-                            child: Text("No Product found"),
+                          return result.when(
+                            loading: () =>
+                                Center(child: SpenzaCircularProgress()),
+                            data: (data) {
+                              if (data == null) {
+                                return Center(child: SpenzaCircularProgress());
+                              } else if (data.isEmpty) {
+                                return Center(
+                                  child: Text("No Product found"),
+                                );
+                              }
+                              return ListView.builder(
+                                itemCount: data.length,
+                                itemBuilder: (context, index) {
+                                  final UserProduct product = data[index];
+                                  return PreloadedProductCard(
+                                    measure: product.measure,
+                                    listId: widget.listId,
+                                    department: product.department,
+                                    imageUrl: product.pImage,
+                                    title: product.name,
+                                    priceRange:
+                                        "\$${product.minPrice} - \$${product.maxPrice}",
+                                    product: product,
+                                  );
+                                },
+                              );
+                            },
+                            error: (error, stackTrace) =>
+                                Center(child: Text("$error")),
                           );
-                        }
-                        return ListView.builder(
-                          itemCount: data.length,
-                          itemBuilder: (context, index) {
-                            final UserProduct product = data[index];
-                            return PreloadedProductCard(
-                              measure: product.measure,
-                              listId: widget.listId,
-                              department: product.department,
-                              imageUrl: product.pImage,
-                              title: product.name,
-                              priceRange:
-                                  "\$${product.minPrice} - \$${product.maxPrice}",
-                              product: product,
-                            );
-                          },
-                        );
-                      },
-                      error: (error, stackTrace) =>
-                          Center(child: Text("$error")),
-                    );
-                  },
+                        },
+                      ),
+                    ),
+                    /*Consumer(
+                      builder: (context, ref, child) =>
+                          ref.watch(userProductListProvider).maybeWhen(
+                                orElse: () => buildMaterialButton(context),
+                                data: (data) => data == null
+                                    ? Container()
+                                    : data.isEmpty
+                                        ? Container()
+                                        : buildMaterialButton(context),
+                                loading: () => Container(),
+                              ),
+                    ),*/
+                  ],
                 ),
-              ),
-              Consumer(
-                builder: (context, ref, child) =>
-                    ref.watch(userProductListProvider).maybeWhen(
-                          orElse: () => buildMaterialButton(context),
-                          data: (data) => data == null
-                              ? Container()
-                              : data.isEmpty
+                Positioned(
+                  bottom: 20,
+                  right: 0,
+                  left: 0,
+                  child: Consumer(
+                    builder: (context, ref, child) =>
+                        ref.watch(userProductListProvider).maybeWhen(
+                              orElse: () => buildMaterialButton(context),
+                              data: (data) => data == null
                                   ? Container()
-                                  : buildMaterialButton(context),
-                          loading: () => Container(),
-                        ),
-              ),
-            ],
+                                  : data.isEmpty
+                                      ? Container()
+                                      : buildMaterialButton(context),
+                              loading: () => Container(),
+                            ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -247,49 +271,14 @@ class _PreLoadedListDetailsScreenState
       onTap: () async {
         context.pushNamed(RouteManager.storeRankingScreen);
       },
-      child: Container(
-        height: 40,
-        decoration: BoxDecoration(
-          color: ColorUtils.colorPrimary,
-          borderRadius: BorderRadius.all(
-            Radius.circular(10),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Image.asset(
+            'spenza_compare.png'.assetImageUrl,
+            fit: BoxFit.contain,
           ),
-          border: Border.all(color: ColorUtils.colorPrimary),
-        ),
-        margin: EdgeInsets.only(bottom: 16, left: 16, right: 16),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-                flex: 8,
-                child: /*Image.asset(
-                    'spenza_no_bg.png'.assetImageUrl,
-                    fit: BoxFit.contain,
-                  ),*/
-                    Text(
-                  "Spenza",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontFamily: GoogleFonts.calistoga().fontFamily,
-                      color: Colors.white,
-                      fontSize: 25),
-                  textAlign: TextAlign.center,
-                )),
-            /* Expanded(
-                  flex: 1,
-                  child: Image.asset(
-                    'app_icon_spenza.png'.assetImageUrl,
-                    fit: BoxFit.contain,
-                  ),
-                ),*/
-            Expanded(
-              flex: 1,
-              child: Image.asset(
-                'app_icon_spenza.png'.assetImageUrl,
-                fit: BoxFit.contain,
-              ),
-            ),
-          ],
         ),
       ),
     );
