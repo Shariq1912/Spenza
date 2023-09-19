@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:restart_app/restart_app.dart';
 import 'package:spenza/helpers/bottom_nav_helper.dart';
+import 'package:spenza/ui/login/restart_widget.dart';
 import 'package:spenza/router/go_router_provider.dart';
 import 'package:spenza/utils/color_utils.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
@@ -42,9 +44,11 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
     super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: topAppBar(),
       body: Padding(
         padding: EdgeInsets.only(top: 10.0, left: 10, right: 10),
@@ -56,15 +60,17 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                   icon: Icons.list,
                   title: "My Lists",
                   onTap: () {
-
                     StatefulNavigationShell.of(context).goBranch(screenNameToIndex[ScreenName.myList]!);
                   }),
               CardItem(
                   icon: Icons.receipt,
                   title: "My Receipts",
                   onTap: () {
-                    context.pushNamed(RouteManager.displayReceiptScreen,
-                        queryParameters: {'list_ref': ''});
+                    /*context.pushNamed(RouteManager.displayReceiptScreen,
+                        queryParameters: {'list_ref': ''});*/
+                    StatefulNavigationShell.of(context).goBranch(
+                      screenNameToIndex[ScreenName.receipts]!,
+                    );
                   }),
               CardItem(
                   icon: Icons.store,
@@ -72,9 +78,17 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                   onTap: () {
                     context.pushNamed(RouteManager.storesScreen);
                   }),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                child: Divider(
+                  height: 1,
+                  color: ColorUtils.colorSurface,
+                ),
+              ),
               SizedBox(height: 10),
+
               Container(
-                color: Color(0xFFE5E7E8),
+                color: Colors.white,
                 child: Column(
                   children: [
                     ListTile(
@@ -113,12 +127,19 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                         ),
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                      child: Divider(
+                        height: 1,
+                        color: ColorUtils.colorSurface,
+                      ),
+                    ),
                   ],
                 ),
               ),
               SizedBox(height: 10),
               Container(
-                color: Color(0xFFE5E7E8),
+                color: Colors.white,
                 child: Column(
                   children: [
                     ListTile(
@@ -137,7 +158,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
               ),
               SizedBox(height: 10),
               Container(
-                color: Color(0xFFE5E7E8),
+                color: Colors.white,
                 child: ListTile(
                   leading: Icon(Icons.logout, color: Colors.grey.shade600),
                   title: Text(
@@ -151,7 +172,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                   onTap: () async {
                     ref
                         .read(loginRepositoryProvider.notifier)
-                        .signOut()
+                        .signOut(context)
                         .then(
                           (value) {
                             // context.goNamed(RouteManager.loginScreen);
@@ -159,6 +180,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                           }
 
                     );
+
                   },
                 ),
               )

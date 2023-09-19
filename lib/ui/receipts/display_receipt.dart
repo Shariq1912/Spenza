@@ -13,6 +13,7 @@ class DisplayReceiptScreen extends ConsumerStatefulWidget{
   const DisplayReceiptScreen({super.key, required this.path});
 
   final String path;
+
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _DisplayReceiptScreen();
 
@@ -26,6 +27,7 @@ class _DisplayReceiptScreen extends ConsumerState<DisplayReceiptScreen>{
     super.initState();
 
     print("PATH OF RECEIPT === ${widget.path}");
+    print("value of key === ${widget.key}");
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadAllMyList();
@@ -33,15 +35,18 @@ class _DisplayReceiptScreen extends ConsumerState<DisplayReceiptScreen>{
   }
 
   Future<void> _loadAllMyList() async {
+
     ref.read(profileRepositoryProvider.notifier).getUserProfileData();
     await ref.read(fetchReciptProviderProvider.notifier).fetchReceipt(widget.path);
+
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        surfaceTintColor: Colors.white,
+        //surfaceTintColor: Colors.white,
         title: Text(
           "Receipts",
           style: TextStyle(

@@ -16,7 +16,7 @@ class CardItem extends StatelessWidget {
     return Container(
 
       //surfaceTintColor: Color(0xFFE5E7E8),
-      color: Color(0xFFE5E7E8),
+      color: Colors.white,
       child: ListTile(
         leading: Icon(icon, color: Color(0xFF0CA9E6)),
         title: Text(

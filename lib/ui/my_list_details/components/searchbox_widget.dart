@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:spenza/utils/color_utils.dart';
 
 class SearchBox extends StatelessWidget {
   final String hint;
   final TextEditingController controller;
   final ValueChanged<String>? onSearch;
   final FocusNode? focusNode; // Callback for focus change
+  final Color colors; // Callback for focus change
 
   const SearchBox({
     required this.controller,
     this.onSearch,
     required this.hint,
     this.focusNode,
+    required this.colors
   });
 
   @override
@@ -28,8 +31,8 @@ class SearchBox extends StatelessWidget {
             margin: const EdgeInsets.all(16.0),
             padding: const EdgeInsets.symmetric(horizontal: 10),
             decoration: BoxDecoration(
-              color: Color(0xFFE5E7E8),
-              border: Border.all(color: Colors.transparent),
+              color: colors,
+              border: Border.all(color: ColorUtils.colorSurface),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(

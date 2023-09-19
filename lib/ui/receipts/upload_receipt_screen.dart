@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,9 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:spenza/ui/home/data/my_list_model.dart';
 import 'package:spenza/ui/home/provider/image_picker_provider.dart';
-import 'package:spenza/ui/home/provider/save_mylist_provider.dart';
 import 'package:spenza/ui/receipts/component/store_pick_dialog.dart';
 import 'package:spenza/ui/receipts/repo/upload_receipt_repo.dart';
 import 'package:spenza/utils/spenza_extensions.dart';

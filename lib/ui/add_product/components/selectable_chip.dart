@@ -22,7 +22,8 @@ class SelectableChip extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: isSelected ? ColorUtils.colorPrimary : Colors.grey.shade200,
+          border: Border.all(color: ColorUtils.colorSurface),
+          color: isSelected ? ColorUtils.colorPrimary : Colors.white,
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),

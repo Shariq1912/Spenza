@@ -23,6 +23,7 @@ class MyListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final poppinsFont = GoogleFonts.poppins().fontFamily;
+    final robotoFont = GoogleFonts.roboto().fontFamily;
     if(stores.isEmpty){
       return Center(
         child: Text(
@@ -44,137 +45,165 @@ class MyListWidget extends StatelessWidget {
             onTap: (){
               onButtonClicked(store.documentId!, store.name, store.myListPhoto!, store.path!);
             },
-            child: Card(
-              surfaceTintColor: Color(0xFFE5E7E8),
-              color: Color(0xFFE5E7E8),
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: store.myListPhoto!.isNotEmpty
-                          ? CachedNetworkImage(
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.fill,
-                          imageUrl: store.myListPhoto!,
-                          errorWidget: (builder, error, url)=> Image.asset(
-                              'app_icon_spenza.png'.assetImageUrl)
-                      )
-                          : Image.asset(
-                        'app_icon_spenza.png'.assetImageUrl,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            store.name,
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, fontFamily: poppinsFont),
-                          ),
-                          SizedBox(height: 3),
-                          Text(
-                            maxLines:1,
-                             store.description,
-                            style: TextStyle(fontSize: 13, fontFamily: poppinsFont),
-                          ),
-                          SizedBox(height: 33),
-                          Row(
-                            children: [
-                              Icon(Icons.upload_file, color: int.parse(store.count!) > 0 ? ColorUtils.colorPrimary : Colors.red,size: 20,),
-                              SizedBox(width: 4),
-                              Text(
-                                int.parse(store.count!) > 0 ? "${store.count!} Receipt": "Upload receipt",
-                                style: TextStyle(
-                                  color: int.parse(store.count!) > 0 ? ColorUtils.primaryText : Colors.red,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                    SpeedDial(
-                      activeBackgroundColor: Color(0xFFE5E7E8),
-                      icon: Icons.more_vert,
-                      activeIcon: Icons.close,
-                      backgroundColor: Color(0xFFE5E7E8),
-                      foregroundColor: Color(0xFF7B868C),
-                      direction: SpeedDialDirection.left,
-                      childrenButtonSize: Size(35.0, 35.0),
-                      mini: true,
-                      closeManually: false,
-                      overlayOpacity: 0.0,
-                      elevation: 0.0,
-                      shape: CircleBorder(),
-                      childMargin: EdgeInsets.symmetric(horizontal: 5),
-                      children: [
-                        SpeedDialChild(
-                          child: Icon(Icons.edit, size: 20,),
-                          backgroundColor: ColorUtils.colorPrimary,
-                          foregroundColor: Colors.white,
-                          shape: CircleBorder(),
-                          labelStyle: TextStyle(fontSize: 18.0),
-                          onTap: () {
-                            onPopUpClicked(store.path!, PopupMenuAction.edit);
-                          },
-                        ),
-                        SpeedDialChild(
-                          child:/* SvgPicture.asset("cloud_upload.svg".assetSvgIconUrl,
-                              colorFilter: ColorFilter.mode(Colors.white, BlendMode.clear)),*/
-                          Icon(Icons.upload_file_outlined, size: 20,),
-                          backgroundColor: ColorUtils.colorPrimary,
-                          foregroundColor: Colors.white,
-                          shape: CircleBorder(),
-                          labelStyle: TextStyle(fontSize: 18.0),
-                          onTap: () {
-                            onPopUpClicked(store.path!, PopupMenuAction.upload);
-                          },
-                        ),
-                        SpeedDialChild(
-                          shape: CircleBorder(),
-                          child: Icon(Icons.receipt_long_rounded, size: 20,),
-                          foregroundColor: Colors.white,
-                          backgroundColor: ColorUtils.colorPrimary,
-                          labelStyle: TextStyle(fontSize: 18.0),
-                          onTap: ()  {
-                            onPopUpClicked(store.path!,PopupMenuAction.receipt);
-                          },
-                        ),
-                        SpeedDialChild(
-                          shape: CircleBorder(),
-                          child: Icon(Icons.copy_all, size: 20,),
-                          foregroundColor: Colors.white,
-                          backgroundColor: ColorUtils.colorPrimary,
-                          labelStyle: TextStyle(fontSize: 18.0),
-                          onTap: () {
-                            onPopUpClicked(store.path!, PopupMenuAction.copy);
-                          },
-                        ),
-                        SpeedDialChild(
-                          shape: CircleBorder(),
-                          child: Icon(Icons.delete_forever_sharp, size: 20,),
-                          foregroundColor: Colors.white,
-                          backgroundColor: ColorUtils.colorPrimary,
-                          labelStyle: TextStyle(fontSize: 18.0),
-                          onTap: () {
-                            onPopUpClicked(store.path!,PopupMenuAction.delete);
-                          },
-                        ),
-
-
-                      ],
-                    )
-                  ],
+            child: Column(
+              children: [
+                Divider(
+                  height: 1,
+                  color: ColorUtils.colorSurface,
                 ),
-              ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: store.myListPhoto!.isNotEmpty
+                            ? CachedNetworkImage(
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.fill,
+                            imageUrl: store.myListPhoto!,
+                            errorWidget: (builder, error, url)=> Image.asset(
+                                'app_icon_spenza.png'.assetImageUrl)
+                        )
+                            : Image.asset(
+                          'app_icon_spenza.png'.assetImageUrl,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              store.name,
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, fontFamily: robotoFont ),
+                            ),
+                            SizedBox(height: 3),
+                            Text(
+                              maxLines:1,
+                               store.description,
+                              style: TextStyle(fontSize: 13, fontFamily: robotoFont),
+                            ),
+                            SizedBox(height: 33),
+                            Row(
+                              children: [
+                                Icon(Icons.upload_file, color: int.parse(store.count!) > 0 ? ColorUtils.colorPrimary : Colors.red,size: 20,),
+                                SizedBox(width: 4),
+                                Text(
+                                  int.parse(store.count!) > 0 ? "${store.count!} Receipt": "Upload receipt",
+                                  style: TextStyle(
+                                    color: int.parse(store.count!) > 0 ? ColorUtils.primaryText : Colors.red,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: robotoFont
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                      SpeedDial(
+                        activeBackgroundColor: Color(0xFFE5E7E8),
+                        icon: Icons.more_vert,
+                        activeIcon: Icons.close,
+                        backgroundColor: Colors.white,
+                        foregroundColor: Color(0xFF7B868C),
+                        direction: SpeedDialDirection.left,
+                        childrenButtonSize: Size(45.0, 45.0),
+                        mini: true,
+                        closeManually: false,
+                        overlayOpacity: 0.7,
+                        elevation: 0.0,
+                        shape: CircleBorder(),
+                        childMargin: EdgeInsets.symmetric(horizontal: 5),
+                        children: [
+                          SpeedDialChild(
+                            child: Image.asset("edit_pen.png".assetImageUrl,
+                              fit: BoxFit.contain,
+                              width: 18,
+                              height: 18,
+                              color: Colors.white,),
+                            backgroundColor: ColorUtils.colorPrimary,
+                            foregroundColor: Colors.white,
+                            shape: CircleBorder(),
+                            labelStyle: TextStyle(fontSize: 18.0),
+                            onTap: () {
+                              onPopUpClicked(store.path!, PopupMenuAction.edit);
+                            },
+                          ),
+                          SpeedDialChild(
+                            child:  Image.asset("cloud_upload.png".assetImageUrl,
+                                   fit: BoxFit.contain,
+                                width: 23,
+                                height: 23,
+                            color: Colors.white,),
+
+                            backgroundColor: ColorUtils.colorPrimary,
+                            foregroundColor: Colors.white,
+                            shape: CircleBorder(),
+                            labelStyle: TextStyle(fontSize: 18.0),
+                            onTap: () {
+                              onPopUpClicked(store.path!, PopupMenuAction.upload);
+                            },
+                          ),
+                          SpeedDialChild(
+                            shape: CircleBorder(),
+                            child: Image.asset("receipts.png".assetImageUrl,
+                              fit: BoxFit.contain,
+                              width: 18,
+                              height: 18,
+                              color: Colors.white,),
+                            foregroundColor: Colors.white,
+                            backgroundColor: ColorUtils.colorPrimary,
+                            labelStyle: TextStyle(fontSize: 18.0),
+                            onTap: ()  {
+                              onPopUpClicked(store.path!,PopupMenuAction.receipt);
+                            },
+                          ),
+                          SpeedDialChild(
+                            shape: CircleBorder(),
+                            child: Image.asset("Copy.png".assetImageUrl,
+                              fit: BoxFit.contain,
+                              width: 18,
+                              height: 18,
+                              color: Colors.white,),
+                            foregroundColor: Colors.white,
+                            backgroundColor: ColorUtils.colorPrimary,
+                            labelStyle: TextStyle(fontSize: 18.0),
+                            onTap: () {
+                              onPopUpClicked(store.path!, PopupMenuAction.copy);
+                            },
+                          ),
+                          SpeedDialChild(
+                            shape: CircleBorder(),
+                            child: Image.asset("delete.png".assetImageUrl,
+                              fit: BoxFit.contain,
+                              width: 18,
+                              height: 18,
+                              color: Colors.white,),
+                            foregroundColor: Colors.white,
+                            backgroundColor: ColorUtils.colorPrimary,
+                            labelStyle: TextStyle(fontSize: 18.0),
+                            onTap: () {
+                              onPopUpClicked(store.path!,PopupMenuAction.delete);
+                            },
+                          ),
+
+
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                Divider(
+                  height: 1,
+                  color: ColorUtils.colorSurface,
+                ),
+              ],
             ),
           );
         },
