@@ -103,7 +103,10 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
             color: ColorUtils.colorPrimary,
           ),
           onBackIconPressed: () {
-            context.pop();
+            // context.pop();
+            ref
+                .read(addProductProvider.notifier)
+                .saveUserSelectedProductsToDB();
           },
         ),
         body: Column(

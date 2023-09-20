@@ -249,7 +249,7 @@ class AddProduct extends _$AddProduct
       var isProductExist = query.docs.isNotEmpty;
 
       if (isProductExist) {
-        context.showSnackBar(message: "Product Already Exist in the List");
+        context.showSnackBar(message: "Product already exist in the List");
         return;
       }
 
@@ -278,7 +278,7 @@ class AddProduct extends _$AddProduct
   /// Increase quantity in the product
   Future<void> increaseQuantity({required Product product}) async {
     final List<Product>? products = state.requireValue;
-    if (products == null || products.length <= 0) {
+    if (products == null || products.isEmpty) {
       return;
     }
 
@@ -296,7 +296,7 @@ class AddProduct extends _$AddProduct
   /// Decrease quantity in the product
   Future<void> decreaseQuantity({required Product product}) async {
     final List<Product>? products = state.requireValue;
-    if (products == null || products.length <= 0 || product.quantity == 0) {
+    if (products == null || products.isEmpty || product.quantity == 0) {
       return;
     }
 
@@ -310,10 +310,116 @@ class AddProduct extends _$AddProduct
   }
 
   Future<void> saveUserSelectedProductsToDB() async {
-    // Fetch products which have quantity more than 1
-    // Save them in User my list with their quantity
-    // Remove products which are included in removedProducts
+    // Fetch products from the current state that have a quantity greater than 1
+    final List<Product>? products = state.requireValue;
+    if (products == null || products.isEmpty) {
+      return;
+    }
 
+    final productsToSave =
+        products.where((product) => product.quantity > 0).toList();
 
+    // Remove products that are in the removedProducts set
+    final productsToRemove = products
+        .where((product) => removedProducts.contains(product.productRef))
+        .toList();
+
+    final batch = fireStore.batch();
+    final userListId = await prefs.then((prefs) => prefs.getUserListId());
+    final productDocumentMap = Map<String, String>();
+    final removedProductDocumentMap = Map<String, String>();
+    final myListRef =
+        fireStore.collection(MyListConstant.myListCollection).doc(userListId);
+
+    if (productsToSave.isNotEmpty) {
+      // Use a collection group query to query the user_product_list subcollection based on product_ref
+      final querySnapshot = await myListRef
+          .collection('user_product_list')
+          .where(
+            'product_ref',
+            whereIn: productsToSave
+                .map(
+                  (product) => fireStore
+                      .collection(ProductCollectionConstant.collectionName)
+                      .doc(product.productRef),
+                )
+                .toList(),
+          )
+          .get();
+
+      for (var result in querySnapshot.docs) {
+        final Map<String, dynamic> data = result.data();
+        productDocumentMap[data['product_ref'].id.toString()] = result.id;
+        print(
+            "To Be Save collection DATA ::: ${productDocumentMap.toString()} and ${result.id}");
+      }
+    }
+
+    if (productsToRemove.isNotEmpty) {
+      // Use a collection group query to query the user_product_list subcollection based on product_ref
+      final querySnapshot = await myListRef
+          .collection('user_product_list')
+          .where(
+            'product_ref',
+            whereIn: productsToRemove
+                .map(
+                  (product) => fireStore
+                      .collection(ProductCollectionConstant.collectionName)
+                      .doc(product.productRef),
+                )
+                .toList(),
+          )
+          .get();
+
+      for (var result in querySnapshot.docs) {
+        final Map<String, dynamic> data = result.data();
+        removedProductDocumentMap[data['product_ref'].id.toString()] =
+            result.id;
+        print(
+            "To Be Delete collection DATA ::: ${removedProductDocumentMap.toString()} and ${result.id}");
+      }
+    }
+
+    for (final product in productsToSave) {
+      String? existingDocId = productDocumentMap[product.productRef];
+      print(
+          "To Be SAVED existingDocId ::: $existingDocId and REF AGAINST == ${product.productRef}");
+
+      DocumentReference documentRef;
+
+      if (existingDocId != null) {
+        // If the key exists, use the existing document
+        documentRef =
+            myListRef.collection('user_product_list').doc(existingDocId);
+      } else {
+        // If the key does not exist, create a new document
+        documentRef = myListRef.collection('user_product_list').doc();
+      }
+
+      final userProduct = UserProductInsert(
+        productRef: fireStore
+            .collection(ProductCollectionConstant.collectionName)
+            .doc(product.productRef),
+        productId: product.productId,
+        quantity: product.quantity,
+      );
+
+      batch.set(documentRef, userProduct.toJson());
+    }
+
+    removedProductDocumentMap.values.forEach((element) {
+      print("To Be DELETED documentId ::: $element");
+
+      final documentRef =
+          myListRef.collection('user_product_list').doc(element);
+      batch.delete(documentRef);
+    });
+
+    try {
+      await batch.commit();
+    } catch (e) {
+      // Handle any Firestore commit errors
+      print('Error saving user selected products: $e');
+    }
   }
 }
