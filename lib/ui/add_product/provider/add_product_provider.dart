@@ -23,6 +23,8 @@ part 'add_product_provider.g.dart';
 @riverpod
 class AddProduct extends _$AddProduct
     with LocationHelper, NearbyStoreMixin, FirestoreAndPrefsMixin {
+  final Set<String> removedProducts = Set();
+
   @override
   Future<List<Product>?> build() async {
     return null;
@@ -208,7 +210,6 @@ class AddProduct extends _$AddProduct
               cancelToken: cancelToken,
             );
 
-
         state = AsyncValue.data(products);
       } on DioException catch (e) {
         print('Error searching products due to DIO EXCEPTION: $e');
@@ -274,50 +275,45 @@ class AddProduct extends _$AddProduct
     }
   }
 
-  /// Not much useful
-  Future<void> findNearbyLocations() async {
-    Future.delayed(Duration.zero);
-
-    try {
-      // Query for "Akota Garden" location
-      QuerySnapshot querySnapshot = await fireStore
-          .collection('locations')
-          .where('place_name', isEqualTo: 'Akota Garden')
-          .get();
-
-      // Get the first document from the query result
-      DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
-
-      // Get the coordinates of "Akota Garden"
-      GeoPoint akotaGardenLocation = documentSnapshot['coordinates'];
-
-      // Create a GeoFirePoint for "Akota Garden"
-      GeoFirePoint center = GeoFirePoint(akotaGardenLocation);
-
-      // Reference to locations collection.
-      final CollectionReference<Map<String, dynamic>> locationCollectionRef =
-          fireStore.collection('locations');
-
-      // Get the documents within a 3 km radius of "Akota Garden"
-      final result =
-          await GeoCollectionReference(locationCollectionRef).fetchWithin(
-        center: center,
-        radiusInKm: 3,
-        field: 'geo',
-        strictMode: true,
-        geopointFrom: geopointFrom,
-      );
-
-      for (var value in result) {
-        String placeName = value['place_name'];
-        final distance =
-            center.distanceBetweenInKm(geopoint: value['coordinates']);
-
-        print(placeName);
-        print("Distance : $distance");
-      }
-    } catch (e) {
-      print("ERROR IN LOCATION : $e");
+  /// Increase quantity in the product
+  Future<void> increaseQuantity({required Product product}) async {
+    final List<Product>? products = state.requireValue;
+    if (products == null || products.length <= 0) {
+      return;
     }
+
+    final index = products.indexOf(product);
+    if (index != -1) {
+      if (removedProducts.contains(product.productRef))
+        removedProducts.remove(product.productRef);
+
+      products[index] = product.copyWith(quantity: product.quantity + 1);
+    }
+
+    state = AsyncValue.data(products);
+  }
+
+  /// Decrease quantity in the product
+  Future<void> decreaseQuantity({required Product product}) async {
+    final List<Product>? products = state.requireValue;
+    if (products == null || products.length <= 0 || product.quantity == 0) {
+      return;
+    }
+
+    final index = products.indexOf(product);
+    if (index != -1) {
+      if (product.quantity == 1) removedProducts.add(product.productRef);
+      products[index] = product.copyWith(quantity: product.quantity - 1);
+    }
+
+    state = AsyncValue.data(products);
+  }
+
+  Future<void> saveUserSelectedProductsToDB() async {
+    // Fetch products which have quantity more than 1
+    // Save them in User my list with their quantity
+    // Remove products which are included in removedProducts
+
+
   }
 }
