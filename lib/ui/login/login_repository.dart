@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spenza/main.dart';
 import 'package:spenza/network/api_responses.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/login/data/login_request.dart';

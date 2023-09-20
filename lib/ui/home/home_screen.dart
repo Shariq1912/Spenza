@@ -1,6 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -36,7 +34,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
   @override
   void initState() {
     super.initState();
-    print("Init called From Home");
+    debugPrint("Init called From Home");
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadStores();
     });
@@ -96,7 +94,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
                                           listId: listId,
                                           name: name,
                                           photo: photo,
-                                          path: path!);
+                                          path: path);
                                 },
                                 data: data,
                                 onCreateList: () async {
@@ -217,144 +215,4 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
     );
   }
 
-  AppBar topAppBar() {
-    String? zipcode;
-
-    return AppBar(
-      toolbarHeight: 90,
-      elevation: 5.0,
-      surfaceTintColor: Colors.white,
-      backgroundColor: ColorUtils.colorPrimary,
-      automaticallyImplyLeading: false,
-      systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: ColorUtils.colorPrimary,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.dark,
-      ),
-      actions: [
-        Padding(
-          padding: const EdgeInsets.only(
-            top: 5,
-          ),
-          child: InkWell(onTap: () {
-            context.pushNamed(RouteManager.settingScreen);
-          }, child: Consumer(
-            builder: (context, ref, child) {
-              final profilePro = ref.watch(profileRepositoryProvider);
-              return profilePro.when(
-                () => Container(),
-                loading: () => Center(child: CircularProgressIndicator()),
-                error: (message) => CircleAvatar(
-                  child: Image.asset('assets/images/user.png'),
-                ),
-                success: (data) {
-                  zipcode = data.zipCode;
-                  print("zzz $zipcode");
-                  if (data.profilePhoto != null &&
-                      data.profilePhoto!.isNotEmpty) {
-                    return Padding(
-                      padding: const EdgeInsets.only(
-                          left: 10, bottom: 18, top: 18, right: 10),
-                      child: ClipOval(
-                        child: AspectRatio(
-                          aspectRatio: 1.0,
-                          child: CachedNetworkImage(
-                            fit: BoxFit.cover,
-                            imageUrl: data.profilePhoto!,
-                            placeholder: (context, url) => Image.asset(
-                                'app_icon_spenza.png'.assetImageUrl),
-                            errorWidget: (context, url, error) => Image.asset(
-                                'user_placeholder.png'.assetImageUrl),
-                          ),
-                        ),
-                      ),
-                    );
-                  } else {
-                    return Padding(
-                      padding: const EdgeInsets.only(
-                          left: 10, bottom: 18, top: 18, right: 10),
-                      child: ClipOval(
-                          child: AspectRatio(
-                        aspectRatio: 1.0,
-                        child: Image.asset(
-                          'user_placeholder.png'.assetImageUrl,
-                          fit: BoxFit.cover,
-                        ),
-                      )),
-                    );
-                  }
-                },
-              );
-            },
-          )
-
-              //),
-              ),
-        )
-      ],
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            maxLines: 2,
-            //AppLocalizations.of(context)!.,
-            "Start saving time and money!",
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontFamily: poppinsFont.fontFamily,
-              decoration: TextDecoration.none,
-              color: ColorUtils.colorWhite,
-              fontWeight: FontWeight.bold,
-              fontSize: 17,
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Consumer(
-            builder: (context, ref, child) {
-              final profilePro = ref.watch(profileRepositoryProvider);
-              return profilePro.when(
-                () => Container(),
-                loading: () => Container(),
-                error: (error) => Container(),
-                success: (data) {
-                  return _buildNearbyText(data.zipCode, 12);
-                },
-              );
-            },
-          ),
-        ],
-      ),
-      centerTitle: false,
-    );
-  }
-
-  Text _buildNearbyText(String zipCode, double fontSize) {
-    return Text.rich(
-      TextSpan(
-        text: "Nearby",
-        style: TextStyle(
-          fontFamily: poppinsFont.fontFamily,
-          decoration: TextDecoration.none,
-          color: ColorUtils.colorWhite,
-          fontWeight: FontWeight.normal,
-          fontSize: fontSize,
-        ),
-        children: [
-          TextSpan(
-            text: " $zipCode",
-            style: TextStyle(
-              fontFamily: poppinsFont.fontFamily,
-              decoration: TextDecoration.none,
-              color: ColorUtils.colorWhite,
-              fontWeight: FontWeight.w700,
-              fontSize: fontSize,
-            ),
-          ),
-        ],
-      ),
-      textAlign: TextAlign.center,
-    );
-  }
 }

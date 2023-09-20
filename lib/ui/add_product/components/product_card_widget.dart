@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter/material.dart';
 import 'package:spenza/utils/color_utils.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
@@ -37,7 +36,8 @@ class ProductCard extends StatelessWidget {
                     color: ColorUtils.colorSurface,
                   ),
                 ),
-                Padding(
+                Container(
+                  color: Colors.white,
                     padding: EdgeInsets.all(8.0),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,7 +62,7 @@ class ProductCard extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                                 title,
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 16),
+                                    fontWeight: FontWeight.bold, fontSize: 14),
                               ),
                               SizedBox(height: 3),
                               Text(

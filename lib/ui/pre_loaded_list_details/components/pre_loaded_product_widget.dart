@@ -45,6 +45,7 @@ class PreloadedProductCard extends ConsumerWidget {
           alignment: Alignment.topRight,
           children: [
             Container(
+              color: Colors.white,
               margin: const EdgeInsets.all(8.0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/helpers/bottom_nav_helper.dart';
-import 'package:spenza/router/app_router.dart';
+import 'package:spenza/ui/home/components/location_dialog.dart';
 import 'package:spenza/ui/profile/profile_repository.dart';
 import 'package:spenza/utils/color_utils.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
@@ -79,12 +79,12 @@ class HomeTopAppBar extends ConsumerWidget implements PreferredSizeWidget {
                         ),
                         success: (data) {
                           final zipcode = data.zipCode;
-                          print("zzz $zipcode");
+                          debugPrint("zzz $zipcode");
                           if (data.profilePhoto != null &&
                               data.profilePhoto!.isNotEmpty) {
                             return Padding(
                               padding: const EdgeInsets.only(
-                                  left: 10, bottom: 18, top: 18, right: 10),
+                                  left: 10, bottom: 16, top: 18, right: 10),
                               child: ClipOval(
                                 child: AspectRatio(
                                   aspectRatio: 1.0,
@@ -149,7 +149,7 @@ class HomeTopAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 loading: () => Container(),
                 error: (error) => Container(),
                 success: (data) {
-                  return _buildNearbyText(data.zipCode, 12);
+                  return _buildNearbyText(context,data.zipCode, 12);
                 },
               );
             },
@@ -160,31 +160,41 @@ class HomeTopAppBar extends ConsumerWidget implements PreferredSizeWidget {
     );
   }
 
-  Text _buildNearbyText(String? zipCode, double fontSize) {
-    return Text.rich(
-      TextSpan(
-        text: "Nearby",
-        style: TextStyle(
-          fontFamily: poppinsFont.fontFamily,
-          decoration: TextDecoration.none,
-          color: ColorUtils.colorWhite,
-          fontWeight: FontWeight.normal,
-          fontSize: fontSize,
-        ),
-        children: [
-          TextSpan(
-            text: " ${zipCode ?? ''}",
-            style: TextStyle(
-              fontFamily: poppinsFont.fontFamily,
-              decoration: TextDecoration.none,
-              color: ColorUtils.colorWhite,
-              fontWeight: FontWeight.w700,
-              fontSize: fontSize,
-            ),
+  Widget _buildNearbyText(BuildContext context, String? zipCode, double fontSize) {
+    return InkWell(
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return LocationDialog();
+            },
+            barrierDismissible: true);
+      },
+      child: Text.rich(
+        TextSpan(
+          text: "Nearby",
+          style: TextStyle(
+            fontFamily: poppinsFont.fontFamily,
+            decoration: TextDecoration.none,
+            color: ColorUtils.colorWhite,
+            fontWeight: FontWeight.normal,
+            fontSize: fontSize,
           ),
-        ],
+          children: [
+            TextSpan(
+              text: " ${zipCode ?? ''}",
+              style: TextStyle(
+                fontFamily: poppinsFont.fontFamily,
+                decoration: TextDecoration.none,
+                color: ColorUtils.colorWhite,
+                fontWeight: FontWeight.w700,
+                fontSize: fontSize,
+              ),
+            ),
+          ],
+        ),
+        textAlign: TextAlign.center,
       ),
-      textAlign: TextAlign.center,
     );
   }
 }

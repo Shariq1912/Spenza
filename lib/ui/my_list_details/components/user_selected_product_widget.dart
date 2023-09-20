@@ -59,13 +59,14 @@ class UserSelectedProductCard extends ConsumerWidget {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+            padding: const EdgeInsets.only(left: 0.0, right: 0.0),
             child: Divider(
               height: 1,
               color: ColorUtils.colorSurface,
             ),
           ),
           Container(
+            color: Colors.white,
             margin: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Stack(
               alignment: Alignment.topRight,
@@ -107,21 +108,21 @@ class UserSelectedProductCard extends ConsumerWidget {
                             ),
                             Text(
                               title,
-                              maxLines: 1,
+                              maxLines: 2,
                               style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w700,
                                   color: Color(0xFF323E48),
                                   fontFamily: robotoFont),
                             ),
-                            const SizedBox(height: 38),
-                            Text(
+                            // SizedBox(height:/* title.length > 32 ? 21 :*/ 38),
+                            /*Text(
                               measure,
                               style: TextStyle(
                                   fontSize: 12,
                                   color: Color(0xFF323E48),
                                   fontFamily: robotoFont),
-                            ),
+                            ),*/
                           ],
                         ),
                       ),
@@ -141,8 +142,11 @@ class UserSelectedProductCard extends ConsumerWidget {
                             child: Container(
                               height: 20,
                               width: 20,
-                              child: Image.asset(
-                                "add_icon.png".assetImageUrl,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: Image.asset(
+                                  "plus_blue.png".assetImageUrl,
+                                ),
                               ),
                             ),
                           ),
@@ -173,8 +177,11 @@ class UserSelectedProductCard extends ConsumerWidget {
                             child: Container(
                               height: 20,
                               width: 20,
-                              child: Image.asset(
-                                "Minus_GW.png".assetImageUrl,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: Image.asset(
+                                  "minus_blue.png".assetImageUrl,
+                                ),
                               ),
                             ),
                           ),
@@ -183,11 +190,22 @@ class UserSelectedProductCard extends ConsumerWidget {
                     ],
                   ),
                 ),
+                Positioned(
+                  left: 110,
+                  bottom: 5,
+                  child:
+                Text(
+                  measure,
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF323E48),
+                      fontFamily: robotoFont),
+                ),)
               ],
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+            padding: const EdgeInsets.only(left: 0.0, right: 0.0),
             child: Divider(
               height: 1,
               color: ColorUtils.colorSurface,

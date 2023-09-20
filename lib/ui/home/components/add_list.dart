@@ -11,8 +11,6 @@ import 'package:spenza/ui/home/data/my_list_model.dart';
 import 'package:spenza/ui/home/provider/save_mylist_provider.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
-import '../provider/fetch_mylist_provider.dart';
-
 class AddItemToList extends ConsumerStatefulWidget {
   const AddItemToList({Key? key}) : super(key: key);
 

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/di/app_providers.dart';
-import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/home/components/my_list_item.dart';
 import 'package:spenza/ui/home/components/new_list_dialog.dart';
 import 'package:spenza/ui/home/data/my_list_model.dart';
@@ -60,10 +58,14 @@ class TopStrip extends ConsumerWidget {
                 ),
                 Align(
                   alignment: Alignment.topRight,
-                  child: Icon(
-                    Icons.arrow_forward_ios,
-                    color: ColorUtils.primaryText,
-                    size: 18,
+                  child: Container(
+                    height: 13,
+                    width: 13,
+                    child: Image.asset(
+                      "forward_Icon_1a1a1a.png".assetImageUrl,
+                      color: ColorUtils.primaryText,
+
+                    ),
                   ),
                 )
               ],

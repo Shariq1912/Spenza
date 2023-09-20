@@ -7,7 +7,6 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/home/data/my_list_model.dart';
 import 'package:spenza/ui/home/provider/image_picker_provider.dart';
 import 'package:spenza/ui/home/provider/save_mylist_provider.dart';

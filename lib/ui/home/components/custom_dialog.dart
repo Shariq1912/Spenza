@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -143,7 +141,7 @@ class _CustomDialogState extends ConsumerState<CustomDialog> {
                     );
                   },
                   error: (error, stackTrace) {
-                    print("errorMrss $error");
+                    debugPrint("errorMrss $error");
                     return Center(child: Text(error.toString()));
                   },
                   loading: () => Center(child: CircularProgressIndicator()),

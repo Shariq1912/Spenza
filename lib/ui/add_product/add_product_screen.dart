@@ -92,6 +92,7 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: CustomAppBar(
           displayActionIcon: false,
           title: 'Add Product to List',
