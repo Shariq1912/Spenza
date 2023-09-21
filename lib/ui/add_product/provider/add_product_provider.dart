@@ -18,6 +18,8 @@ import 'package:spenza/utils/fireStore_constants.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 import "package:collection/collection.dart";
 
+import 'add_product_notifier_provider.dart';
+
 part 'add_product_provider.g.dart';
 
 @riverpod
@@ -202,13 +204,21 @@ class AddProduct extends _$AddProduct
           .toList();
 
       try {
-        final List<Product> products = await ref
+        List<Product> products = await ref
             .read(searchProductRepositoryProvider)
             .searchProductRepository(
               storeIds: nearbyStoreIds,
               query: query.toLowerCase(),
               cancelToken: cancelToken,
             );
+
+        final Map<String, int> userListProducts = await fetchUserListProducts();
+
+        products = products.map((e) {
+          final userProductQuantity = userListProducts[e.productRef] ?? 0;
+          if (userProductQuantity == 0) return e;
+          return e.copyWith(quantity: userProductQuantity);
+        }).toList();
 
         state = AsyncValue.data(products);
       } on DioException catch (e) {
@@ -225,6 +235,24 @@ class AddProduct extends _$AddProduct
       state =
           AsyncValue.error('Error searching products: $e', StackTrace.current);
     }
+  }
+
+  Future<Map<String, int>> fetchUserListProducts() async {
+    final userListId = await prefs.then((prefs) => prefs.getUserListId());
+    final myListRef =
+        fireStore.collection(MyListConstant.myListCollection).doc(userListId);
+
+    final querySnapshot = await myListRef.collection('user_product_list').get();
+
+    final Map<String, int> productRefAndQuantity = Map();
+
+    for (var result in querySnapshot.docs) {
+      final Map<String, dynamic> data = result.data();
+      productRefAndQuantity[data['product_ref'].id.toString()] =
+          data['quantity'];
+    }
+
+    return productRefAndQuantity;
   }
 
   /// Add The selected product in user my list
@@ -287,6 +315,11 @@ class AddProduct extends _$AddProduct
       if (removedProducts.contains(product.productRef))
         removedProducts.remove(product.productRef);
 
+      if (product.quantity == 0) {
+        // todo make it localized
+        ref.read(addProductNotifierProvider.notifier).state = "Product successfully added in the List";
+      }
+
       products[index] = product.copyWith(quantity: product.quantity + 1);
     }
 
@@ -302,7 +335,11 @@ class AddProduct extends _$AddProduct
 
     final index = products.indexOf(product);
     if (index != -1) {
-      if (product.quantity == 1) removedProducts.add(product.productRef);
+      if (product.quantity == 1) {
+        // todo make it localized
+        ref.read(addProductNotifierProvider.notifier).state = "Product removed from the List";
+        removedProducts.add(product.productRef);
+      }
       products[index] = product.copyWith(quantity: product.quantity - 1);
     }
 

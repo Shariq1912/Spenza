@@ -10,12 +10,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/ui/add_product/components/product_card_widget.dart';
 import 'package:spenza/ui/add_product/components/selectable_chip.dart';
 import 'package:spenza/ui/add_product/data/product.dart';
+import 'package:spenza/ui/add_product/provider/add_product_notifier_provider.dart';
 import 'package:spenza/ui/add_product/provider/add_product_provider.dart';
 import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/my_list_details/components/custom_app_bar.dart';
 import 'package:spenza/ui/my_list_details/components/searchbox_widget.dart';
 import 'package:spenza/ui/my_store_products/data/list_item.dart';
 import 'package:spenza/utils/color_utils.dart';
+import 'package:spenza/utils/spenza_extensions.dart';
 
 import 'provider/selected_department_provider.dart';
 
@@ -63,6 +65,11 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
         _focusNode.unfocus();
       }
     });
+
+    _searchController.addListener(() {
+      ref.read(searchQueryProvider.notifier).state =
+          _searchController.text.trim().toLowerCase();
+    });
   }
 
   @override
@@ -72,6 +79,7 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
     super.dispose();
     ref.invalidate(selectedDepartmentsProvider);
     ref.invalidate(searchQueryProvider);
+    ref.invalidate(addProductNotifierProvider);
     ref.invalidate(
         addProductProvider); // todo dispose the background fetching data when screen dispose.
     _searchController.dispose();
@@ -83,14 +91,20 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _searchController.addListener(() {
-      ref.read(searchQueryProvider.notifier).state =
-          _searchController.text.trim().toLowerCase();
+    ref.listen(addProductNotifierProvider, (previous, next) {
+      // todo listen only called once if state string value is same.
+      debugPrint("Snackbar state === $previous and $next");
+
+      if (next == null || next.isEmpty) return;
+
+      context.showSnackBar(message: next);
     });
 
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
+    return WillPopScope(
+      onWillPop: () async {
+        final hasValueChanged = await saveMyListProducts();
+        context.pop(hasValueChanged);
+        return true;
       },
       child: Scaffold(
         appBar: CustomAppBar(
@@ -102,11 +116,9 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
             fontSize: 20,
             color: ColorUtils.colorPrimary,
           ),
-          onBackIconPressed: () {
-            // context.pop();
-            ref
-                .read(addProductProvider.notifier)
-                .saveUserSelectedProductsToDB();
+          onBackIconPressed: () async {
+            final hasValueChanged = await saveMyListProducts();
+            context.pop(hasValueChanged);
           },
         ),
         body: Column(
@@ -285,6 +297,24 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
         ),
       ),
     );
+  }
+
+  Future<bool> saveMyListProducts() async {
+    final displayPopup =
+        ref.read(addProductNotifierProvider.notifier).state != null;
+    if (displayPopup) {
+      ref.read(addProductNotifierProvider.notifier).state =
+          "Saving products to the list...";
+
+      await Future.microtask(
+        () => ref
+            .read(addProductProvider.notifier)
+            .saveUserSelectedProductsToDB(),
+      );
+    }
+    ref.read(addProductNotifierProvider.notifier).state = null;
+
+    return displayPopup;
   }
 
   Widget buildListViewWithLabel({

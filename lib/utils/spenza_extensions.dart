@@ -15,18 +15,25 @@ extension ImageExtension on String {
   String get assetImageUrl {
     return 'assets/images/$this';
   }
+
   String get assetSvgIconUrl {
     return 'assets/bottom_nav_icons/$this';
   }
 }
 
 extension SnackbarExtension on BuildContext {
-  void showSnackBar({required String message}) {
-    ScaffoldMessenger.of(this).showSnackBar(
-      SnackBar(
-        content: Text(message),
-      ),
-    );
+  void showSnackBar({
+    required String message,
+    Duration duration = const Duration(seconds: 1),
+  }) {
+    ScaffoldMessenger.of(this)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          duration: duration,
+          content: Text(message),
+        ),
+      );
   }
 }
 
@@ -105,8 +112,6 @@ extension FirestoreExtension on FirebaseFirestore {
   }
 }
 
-
-
 mixin FirstTimeLoginMixin {
   Future<bool> isFirstTimeLogin(
       {required FirebaseFirestore firestore, required String userId}) async {
@@ -144,19 +149,28 @@ extension ImagePickerExtension on ImagePicker {
                 onPressed: () async {
                   Navigator.pop(context, await _pickImage(ImageSource.gallery));
                 },
-                child: const Text('Choose from Gallery',style: TextStyle(color: Color(0xFF0CA9E6)),),
+                child: const Text(
+                  'Choose from Gallery',
+                  style: TextStyle(color: Color(0xFF0CA9E6)),
+                ),
               ),
               CupertinoDialogAction(
                 onPressed: () async {
                   Navigator.pop(context, await _pickImage(ImageSource.camera));
                 },
-                child: const Text('Capture from Camera',style: TextStyle(color: Color(0xFF0CA9E6)),),
+                child: const Text(
+                  'Capture from Camera',
+                  style: TextStyle(color: Color(0xFF0CA9E6)),
+                ),
               ),
               CupertinoDialogAction(
                 onPressed: () {
                   Navigator.pop(context, null);
                 },
-                child: const Text('Cancel',style: TextStyle(color: Colors.redAccent,)),
+                child: const Text('Cancel',
+                    style: TextStyle(
+                      color: Colors.redAccent,
+                    )),
               ),
             ],
           );
@@ -190,7 +204,7 @@ extension ImagePickerExtension on ImagePicker {
 }
 
 extension FileExtension on File {
-  Future<String?> uploadImageToFirebase({ required String path}) async {
+  Future<String?> uploadImageToFirebase({required String path}) async {
     try {
       final storageReference = FirebaseStorage.instance
           .ref()
