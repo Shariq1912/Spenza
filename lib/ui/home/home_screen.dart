@@ -10,10 +10,9 @@ import 'package:spenza/ui/common/home_top_app_bar.dart';
 import 'package:spenza/ui/home/provider/fetch_mylist_provider.dart';
 import 'package:spenza/ui/home/provider/home_preloaded_list.dart';
 import 'package:spenza/ui/home/repo/fetch_favourite_store_repository.dart';
+import 'package:spenza/ui/profile/profile_repository.dart';
 import 'package:spenza/utils/color_utils.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
-
-import '../profile/profile_repository.dart';
 import 'components/myStore.dart';
 import 'components/preLoadedList.dart';
 import 'components/shimmer_items/home_shimmer_list_view.dart';
@@ -54,7 +53,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
   @override
   void dispose() {
 
-    print("Dispose called From Home");
+    debugPrint("Dispose called From Home");
 
     ref.invalidate(fetchMyListProvider);
     ref.invalidate(fetchFavouriteStoreRepositoryProvider);
@@ -65,7 +64,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
 
   @override
   Widget build(BuildContext context) {
-    print("pppp $postalCode");
+    debugPrint("pppp $postalCode");
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: HomeTopAppBar(

@@ -92,7 +92,6 @@ class TopStrip extends ConsumerWidget {
                     );
                   } else {
                     return MyListItem(
-                      //imageUrl: "https://firebasestorage.googleapis.com/v0/b/spenzabeta-74e04.appspot.com/o/preloaded_list%2Fshopping_list_single_person.png?alt=media&token=1eae7be8-5443-4ac0-b1fe-a38698d14041",
                       imageUrl: "add_new_list_button.png".assetImageUrl,
                       name: "New List",
                       description: "",

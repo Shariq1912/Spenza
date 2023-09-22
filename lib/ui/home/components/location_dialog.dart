@@ -5,8 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/location/location_provider.dart';
 import 'package:spenza/ui/profile/profile_repository.dart';
+import 'package:spenza/utils/color_utils.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
 class LocationDialog extends ConsumerStatefulWidget {
@@ -25,17 +27,25 @@ class _LocationDialogState extends ConsumerState<LocationDialog> {
 
   final fieldValidator = MultiValidator([
     RequiredValidator(errorText: 'Field is required'),
-    LengthRangeValidator(min: 5, max: 5, errorText: 'Zip code must be 5 digits'),
-
+    LengthRangeValidator(
+        min: 5, max: 5, errorText: 'Zip code must be 5 digits'),
   ]);
 
   Future<void> _saveData(BuildContext context) async {
-     await ref.read(locationPermissionProvider.notifier).processZipCodeEnteredByUser(
+    await ref
+        .read(locationPermissionProvider.notifier)
+        .processZipCodeEnteredByUser(
           zipCodeController.text,
         );
-     Navigator.of(context).pop();
-     await ref.read(profileRepositoryProvider.notifier).getUserProfileData();
+    Navigator.of(context).pop();
+    await ref.read(profileRepositoryProvider.notifier).getUserProfileData();
+  }
+  Future<void> _saveDataFromCurrentLocation(BuildContext context) async {
+    Navigator.of(context).pop();
+    await ref
+        .read(locationPermissionProvider.notifier).requestLocationPermission();
 
+    await ref.read(profileRepositoryProvider.notifier).getUserProfileData();
   }
 
   @override
@@ -63,6 +73,7 @@ class _LocationDialogState extends ConsumerState<LocationDialog> {
       child: Form(
         key: _formKey,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Align(
               alignment: Alignment.topRight,
@@ -80,14 +91,16 @@ class _LocationDialogState extends ConsumerState<LocationDialog> {
                 ),
               ),
             ),
-            Container(
-                width: 100,
-                height: 100,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: Image.asset('location_image_pin.jpg'.assetImageUrl,
-                      fit: BoxFit.cover),
-                )),
+            Center(
+              child: Container(
+                  width: 100,
+                  height: 100,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
+                    child: Image.asset('location_image_pin.jpg'.assetImageUrl,
+                        fit: BoxFit.cover),
+                  )),
+            ),
             SizedBox(
               height: 15,
             ),
@@ -97,7 +110,8 @@ class _LocationDialogState extends ConsumerState<LocationDialog> {
                 FilteringTextInputFormatter.digitsOnly
               ],
               decoration: InputDecoration(
-                hintText: "Enter zip code",
+                hintStyle: TextStyle(fontFamily: robotoFont),
+                hintText: ("Enter zip code"),
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 border: OutlineInputBorder(
@@ -109,6 +123,38 @@ class _LocationDialogState extends ConsumerState<LocationDialog> {
               ),
               validator: fieldValidator,
               controller: zipCodeController,
+            ),
+            Container(
+              padding: EdgeInsets.only(left: 5),
+              child: Consumer(
+                builder: (context, ref, child) => ref.watch(locationPermissionProvider).maybeWhen(
+                        () => InkWell(
+                          onTap: () async {
+                            debugPrint("current location");
+                            _saveDataFromCurrentLocation(context);
+                          },
+                          child: Text(
+                            "Use your current location",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                fontFamily: robotoFont, color: ColorUtils.colorPrimary),
+                          ),
+                        ),
+                    orElse: () =>InkWell(
+                      onTap: () async {
+                        debugPrint("current location");
+                        _saveDataFromCurrentLocation(context);
+                      },
+                      child: Text(
+                        "Use your current location",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontFamily: robotoFont, color: ColorUtils.colorPrimary),
+                      ),
+                    ),
+                  loading: () => SpenzaCircularProgress()
+                )
+              ),
             ),
             SizedBox(
               height: 15,

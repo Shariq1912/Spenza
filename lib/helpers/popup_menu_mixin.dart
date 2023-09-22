@@ -46,7 +46,7 @@ mixin PopupMenuMixin<T extends StatefulWidget> on State<T> {
       position: position,
       items: items,
       elevation: 8.0,
-      color: Colors.transparent,
+      color: Colors.white,
         surfaceTintColor: Colors.white,
     ).then<void>((PopupMenuAction? itemSelected) {
       if (itemSelected != null) {
