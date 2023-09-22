@@ -19,8 +19,8 @@ class Product with _$Product {
     required String measure,
     required String name,
     required String pImage,
-    @Default("")
-        String storeRef,
+
+    @Default("") String storeRef,
     @JsonKey(includeFromJson: true, includeToJson: false)
     @Default([])
         List<dynamic> departments,
@@ -31,8 +31,10 @@ class Product with _$Product {
     @Default("")
         String minPrice,
     @JsonKey(includeFromJson: true, includeToJson: false)
-    @Default("")
-        String maxPrice,
+    @Default("") String maxPrice,
+
+    @Default(0) int quantity,
+
   }) = _Product;
 
   factory Product.fromJson(Map<String, dynamic> json) =>

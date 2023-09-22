@@ -21,16 +21,16 @@ import 'package:spenza/ui/receipts/display_receipt.dart';
 import 'package:spenza/ui/selected_store/selected_store_screen.dart';
 import 'package:spenza/ui/settings/setting_screen.dart';
 import 'package:spenza/ui/sign_up/register_screen.dart';
-import 'package:spenza/ui/splash/splash_screen.dart';
+import 'package:spenza/ui/splash/opening_screen.dart';
 import 'package:spenza/ui/webview_screen/webview_screen.dart';
 
 import '../ui/my_store/my_store.dart';
 import '../ui/receipts/upload_receipt_screen.dart';
-import '../ui/splash/provider/splash_widget.dart';
+import '../ui/splash/splash_screen.dart';
 import 'app_router.dart';
 
 final initialLocationProvider =
-    StateProvider.autoDispose<String>((ref) => RouteManager.splashWidget);
+    StateProvider.autoDispose<String>((ref) => RouteManager.splashScreen);
 
 final goRouterProvider = Provider.autoDispose<GoRouter>((ref) {
   final initialLocation = ref.watch(initialLocationProvider);
@@ -130,20 +130,18 @@ final goRouterProvider = Provider.autoDispose<GoRouter>((ref) {
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigator,
-        name: RouteManager.splashWidget,
-        path: RouteManager.splashWidget,
-        builder: (context, state) {
-          return SplashWidget();
-          // return const LoginScreen();
-        },
-      ),
-      GoRoute(
-        parentNavigatorKey: _rootNavigator,
         name: RouteManager.splashScreen,
         path: RouteManager.splashScreen,
         builder: (context, state) {
           return SplashScreen();
-          // return const LoginScreen();
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigator,
+        name: RouteManager.openingScreen,
+        path: RouteManager.openingScreen,
+        builder: (context, state) {
+          return OpeningScreen();
         },
       ),
       GoRoute(

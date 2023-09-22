@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/splash/provider/splash_provider.dart';
+import 'package:spenza/utils/color_utils.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
-  const SplashScreen({super.key});
-
   @override
-  ConsumerState createState() => _SplashScreenState();
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends ConsumerState<SplashScreen> {
-  final poppinsFont = GoogleFonts.poppins().fontFamily;
-
   @override
   void initState() {
     super.initState();
+    /*Future.delayed(Duration(seconds: 2), () {
+      context.goNamed(RouteManager.splashScreen);
+    });*/
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadData();
@@ -34,212 +32,53 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   void dispose() {
     ref.invalidate(splashProvider);
     super.dispose();
-
-  }
-  @override
-  void didChangeDependencies() {
-    ref.invalidate(splashProvider);
-    super.didChangeDependencies();
   }
 
   @override
-  Widget build(BuildContext buildContext) {
+  Widget build(BuildContext context) {
+    ref.listen(splashProvider, (previous, next) {
+      next.maybeWhen(
+        data: (data) {
+          if (data == null) {
+            return;
+          }
+          Future.delayed(Duration(seconds: 1), () {
+            context.goNamed(data);
+          });
+
+        },
+        error: (error, stackTrace) =>
+            context.showSnackBar(message: "Something went wrong!"),
+        orElse: () {},
+      );
+    });
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                  ),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 100, 0, 0),
-                          child: Center(
-                            child: Text(
-                              AppLocalizations.of(context)!.welcome,
-                              style: TextStyle(
-                                fontFamily: poppinsFont,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: const Color(0xFF7B868C),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Center(
-                          child: Image.asset(
-                            'spenza_logo.png'.assetImageUrl,
-                            height: 90,
-                            width: 300,
-                            fit: BoxFit.fitWidth,
-                          ),
-                        ),
-                        const SizedBox(height: 15),
-                        _buildText(
-                          AppLocalizations.of(context)!.find_stores,
-                          fontSize: 21,
-                          color: const Color(0xFF0CA9E6),
-                        ),
-                        _buildText(
-                          AppLocalizations.of(context)!.find_stores_description,
-                          fontSize: 12,
-                          color: const Color(0xFF7B868C),
-                        ),
-                        const SizedBox(height: 20),
-                        _buildText(
-                          AppLocalizations.of(context)!.make_shopping_list,
-                          fontSize: 21,
-                          color: const Color(0xFF0CA9E6),
-                        ),
-                        _buildText(
-                          AppLocalizations.of(context)!
-                              .make_shopping_list_description,
-                          fontSize: 12,
-                          color: const Color(0xFF7B868C),
-                        ),
-                        const SizedBox(height: 20),
-                        _buildText(
-                          AppLocalizations.of(context)!.compare_prices,
-                          fontSize: 21,
-                          color: const Color(0xFF0CA9E6),
-                        ),
-                        _buildText(
-                          AppLocalizations.of(context)!
-                              .compare_prices_description,
-                          fontSize: 12,
-                          color: const Color(0xFF7B868C),
-                        ),
-                        const SizedBox(height: 20),
-                        _buildText(
-                          AppLocalizations.of(context)!.shop_in_store_or_online,
-                          fontSize: 21,
-                          color: const Color(0xFF0CA9E6),
-                        ),
-                        _buildText(
-                          AppLocalizations.of(context)!
-                              .shop_in_store_or_online_description,
-                          fontSize: 12,
-                          color: const Color(0xFF7B868C),
-                        ),
-                        const SizedBox(height: 65),
-                        Consumer(builder: (context, ref, child) {
-                          return ref.watch(splashProvider).when(
-                                data: (data) {
-                                  if (data != null) {
-                                    Future.delayed(Duration.zero, () {
-                                      context.goNamed(data);
-                                    });
-                                  }
-                                  return data == null
-                                      ? Column(
-                                          children: [
-                                            Center(
-                                              child: ElevatedButton(
-                                                onPressed: () {
-                                                  context.pushNamed(RouteManager
-                                                      .registerScreen);
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor:
-                                                      const Color(0xFF0CA9E6),
-                                                  foregroundColor: Colors.white,
-                                                  textStyle: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontFamily: poppinsFont,
-                                                  ),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                  ),
-                                                  fixedSize:
-                                                      const Size(310, 40),
-                                                ),
-                                                child: Text(AppLocalizations.of(
-                                                        context)!
-                                                    .sign_up),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 20),
-                                            Center(
-                                              child: ElevatedButton(
-                                                onPressed: () {
-                                                  context.pushNamed(
-                                                      RouteManager.loginScreen);
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                    backgroundColor:
-                                                        Color(0xFFE5E7E8),
-                                                    foregroundColor:
-                                                        const Color(0xFF0CA9E6),
-                                                    textStyle: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: poppinsFont,
-                                                      color: Colors.lightGreen,
-                                                    ),
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5),
-                                                      side: BorderSide.none,
-                                                    ),
-                                                    fixedSize:
-                                                        const Size(310, 40),
-                                                    surfaceTintColor:
-                                                        Colors.white),
-                                                child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .login,
-                                                  style: TextStyle(
-                                                      color: Color(0xFF7b868C)),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                      : Container();
-                                },
-                                error: (error, stackTrace) => Container(),
-                                loading: () => Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              );
-                        }),
-                      ],
+      body: Container(
+        color: ColorUtils.colorPrimary,
+        child: Center(
+          child: TweenAnimationBuilder<double>(
+            duration: Duration(seconds: 2),
+            tween: Tween(begin: 0.0, end: 1.0),
+            builder: (BuildContext context, double value, Widget? child) {
+              return Opacity(
+                opacity: value,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    SvgPicture.asset(
+                      'assets/images/spenza_white.svg',
+                      // colorFilter: ColorFilter.mode(Colors.red, BlendMode.color),
+                      fit: BoxFit.fitWidth,
+                      width: 50,
+                      height: 100,
                     ),
-                  ),
+                  ],
                 ),
-              ),
-            ],
+              );
+            },
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildText(String text, {double fontSize = 12, Color? color}) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontFamily: poppinsFont,
-          fontSize: fontSize,
-          fontWeight: fontSize == 12 ? FontWeight.normal : FontWeight.bold,
-          color: color,
         ),
       ),
     );
