@@ -18,11 +18,15 @@ import 'package:spenza/utils/fireStore_constants.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 import "package:collection/collection.dart";
 
+import 'add_product_notifier_provider.dart';
+
 part 'add_product_provider.g.dart';
 
 @riverpod
 class AddProduct extends _$AddProduct
     with LocationHelper, NearbyStoreMixin, FirestoreAndPrefsMixin {
+  final Set<String> removedProducts = Set();
+
   @override
   Future<List<Product>?> build() async {
     return null;
@@ -200,7 +204,7 @@ class AddProduct extends _$AddProduct
           .toList();
 
       try {
-        final List<Product> products = await ref
+        List<Product> products = await ref
             .read(searchProductRepositoryProvider)
             .searchProductRepository(
               storeIds: nearbyStoreIds,
@@ -208,6 +212,13 @@ class AddProduct extends _$AddProduct
               cancelToken: cancelToken,
             );
 
+        final Map<String, int> userListProducts = await fetchUserListProducts();
+
+        products = products.map((e) {
+          final userProductQuantity = userListProducts[e.productRef] ?? 0;
+          if (userProductQuantity == 0) return e;
+          return e.copyWith(quantity: userProductQuantity);
+        }).toList();
 
         state = AsyncValue.data(products);
       } on DioException catch (e) {
@@ -224,6 +235,24 @@ class AddProduct extends _$AddProduct
       state =
           AsyncValue.error('Error searching products: $e', StackTrace.current);
     }
+  }
+
+  Future<Map<String, int>> fetchUserListProducts() async {
+    final userListId = await prefs.then((prefs) => prefs.getUserListId());
+    final myListRef =
+        fireStore.collection(MyListConstant.myListCollection).doc(userListId);
+
+    final querySnapshot = await myListRef.collection('user_product_list').get();
+
+    final Map<String, int> productRefAndQuantity = Map();
+
+    for (var result in querySnapshot.docs) {
+      final Map<String, dynamic> data = result.data();
+      productRefAndQuantity[data['product_ref'].id.toString()] =
+          data['quantity'];
+    }
+
+    return productRefAndQuantity;
   }
 
   /// Add The selected product in user my list
@@ -248,7 +277,7 @@ class AddProduct extends _$AddProduct
       var isProductExist = query.docs.isNotEmpty;
 
       if (isProductExist) {
-        context.showSnackBar(message: "Product Already Exist in the List");
+        context.showSnackBar(message: "Product already exist in the List");
         return;
       }
 
@@ -274,50 +303,160 @@ class AddProduct extends _$AddProduct
     }
   }
 
-  /// Not much useful
-  Future<void> findNearbyLocations() async {
-    Future.delayed(Duration.zero);
+  /// Increase quantity in the product
+  Future<void> increaseQuantity({required Product product}) async {
+    final List<Product>? products = state.requireValue;
+    if (products == null || products.isEmpty) {
+      return;
+    }
 
-    try {
-      // Query for "Akota Garden" location
-      QuerySnapshot querySnapshot = await fireStore
-          .collection('locations')
-          .where('place_name', isEqualTo: 'Akota Garden')
+    final index = products.indexOf(product);
+    if (index != -1) {
+      if (removedProducts.contains(product.productRef))
+        removedProducts.remove(product.productRef);
+
+      if (product.quantity == 0) {
+        // todo make it localized
+        ref.read(addProductNotifierProvider.notifier).state = "Product successfully added in the List";
+      }
+
+      products[index] = product.copyWith(quantity: product.quantity + 1);
+    }
+
+    state = AsyncValue.data(products);
+  }
+
+  /// Decrease quantity in the product
+  Future<void> decreaseQuantity({required Product product}) async {
+    final List<Product>? products = state.requireValue;
+    if (products == null || products.isEmpty || product.quantity == 0) {
+      return;
+    }
+
+    final index = products.indexOf(product);
+    if (index != -1) {
+      if (product.quantity == 1) {
+        // todo make it localized
+        ref.read(addProductNotifierProvider.notifier).state = "Product removed from the List";
+        removedProducts.add(product.productRef);
+      }
+      products[index] = product.copyWith(quantity: product.quantity - 1);
+    }
+
+    state = AsyncValue.data(products);
+  }
+
+  Future<void> saveUserSelectedProductsToDB() async {
+    // Fetch products from the current state that have a quantity greater than 1
+    final List<Product>? products = state.requireValue;
+    if (products == null || products.isEmpty) {
+      return;
+    }
+
+    final productsToSave =
+        products.where((product) => product.quantity > 0).toList();
+
+    // Remove products that are in the removedProducts set
+    final productsToRemove = products
+        .where((product) => removedProducts.contains(product.productRef))
+        .toList();
+
+    final batch = fireStore.batch();
+    final userListId = await prefs.then((prefs) => prefs.getUserListId());
+    final productDocumentMap = Map<String, String>();
+    final removedProductDocumentMap = Map<String, String>();
+    final myListRef =
+        fireStore.collection(MyListConstant.myListCollection).doc(userListId);
+
+    if (productsToSave.isNotEmpty) {
+      // Use a collection group query to query the user_product_list subcollection based on product_ref
+      final querySnapshot = await myListRef
+          .collection('user_product_list')
+          .where(
+            'product_ref',
+            whereIn: productsToSave
+                .map(
+                  (product) => fireStore
+                      .collection(ProductCollectionConstant.collectionName)
+                      .doc(product.productRef),
+                )
+                .toList(),
+          )
           .get();
 
-      // Get the first document from the query result
-      DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+      for (var result in querySnapshot.docs) {
+        final Map<String, dynamic> data = result.data();
+        productDocumentMap[data['product_ref'].id.toString()] = result.id;
+        print(
+            "To Be Save collection DATA ::: ${productDocumentMap.toString()} and ${result.id}");
+      }
+    }
 
-      // Get the coordinates of "Akota Garden"
-      GeoPoint akotaGardenLocation = documentSnapshot['coordinates'];
+    if (productsToRemove.isNotEmpty) {
+      // Use a collection group query to query the user_product_list subcollection based on product_ref
+      final querySnapshot = await myListRef
+          .collection('user_product_list')
+          .where(
+            'product_ref',
+            whereIn: productsToRemove
+                .map(
+                  (product) => fireStore
+                      .collection(ProductCollectionConstant.collectionName)
+                      .doc(product.productRef),
+                )
+                .toList(),
+          )
+          .get();
 
-      // Create a GeoFirePoint for "Akota Garden"
-      GeoFirePoint center = GeoFirePoint(akotaGardenLocation);
+      for (var result in querySnapshot.docs) {
+        final Map<String, dynamic> data = result.data();
+        removedProductDocumentMap[data['product_ref'].id.toString()] =
+            result.id;
+        print(
+            "To Be Delete collection DATA ::: ${removedProductDocumentMap.toString()} and ${result.id}");
+      }
+    }
 
-      // Reference to locations collection.
-      final CollectionReference<Map<String, dynamic>> locationCollectionRef =
-          fireStore.collection('locations');
+    for (final product in productsToSave) {
+      String? existingDocId = productDocumentMap[product.productRef];
+      print(
+          "To Be SAVED existingDocId ::: $existingDocId and REF AGAINST == ${product.productRef}");
 
-      // Get the documents within a 3 km radius of "Akota Garden"
-      final result =
-          await GeoCollectionReference(locationCollectionRef).fetchWithin(
-        center: center,
-        radiusInKm: 3,
-        field: 'geo',
-        strictMode: true,
-        geopointFrom: geopointFrom,
+      DocumentReference documentRef;
+
+      if (existingDocId != null) {
+        // If the key exists, use the existing document
+        documentRef =
+            myListRef.collection('user_product_list').doc(existingDocId);
+      } else {
+        // If the key does not exist, create a new document
+        documentRef = myListRef.collection('user_product_list').doc();
+      }
+
+      final userProduct = UserProductInsert(
+        productRef: fireStore
+            .collection(ProductCollectionConstant.collectionName)
+            .doc(product.productRef),
+        productId: product.productId,
+        quantity: product.quantity,
       );
 
-      for (var value in result) {
-        String placeName = value['place_name'];
-        final distance =
-            center.distanceBetweenInKm(geopoint: value['coordinates']);
+      batch.set(documentRef, userProduct.toJson());
+    }
 
-        print(placeName);
-        print("Distance : $distance");
-      }
+    removedProductDocumentMap.values.forEach((element) {
+      print("To Be DELETED documentId ::: $element");
+
+      final documentRef =
+          myListRef.collection('user_product_list').doc(element);
+      batch.delete(documentRef);
+    });
+
+    try {
+      await batch.commit();
     } catch (e) {
-      print("ERROR IN LOCATION : $e");
+      // Handle any Firestore commit errors
+      print('Error saving user selected products: $e');
     }
   }
 }

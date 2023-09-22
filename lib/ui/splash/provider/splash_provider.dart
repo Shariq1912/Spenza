@@ -22,22 +22,26 @@ class Splash extends _$Splash with FirstTimeLoginMixin {
     final isLogin = prefs.isUserLoggedIn();
 
     Future.delayed(Duration.zero);
-
-    if (!isLogin) {
-      state = AsyncValue.data(null);
-      return;
-    }
-
-    // final isFirstLogin = prefs.isFirstLogin();
     final isFirstLogin = await isFirstTimeLogin(
       firestore: _fireStore,
       userId: prefs.getUserId(),
     );
-    if (!isFirstLogin) {
-      state = AsyncValue.data(RouteManager.homeScreen);
-    } else{
-      /// Redirect to Location screen for location and zip code purpose then make user to select favourite stores.
-      state = AsyncValue.data(RouteManager.locationScreen);
+
+    if (!isLogin) {
+      // Not logged in
+      if (isFirstLogin) {
+        state = AsyncValue.data(RouteManager.openingScreen);
+      } else {
+        state = AsyncValue.data(RouteManager.loginScreen);
+      }
+    } else {
+      // Logged in
+      if (isFirstLogin) {
+        state = AsyncValue.data(RouteManager.locationScreen);
+      } else {
+        state = AsyncValue.data(RouteManager.homeScreen);
+      }
     }
   }
+
 }
