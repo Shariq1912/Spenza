@@ -20,12 +20,12 @@ import 'package:spenza/ui/receipts/display_receipt.dart';
 import 'package:spenza/ui/selected_store/selected_store_screen.dart';
 import 'package:spenza/ui/settings/setting_screen.dart';
 import 'package:spenza/ui/sign_up/register_screen.dart';
-import 'package:spenza/ui/splash/splash_screen.dart';
+import 'package:spenza/ui/splash/opening_screen.dart';
 import 'package:spenza/ui/webview_screen/webview_screen.dart';
 
 import '../ui/my_store/my_store.dart';
 import '../ui/receipts/upload_receipt_screen.dart';
-import '../ui/splash/provider/splash_widget.dart';
+import '../ui/splash/splash_screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigator = GlobalKey(debugLabel: 'root');
 
@@ -34,8 +34,8 @@ final GlobalKey<NavigatorState> _shellNavigator =
     GlobalKey(debugLabel: 'shell');
 
 class RouteManager {
-  static const String splashWidget = '/';
-  static const String splashScreen = '/splashScreen';
+  static const String splashScreen = '/';
+  static const String openingScreen = '/openingScreen';
 
   static const String loginScreen = '/loginScreen';
   static const String registerScreen = '/registerScreen';
@@ -68,10 +68,12 @@ class RouteManager {
   static const preloadedListScreenBottomPath = '/preloadedListScreenBottomPath';
   static const receiptListScreenBottomPath = '/receiptListScreenBottomPath';
   final GlobalKey<StatefulNavigationShellState> homeNavigationKey = GlobalKey();
-  final GlobalKey<StatefulNavigationShellState> myListNavigationKey = GlobalKey();
-  final GlobalKey<StatefulNavigationShellState> receiptsNavigationKey = GlobalKey();
-  final GlobalKey<StatefulNavigationShellState> settingsNavigationKey = GlobalKey();
-
+  final GlobalKey<StatefulNavigationShellState> myListNavigationKey =
+      GlobalKey();
+  final GlobalKey<StatefulNavigationShellState> receiptsNavigationKey =
+      GlobalKey();
+  final GlobalKey<StatefulNavigationShellState> settingsNavigationKey =
+      GlobalKey();
 
   /// The route configuration.
   static final GoRouter router = GoRouter(
@@ -126,8 +128,7 @@ class RouteManager {
                   final String path = state.queryParameters['list_ref'] ?? "";
                   print("Shell Route Path Called == $path");
                   return NoTransitionPage(
-                    child:
-                        DisplayReceiptScreen(key: UniqueKey(), path: path),
+                    child: DisplayReceiptScreen(key: UniqueKey(), path: path),
                   );
                 },
               ),
@@ -153,19 +154,19 @@ class RouteManager {
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigator,
-        name: splashWidget,
-        path: splashWidget,
+        name: splashScreen,
+        path: splashScreen,
         builder: (context, state) {
-          return SplashWidget();
+          return SplashScreen();
           // return const LoginScreen();
         },
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigator,
-        name: splashScreen,
-        path: splashScreen,
+        name: openingScreen,
+        path: openingScreen,
         builder: (context, state) {
-          return SplashScreen();
+          return OpeningScreen();
           // return const LoginScreen();
         },
       ),
@@ -378,6 +379,4 @@ class RouteManager {
       ),
     ],
   );
-
-
 }

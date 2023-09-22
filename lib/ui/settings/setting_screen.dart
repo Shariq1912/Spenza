@@ -171,11 +171,24 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                           .then(
                         (value) {
                           // context.goNamed(RouteManager.loginScreen);
+                          ref
+                              .read(initialLocationProvider.notifier).state =
+                              RouteManager.loginScreen;
                           ref.invalidate(goRouterProvider);
                         },
                       );
                     },
                   ),
+
+                  /*onTap: () =>
+                      ref.read(loginRepositoryProvider.notifier).signOut().then(
+                    (value) {
+                      ref
+                          .read(initialLocationProvider.notifier).state =
+                          RouteManager.loginScreen;
+                      ref.invalidate(goRouterProvider);
+                    },
+                  ),*/
                 ),
               )
             ],
