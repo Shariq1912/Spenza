@@ -67,11 +67,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    SvgPicture.asset(
-                      'assets/images/spenza_white.svg',
+                    Image.asset(
+                      'assets/images/LOGO_Spenza-letters-white.png',
                       // colorFilter: ColorFilter.mode(Colors.red, BlendMode.color),
                       fit: BoxFit.fitWidth,
-                      width: 50,
+                      width: 230,
                       height: 100,
                     ),
                   ],

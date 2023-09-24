@@ -152,7 +152,7 @@ class _LocationDialogState extends ConsumerState<LocationDialog> {
                             fontFamily: robotoFont, color: ColorUtils.colorPrimary),
                       ),
                     ),
-                  loading: () => SpenzaCircularProgress()
+                  //loading: () => SpenzaCircularProgress()
                 )
               ),
             ),
