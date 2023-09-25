@@ -24,7 +24,7 @@ class ProductForStore extends _$ProductForStore with FirestoreAndPrefsMixin {
       QuerySnapshot<Map<String, dynamic>> productsSnapshot = await fireStore
           .collection('products_mvp')
           .where('storeRef', isEqualTo: storeRef)
-          .limit(10)
+          // .limit(10)
           .get();
 
       final List<ProductModel> pro = productsSnapshot.docs.map((doc) {
