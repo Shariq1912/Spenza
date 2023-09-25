@@ -5,15 +5,19 @@ class SearchBox extends StatelessWidget {
   final String hint;
   final TextEditingController controller;
   final ValueChanged<String>? onSearch;
+  final VoidCallback? onSearchClick;
   final FocusNode? focusNode; // Callback for focus change
-  final Color colors; // Callback for focus change
+  final Color colors;
+  final bool isEnabled;
 
   const SearchBox({
     required this.controller,
     this.onSearch,
+    this.onSearchClick,
     required this.hint,
     this.focusNode,
-    required this.colors
+    this.isEnabled = true,
+    required this.colors,
   });
 
   @override
@@ -21,12 +25,10 @@ class SearchBox extends StatelessWidget {
     return FocusScope(
       child: GestureDetector(
         onTap: () {
-          // When the user taps outside the text field, unfocus it
-          FocusScope.of(context).unfocus();
+          onSearchClick?.call();
         },
         child: Padding(
           padding: const EdgeInsets.all(0.0),
-
           child: Container(
             margin: const EdgeInsets.all(16.0),
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -41,6 +43,7 @@ class SearchBox extends StatelessWidget {
                 SizedBox(width: 8),
                 Expanded(
                   child: TextField(
+                    enabled: isEnabled,
                     focusNode: focusNode,
                     controller: controller,
                     textInputAction: TextInputAction.search,
@@ -55,9 +58,11 @@ class SearchBox extends StatelessWidget {
                       }
                     },
                     decoration: InputDecoration(
+                      hintStyle: TextStyle(color: Colors.grey.shade700),
                       border: InputBorder.none,
                       hintText: hint,
                     ),
+                    style: TextStyle(color:  Colors.grey.shade700), // Set the text color to black
                   ),
                 ),
               ],

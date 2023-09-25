@@ -34,7 +34,7 @@ class StoreRanking extends _$StoreRanking
   }
 
   Future<void> rankStoresByPriceTotal({
-    double radius = 5,
+    double radius = 3,
   }) async {
     state = AsyncValue.loading();
 
