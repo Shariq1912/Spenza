@@ -1,9 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/helpers/popup_menu_mixin.dart';
 import 'package:spenza/router/app_router.dart';
@@ -15,6 +13,7 @@ import 'package:spenza/ui/my_list_details/components/user_selected_product_widge
 import 'package:spenza/ui/my_list_details/provider/list_details_provider.dart';
 import 'package:spenza/ui/my_list_details/provider/user_product_list_provider.dart';
 import 'package:spenza/utils/color_utils.dart';
+import 'package:spenza/utils/searchbox_delegate.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
 import 'provider/display_spenza_button_provider.dart';
@@ -22,10 +21,10 @@ import 'provider/display_spenza_button_provider.dart';
 class MyListDetailsScreen extends ConsumerStatefulWidget {
   const MyListDetailsScreen(
       {super.key,
-        required this.listId,
-        required this.name,
-        required this.photo,
-        required this.path});
+      required this.listId,
+      required this.name,
+      required this.photo,
+      required this.path});
 
   final String listId;
   final String name;
@@ -47,36 +46,66 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
   final List<PopupMenuItem<PopupMenuAction>> items = [
     PopupMenuItem(
       child: ListTile(
-        leading: const Icon(Icons.edit),
-        title: Text(PopupMenuAction.edit.value),
+        leading: Image.asset(
+          "edit_pen.png".assetImageUrl,
+          fit: BoxFit.contain,
+          width: 18,
+          height: 18,
+          color: ColorUtils.colorPrimary,
+        ),
+        title: Text(PopupMenuAction.edit.value, style: TextStyle(color: ColorUtils.colorPrimary,),),
       ),
       value: PopupMenuAction.edit,
     ),
     PopupMenuItem(
       child: ListTile(
-        leading: const Icon(Icons.upload),
-        title: Text(PopupMenuAction.upload.value),
+        leading: Image.asset(
+          "cloud_upload.png".assetImageUrl,
+          fit: BoxFit.contain,
+          width: 23,
+          height: 23,
+          color: ColorUtils.colorPrimary,
+        ),
+        title: Text(PopupMenuAction.upload.value, style: TextStyle(color: ColorUtils.colorPrimary,),),
       ),
       value: PopupMenuAction.upload,
     ),
     PopupMenuItem(
       child: ListTile(
-        leading: const Icon(Icons.receipt),
-        title: Text(PopupMenuAction.receipt.value),
+        leading: Image.asset(
+          "receipts.png".assetImageUrl,
+          fit: BoxFit.contain,
+          width: 18,
+          height: 18,
+          color: ColorUtils.colorPrimary,
+        ),
+        title: Text(PopupMenuAction.receipt.value, style: TextStyle(color: ColorUtils.colorPrimary,),),
       ),
       value: PopupMenuAction.receipt,
     ),
     PopupMenuItem(
       child: ListTile(
-        leading: const Icon(Icons.copy),
-        title: Text(PopupMenuAction.copy.value),
+        leading: Image.asset(
+          "Copy.png".assetImageUrl,
+          fit: BoxFit.contain,
+          width: 18,
+          height: 18,
+          color: ColorUtils.colorPrimary,
+        ),
+        title: Text(PopupMenuAction.copy.value, style: TextStyle(color: ColorUtils.colorPrimary,),),
       ),
       value: PopupMenuAction.copy,
     ),
     PopupMenuItem(
       child: ListTile(
-        leading: const Icon(Icons.delete),
-        title: Text(PopupMenuAction.delete.value),
+        leading: Image.asset(
+          "delete.png".assetImageUrl,
+          fit: BoxFit.contain,
+          width: 18,
+          height: 18,
+          color: ColorUtils.colorPrimary,
+        ),
+        title: Text(PopupMenuAction.delete.value, style: TextStyle(color: ColorUtils.colorPrimary,),),
       ),
       value: PopupMenuAction.delete,
     ),
@@ -182,7 +211,6 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                   context.pop(hasValueChanged);
                 },
                 onActionIconPressed: _onActionIconPressed),
-
           ),
           body: Stack(
             children: [
@@ -214,9 +242,9 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                             }
 
                             return ListView.builder(
-                              itemCount: data.length+1,
+                              itemCount: data.length + 1,
                               itemBuilder: (context, index) {
-                                if (index < data.length){
+                                if (index < data.length) {
                                   final UserProduct product = data[index];
                                   return UserSelectedProductCard(
                                     measure: product.measure,
@@ -225,16 +253,15 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                                     imageUrl: product.pImage,
                                     title: product.name,
                                     priceRange:
-                                    "\$${product.minPrice} - \$${product.maxPrice}",
+                                        "\$${product.minPrice} - \$${product.maxPrice}",
                                     product: product,
                                     isLastCard: index == data.length - 1,
                                   );
-                                }else{
+                                } else {
                                   return Container(
                                     color: Colors.transparent,
                                   );
                                 }
-
                               },
                             );
                           },
@@ -246,7 +273,6 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                       },
                     ),
                   ),
-
                 ],
               ),
               Positioned(

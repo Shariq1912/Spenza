@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:spenza/utils/color_utils.dart';
 import "package:collection/collection.dart";
 
@@ -29,11 +30,7 @@ class SearchBoxDelegate extends SearchDelegate<String> {
     return [
       IconButton(
         onPressed: () {
-          if (query.isNotEmpty) {
             query = '';
-            return;
-          }
-          close(context, "");
         },
         icon: Icon(Icons.clear),
       ),
@@ -46,6 +43,7 @@ class SearchBoxDelegate extends SearchDelegate<String> {
     return IconButton(
       onPressed: () {
         close(context, "");
+        context.pop();
       },
       icon: Icon(Icons.arrow_back),
     );

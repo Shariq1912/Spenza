@@ -82,6 +82,7 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(kToolbarHeight),
           child: Consumer(

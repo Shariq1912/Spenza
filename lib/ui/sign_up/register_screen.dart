@@ -76,12 +76,8 @@ class _SignUpScreenState extends ConsumerState<RegisterScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
-        leading: IconButton(
-            onPressed: () {
-              context.goNamed(RouteManager.splashScreen);
-            },
-            icon: const Icon(Icons.chevron_left_outlined, size: 35,color: const Color(0xFF0CA9E6),)),
       ),
       body: SingleChildScrollView(
         child: Padding(

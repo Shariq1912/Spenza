@@ -26,7 +26,7 @@ class ElevatedButtonWithCenteredText extends StatelessWidget {
         textStyle: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.bold,
-          fontFamily: fontFamily,
+          fontFamily: 'nutmeg',
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),

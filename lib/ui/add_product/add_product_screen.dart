@@ -12,6 +12,7 @@ import 'package:spenza/ui/add_product/components/selectable_chip.dart';
 import 'package:spenza/ui/add_product/data/product.dart';
 import 'package:spenza/ui/add_product/provider/add_product_notifier_provider.dart';
 import 'package:spenza/ui/add_product/provider/add_product_provider.dart';
+import 'package:spenza/ui/common/elevated_button_with_centered_text.dart';
 import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/my_list_details/components/custom_app_bar.dart';
 import 'package:spenza/ui/my_list_details/components/searchbox_widget.dart';
@@ -76,9 +77,12 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
     _cancelToken = CancelToken();
 
     Future.microtask(
-      () => ref
+      () => /*ref
           .read(addProductProvider.notifier)
-          .searchProductsNew(query: query, cancelToken: _cancelToken),
+          .searchProductsNew(query: query, cancelToken: _cancelToken),*/
+      ref
+          .read(addProductProvider.notifier)
+          .searchProducts(query: query)
     );
   }
 
@@ -117,6 +121,8 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    final size = MediaQuery.of(context).size;
     ref.listen(addProductNotifierProvider, (previous, next) {
       // todo listen only called once if state string value is same.
       debugPrint("Snackbar state === $previous and $next");
@@ -324,6 +330,18 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                 );
               }),
             ),
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16),
+              child: ElevatedButtonWithCenteredText(
+                size: Size(size.width, 40),
+                onClick: () async {
+                  final hasValueChanged = await saveMyListProducts();
+                  context.pop(hasValueChanged);
+                },
+                text: "Go back to My List", // todo localize the text
+                fontFamily: poppinsFont!,
+              ),
+            ),
           ],
         ),
       ),
@@ -407,6 +425,7 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
         }
       },
     );
+
   }
 
   Widget buildListViewWithoutLabel({

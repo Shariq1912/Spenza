@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/ui/common/home_top_app_bar.dart';
 import 'package:spenza/ui/common/spenza_circular_progress.dart';
+import 'package:spenza/ui/matching_store/components/matching_store_app_bar.dart';
 import 'package:spenza/ui/matching_store/components/matching_store_card.dart';
 import 'package:spenza/ui/matching_store/provider/store_ranking_provider.dart';
 import 'package:spenza/ui/my_list_details/data/matching_store.dart';
@@ -35,7 +36,7 @@ class _MatchingStoreScreenState extends ConsumerState<MatchingStoreScreen> {
     final poppinsFont = ref.watch(poppinsFontProvider);
 
     return Scaffold(
-      appBar: HomeTopAppBar(
+      appBar: MatchingTopAppBar(
         title: "Choose your best option!",
         poppinsFont: poppinsFont,
         isUserIconVisible: false,

@@ -214,6 +214,7 @@ class RouteManager {
           final String name = state.queryParameters['name'] ?? "preloaded";
           final String photo = state.queryParameters['photo'] ?? "";
           final String path = state.queryParameters['path'] ?? "";
+
           //return MyListDetailsScreen(listId: listId);
 
           return MyListDetailsScreen(
@@ -365,7 +366,7 @@ class RouteManager {
         path: myListScreen,
         builder: (context, state) {
           return MyListScreen(
-            key: state.pageKey,
+            key: null,
           );
         },
       ),

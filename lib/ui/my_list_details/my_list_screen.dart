@@ -186,6 +186,7 @@ class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("kkk ${widget.key}");
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.white,

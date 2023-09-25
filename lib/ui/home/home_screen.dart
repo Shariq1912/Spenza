@@ -106,7 +106,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with FirestoreAndPrefsM
                                   }
                                 },
                                 onAllList: () {
-                                  // context.pushNamed(RouteManager.myListScreen);
+                                   //context.pushNamed(RouteManager.myListScreen);
                                   StatefulNavigationShell.of(context).goBranch(screenNameToIndex[ScreenName.myList]!);
 
                                 },

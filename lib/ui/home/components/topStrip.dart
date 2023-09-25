@@ -62,7 +62,7 @@ class _TopStripState extends ConsumerState<TopStrip> {
                   alignment: Alignment.topRight,
                   child: IconButton(
                     onPressed: () {
-                      context.goNamed(RouteManager.myListDetailScreen);
+                      context.goNamed(RouteManager.myListDetailScreen, queryParameters:{'source': "withoutbottom"} );
                     },
                     icon: Icon(
                       Icons.arrow_forward_ios,

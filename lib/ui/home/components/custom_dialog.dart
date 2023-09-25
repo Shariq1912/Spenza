@@ -88,53 +88,58 @@ class _CustomDialogState extends ConsumerState<CustomDialog> {
                       itemBuilder: (context, index) {
                         MyListModel item = data[index];
                         var fileName = item.myListPhoto ?? "";
-                        return Container(
-                          color: Color(0xFFE5E7E8),
-                          margin: EdgeInsets.only(top: 8, bottom: 8),
-                          child: Row(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(10),
-                                width: 110,
-                                height: 110,
-                                child: CachedNetworkImage(
+                        return GestureDetector(
+                          onTap: () async{
+                            await ref
+                                .read(addProductToMyListProvider.notifier)
+                                .addProductToMyList(
+                              listId: item.documentId!,
+                              productRef: widget.productRef,
+                              productId: widget.productId,
+                              context: context,
+                            );
+                          },
+                          child: Container(
+                            color: Color(0xFFE5E7E8),
+                            margin: EdgeInsets.only(top: 8, bottom: 8),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(10),
                                   width: 110,
                                   height: 110,
-                                  fit: BoxFit.cover,
-                                  imageUrl: fileName,
-                                  errorWidget: (context, url, error) =>
-                                      Image.asset(
-                                          'app_icon_spenza.png'.assetImageUrl),
-                                ),
-                              ),
-                              SizedBox(width: 16),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    item.name,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  child: CachedNetworkImage(
+                                    width: 110,
+                                    height: 110,
+                                    fit: BoxFit.cover,
+                                    imageUrl: fileName,
+                                    errorWidget: (context, url, error) =>
+                                        Image.asset(
+                                            'app_icon_spenza.png'.assetImageUrl),
                                   ),
-                                ],
-                              ),
-                              Spacer(),
-                              IconButton(
-                                onPressed: () async {
-                                  await ref
-                                      .read(addProductToMyListProvider.notifier)
-                                      .addProductToMyList(
-                                    listId: item.documentId!,
-                                    productRef: widget.productRef,
-                                    productId: widget.productId,
-                                    context: context,
-                                  );
-                                },
-                                icon: Icon(Icons.playlist_add_rounded),
-                              ),
-                            ],
+                                ),
+                                SizedBox(width: 16),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      item.name,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Spacer(),
+                                IconButton(
+                                  onPressed: ()  {
+
+                                  },
+                                  icon: Icon(Icons.playlist_add_rounded),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },

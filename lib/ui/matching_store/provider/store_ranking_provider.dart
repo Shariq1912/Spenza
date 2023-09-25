@@ -11,7 +11,6 @@ import 'package:spenza/helpers/nearby_store_helper.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/add_product/data/product.dart';
 import 'package:spenza/ui/favourite_stores/data/favourite_stores.dart';
-import 'package:spenza/ui/home/data/fetch_favourite_store.dart';
 import 'package:spenza/ui/my_list_details/data/matching_store.dart';
 import 'package:spenza/utils/fireStore_constants.dart';
 import 'package:spenza/utils/spenza_extensions.dart';

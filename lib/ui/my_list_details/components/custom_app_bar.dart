@@ -12,6 +12,7 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final displayActionIcon;
   final VoidCallback onBackIconPressed;
   final VoidCallback? onActionIconPressed; // Optional callback parameter
+  final String? source; // Optional callback parameter
 
   const CustomAppBar({
     Key? key,
@@ -21,7 +22,8 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
     this.logo = "https://picsum.photos/250?image=9",
     required this.onBackIconPressed,
     required this.displayActionIcon,
-    this.onActionIconPressed, // Pass the optional callback here
+    this.onActionIconPressed,
+    this.source
   }) : super(key: key);
 
   @override
@@ -29,20 +31,30 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    debugPrint("bottomValue $source");
     return AppBar(
       elevation: 5.0,
       surfaceTintColor: Colors.white,
       backgroundColor: Colors.white,
       automaticallyImplyLeading: false,
-      leading: Padding(
-        padding: const EdgeInsets.only(left: 8.0),
-        child: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: ColorUtils.colorPrimary,
-            size: 24,
+      leading: Visibility(
+        visible: source!="bottom",
+        child: Padding(
+          padding: const EdgeInsets.only(left: 0.0),
+          child: GestureDetector(
+            onTap: () {
+              onBackIconPressed();
+            },
+            child: Center(
+              child: SizedBox(
+                width: 20,
+                height: 20,
+                child: Image.asset(
+                  "back_Icon_blue.png".assetImageUrl,
+                ),
+              ),
+            ),
           ),
-          onPressed: onBackIconPressed,
         ),
       ),
       actions: [
@@ -58,7 +70,7 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
                         fit: BoxFit.cover,
                         imageUrl: logo,
                         placeholder: (context, url) =>
-                            Image.asset('placeholder_myList.png'.assetImageUrl),
+                            Image.asset('app_icon_spenza.png'.assetImageUrl),
                         errorWidget: (context, url, error) =>
                             Image.asset('placeholder_myList.png'.assetImageUrl),
                       ),

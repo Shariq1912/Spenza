@@ -188,6 +188,7 @@ final goRouterProvider = Provider.autoDispose<GoRouter>((ref) {
           final String name = state.queryParameters['name'] ?? "preloaded";
           final String photo = state.queryParameters['photo'] ?? "";
           final String path = state.queryParameters['path'] ?? "";
+
           //return MyListDetailsScreen(listId: listId);
 
           return MyListDetailsScreen(

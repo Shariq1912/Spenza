@@ -38,22 +38,40 @@ class _PreLoadedListDetailsScreenState
   final List<PopupMenuItem<PopupMenuAction>> items = [
     PopupMenuItem(
       child: ListTile(
-        trailing: const Icon(Icons.copy),
-        title: Text(PopupMenuAction.copy.value),
+        leading: Image.asset(
+          "Copy.png".assetImageUrl,
+          fit: BoxFit.contain,
+          width: 18,
+          height: 18,
+          color: ColorUtils.colorPrimary,
+        ),
+        title: Text(PopupMenuAction.copy.value, style: TextStyle(color: ColorUtils.colorPrimary,),),
       ),
       value: PopupMenuAction.copy,
     ),
     PopupMenuItem(
       child: ListTile(
-        trailing: const Icon(Icons.upload),
-        title: Text(PopupMenuAction.upload.value),
+        leading: Image.asset(
+          "cloud_upload.png".assetImageUrl,
+          fit: BoxFit.contain,
+          width: 23,
+          height: 23,
+          color: ColorUtils.colorPrimary,
+        ),
+        title: Text(PopupMenuAction.upload.value, style: TextStyle(color: ColorUtils.colorPrimary,),),
       ),
       value: PopupMenuAction.upload,
     ),
     PopupMenuItem(
       child: ListTile(
-        trailing: const Icon(Icons.receipt),
-        title: Text(PopupMenuAction.receipt.value),
+        leading: Image.asset(
+          "receipts.png".assetImageUrl,
+          fit: BoxFit.contain,
+          width: 18,
+          height: 18,
+          color: ColorUtils.colorPrimary,
+        ),
+        title: Text(PopupMenuAction.receipt.value, style: TextStyle(color: ColorUtils.colorPrimary,),),
       ),
       value: PopupMenuAction.receipt,
     ),

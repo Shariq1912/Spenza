@@ -145,6 +145,11 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   generate: true
+  fonts:
+    - family: NutMeg
+      fonts:
+        - asset: assets/fonts/_Nutmeg-UltraBlack.otf
+
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

@@ -81,12 +81,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        leading: IconButton(
-            onPressed: () {
-              context.goNamed(RouteManager.splashScreen);
-            },
-            icon: const Icon(Icons.arrow_back_ios_rounded,
-                size: 35, color: Color(0xFF0CA9E6), grade: 50)),
+        automaticallyImplyLeading: false,
+        /*leading: GestureDetector(
+          onTap: () {
+            context.goNamed(RouteManager.splashScreen);
+          },
+          child: Center(
+            child: SizedBox(
+              width: 20,
+              height: 20,
+              child: Image.asset(
+                "back_Icon_blue.png".assetImageUrl,
+              ),
+            ),
+          ),
+        ),*/
       ),
       body: SafeArea(
         child: SingleChildScrollView(
