@@ -18,6 +18,7 @@ import 'package:spenza/ui/my_list_details/provider/user_product_list_provider.da
 import 'package:spenza/ui/my_store_products/data/products.dart';
 import 'package:spenza/ui/my_store_products/provider/product_for_store_provider.dart';
 import 'package:spenza/ui/my_store_products/repo/department_repository.dart';
+import 'package:spenza/ui/selected_store/provider/selected_store_provider.dart';
 import 'package:spenza/ui/selected_store/provider/store_details_provider.dart';
 import 'package:spenza/utils/color_utils.dart';
 import 'package:spenza/utils/fireStore_constants.dart';
@@ -72,6 +73,11 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
         _focusNode.unfocus();
       }
     });
+
+    _searchController.addListener(() {
+      ref.read(searchQueryProvider.notifier).state =
+          _searchController.text.trim().toLowerCase();
+    });
   }
 
   _loadProducts() async {
@@ -98,22 +104,9 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
 
   @override
   Widget build(BuildContext context) {
-    _searchController.addListener(() {
-      ref.read(searchQueryProvider.notifier).state =
-          _searchController.text.trim().toLowerCase();
-    });
-
     return WillPopScope(
       onWillPop: () async {
-        if (hasValueChanged) {
-          print("WIll POP Scope === $hasValueChanged");
-          Future.microtask(
-            () => ref
-                .read(userProductListProvider.notifier)
-                .fetchProductFromListId(),
-          );
-        }
-        return true;
+        return await saveDataBeforeExit();
       },
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -133,7 +126,8 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
                         fontSize: 20,
                         color: ColorUtils.colorPrimary,
                       ),
-                      onBackIconPressed: () {
+                      onBackIconPressed: () async {
+                        await saveDataBeforeExit();
                         context.pop();
                       },
                     ),
@@ -146,7 +140,8 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
                         fontSize: 20,
                         color: ColorUtils.colorPrimary,
                       ),
-                      onBackIconPressed: () {
+                      onBackIconPressed: () async {
+                        await saveDataBeforeExit();
                         context.pop();
                       },
                     ),
@@ -285,6 +280,30 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
     );
   }
 
+  Future<bool> saveDataBeforeExit() async {
+    if (hasValueChanged) {
+      print("Will POP Scope === $hasValueChanged");
+      Future.microtask(
+        () =>
+            ref.read(userProductListProvider.notifier).fetchProductFromListId(),
+      );
+
+      Future.microtask(
+        () =>
+            ref.read(selectedStoreProvider.notifier).getSelectedStoreProducts(),
+      );
+
+      context.showSnackBar(
+          message: "Saving Product to My List..."); // todo make it localized.
+      return await Future.delayed(
+        Duration(seconds: 2),
+        () => true,
+      );
+    }
+
+    return true;
+  }
+
   Future<void> handleAddProduct(
     ProductModel product,
     BuildContext context,
@@ -297,6 +316,7 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
             productRef: product.documentId!,
             productId: product.productId,
             context: context,
+            hasToPop: false,
           );
 
       print("has Reload == $hasReload");
