@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:spenza/ui/location/data/zipcode_model.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
-
-import '../zipcode_provider.dart';
 
 class ZipCodeWidget extends ConsumerStatefulWidget {
   final TextEditingController zipCodeController;
@@ -43,7 +40,7 @@ class _ZipCodeWidgetState extends ConsumerState<ZipCodeWidget> {
 
   @override
   Widget build(BuildContext context) {
-    print(" ztt${widget.zipcode}");
+    debugPrint(" ztt${widget.zipcode}");
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(

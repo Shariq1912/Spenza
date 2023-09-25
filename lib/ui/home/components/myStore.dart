@@ -3,8 +3,10 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/my_store/data/all_store.dart';
+import 'package:spenza/utils/color_utils.dart';
+import 'package:spenza/utils/spenza_extensions.dart';
 
-import '../../../utils/color_utils.dart';
+
 import 'image_text_card.dart';
 
 class MyStores extends StatelessWidget {
@@ -51,11 +53,13 @@ class MyStores extends StatelessWidget {
                 flex: 1,
                 child: Align(
                   alignment: Alignment.topRight,
-                  child: Icon(
-                      Icons.arrow_forward_ios,
-                      color: ColorUtils.primaryText,
-                      size: 18,
+                  child: Container(
+                    height: 13,
+                    width: 13,
+                    child: Image.asset(
+                      "forward_Icon_1a1a1a.png".assetImageUrl,
                     ),
+                  ),
                 ),
               ),
             ],

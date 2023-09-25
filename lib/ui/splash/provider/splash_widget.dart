@@ -15,7 +15,7 @@ class _SplashWidgetState extends ConsumerState<SplashWidget> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 8), () {
       context.goNamed(RouteManager.splashScreen);
     });
   }
@@ -36,11 +36,11 @@ class _SplashWidgetState extends ConsumerState<SplashWidget> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    SvgPicture.asset(
-                      'assets/images/spenza_white.svg',
+                    Image.asset(
+                      'assets/images/LOGO_Spenza-letters-white.png',
                      // colorFilter: ColorFilter.mode(Colors.red, BlendMode.color),
                       fit: BoxFit.fitWidth,
-                      width: 50,
+                      width: 230,
                       height: 100,
                     ),
                   ],

@@ -107,6 +107,7 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
         return true;
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: CustomAppBar(
           displayActionIcon: false,
           title: 'Add Product to List',

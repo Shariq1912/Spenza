@@ -11,7 +11,7 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final TextStyle textStyle;
   final displayActionIcon;
   final VoidCallback onBackIconPressed;
-  //final VoidCallback? onActionIconPressed; // Optional callback parameter
+  final VoidCallback? onActionIconPressed; // Optional callback parameter
 
   const CustomAppBar({
     Key? key,
@@ -21,7 +21,7 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
     this.logo = "https://picsum.photos/250?image=9",
     required this.onBackIconPressed,
     required this.displayActionIcon,
-    //this.onActionIconPressed, // Pass the optional callback here
+    this.onActionIconPressed, // Pass the optional callback here
   }) : super(key: key);
 
   @override
@@ -48,7 +48,7 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
       actions: [
         displayActionIcon
             ? InkWell(
-                //onTap: onActionIconPressed,
+                onTap: onActionIconPressed,
                 child: CircleAvatar(
                   radius: 40,
                   child: ClipOval(

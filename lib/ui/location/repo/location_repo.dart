@@ -147,4 +147,47 @@ class LocationRepository extends StateNotifier<LocationState> {
       },SetOptions(merge: true)
     );
   }
+  Future<void> requestLocationPermissionUsingDialog() async {
+    try {
+      final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        state = LocationState.error(message: "Location service is disabled");
+        return;
+      }
+
+      state = LocationState.loading();
+
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.deniedForever) {
+        await Geolocator.openLocationSettings();
+        permission = await Geolocator.checkPermission();
+      }
+
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        state = LocationState.denied();
+        return;
+      }
+
+      Position initialPosition = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      await _saveLocationToServer(
+        latitude: initialPosition.latitude,
+        longitude: initialPosition.longitude,
+      );
+
+      await _saveZipCodeToServer(await _getPostalCode(initialPosition));
+
+      state = LocationState.success(
+          message: 'Coordinates and zipcode saved successfully');
+    } catch (error) {
+      debugPrint("$error");
+      state = LocationState.denied();
+    }
+  }
+
+
+
 }

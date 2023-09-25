@@ -182,7 +182,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                   // context.pushNamed(RouteManager.addProductScreen);
                   context.pop(hasValueChanged);
                 },
-                //onActionIconPressed: _onActionIconPressed
+                onActionIconPressed: _onActionIconPressed
     ),
 
           ),
