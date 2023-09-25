@@ -15,6 +15,7 @@ import 'package:spenza/ui/home/components/custom_dialog.dart';
 import 'package:spenza/ui/my_list_details/components/custom_app_bar.dart';
 import 'package:spenza/ui/my_list_details/components/searchbox_widget.dart';
 import 'package:spenza/ui/my_list_details/provider/user_product_list_provider.dart';
+import 'package:spenza/ui/my_store_products/component/product_card_widgets.dart';
 import 'package:spenza/ui/my_store_products/data/products.dart';
 import 'package:spenza/ui/my_store_products/provider/product_for_store_provider.dart';
 import 'package:spenza/ui/my_store_products/repo/department_repository.dart';
@@ -219,7 +220,7 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
             ),
             Expanded(
               child: Container(
-                padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                padding: EdgeInsets.only(left: 0.0, right: 0.0),
                 child: Consumer(builder: (context, ref, child) {
                   final data = ref.watch(productForStoreProvider);
                   final selectedDepartments =
@@ -360,7 +361,7 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
         } else if (item.product != null) {
           // Render product card
           final ProductModel product = item.product!;
-          return ProductCard(
+          return ProductCardWidget(
             onClick: () => onClick.call(product),
             measure: product.measure,
             imageUrl: product.pImage,
@@ -386,7 +387,7 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
         itemCount: products.length,
         itemBuilder: (context, index) {
           final ProductModel product = products[index];
-          return ProductCard(
+          return ProductCardWidget(
             onClick: () => onClick.call(product),
             measure: product.measure,
             imageUrl: product.pImage,

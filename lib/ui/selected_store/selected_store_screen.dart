@@ -6,11 +6,8 @@ import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/common/elevated_button_with_centered_text.dart';
 import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/favourite_stores/data/favourite_stores.dart';
-import 'package:spenza/ui/matching_store/components/matching_store_card.dart';
-import 'package:spenza/ui/matching_store/provider/store_ranking_provider.dart';
 import 'package:spenza/ui/my_list_details/components/custom_app_bar.dart';
 import 'package:spenza/ui/my_list_details/components/searchbox_widget.dart';
-import 'package:spenza/ui/my_list_details/data/matching_store.dart';
 import 'package:spenza/ui/selected_store/components/selected_store_product_card_widget.dart';
 import 'package:spenza/ui/selected_store/data/selected_product_elements.dart';
 import 'package:spenza/ui/selected_store/data/selected_product_list.dart';
@@ -227,7 +224,8 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
               child: ElevatedButtonWithCenteredText(
                 size: Size(size.width, 40),
                 onClick: () {
-                  context.pushNamed(RouteManager.uploadReceiptScreen);
+                  context.pushNamed(RouteManager.uploadReceiptScreen,
+                    queryParameters: {'source': "finished"},);
                 },
                 text: "I finished Shopping", // todo localize the text
                 fontFamily: poppinsFont!,

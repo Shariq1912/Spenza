@@ -23,7 +23,7 @@ class MyStoreListWidget extends StatelessWidget {
         AllStores store = stores[index];
 
         return Container(
-          margin: const EdgeInsets.symmetric(horizontal: 4.0),
+          margin: const EdgeInsets.symmetric(horizontal: 0.0),
           child: GestureDetector(
             onTap: (){
               print(store.documentId);
@@ -40,7 +40,7 @@ class MyStoreListWidget extends StatelessWidget {
                   color: ColorUtils.colorSurface,
                 ),
                 Container(
-                  margin: const EdgeInsets.all(8.0),
+                  margin: const EdgeInsets.all(10.0),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

@@ -235,6 +235,52 @@ class MyStoreRepository extends StateNotifier<ApiResponse> {
       print("Error toggling favorite store: $error");
     }
   }
+  /*Future<void> toggleFavoriteStore(AllStores store) async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getUserId();
+    final storeId = store.documentId;
+
+    final storeReference = 'stores/$storeId';
+    final favoriteCollection = FirebaseFirestore.instance.collection(FavoriteConstant.favoriteCollection);
+
+    try {
+      final querySnapshot = await favoriteCollection
+          .where(FavoriteConstant.userIdField, isEqualTo: 'users/$userId')
+          .get();
+
+      final batch = FirebaseFirestore.instance.batch();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final favoriteDoc = querySnapshot.docs.first;
+        final currentStores = List.from(favoriteDoc.data()[FavoriteConstant.storeIdsField] as List);
+
+        if (currentStores.contains(storeReference)) {
+          currentStores.remove(storeReference);
+        } else {
+          currentStores.add(storeReference);
+        }
+
+        batch.update(favoriteDoc.reference, {
+          FavoriteConstant.storeIdsField: currentStores,
+        });
+      } else {
+        final newFavoriteDocRef = favoriteCollection.doc();
+        batch.set(newFavoriteDocRef, {
+          FavoriteConstant.userIdField: 'users/$userId',
+          FavoriteConstant.storeIdsField: [storeReference],
+        });
+      }
+
+      await batch.commit();
+      await fetchAllStores();
+    } catch (error) {
+      state = ApiResponse.error(errorMsg: error.toString());
+      print("Error toggling favorite store: $error");
+    }
+  }*/
+
+
+
 
 
 

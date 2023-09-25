@@ -233,19 +233,27 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                             }
 
                             return ListView.builder(
-                              itemCount: data.length,
+                              itemCount: data.length+1,
                               itemBuilder: (context, index) {
-                                final UserProduct product = data[index];
-                                return UserSelectedProductCard(
-                                  measure: product.measure,
-                                  listId: widget.listId,
-                                  department: product.department,
-                                  imageUrl: product.pImage,
-                                  title: product.name,
-                                  priceRange:
-                                  "\$${product.minPrice} - \$${product.maxPrice}",
-                                  product: product,
-                                );
+                                if (index < data.length){
+                                  final UserProduct product = data[index];
+                                  return UserSelectedProductCard(
+                                    measure: product.measure,
+                                    listId: widget.listId,
+                                    department: product.department,
+                                    imageUrl: product.pImage,
+                                    title: product.name,
+                                    priceRange:
+                                    "\$${product.minPrice} - \$${product.maxPrice}",
+                                    product: product,
+                                    isLastCard: index == data.length - 1,
+                                  );
+                                }else{
+                                  return Container(
+                                    color: Colors.transparent,
+                                  );
+                                }
+
                               },
                             );
                           },

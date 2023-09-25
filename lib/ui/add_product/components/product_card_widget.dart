@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:spenza/router/app_router.dart';
+import 'package:spenza/ui/profile/profile_screen.dart';
 import 'package:spenza/utils/color_utils.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
@@ -27,6 +31,7 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final robotoFont = GoogleFonts.roboto().fontFamily;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0.0),
       child: GestureDetector(
@@ -34,7 +39,7 @@ class ProductCard extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 0.0),
               child: Divider(
                 height: 1,
                 color: ColorUtils.colorSurface,
@@ -66,13 +71,14 @@ class ProductCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           title,
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
+                              fontWeight: FontWeight.bold, fontSize: 13, fontFamily: robotoFont),
                         ),
                         SizedBox(height: 3),
                         Text(
                           measure,
                           style: TextStyle(
-                            fontSize: 13,
+                            fontSize: 12,
+                            fontFamily: robotoFont
                           ),
                         ),
                         SizedBox(height: 18),
@@ -81,7 +87,8 @@ class ProductCard extends StatelessWidget {
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
                               color: Colors.black,
-                              fontSize: 14),
+                              fontSize: 13,
+                          fontFamily: robotoFont),
                         ),
                       ],
                     ),
@@ -96,7 +103,7 @@ class ProductCard extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 0.0),
               child: Divider(
                 height: 1,
                 color: ColorUtils.colorSurface,
@@ -165,9 +172,43 @@ class ProductCard extends StatelessWidget {
         child: Container(
           height: 20,
           width: 20,
-          child: Image.asset(
-            "add_icon.png".assetImageUrl,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+            child: Image.asset(
+              "plus_blue.png".assetImageUrl,
+            ),
           ),
+        ),
+      ),
+    );
+  }
+  Widget buildMaterialButton(BuildContext context) {
+    return Expanded(
+      child: ElevatedButton(
+        onPressed: () {
+          context.pop();
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF0CA9E6),
+          foregroundColor: Colors.white,
+          textStyle: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            fontFamily: poppinsFont,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+            side: const BorderSide(color: Color(0xFF99D6EF)),
+          ),
+          //fixedSize: const Size(310, 40),
+        ),
+        child: Text(
+          priceRange,
+          style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: Colors.white,
+              fontSize: 13,
+              ),
         ),
       ),
     );

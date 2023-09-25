@@ -346,7 +346,7 @@ class FetchFavouriteStoreRepository extends _$FetchFavouriteStoreRepository {
         favouriteAllStores.map((store) => store.name).toSet();
         for (var store in allStores) {
           if (favouriteStoreNames.contains(store.name)) {
-            print("samme : ${store.name}");
+            print("samme : ${store.documentId}");
             storesWithSameName.add(store);
           } else {
             storesWithdifferentName.add(store);

@@ -16,6 +16,7 @@ class PreloadedProductCard extends ConsumerWidget {
   final String listId;
   final String measure;
   final UserProduct product;
+  final bool isLastCard;
 
   // final Function(int quantity) quantity;
 
@@ -27,6 +28,7 @@ class PreloadedProductCard extends ConsumerWidget {
     required this.product,
     required this.measure,
     required this.listId,
+    required this.isLastCard,
   });
 
   @override
@@ -35,7 +37,7 @@ class PreloadedProductCard extends ConsumerWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+          padding: const EdgeInsets.only(left: 0.0, right: 0.0),
           child: Divider(
             height: 1,
             color: ColorUtils.colorSurface,
@@ -82,7 +84,7 @@ class PreloadedProductCard extends ConsumerWidget {
                         ),
                         Text(
                           title,
-                          maxLines: 1,
+                          maxLines: 2,
                           style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w700,
@@ -120,11 +122,17 @@ class PreloadedProductCard extends ConsumerWidget {
                                   quantity: product.quantity + 1,
                                 );
                           },
-                          child: Icon(
-                            CupertinoIcons.add_circled_solid,
-                            color: ColorUtils.colorSecondary,
-                          )),
-                      SizedBox(height: 11),
+                          child: Container(
+                            height: 20,
+                            width: 20,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: Image.asset(
+                                "plus_blue.png".assetImageUrl,
+                              ),
+                            ),
+                          ),),
+                      SizedBox(height: 15),
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         child: Text(
@@ -136,7 +144,7 @@ class PreloadedProductCard extends ConsumerWidget {
                               fontWeight: FontWeight.w600),
                         ),
                       ),
-                      SizedBox(height: 11),
+                      SizedBox(height: 15),
                       InkWell(
                           onTap: () {
                             if (product.quantity > 1) {
@@ -148,10 +156,16 @@ class PreloadedProductCard extends ConsumerWidget {
                                   );
                             }
                           },
-                          child: Icon(
-                            CupertinoIcons.minus_circle_fill,
-                            color: ColorUtils.colorSecondary,
-                          )),
+                          child: Container(
+                            height: 20,
+                            width: 20,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: Image.asset(
+                                "minus_blue.png".assetImageUrl,
+                              ),
+                            ),
+                          ),),
                     ],
                   ),
                 ],
@@ -166,6 +180,11 @@ class PreloadedProductCard extends ConsumerWidget {
             color: ColorUtils.colorSurface,
           ),
         ),
+        if (isLastCard) // Conditionally render the extra container
+          Container(
+            height: 110, // Adjust the height as needed
+            color: Colors.transparent, // Set the color as per your design
+          ),
       ],
     );
   }

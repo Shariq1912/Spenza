@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/common/spenza_circular_progress.dart';
+import 'package:spenza/ui/home/repo/fetch_favourite_store_repository.dart';
 import 'package:spenza/ui/my_store/data/all_store.dart';
 import 'package:spenza/ui/my_store/my_store_provider.dart';
 import 'package:spenza/ui/my_store/widget/my_store_list_widget.dart';
@@ -57,7 +58,11 @@ class _StoresState extends ConsumerState<AllStoresScreen> {
         ),
         centerTitle: true,
         leading: IconButton(
-          onPressed: () {
+          onPressed: () async{
+            await ref
+                .read(fetchFavouriteStoreRepositoryProvider
+                .notifier)
+                .fetchFavStores();
             context.pop();
           },
           icon: Icon(Icons.arrow_back_ios, color: Color(0xFF0CA9E6)),
@@ -127,7 +132,7 @@ class _StoresState extends ConsumerState<AllStoresScreen> {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
         child: Consumer(
           builder: (context, ref, child) {
             final storeProvider = ref.watch(allStoreProvider);

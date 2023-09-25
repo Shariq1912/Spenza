@@ -31,7 +31,7 @@ class PreloadedListWidget extends ConsumerWidget {
                 color: ColorUtils.colorSurface,
               ),
               Padding(
-                padding: EdgeInsets.all(8.0),
+                padding: EdgeInsets.only(left: 12.0,right: 8.0,top: 8.0, bottom: 8.0),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

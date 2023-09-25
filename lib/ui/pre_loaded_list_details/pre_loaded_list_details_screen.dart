@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/di/app_providers.dart';
 import 'package:spenza/helpers/popup_menu_mixin.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/ui/add_product/data/user_product.dart';
 import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/my_list_details/components/custom_app_bar.dart';
-import 'package:spenza/ui/my_list_details/components/searchbox_widget.dart';
-import 'package:spenza/ui/my_list_details/components/user_selected_product_widget.dart';
 import 'package:spenza/ui/my_list_details/provider/list_details_provider.dart';
 import 'package:spenza/ui/my_list_details/provider/user_product_list_provider.dart';
 import 'package:spenza/ui/pre_loaded_list_details/components/pre_loaded_product_widget.dart';
@@ -118,10 +115,10 @@ class _PreLoadedListDetailsScreenState
                           ///context.pushNamed(RouteManager.addProductScreen);
                           context.pop(hasValueChanged);
                         },
-                        /* onActionIconPressed: () {
+                         onActionIconPressed: () {
                          // _onActionIconPressed("preloaded_default/${widget.listId}");
                           _onActionIconPressed("preloaded_default/${widget.listId}");
-                        }*/
+                        }
                       ),
                       orElse: () => CustomAppBar(
                         displayActionIcon: true,
@@ -144,7 +141,7 @@ class _PreLoadedListDetailsScreenState
             ),
           ),
           body: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
             child: Stack(
               children: [
                 Column(
@@ -166,21 +163,28 @@ class _PreLoadedListDetailsScreenState
                                 );
                               }
                               return ListView.builder(
-                                itemCount: data.length,
-                                itemBuilder: (context, index) {
-                                  final UserProduct product = data[index];
-                                  return PreloadedProductCard(
-                                    measure: product.measure,
-                                    listId: widget.listId,
-                                    department: product.department,
-                                    imageUrl: product.pImage,
-                                    title: product.name,
-                                    priceRange:
-                                        "\$${product.minPrice} - \$${product.maxPrice}",
-                                    product: product,
-                                  );
-                                },
-                              );
+                                  itemCount: data.length + 1, // Add 1 for the extra empty tile
+                                  itemBuilder: (context, index) {
+                                    if (index < data.length) {
+                                      final UserProduct product = data[index];
+                                      return PreloadedProductCard(
+                                        measure: product.measure,
+                                        listId: widget.listId,
+                                        department: product.department,
+                                        imageUrl: product.pImage,
+                                        title: product.name,
+                                        priceRange: "\$${product.minPrice} - \$${product.maxPrice}",
+                                        product: product,
+                                        isLastCard: index == data.length - 1, // Check if it's the last card
+                                      );
+                                    } else {
+                                      return Container(
+                                        color: Colors.transparent,
+                                      );
+                                    }
+                                  },
+                                );
+
                             },
                             error: (error, stackTrace) =>
                                 Center(child: Text("$error")),

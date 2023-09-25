@@ -294,13 +294,14 @@ final goRouterProvider = Provider.autoDispose<GoRouter>((ref) {
         path: RouteManager.uploadReceiptScreen,
         builder: (context, state) {
           final String path = state.queryParameters['list_id'] ?? "";
+          final String source = state.queryParameters['source'] ?? "";
           //return MyListDetailsScreen(listId: listId);
           if (path != "") {
             print("Notequal $path");
-            return UploadReceiptScreen(path: path);
+            return UploadReceiptScreen(path: path,source: source,);
           } else {
             print("equal $path");
-            return UploadReceiptScreen(path: path); // For example
+            return UploadReceiptScreen(path: path,source: source,); // For example
           }
         },
       ),

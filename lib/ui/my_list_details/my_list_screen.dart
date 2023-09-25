@@ -271,7 +271,7 @@ class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
       body: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
             child: Consumer(
               builder: (context, ref, child) {
                 final storeProvider = ref.watch(fetchMyListProvider);

@@ -17,6 +17,7 @@ class UserSelectedProductCard extends ConsumerWidget {
   final String listId;
   final String measure;
   final UserProduct product;
+  final bool isLastCard;
 
   // final Function(int quantity) quantity;
 
@@ -28,6 +29,7 @@ class UserSelectedProductCard extends ConsumerWidget {
     required this.product,
     required this.measure,
     required this.listId,
+    required this.isLastCard,
   });
 
   @override
@@ -211,6 +213,11 @@ class UserSelectedProductCard extends ConsumerWidget {
               color: ColorUtils.colorSurface,
             ),
           ),
+          if (isLastCard) // Conditionally render the extra container
+            Container(
+              height: 110, // Adjust the height as needed
+              color: Colors.transparent, // Set the color as per your design
+            ),
         ],
       ),
     );

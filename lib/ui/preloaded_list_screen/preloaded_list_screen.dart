@@ -149,7 +149,9 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen>
         return true;
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
+          backgroundColor: Colors.white,
           surfaceTintColor: Colors.white,
           title: Text(
             "Preloaded Lists",
@@ -216,7 +218,7 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen>
           ],
         ),
         body: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.only(top: 10.0, bottom: 10),
           child: Consumer(
             builder: (context, ref, child) {
               final preloadedListProvider =
