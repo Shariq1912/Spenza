@@ -24,18 +24,23 @@ class ProductForStore extends _$ProductForStore with FirestoreAndPrefsMixin {
       QuerySnapshot<Map<String, dynamic>> productsSnapshot = await fireStore
           .collection('products_mvp')
           .where('storeRef', isEqualTo: storeRef)
+          // .limit(10)
           .get();
 
       final List<ProductModel> pro = productsSnapshot.docs.map((doc) {
-
         final data = doc.data();
-        try{
+        try {
           final pros = ProductModel.fromJson(data).copyWith(documentId: doc.id);
           return pros;
-        }
-        catch(e){
-          print("Product ID - ${data['product_id']} and Name - ${data['name']} ");
-          return ProductModel(name: "name", pImage: "pImage", measure: "measure", productId: "productId", departmentName: "departmentName");
+        } catch (e) {
+          print(
+              "Product ID - ${data['product_id']} and Name - ${data['name']} ");
+          return ProductModel(
+              name: "name",
+              pImage: "pImage",
+              measure: "measure",
+              productId: "productId",
+              departmentName: "departmentName");
         }
       }).toList();
 

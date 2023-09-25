@@ -40,6 +40,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
   final TextEditingController _searchController = TextEditingController();
   bool hasValueChanged = false;
   final _focusNode = FocusNode();
+
   KeyboardVisibilityController _keyboardVisibilityController =
       KeyboardVisibilityController();
 
