@@ -223,6 +223,12 @@ class AddProduct extends _$AddProduct
         state = AsyncValue.data(products);
       } on DioException catch (e) {
         print('Error searching products due to DIO EXCEPTION: $e');
+
+        if (e.type == DioExceptionType.cancel) {
+          state = AsyncValue.loading();
+          return;
+        }
+
         state = AsyncValue.error(
             'Error searching products: $e', StackTrace.current);
       } catch (e) {
@@ -317,7 +323,8 @@ class AddProduct extends _$AddProduct
 
       if (product.quantity == 0) {
         // todo make it localized
-        ref.read(addProductNotifierProvider.notifier).state = "Product successfully added in the List";
+        ref.read(addProductNotifierProvider.notifier).state =
+            "Product successfully added in the List";
       }
 
       products[index] = product.copyWith(quantity: product.quantity + 1);
@@ -337,7 +344,8 @@ class AddProduct extends _$AddProduct
     if (index != -1) {
       if (product.quantity == 1) {
         // todo make it localized
-        ref.read(addProductNotifierProvider.notifier).state = "Product removed from the List";
+        ref.read(addProductNotifierProvider.notifier).state =
+            "Product removed from the List";
         removedProducts.add(product.productRef);
       }
       products[index] = product.copyWith(quantity: product.quantity - 1);

@@ -17,6 +17,7 @@ import 'package:spenza/ui/my_list_details/components/custom_app_bar.dart';
 import 'package:spenza/ui/my_list_details/components/searchbox_widget.dart';
 import 'package:spenza/ui/my_store_products/data/list_item.dart';
 import 'package:spenza/utils/color_utils.dart';
+import 'package:spenza/utils/searchbox_delegate.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
 import 'provider/selected_department_provider.dart';
@@ -44,17 +45,15 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
     debugPrint("Init Called on Add Product Screen");
     debugPrint("Query is ${widget.query}");
 
+    _searchController.text = widget.query;
+
     /*WidgetsBinding.instance.addPostFrameCallback((_) async{
       ref.read(addProductProvider.notifier).searchProducts(query: widget.query);
     });*/
 
     _cancelToken = CancelToken();
 
-    Future.microtask(
-      () => ref
-          .read(addProductProvider.notifier)
-          .searchProductsNew(query: widget.query, cancelToken: _cancelToken),
-    );
+    _searchProductFromQuery(query: widget.query);
 
     final keyboardVisibilityController = KeyboardVisibilityController();
 
@@ -72,6 +71,17 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
     });
   }
 
+  void _searchProductFromQuery({required String query}) {
+    _cancelToken.cancel("Searched for new query = $query");
+    _cancelToken = CancelToken();
+
+    Future.microtask(
+      () => ref
+          .read(addProductProvider.notifier)
+          .searchProductsNew(query: query, cancelToken: _cancelToken),
+    );
+  }
+
   @override
   void dispose() {
     debugPrint("Dispose Called on Add Product Screen");
@@ -87,6 +97,22 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
     _cancelToken.cancel("Screen Disposed! :) ");
 
     keyboardSubscription.cancel();
+  }
+
+  void _openSearchDelegate(BuildContext context) async {
+    final String? query = await showSearch(
+      context: context,
+      delegate: SearchBoxDelegate(), // custom search delegate
+    );
+    if (query != null && query.isNotEmpty) {
+      // Handle the search query
+      print('Search query from delegate: $query');
+
+      _searchController.text = query;
+      // handleSearchQuery(query);
+
+      _searchProductFromQuery(query: query);
+    }
   }
 
   @override
@@ -125,10 +151,14 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
         body: Column(
           children: [
             SearchBox(
+              onSearchClick: () {
+                _openSearchDelegate(context);
+              },
+              isEnabled: false,
               colors: Colors.white,
-              controller: _searchController,
-              hint: "Search Product",
               focusNode: _focusNode,
+              hint: "Search Product",
+              controller: _searchController,
             ),
             Padding(
               padding:
@@ -215,10 +245,10 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                     final isAllSelected = selectedDepartments.contains("All");
 
                     final filteredProducts = data.where((product) {
-                      if (searchQuery.isNotEmpty &&
+                      /*if (searchQuery.isNotEmpty &&
                           !product.name.toLowerCase().contains(searchQuery)) {
                         return false; // Skip products that don't match the search query
-                      }
+                      }*/
 
                       if (selectedDepartments.contains("All")) {
                         return true;

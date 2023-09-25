@@ -37,11 +37,12 @@ class MyListDetailsScreen extends ConsumerStatefulWidget {
 }
 
 class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
-    with PopupMenuMixin, WidgetsBindingObserver {
+    with PopupMenuMixin {
   final TextEditingController _searchController = TextEditingController();
   bool hasValueChanged = false;
   final _focusNode = FocusNode();
-  KeyboardVisibilityController _keyboardVisibilityController = KeyboardVisibilityController();
+  KeyboardVisibilityController _keyboardVisibilityController =
+      KeyboardVisibilityController();
 
   final List<PopupMenuItem<PopupMenuAction>> items = [
     PopupMenuItem(
@@ -90,29 +91,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
     ref.read(displaySpenzaButtonProvider.notifier).dispose();
     ref.invalidate(userProductListProvider);
 
-    WidgetsBinding.instance.removeObserver(this);
-
     super.dispose();
-  }
-
-
-  @override
-  void didChangeMetrics() {
-    super.didChangeMetrics();
-
-    // todo change with package since deprecated.
-    /*final bottomInset = WidgetsBinding.instance.window.viewInsets.bottom;
-    if (bottomInset == 0) {
-      // Soft keyboard closed
-      debugPrint('Soft keyboard closed');
-     _focusNode.unfocus();
-    }*/
-    _keyboardVisibilityController.onChange.listen((bool visible) {
-      if (!visible) {
-        debugPrint('Soft keyboard closed');
-        _focusNode.unfocus();
-      }
-    });
   }
 
   @override
@@ -126,14 +105,35 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
       //  await ref.read(listDetailsProvider.notifier).getSelectedListDetails();
     });
 
-    WidgetsBinding.instance.addObserver(this);
+    _keyboardVisibilityController.onChange.listen((bool visible) {
+      if (!visible) {
+        debugPrint('Soft keyboard closed');
+        _focusNode.unfocus();
+      }
+    });
 
     _focusNode.addListener(() {
       print("Has focus: ${_focusNode.hasFocus}");
 
       ref.read(displaySpenzaButtonProvider.notifier).state =
-      !_focusNode.hasFocus;
+          !_focusNode.hasFocus;
+
+      _focusNode.unfocus();
+      // redirect to Search Delegate.
+      _openSearchDelegate(context);
     });
+  }
+
+  void _openSearchDelegate(BuildContext context) async {
+    final String? query = await showSearch(
+      context: context,
+      delegate: SearchBoxDelegate(), // custom search delegate
+    );
+    if (query != null && query.isNotEmpty) {
+      // Handle the search query
+      print('Search query from delegate: $query');
+      handleSearchQuery(query);
+    }
   }
 
   @override
@@ -167,8 +167,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
           backgroundColor: Colors.white,
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight),
-            child:
-            CustomAppBar(
+            child: CustomAppBar(
                 displayActionIcon: true,
                 title: widget.name,
                 logo: widget.photo ?? "",
@@ -182,8 +181,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                   // context.pushNamed(RouteManager.addProductScreen);
                   context.pop(hasValueChanged);
                 },
-                onActionIconPressed: _onActionIconPressed
-    ),
+                onActionIconPressed: _onActionIconPressed),
 
           ),
           body: Stack(
@@ -196,24 +194,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                     hint: "Add products",
                     controller: _searchController,
                     onSearch: (value) async {
-                      Future.microtask(
-                            () => ref
-                            .read(userProductListProvider.notifier)
-                            .saveUserProductListToServer(context: context),
-                      );
-
-                      _searchController.clear();
-
-                      final bool? result = await context.pushNamed(
-                        RouteManager.addProductScreen,
-                        queryParameters: {'query': value},
-                      );
-
-                      if (result ?? false) {
-                        ref
-                            .read(userProductListProvider.notifier)
-                            .fetchProductFromListId();
-                      }
+                      handleSearchQuery(value);
                     },
                   ),
                   const SizedBox(height: 1),
@@ -259,7 +240,8 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                           },
                           error: (error, stackTrace) =>
                               Center(child: Text("$error")),
-                          loading: () => Center(child: SpenzaCircularProgress()),
+                          loading: () =>
+                              Center(child: SpenzaCircularProgress()),
                         );
                       },
                     ),
@@ -273,11 +255,12 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
                 left: 0,
                 child: Consumer(builder: (context, ref, child) {
                   final bool displayButton =
-                  ref.watch(displaySpenzaButtonProvider);
+                      ref.watch(displaySpenzaButtonProvider);
                   return displayButton
                       ? buildMaterialButton(context)
                       : Container();
-                }),)
+                }),
+              )
             ],
           ),
         ),
@@ -285,11 +268,32 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
     );
   }
 
+  Future<void> handleSearchQuery(String value) async {
+    {
+      Future.microtask(
+        () => ref
+            .read(userProductListProvider.notifier)
+            .saveUserProductListToServer(context: context),
+      );
+
+      _searchController.clear();
+
+      final bool? result = await context.pushNamed(
+        RouteManager.addProductScreen,
+        queryParameters: {'query': value},
+      );
+
+      if (result ?? false) {
+        ref.read(userProductListProvider.notifier).fetchProductFromListId();
+      }
+    }
+  }
+
   void _onActionIconPressed() {
     final RenderBox customAppBarRenderBox =
-    context.findRenderObject() as RenderBox;
+        context.findRenderObject() as RenderBox;
     final customAppBarPosition =
-    customAppBarRenderBox.localToGlobal(Offset.zero);
+        customAppBarRenderBox.localToGlobal(Offset.zero);
 
     showPopupMenu(
       context: context,
@@ -322,7 +326,7 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
         } else if (value == PopupMenuAction.edit) {
           debugPrint("edit action");
           final bool? result =
-          await context.pushNamed(RouteManager.editListScreen);
+              await context.pushNamed(RouteManager.editListScreen);
           if (result ?? false) {
             context.showSnackBar(message: "List Edited Successfully!");
             ref.read(listDetailsProvider.notifier).getSelectedListDetails();
@@ -344,26 +348,25 @@ class _MyListDetailsScreenState extends ConsumerState<MyListDetailsScreen>
   }
 
   Widget buildMaterialButton(BuildContext context) {
-    return
-      GestureDetector(
-        onTap: () async {
-          final bool? isSuccess = await ref
-              .read(userProductListProvider.notifier)
-              .saveUserProductListToServer(context: context);
+    return GestureDetector(
+      onTap: () async {
+        final bool? isSuccess = await ref
+            .read(userProductListProvider.notifier)
+            .saveUserProductListToServer(context: context);
 
-          if (isSuccess ?? false)
-            context.pushNamed(RouteManager.storeRankingScreen);
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.asset(
-              'spenza_compare.png'.assetImageUrl,
-              fit: BoxFit.contain,
-            ),
+        if (isSuccess ?? false)
+          context.pushNamed(RouteManager.storeRankingScreen);
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Image.asset(
+            'spenza_compare.png'.assetImageUrl,
+            fit: BoxFit.contain,
           ),
         ),
-      );
+      ),
+    );
   }
 }
