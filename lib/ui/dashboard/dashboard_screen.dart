@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/src/route.dart';
+import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/my_list_details/components/searchbox_widget.dart';
 import 'package:spenza/utils/searchbox_delegate.dart';
 
@@ -18,6 +19,9 @@ class DashboardScreen extends StatelessWidget {
       bottomNavigationBar: BottomNavigationWidget(
         navigationShell: navigationShell,
       ),
+      /*body: Center(
+        child: SpenzaCircularProgress(),
+      ),*/
     );
   }
 }
@@ -71,5 +75,3 @@ class CoolApp extends StatelessWidget {
     );
   }
 }
-
-

@@ -337,7 +337,7 @@ class RouteManager {
         builder: (context, state) {
           final String path = state.queryParameters['list_ref'] ?? "";
           return DisplayReceiptScreen(
-            key: state.pageKey,
+            // key: state.pageKey,
             path: path,
           );
         },

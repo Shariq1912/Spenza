@@ -7,6 +7,7 @@ import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/profile/profile_repository.dart';
 import 'package:spenza/ui/receipts/component/my_receipt_widget.dart';
 import 'package:spenza/ui/receipts/provider/fetch_receipt_provider.dart';
+import 'package:spenza/utils/color_utils.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
 
@@ -58,12 +59,12 @@ class _DisplayReceiptScreen extends ConsumerState<DisplayReceiptScreen>{
           ),
         ),
         centerTitle: true,
-        /*leading: IconButton(
+        leading: widget.key == null ? IconButton(
           onPressed: () {
             context.pop();
           },
-          icon: Icon(Icons.arrow_back_ios, color: Color(0xFF0CA9E6)),
-        ),*/
+          icon: Icon(Icons.arrow_back_ios, color: ColorUtils.colorPrimary),
+        ) : Container(),
         automaticallyImplyLeading: false,
         actions: [
           Padding(

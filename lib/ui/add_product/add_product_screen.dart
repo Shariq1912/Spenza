@@ -225,46 +225,81 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
               ),
             ),
             Expanded(
-              child: Consumer(builder: (context, ref, child) {
-                final data = ref.watch(addProductProvider);
-                final selectedDepartments =
-                    ref.watch(selectedDepartmentsProvider);
-                final searchQuery = ref.watch(searchQueryProvider);
+              child: Consumer(
+                builder: (context, ref, child) {
+                  final data = ref.watch(addProductProvider);
+                  final selectedDepartments =
+                      ref.watch(selectedDepartmentsProvider);
+                  final searchQuery = ref.watch(searchQueryProvider);
 
-                return data.when(
-                  data: (data) {
-                    if (data == null) {
-                      return Center(child: SpenzaCircularProgress());
-                    }
-                    if (data.isEmpty) {
-                      return Center(
-                        child: Text("No Product found"),
-                      );
-                    }
+                  return data.when(
+                    data: (data) {
+                      if (data == null) {
+                        return Center(
+                          child: SpenzaCircularProgress(
+                            label: "We are picking your items",
+                          ),
+                        );
+                      }
+                      if (data.isEmpty) {
+                        return Center(
+                          child: Text("No Product found"),
+                        );
+                      }
 
-                    final isAllSelected = selectedDepartments.contains("All");
+                      final isAllSelected = selectedDepartments.contains("All");
 
-                    final filteredProducts = data.where((product) {
-                      /*if (searchQuery.isNotEmpty &&
+                      final filteredProducts = data.where((product) {
+                        /*if (searchQuery.isNotEmpty &&
                           !product.name.toLowerCase().contains(searchQuery)) {
                         return false; // Skip products that don't match the search query
                       }*/
 
-                      if (selectedDepartments.contains("All")) {
-                        return true;
-                      }
-                      return product.departments.any((department) =>
-                          selectedDepartments.contains(department));
-                    }).toList();
+                        if (selectedDepartments.contains("All")) {
+                          return true;
+                        }
+                        return product.departments.any((department) =>
+                            selectedDepartments.contains(department));
+                      }).toList();
 
-                    if (isAllSelected) {
-                      final Map<String, List<Product>> productByDepartment =
-                          groupBy(
-                        filteredProducts,
-                        (product) => product.department,
-                      );
-                      return buildListViewWithLabel(
-                        productByDepartment: productByDepartment,
+                      if (isAllSelected) {
+                        final Map<String, List<Product>> productByDepartment =
+                            groupBy(
+                          filteredProducts,
+                          (product) => product.department,
+                        );
+                        return buildListViewWithLabel(
+                          productByDepartment: productByDepartment,
+                          onClick: (product) {
+                            /*ref
+                            .read(addProductProvider.notifier)
+                            .addProductToUserList(
+                          context,
+                          product: product,
+                        );*/
+                            ref
+                                .read(addProductProvider.notifier)
+                                .increaseQuantity(product: product);
+                          },
+                          quantityChanged:
+                              (Product product, bool hasIncreased) {
+                            debugPrint("QUANTITY INCREASED == $hasIncreased");
+
+                            if (hasIncreased) {
+                              ref
+                                  .read(addProductProvider.notifier)
+                                  .increaseQuantity(product: product);
+                              return;
+                            }
+                            ref
+                                .read(addProductProvider.notifier)
+                                .decreaseQuantity(product: product);
+                          },
+                        );
+                      }
+
+                      return buildListViewWithoutLabel(
+                        products: filteredProducts,
                         onClick: (product) {
                           /*ref
                             .read(addProductProvider.notifier)
@@ -277,8 +312,7 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                               .increaseQuantity(product: product);
                         },
                         quantityChanged: (Product product, bool hasIncreased) {
-                          debugPrint("QUANTITY INCREASED == $hasIncreased");
-
+                          print("QUANTITY INCREASED == $hasIncreased");
                           if (hasIncreased) {
                             ref
                                 .read(addProductProvider.notifier)
@@ -290,39 +324,16 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                               .decreaseQuantity(product: product);
                         },
                       );
-                    }
-
-                    return buildListViewWithoutLabel(
-                      products: filteredProducts,
-                      onClick: (product) {
-                        /*ref
-                            .read(addProductProvider.notifier)
-                            .addProductToUserList(
-                          context,
-                          product: product,
-                        );*/
-                        ref
-                            .read(addProductProvider.notifier)
-                            .increaseQuantity(product: product);
-                      },
-                      quantityChanged: (Product product, bool hasIncreased) {
-                        print("QUANTITY INCREASED == $hasIncreased");
-                        if (hasIncreased) {
-                          ref
-                              .read(addProductProvider.notifier)
-                              .increaseQuantity(product: product);
-                          return;
-                        }
-                        ref
-                            .read(addProductProvider.notifier)
-                            .decreaseQuantity(product: product);
-                      },
-                    );
-                  },
-                  error: (error, stackTrace) => Center(child: Text("$error")),
-                  loading: () => Center(child: SpenzaCircularProgress()),
-                );
-              }),
+                    },
+                    error: (error, stackTrace) => Center(child: Text("$error")),
+                    loading: () => Center(
+                      child: SpenzaCircularProgress(
+                        label: "We are picking your items",
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),

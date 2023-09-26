@@ -97,6 +97,8 @@ class _MyStoreProductState extends ConsumerState<MyStoreProduct> {
 
     ref.invalidate(productForStoreProvider);
     ref.invalidate(storeDetailsProvider);
+    ref.invalidate(searchQueryProvider);
+    ref.invalidate(selectedDepartmentsProvider);
     _searchController.dispose();
     _focusNode.dispose();
     keyboardSubscription.cancel();
