@@ -146,10 +146,13 @@ class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
     } else if (action == PopupMenuAction.receipt) {
       debugPrint("receipt action, $itemPath");
 
-      context.goNamed(
+      /*context.goNamed(
         RouteManager.receiptListScreenBottomPath,
         queryParameters: {'list_ref': itemPath},
-      );
+      );*/
+
+      context.pushNamed(RouteManager.displayReceiptScreen,
+          queryParameters: {'list_ref': itemPath});
 
     } else if (action == PopupMenuAction.delete) {
       debugPrint("delete action");

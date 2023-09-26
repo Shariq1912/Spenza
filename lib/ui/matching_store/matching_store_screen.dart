@@ -48,7 +48,11 @@ class _MatchingStoreScreenState extends ConsumerState<MatchingStoreScreen> {
           return result.when(
             data: (data) {
               if (data == null) {
-                return Center(child: SpenzaCircularProgress());
+                return Center(
+                  child: SpenzaCircularProgress(
+                    label: "We are looking for the best bargain",
+                  ),
+                );
               }
               if (data.isEmpty) {
                 return Center(
@@ -87,7 +91,11 @@ class _MatchingStoreScreenState extends ConsumerState<MatchingStoreScreen> {
               );
             },
             error: (error, stackTrace) => Center(child: Text("$error")),
-            loading: () => Center(child: SpenzaCircularProgress()),
+            loading: () => Center(
+              child: SpenzaCircularProgress(
+                label: "We are looking for the best bargain",
+              ),
+            ),
           );
         },
       ),

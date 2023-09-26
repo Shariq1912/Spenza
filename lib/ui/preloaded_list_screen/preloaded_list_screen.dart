@@ -117,13 +117,13 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen>
     } else if (action == PopupMenuAction.receipt) {
       debugPrint("receipt action, $itemPath");
 
-      context.goNamed(
+      /*context.goNamed(
         RouteManager.receiptListScreenBottomPath,
         queryParameters: {'list_ref': itemPath},
-      );
+      );*/
 
-      /*context.pushNamed(RouteManager.displayReceiptScreen,
-          queryParameters: {'list_ref': itemPath});*/
+      context.pushNamed(RouteManager.displayReceiptScreen,
+          queryParameters: {'list_ref': itemPath});
 
 
     }   else if (action == PopupMenuAction.copy) {

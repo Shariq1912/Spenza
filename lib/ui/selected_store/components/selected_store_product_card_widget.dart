@@ -12,6 +12,7 @@ class SelectedStoreProductCard extends StatefulWidget {
   final bool isMissing;
 
   const SelectedStoreProductCard({
+    Key? key,
     required this.imageUrl,
     required this.title,
     required this.price,
@@ -19,7 +20,7 @@ class SelectedStoreProductCard extends StatefulWidget {
     required this.quantity,
     required this.isMissing,
     required this.onClick,
-  });
+  }) : super(key: key);
 
   @override
   _SelectedStoreProductCardState createState() =>
@@ -50,8 +51,6 @@ class _SelectedStoreProductCardState extends State<SelectedStoreProductCard> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-
-
                     Text(
                       "${widget.quantity} pza",
                       style: TextStyle(
