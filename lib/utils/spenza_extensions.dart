@@ -66,6 +66,10 @@ extension SharedPreferencesExtension on SharedPreferences {
     String? result = getString('profilePhoto');
     return result!.isNotEmpty ? result : 'assets/images/user.png';
   }
+
+  String getLanguage() {
+    return getString('language') ?? "";
+  }
 }
 
 extension NumberFormat on double {

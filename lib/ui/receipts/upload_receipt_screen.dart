@@ -55,21 +55,25 @@ class _UploadReceiptScreenState extends ConsumerState<UploadReceiptScreen> {
         title: Text(
           "Upload receipt",
           style: TextStyle(
-              color: Color(0xFF7B868C),
+              color: ColorUtils.colorPrimary,
               fontFamily: poppinsFont,
               fontWeight: FontWeight.bold,
               fontSize: 18),
         ),
-        leading: IconButton(
-            onPressed: () {
-              ref.read(imagePickerProvider.notifier).state = null;
-              context.pop();
-            },
-            icon: Icon(
-              Icons.arrow_back_ios_new_outlined,
-              color: Color(0xFF7B868C),
-              size: 20,
-            )),
+        leading: GestureDetector(
+          onTap: () {
+            context.pop();
+          },
+          child: Center(
+            child: SizedBox(
+              width: 18,
+              height: 18,
+              child: Image.asset(
+                "back_Icon_blue.png".assetImageUrl,
+              ),
+            ),
+          ),
+        ),
       ),
       body: Container(
         padding: const EdgeInsets.only(left: 20.0, right: 20, bottom: 20),

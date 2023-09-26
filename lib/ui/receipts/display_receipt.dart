@@ -47,7 +47,8 @@ class _DisplayReceiptScreen extends ConsumerState<DisplayReceiptScreen>{
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        //surfaceTintColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        backgroundColor: Colors.white,
         title: Text(
           "Receipts",
           style: TextStyle(
@@ -130,7 +131,7 @@ class _DisplayReceiptScreen extends ConsumerState<DisplayReceiptScreen>{
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
         child: Consumer(
           builder: (context, ref, child) {
             final storeProvider = ref.watch(fetchReciptProviderProvider);

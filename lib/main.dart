@@ -10,6 +10,9 @@ import 'package:spenza/router/app_router.dart';
 import 'package:spenza/router/go_router_provider.dart';
 import 'package:spenza/utils/color_utils.dart';
 
+import 'l10n/l10n.dart';
+import 'l10n/provider/language_provider.dart';
+
 // import 'firebase_options.dart';
 
 void main() async {
@@ -17,10 +20,13 @@ void main() async {
   await Firebase.initializeApp();
   // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   final sharedPrefs = await SharedPreferences.getInstance();
+  final selectedLanguage = sharedPrefs.getString('language') ?? 'en';
+
   runApp(
     ProviderScope(
       overrides: [
         sharedPreferencesProvider.overrideWithValue(sharedPrefs),
+        //languageProvider.overrideWithValue(selectedLanguage),
       ],
       child: SpenzaApp(),
     ),
@@ -34,6 +40,7 @@ class SpenzaApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final goRouter = ref.watch(goRouterProvider);
+    final locale = ref.watch(languageProvider);
 
 
     debugPrint("called");
@@ -75,7 +82,7 @@ class SpenzaApp extends ConsumerWidget {
       ],
 
       /// If manually want to set locale
-      // locale: locale,
+      locale: Locale(locale),
       supportedLocales: AppLocalizations.supportedLocales,
       routeInformationParser: goRouter.routeInformationParser,
       routerDelegate: goRouter.routerDelegate,

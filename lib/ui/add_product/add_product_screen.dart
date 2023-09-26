@@ -77,12 +77,12 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
     _cancelToken = CancelToken();
 
     Future.microtask(
-      () => /*ref
+      () => ref
           .read(addProductProvider.notifier)
-          .searchProductsNew(query: query, cancelToken: _cancelToken),*/
-      ref
+          .searchProductsNew(query: query, cancelToken: _cancelToken),
+      /*ref
           .read(addProductProvider.notifier)
-          .searchProducts(query: query)
+          .searchProducts(query: query)*/
     );
   }
 

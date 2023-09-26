@@ -10,7 +10,7 @@ class CardItem extends StatelessWidget {
 
    CardItem({required this.icon, required this.title, this.onTap});
   final poppinsFont = GoogleFonts.poppins().fontFamily;
-
+  final robotoFont = GoogleFonts.roboto().fontFamily;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,7 +23,7 @@ class CardItem extends StatelessWidget {
           title,
           style: TextStyle(
             fontSize: 14,
-            fontFamily: poppinsFont,
+            fontFamily: robotoFont,
               color: ColorUtils.primaryText
           ),
         ),

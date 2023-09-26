@@ -18,8 +18,10 @@ class Splash extends _$Splash with FirstTimeLoginMixin {
   Future<void> isLoggedIn() async {
     state = AsyncValue.loading();
 
+
     final prefs = await SharedPreferences.getInstance();
     final isLogin = prefs.isUserLoggedIn();
+
 
     Future.delayed(Duration.zero);
     final isFirstLogin = await isFirstTimeLogin(

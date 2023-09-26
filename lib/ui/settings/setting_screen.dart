@@ -4,7 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/helpers/bottom_nav_helper.dart';
+import 'package:spenza/l10n/provider/language_provider.dart';
 import 'package:spenza/router/go_router_provider.dart';
 import 'package:spenza/utils/color_utils.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
@@ -22,6 +24,7 @@ class SettingScreen extends ConsumerStatefulWidget {
 
 class _SettingScreenState extends ConsumerState<SettingScreen> {
   final poppinsFont = GoogleFonts.poppins().fontFamily;
+  final robotoFont = GoogleFonts.roboto().fontFamily;
 
   @override
   void initState() {
@@ -49,7 +52,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
       backgroundColor: Colors.white,
       appBar: topAppBar(),
       body: Padding(
-        padding: EdgeInsets.only(top: 10.0, left: 10, right: 10),
+        padding: EdgeInsets.only(top: 10.0, left: 0, right: 0),
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -65,8 +68,6 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                   icon: Icons.receipt,
                   title: "My Receipts",
                   onTap: () {
-                    /*context.pushNamed(RouteManager.displayReceiptScreen,
-                        queryParameters: {'list_ref': ''});*/
                     StatefulNavigationShell.of(context).goBranch(
                       screenNameToIndex[ScreenName.receipts]!,
                     );
@@ -77,6 +78,40 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                   onTap: () {
                     context.pushNamed(RouteManager.storesScreen);
                   }),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                child: Divider(
+                  height: 1,
+                  color: ColorUtils.colorSurface,
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.notification_important,
+                    color: Colors.grey.shade600),
+                title: Text(
+                  "Language",
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: robotoFont,
+                      color: ColorUtils.primaryText),
+                ),
+                onTap: () async {
+                  ref.read(languageProvider.notifier).state = 'es';
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.setString("language", 'es' );
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.notification_important,
+                    color: Colors.grey.shade600),
+                title: Text(
+                  "Change Password",
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: robotoFont,
+                      color: ColorUtils.primaryText),
+                )
+              ),
               Padding(
                 padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                 child: Divider(
@@ -96,7 +131,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                         "Notifications",
                         style: TextStyle(
                             fontSize: 14,
-                            fontFamily: poppinsFont,
+                            fontFamily: robotoFont,
                             color: ColorUtils.primaryText),
                       ),
                     ),
@@ -107,7 +142,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                         "Privacy Policy",
                         style: TextStyle(
                             fontSize: 14,
-                            fontFamily: poppinsFont,
+                            fontFamily: robotoFont,
                             color: ColorUtils.primaryText),
                       ),
                     ),
@@ -118,7 +153,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                         "Terms and Condition",
                         style: TextStyle(
                             fontSize: 14,
-                            fontFamily: poppinsFont,
+                            fontFamily: robotoFont,
                             color: ColorUtils.primaryText),
                       ),
                     ),
@@ -144,7 +179,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                         "Share and earn",
                         style: TextStyle(
                             fontSize: 14,
-                            fontFamily: poppinsFont,
+                            fontFamily: robotoFont,
                             color: ColorUtils.primaryText),
                       ),
                     ),
@@ -160,7 +195,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     "Sign Out",
                     style: TextStyle(
                         fontSize: 14,
-                        fontFamily: poppinsFont,
+                        fontFamily: robotoFont,
                         color: ColorUtils.primaryText),
                   ),
                   onTap: () => handleLogout(
@@ -286,11 +321,22 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
             padding: const EdgeInsets.only(
               top: 5,
             ),
-            child: IconButton(
-              onPressed: () {
+            child: GestureDetector(
+              onTap: () {
                 context.push(RouteManager.profileScreen);
               },
-              icon: Icon(Icons.arrow_forward_ios, color: Color(0xFF0CA9E6)),
+              child: Container(
+                padding: const EdgeInsets.only(
+                    top: 5,right: 5
+                ),
+                child: SizedBox(
+                  width: 18,
+                  height: 18,
+                  child: Image.asset(
+                    "forward_Icon_blue.png".assetImageUrl,
+                  ),
+                ),
+              ),
             )
             //),
             ),
@@ -298,7 +344,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
       title: Text(
         "Account Information",
         style: TextStyle(
-          fontFamily: poppinsFont,
+          fontFamily: robotoFont,
           fontWeight: FontWeight.bold,
           fontSize: 16,
           color: ColorUtils.primaryText,
