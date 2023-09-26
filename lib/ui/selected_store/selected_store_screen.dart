@@ -223,7 +223,8 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16),
+              padding:
+                  const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16),
               child: ElevatedButtonWithCenteredText(
                 size: Size(size.width, 40),
                 onClick: () {
@@ -249,6 +250,7 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
     return Column(
       children: [
         SelectedStoreProductCard(
+          // key: ValueKey(product.hashCode), // todo remove comment if want to persist the state of checkbox.
           isMissing: isMissing,
           imageUrl: product.productImage,
           price: product.price,

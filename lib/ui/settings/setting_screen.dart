@@ -310,6 +310,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
 
   void handleLogout({required VoidCallback onConfirm}) {
     QuickAlert.show(
+      customAsset: 'spenza-logout-warning.png'.assetImageUrl,
       context: context,
       type: QuickAlertType.warning,
       showCancelBtn: true,
