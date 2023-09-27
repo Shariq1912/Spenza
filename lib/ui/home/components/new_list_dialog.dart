@@ -62,7 +62,9 @@ class _NewMyListState extends ConsumerState<NewMyList> {
     return Dialog(
       backgroundColor: Colors.white,
       surfaceTintColor: Colors.white,
-      shape: RoundedRectangleBorder(),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(17),
+      ),
       child: contentBox(context),
       elevation: 0,
 
@@ -81,16 +83,22 @@ class _NewMyListState extends ConsumerState<NewMyList> {
           children: [
             Align(
                 alignment: Alignment.topRight,
-                child: IconButton(
-                    onPressed: () {
-                      ref.read(imagePickerProvider.notifier).state = null;
-                      Navigator.of(context).pop();
-                    },
-                    icon: Icon(
-                      Icons.close,
-                      color: Color(0xFF7B868C),
-                      size: 35,
-                    ))),
+                child: GestureDetector(
+                  onTap: () {
+                    ref.read(imagePickerProvider.notifier).state = null;
+                    Navigator.of(context).pop();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: Image.asset(
+                        "x_close.png".assetImageUrl,
+                      ),
+                    ),
+                  ),
+                )),
             GestureDetector(
               onTap: () async {
                 final pickedImage =
@@ -126,7 +134,7 @@ class _NewMyListState extends ConsumerState<NewMyList> {
             SizedBox(height: 15,),
             TextFormField(
                 decoration: InputDecoration(
-                  hintText:"Name of your list",
+                  hintText:"Name your list",
                   contentPadding: const EdgeInsets.symmetric(
                       horizontal: 16, vertical: 12),
                   border: OutlineInputBorder(

@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:spenza/ui/common/spenza_circular_progress.dart';
 import 'package:spenza/ui/location/location_provider.dart';
 import 'package:spenza/ui/profile/profile_repository.dart';
 import 'package:spenza/utils/color_utils.dart';

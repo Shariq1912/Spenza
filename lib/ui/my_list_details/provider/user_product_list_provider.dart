@@ -169,7 +169,7 @@ class UserProductList extends _$UserProductList with FirestoreAndPrefsMixin {
       final currentDate = DateTime.now();
       final formattedDate =
           DateFormat('yyyy-MM-dd_HH:mm:ss').format(currentDate);
-      final newName = 'Copied ${modifiedData['name']}';
+      final newName = '${modifiedData['name'] } Copy ';
 
       modifiedData['name'] = newName; // Change to the desired modified name
 

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/ui/common/spenza_circular_progress.dart';
+import 'package:spenza/ui/home/components/edit_list_dialog.dart';
 import 'package:spenza/ui/my_list_details/provider/list_details_provider.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
@@ -167,7 +168,12 @@ class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
       }
     } else if (action == PopupMenuAction.edit) {
       debugPrint("edit action");
-      final bool? result = await context.pushNamed(RouteManager.editListScreen);
+      final bool? result = await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return EditListDialog();
+          },
+          barrierDismissible: true);
       if (result ?? false) {
         context.showSnackBar(message: "List Edited Successfully!");
         ref.read(listDetailsProvider.notifier).getSelectedListDetails();
@@ -191,7 +197,9 @@ class _MyListState extends ConsumerState<MyListScreen> with PopupMenuMixin {
   Widget build(BuildContext context) {
     debugPrint("kkk ${widget.key}");
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
         title: Text(
           "My Lists",

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/utils/color_utils.dart';
 import "package:collection/collection.dart";
+import 'package:spenza/utils/spenza_extensions.dart';
 
 class SearchBoxDelegate extends SearchDelegate<String> {
   final data = ["Tomate", "Milk",  "Egg", "Ketchup"];
@@ -40,12 +41,20 @@ class SearchBoxDelegate extends SearchDelegate<String> {
   @override
   Widget buildLeading(BuildContext context) {
     // Leading icon or widget (e.g., back button).
-    return IconButton(
-      onPressed: () {
-        close(context, "");
+    return GestureDetector(
+      onTap: () {
+        close(context, '');
         context.pop();
       },
-      icon: Icon(Icons.arrow_back),
+      child: Center(
+        child: SizedBox(
+          width: 20,
+          height: 20,
+          child: Image.asset(
+            "back_Icon_blue.png".assetImageUrl,
+          ),
+        ),
+      ),
     );
   }
 
@@ -54,8 +63,13 @@ class SearchBoxDelegate extends SearchDelegate<String> {
   Widget buildResults(BuildContext context) {
     if (query.isNotEmpty) {
       close(context, query);
+      context.pop();
     }
     return Container();
+  }
+  @override
+  void showResults(BuildContext context) {
+    close(context, query);
   }
 
   @override

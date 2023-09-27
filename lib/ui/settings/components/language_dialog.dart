@@ -66,7 +66,7 @@ class _LanguageDialogState extends ConsumerState<LanguageDialog> {
                   color: ColorUtils.colorPrimary,
                   fontFamily: poppinsFont,
                   fontWeight: FontWeight.bold,
-                  fontSize: 24,
+                  fontSize: 20,
                 ),
               ),
             ),
@@ -79,6 +79,7 @@ class _LanguageDialogState extends ConsumerState<LanguageDialog> {
                 color: ColorUtils.primaryText,
                 fontFamily: poppinsFont,
                 fontWeight: FontWeight.w300,
+                fontSize: 16
               ),
             ),
             SizedBox(
