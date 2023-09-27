@@ -67,13 +67,33 @@ extension SharedPreferencesExtension on SharedPreferences {
     return result!.isNotEmpty ? result : 'assets/images/user.png';
   }
 
-  String getLanguage() {
-    return getString('language') ?? "";
+  Locale getLanguage() {
+    final String localeCode = getString("language") ?? ' ';
+    if (localeCode.isEmpty) throw 'Locale not found';
+    return Locale(localeCode);
   }
 }
 
 extension NumberFormat on double {
   double toPrecision(int n) => double.parse(toStringAsFixed(n));
+}
+
+enum SupportedLocale { en, es }
+
+extension SupportedLocalExtension on SupportedLocale {
+  String get code =>this.toString().split('.').last;
+  String get name {
+    String name;
+    switch (this) {
+      case SupportedLocale.en:
+        name = 'English';
+        break;
+      case SupportedLocale.es:
+        name = 'Spanish';
+        break;
+    }
+    return name;
+  }
 }
 
 extension DistanceFormatter on double {

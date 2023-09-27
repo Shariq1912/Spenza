@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/di/app_providers.dart';
+import 'package:spenza/firebase_options.dart';
 import 'package:spenza/router/app_router.dart';
 import 'package:spenza/router/go_router_provider.dart';
 import 'package:spenza/utils/color_utils.dart';
@@ -17,10 +18,9 @@ import 'l10n/provider/language_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  //await Firebase.initializeApp();
+   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   final sharedPrefs = await SharedPreferences.getInstance();
-  final selectedLanguage = sharedPrefs.getString('language') ?? 'en';
 
   runApp(
     ProviderScope(
@@ -40,7 +40,7 @@ class SpenzaApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final goRouter = ref.watch(goRouterProvider);
-    final locale = ref.watch(languageProvider);
+    final locale = ref.watch(localeProvider);
 
 
     debugPrint("called");
@@ -82,7 +82,7 @@ class SpenzaApp extends ConsumerWidget {
       ],
 
       /// If manually want to set locale
-      locale: Locale(locale),
+      locale: locale,
       supportedLocales: AppLocalizations.supportedLocales,
       routeInformationParser: goRouter.routeInformationParser,
       routerDelegate: goRouter.routerDelegate,
