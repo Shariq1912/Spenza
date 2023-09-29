@@ -31,6 +31,7 @@ class CoolApp extends StatelessWidget {
 
   void _openSearchDelegate(BuildContext context) async {
     final String? query = await showSearch(
+
       context: context,
       delegate: SearchBoxDelegate(), // Your custom search delegate
     );

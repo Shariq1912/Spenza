@@ -60,13 +60,13 @@ class UserSelectedProductCard extends ConsumerWidget {
       ),
       child: Column(
         children: [
-          Padding(
+         /* Padding(
             padding: const EdgeInsets.only(left: 0.0, right: 0.0),
             child: Divider(
               height: 1,
               color: ColorUtils.colorSurface,
             ),
-          ),
+          ),*/
           Container(
             color: Colors.white,
             margin: const EdgeInsets.symmetric(horizontal: 8.0),

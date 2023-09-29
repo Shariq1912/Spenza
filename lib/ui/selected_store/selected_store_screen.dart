@@ -222,7 +222,7 @@ class _SelectedStoreScreenState extends ConsumerState<SelectedStoreScreen> {
             ),
             Padding(
               padding:
-                  const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16),
+                  const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 22),
               child: ElevatedButtonWithCenteredText(
                 size: Size(size.width, 40),
                 onClick: () {

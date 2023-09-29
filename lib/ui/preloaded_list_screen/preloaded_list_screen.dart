@@ -163,12 +163,20 @@ class _PreloadedListScreenState extends ConsumerState<PreloadedListScreen>
             ),
           ),
           centerTitle: true,
-          leading: IconButton(
-            onPressed: () async{
+          leading: GestureDetector(
+            onTap: () async{
               await ref.read(fetchMyListProvider.notifier).fetchMyListFun();
               context.pop();
             },
-            icon: Icon(Icons.arrow_back_ios, color: Color(0xFF0CA9E6)),
+            child: Center(
+              child: SizedBox(
+                width: 20,
+                height: 20,
+                child: Image.asset(
+                  "back_Icon_blue.png".assetImageUrl,
+                ),
+              ),
+            ),
           ),
           actions: [
             Padding(

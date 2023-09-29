@@ -42,13 +42,13 @@ class MyReceiptWidget extends ConsumerWidget {
             children: [
               Column(
                 children: [
-                  Padding(
+                  /*Padding(
                     padding: const EdgeInsets.only(left: 0.0, right: 0.0),
                     child: Divider(
                       height: 1,
                       color: ColorUtils.colorSurface,
                     ),
-                  ),
+                  ),*/
                   Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Row(

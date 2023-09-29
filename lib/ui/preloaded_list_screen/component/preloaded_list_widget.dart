@@ -26,10 +26,10 @@ class PreloadedListWidget extends ConsumerWidget {
           },
           child: Column(
             children: [
-              Divider(
+              /*Divider(
                 height: 1,
                 color: ColorUtils.colorSurface,
-              ),
+              ),*/
               Padding(
                 padding: EdgeInsets.only(left: 12.0,right: 8.0,top: 8.0, bottom: 8.0),
                 child: Row(

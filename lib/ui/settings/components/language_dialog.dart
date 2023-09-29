@@ -17,6 +17,7 @@ class LanguageDialog extends ConsumerStatefulWidget {
 
 class _LanguageDialogState extends ConsumerState<LanguageDialog> {
   final poppinsFont = GoogleFonts.poppins().fontFamily;
+  final robotoFont = GoogleFonts.roboto().fontFamily;
 
   @override
   void initState() {
@@ -35,7 +36,9 @@ class _LanguageDialogState extends ConsumerState<LanguageDialog> {
     return Dialog(
       backgroundColor: Colors.white,
       surfaceTintColor: Colors.white,
-      shape: RoundedRectangleBorder(),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(17),
+      ),
       child: contentBox(context),
       elevation: 0,
     );
@@ -50,22 +53,28 @@ class _LanguageDialogState extends ConsumerState<LanguageDialog> {
           children: [
             Align(
                 alignment: Alignment.topRight,
-                child: IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    icon: Icon(
-                      Icons.close,
-                      color: Color(0xFF7B868C),
-                      size: 35,
-                    ))),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: Image.asset(
+                        "x_close.png".assetImageUrl,
+                      ),
+                    ),
+                  ),
+                )),
             Center(
               child: Text(
                 "Application Language",
                 style: TextStyle(
                   color: ColorUtils.colorPrimary,
-                  fontFamily: poppinsFont,
-                  fontWeight: FontWeight.bold,
+                  fontFamily: robotoFont,
+                  fontWeight: FontWeight.w700,
                   fontSize: 20,
                 ),
               ),
@@ -77,7 +86,7 @@ class _LanguageDialogState extends ConsumerState<LanguageDialog> {
               "The selected language will be applied to the entire application.",
               style: TextStyle(
                 color: ColorUtils.primaryText,
-                fontFamily: poppinsFont,
+                fontFamily: robotoFont,
                 fontWeight: FontWeight.w300,
                 fontSize: 16
               ),
@@ -91,7 +100,7 @@ class _LanguageDialogState extends ConsumerState<LanguageDialog> {
                 "English",
                 style: TextStyle(
                     fontSize: 14,
-                    fontFamily: poppinsFont,
+                    fontFamily: robotoFont,
                     color: ColorUtils.primaryText),
               ),
               onTap: () async {
@@ -106,7 +115,7 @@ class _LanguageDialogState extends ConsumerState<LanguageDialog> {
                 "Spanish",
                 style: TextStyle(
                     fontSize: 14,
-                    fontFamily: poppinsFont,
+                    fontFamily: robotoFont,
                     color: ColorUtils.primaryText),
               ),
               onTap: () async {

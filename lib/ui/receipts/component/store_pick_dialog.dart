@@ -8,9 +8,7 @@ import 'package:spenza/utils/spenza_extensions.dart';
 import '../../my_store/my_store_provider.dart';
 
 class StorePickDialog extends ConsumerStatefulWidget {
-
-  StorePickDialog({Key? key})
-      : super(key: key);
+  StorePickDialog({Key? key}) : super(key: key);
 
   @override
   ConsumerState<StorePickDialog> createState() => _StorePickDialogState();
@@ -31,13 +29,14 @@ class _StorePickDialogState extends ConsumerState<StorePickDialog> {
     await ref.read(allStoreProvider.notifier).fetchAllStores();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: Colors.white,
       surfaceTintColor: Colors.white,
-      shape: RoundedRectangleBorder(),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(17),
+      ),
       child: contentBox(context),
       elevation: 0,
     );
@@ -51,16 +50,22 @@ class _StorePickDialogState extends ConsumerState<StorePickDialog> {
         child: Column(
           children: [
             Align(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    icon: Icon(
-                      Icons.close,
-                      color: Color(0xFF7B868C),
-                      size: 35,
-                    ))),
+              alignment: Alignment.topRight,
+              child: InkWell(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  margin: EdgeInsets.only(top: 20),
+                  height: 20,
+                  width: 20,
+                  child: Image.asset(
+                    "x_close.png".assetImageUrl,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 5,),
             Text(
               "Select the store for which you'd like to upload a receipt",
               style: TextStyle(
@@ -75,7 +80,7 @@ class _StorePickDialogState extends ConsumerState<StorePickDialog> {
               child: Consumer(builder: (context, ref, child) {
                 final mylist = ref.watch(allStoreProvider);
                 return mylist.when(
-                    () => Container(),
+                  () => Container(),
                   success: (data) {
                     return ListView.builder(
                       shrinkWrap: true,
@@ -84,7 +89,7 @@ class _StorePickDialogState extends ConsumerState<StorePickDialog> {
                         AllStores item = data[index];
                         var fileName = item.logo ?? "";
                         return Container(
-                          color: Color(0xFFE5E7E8),
+                          color: Colors.white,
                           margin: EdgeInsets.only(top: 8, bottom: 8),
                           child: Row(
                             children: [
@@ -107,19 +112,18 @@ class _StorePickDialogState extends ConsumerState<StorePickDialog> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    item.name.length > 12 ? '${item.name.substring(0, 12)}...' : item.name,
+                                    item.name.length > 12
+                                        ? '${item.name.substring(0, 12)}...'
+                                        : item.name,
                                     style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold
-
-                                    ),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ],
                               ),
                               Spacer(),
                               IconButton(
-                                onPressed: () async {
-                                },
+                                onPressed: () async {},
                                 icon: Icon(Icons.playlist_add_rounded),
                               ),
                             ],
@@ -140,8 +144,7 @@ class _StorePickDialogState extends ConsumerState<StorePickDialog> {
               height: 30,
             ),
             ElevatedButton(
-              onPressed: () {
-              },
+              onPressed: () {},
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF0CA9E6),
                 foregroundColor: Colors.white,

@@ -7,33 +7,42 @@ import 'package:spenza/utils/spenza_extensions.dart';
 class SearchBoxDelegate extends SearchDelegate<String> {
   final data = ["Tomate", "Milk",  "Egg", "Ketchup"];
 
-  /*@override
+  @override
   ThemeData appBarTheme(BuildContext context) {
     return ThemeData(
       colorScheme: ColorScheme.fromSeed(
         seedColor: Colors.white,
         primary: Colors.white,
         onPrimary: ColorUtils.colorWhite,
-        // secondary: ColorUtils.colorSecondary,
-        // onSecondary: ColorUtils.colorWhite,
-        // error: ColorUtils.colorError,
-        // onError: ColorUtils.colorWhite,
-        // background: ColorUtils.lightGrey,
-        // onBackground: ColorUtils.colorPrimaryText,
+
       ),
       useMaterial3: true,
+      scaffoldBackgroundColor: Colors.white,
+        appBarTheme: const AppBarTheme(
+        color: Colors.white
+    )
     );
-  }*/
+  }
 
   @override
   List<Widget> buildActions(BuildContext context) {
     // Actions for the search bar (e.g., clear button).
     return [
-      IconButton(
-        onPressed: () {
-            query = '';
-        },
-        icon: Icon(Icons.clear),
+      Padding(
+        padding: EdgeInsets.only(right: 10),
+        child: InkWell(
+          onTap: () {
+            query ='';
+          },
+          child: Container(
+            //margin: EdgeInsets.only(top: 20),
+            height: 16,
+            width: 16,
+            child: Image.asset(
+              "x_close.png".assetImageUrl,
+            ),
+          ),
+        ),
       ),
     ];
   }

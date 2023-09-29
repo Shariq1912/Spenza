@@ -36,13 +36,13 @@ class PreloadedProductCard extends ConsumerWidget {
     final robotoFont = GoogleFonts.roboto().fontFamily;
     return Column(
       children: [
-        Padding(
+        /*Padding(
           padding: const EdgeInsets.only(left: 0.0, right: 0.0),
           child: Divider(
             height: 1,
             color: ColorUtils.colorSurface,
           ),
-        ),
+        ),*/
         Stack(
           alignment: Alignment.topRight,
           children: [

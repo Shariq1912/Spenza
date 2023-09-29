@@ -101,6 +101,7 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
 
   void _openSearchDelegate(BuildContext context) async {
     final String? query = await showSearch(
+      useRootNavigator: true,
       context: context,
       delegate: SearchBoxDelegate(), // custom search delegate
     );

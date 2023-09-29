@@ -35,10 +35,10 @@ class MyStoreListWidget extends StatelessWidget {
             },
             child: Column(
               children: [
-                Divider(
+                /*Divider(
                   height: 1,
                   color: ColorUtils.colorSurface,
-                ),
+                ),*/
                 Container(
                   margin: const EdgeInsets.all(10.0),
                   child: Row(
@@ -110,12 +110,12 @@ class MyStoreListWidget extends StatelessWidget {
                                     child: store.isFavorite
                                         ? Icon(
                                             Icons.favorite_outlined,
-                                            color: Color(0xFF7B868C),
+                                            color: ColorUtils.colorPrimary,
                                             size: 25,
                                           )
                                         : Icon(
                                             Icons.favorite_border_outlined,
-                                            color: Color(0xFF7B868C),
+                                            color: ColorUtils.colorPrimary,
                                             size: 25,
                                           )),
                               ),

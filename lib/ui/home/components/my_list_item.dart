@@ -34,7 +34,7 @@ class MyListItem extends StatelessWidget {
           leadingWidget(imageUrl),
           SizedBox(height: 6),
           Text(
-            name.length > 20 ? '${name.substring(0, 20)}...' : name,
+            name.length > 13 ? '${name.substring(0, 13)}...' : name,
             style:  TextStyle(
               fontFamily: robotoFont,
               decoration: TextDecoration.none,
@@ -67,27 +67,6 @@ class MyListItem extends StatelessWidget {
 
             ],
           ),
-          /*placeholder: (context, url) => Stack(
-            children: [
-              Image.asset(
-                "add_new_list_button.png".assetImageUrl,
-                fit: BoxFit.fill,
-                width: 110,
-                height: 110,
-              ),
-              Positioned(
-                top: 0,
-                right: 0,
-                child: Container(
-                  child: Icon(
-                    Icons.add,
-                    color: Colors.white,
-                    size: 25.0,
-                  ),
-                ),
-              ),
-            ],
-          ),*/
           imageUrl: fileName,
           fit: BoxFit.fill,
           width: 110,

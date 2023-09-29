@@ -88,7 +88,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                   ),
                 ),
                 ListTile(
-                  leading: Icon(Icons.notification_important,
+                  leading: Icon(Icons.language,
                       color: Colors.grey.shade600),
                   title: Text(
                     "Language",
@@ -109,7 +109,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
 
                 ),
                 ListTile(
-                    leading: Icon(Icons.notification_important,
+                    leading: Icon(Icons.password,
                         color: Colors.grey.shade600),
                     title: Text(
                       "Change Password",

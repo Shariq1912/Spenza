@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spenza/ui/home/provider/fetch_mylist_provider.dart';
+import 'package:spenza/utils/color_utils.dart';
 import 'package:spenza/utils/spenza_extensions.dart';
 
 import '../../my_store_products/component/add_product_to_new_list.dart';
@@ -43,7 +44,9 @@ class _CustomDialogState extends ConsumerState<CustomDialog> {
     return Dialog(
       backgroundColor: Colors.white,
       surfaceTintColor: Colors.white,
-      shape: RoundedRectangleBorder(),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(17),
+      ),
       child: contentBox(context),
       elevation: 0,
     );
@@ -57,20 +60,26 @@ class _CustomDialogState extends ConsumerState<CustomDialog> {
         child: Column(
           children: [
             Align(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    icon: Icon(
-                      Icons.close,
-                      color: Color(0xFF7B868C),
-                      size: 35,
-                    ))),
+              alignment: Alignment.topRight,
+              child: InkWell(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  margin: EdgeInsets.only(top: 20),
+                  height: 20,
+                  width: 20,
+                  child: Image.asset(
+                    "x_close.png".assetImageUrl,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 5,),
             Text(
               "Choose your list where you want to add product",
               style: TextStyle(
-                  color: Color(0xFF0da9ea),
+                  color: ColorUtils.colorPrimary,
                   fontFamily: poppinsFont,
                   fontWeight: FontWeight.bold),
             ),
@@ -89,18 +98,18 @@ class _CustomDialogState extends ConsumerState<CustomDialog> {
                         MyListModel item = data[index];
                         var fileName = item.myListPhoto ?? "";
                         return GestureDetector(
-                          onTap: () async{
+                          onTap: () async {
                             await ref
                                 .read(addProductToMyListProvider.notifier)
                                 .addProductToMyList(
-                              listId: item.documentId!,
-                              productRef: widget.productRef,
-                              productId: widget.productId,
-                              context: context,
-                            );
+                                  listId: item.documentId!,
+                                  productRef: widget.productRef,
+                                  productId: widget.productId,
+                                  context: context,
+                                );
                           },
                           child: Container(
-                            color: Color(0xFFE5E7E8),
+                            color: Colors.white,
                             margin: EdgeInsets.only(top: 8, bottom: 8),
                             child: Row(
                               children: [
@@ -114,8 +123,8 @@ class _CustomDialogState extends ConsumerState<CustomDialog> {
                                     fit: BoxFit.cover,
                                     imageUrl: fileName,
                                     errorWidget: (context, url, error) =>
-                                        Image.asset(
-                                            'app_icon_spenza.png'.assetImageUrl),
+                                        Image.asset('app_icon_spenza.png'
+                                            .assetImageUrl),
                                   ),
                                 ),
                                 SizedBox(width: 16),
@@ -133,9 +142,7 @@ class _CustomDialogState extends ConsumerState<CustomDialog> {
                                 ),
                                 Spacer(),
                                 IconButton(
-                                  onPressed: ()  {
-
-                                  },
+                                  onPressed: () {},
                                   icon: Icon(Icons.playlist_add_rounded),
                                 ),
                               ],
@@ -173,7 +180,8 @@ class _CustomDialogState extends ConsumerState<CustomDialog> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => AddProductToNewList(
-                        productId: widget.productId, productRef: widget.productRef),
+                        productId: widget.productId,
+                        productRef: widget.productRef),
                   ),
                 );
               },

@@ -47,10 +47,10 @@ class MyListWidget extends StatelessWidget {
             },
             child: Column(
               children: [
-                Divider(
+                /*Divider(
                   height: 1,
                   color: ColorUtils.colorSurface,
-                ),
+                ),*/
                 Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Row(

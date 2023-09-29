@@ -57,16 +57,28 @@ class _StoresState extends ConsumerState<AllStoresScreen> {
           ),
         ),
         centerTitle: true,
-        leading: IconButton(
-          onPressed: () async{
-            await ref
-                .read(fetchFavouriteStoreRepositoryProvider
-                .notifier)
-                .fetchFavStores();
-            context.pop();
-          },
-          icon: Icon(Icons.arrow_back_ios, color: Color(0xFF0CA9E6)),
-        ),
+        leading:
+          Padding(
+            padding: const EdgeInsets.only(left: 0.0),
+            child: GestureDetector(
+              onTap: () async{
+                await ref
+                    .read(fetchFavouriteStoreRepositoryProvider
+                    .notifier)
+                    .fetchFavStores();
+                context.pop();
+              },
+              child: Center(
+                child: SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: Image.asset(
+                    "back_Icon_blue.png".assetImageUrl,
+                  ),
+                ),
+              ),
+            ),
+          ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(top: 5),
